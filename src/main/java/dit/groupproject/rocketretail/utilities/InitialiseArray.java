@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
@@ -25,36 +26,34 @@ public class InitialiseArray {
      * <code>ArrayList</code>.
      */
     public static void addStaff() {
-        ShopDriver.addStaffMember(new Staff(0, 1001, "James Richards", 1, "0181244862", "Islandsville", 60000, 1,
+        ShopDriver.addStaffMember(new Staff(1001, "James Richards", 1, "0181244862", "Islandsville", 60000, 1,
                 "16/10/2001"));
-        ShopDriver.addStaffMember(new Staff(1, 1002, "Jennifer Dariada", 2, "0182124456", "Rickysville", 50000, 1,
+        ShopDriver.addStaffMember(new Staff(1002, "Jennifer Dariada", 2, "0182124456", "Rickysville", 50000, 1,
                 "16/11/2001"));
-        ShopDriver.addStaffMember(new Staff(2, 1003, "Kayley Murphy", 2, "0192134456", "Fodderville", 60000, 1,
+        ShopDriver.addStaffMember(new Staff(1003, "Kayley Murphy", 2, "0192134456", "Fodderville", 60000, 1,
                 "16/12/2002"));
-        ShopDriver.addStaffMember(new Staff(3, 1001, "James Ricardo", 1, "0181245863", "Newtown", 30000, 2,
-                "16/10/2001"));
-        ShopDriver.addStaffMember(new Staff(4, 1002, "Jennifer Duffin", 2, "0184124456", "Downtown", 20000, 2,
+        ShopDriver.addStaffMember(new Staff(1001, "James Ricardo", 1, "0181245863", "Newtown", 30000, 2, "16/10/2001"));
+        ShopDriver.addStaffMember(new Staff(1002, "Jennifer Duffin", 2, "0184124456", "Downtown", 20000, 2,
                 "16/11/2001"));
-        ShopDriver.addStaffMember(new Staff(5, 1001, "James Ricardo", 1, "0181245867", "Smallsville", 30000, 2,
+        ShopDriver.addStaffMember(new Staff(1001, "James Ricardo", 1, "0181245867", "Smallsville", 30000, 2,
                 "16/10/2001"));
-        ShopDriver.addStaffMember(new Staff(6, 1002, "Jennifer Duffin", 2, "0184124456", "New Dobsville", 20000, 2,
+        ShopDriver.addStaffMember(new Staff(1002, "Jennifer Duffin", 2, "0184124456", "New Dobsville", 20000, 2,
                 "16/11/2001"));
-        ShopDriver.addStaffMember(new Staff(7, 1003, "Kayley Murtaugh", 2, "0132134456", "Shining Water", 40000, 2,
+        ShopDriver.addStaffMember(new Staff(1003, "Kayley Murtaugh", 2, "0132134456", "Shining Water", 40000, 2,
                 "16/12/2002"));
-        ShopDriver.addStaffMember(new Staff(8, 1004, "Ricky Dunse", 1, "0134667898", "Kasey's Point", 30000, 2,
+        ShopDriver.addStaffMember(new Staff(1004, "Ricky Dunse", 1, "0134667898", "Kasey's Point", 30000, 2,
                 "16/01/2003"));
-        ShopDriver.addStaffMember(new Staff(9, 1003, "Kayley Murtaugh", 2, "0132134456", "Dumbcreek", 40000, 2,
+        ShopDriver.addStaffMember(new Staff(1003, "Kayley Murtaugh", 2, "0132134456", "Dumbcreek", 40000, 2,
                 "16/12/2002"));
+        ShopDriver.addStaffMember(new Staff(1004, "Ricky Dunse", 1, "0134667894", "Hobtown", 30000, 2, "16/01/2003"));
+        ShopDriver.addStaffMember(new Staff(1005, "Marcus Porter", 1, "0124566891", "Seedyville", 41000, 2,
+                "16/09/2004"));
         ShopDriver
-                .addStaffMember(new Staff(10, 1004, "Ricky Dunse", 1, "0134667894", "Hobtown", 30000, 2, "16/01/2003"));
-        ShopDriver.addStaffMember(new Staff(11, 1005, "Marcus Porter", 1, "0124566891", "Seedyville", 41000, 2,
+                .addStaffMember(new Staff(1005, "Marc Johns", 1, "0124565891", "Dirtbagtown", 42000, 2, "16/09/2004"));
+        ShopDriver.addStaffMember(new Staff(1005, "Marcus Porter", 1, "0124566891", "Nowhereville", 41000, 2,
                 "16/09/2004"));
-        ShopDriver.addStaffMember(new Staff(12, 1005, "Marc Johns", 1, "0124565891", "Dirtbagtown", 42000, 2,
-                "16/09/2004"));
-        ShopDriver.addStaffMember(new Staff(13, 1005, "Marcus Porter", 1, "0124566891", "Nowhereville", 41000, 2,
-                "16/09/2004"));
-        ShopDriver.addStaffMember(new Staff(14, 1005, "Marc Johns", 1, "0124565891", "Nowhereville", 42000, 2,
-                "16/09/2004"));
+        ShopDriver
+                .addStaffMember(new Staff(1005, "Marc Johns", 1, "0124565891", "Nowhereville", 42000, 2, "16/09/2004"));
     }
 
     /**
@@ -62,46 +61,45 @@ public class InitialiseArray {
      * <code>ArrayList</code>.
      */
     public static void addSuppliers() {
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart, "Hurstons",
-                "018214485", "Shelby Town", "R1223456", "16/09/2013", "16/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "Simmerstons", "011214485", "Nurtenville", "T1223478", "14/10/2013", "16/10/2002"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart, "Colbys",
-                "012214485", "Duve Town", "R2223456", "15/11/2013", "16/10/2003"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart, "McGlones",
-                "013214485", "Shimmy Point", "G1223456", "16/10/2013", "16/10/2004"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart, "Smestones",
-                "014214485", "Shayders Point", "B1223456", "16/10/2013", "15/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart, "Seegers",
-                "016214485", "Donetsk", "C1223456", "16/10/2013", "13/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "Thurstone Products", "017214485", "Durker Point", "F1223456", "17/10/2013", "16/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "Rocket Men", "016214485", "Shelby Town", "N1223456", "19/10/2013", "16/09/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart, "Devil's",
-                "018244485", "Nurtenville", "D5223456", "20/10/2013", "14/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "Radier Co-op", "018215485", "Durker Point", "S1223456", "16/10/2013", "16/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "Dulby's Ltd", "017621445", "Shelby Town", "T1223356", "16/09/2013", "16/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart, "Holkers",
-                "016514485", "Durker Point", "R1223456", "16/10/2013", "16/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "Covertons'", "018214485", "Nurtenville", "R2223456", "15/11/2013", "16/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "McGrainers", "013214485", "Shelby Town", "G1223456", "16/10/2013", "16/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "Shifferstids", "018214485", "Nurtenville", "B1223456", "14/10/2013", "16/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart, "Seellyron",
-                "018214485", "Durker Point", "C1223456", "09/10/2013", "16/09/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "James Products", "018214485", "Shelby Town", "F1223456", "13/10/2013", "11/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "Grifters & Sons", "018416485", "Newtown", "N1223456", "16/10/2013", "16/10/2001"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart, "Smertons",
-                "018314485", "Shining Water", "D5223456", "12/10/2013", "16/10/2005"));
-        ShopDriver.addSupplier(new Supplier(ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart,
-                "Radenso Ltd", "017214485", "Dirtbagtown", "S1223456", "11/10/2013", "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Hurstons", "018214485", "Shelby Town", "R1223456", "16/09/2013",
+                "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Simmerstons", "011214485", "Nurtenville", "T1223478", "14/10/2013",
+                "16/10/2002"));
+        ShopDriver
+                .addSupplier(new Supplier("Colbys", "012214485", "Duve Town", "R2223456", "15/11/2013", "16/10/2003"));
+        ShopDriver.addSupplier(new Supplier("McGlones", "013214485", "Shimmy Point", "G1223456", "16/10/2013",
+                "16/10/2004"));
+        ShopDriver.addSupplier(new Supplier("Smestones", "014214485", "Shayders Point", "B1223456", "16/10/2013",
+                "15/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Seegers", "016214485", "Donetsk", "C1223456", "16/10/2013", "13/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Thurstone Products", "017214485", "Durker Point", "F1223456",
+                "17/10/2013", "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Rocket Men", "016214485", "Shelby Town", "N1223456", "19/10/2013",
+                "16/09/2001"));
+        ShopDriver.addSupplier(new Supplier("Devil's", "018244485", "Nurtenville", "D5223456", "20/10/2013",
+                "14/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Radier Co-op", "018215485", "Durker Point", "S1223456", "16/10/2013",
+                "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Dulby's Ltd", "017621445", "Shelby Town", "T1223356", "16/09/2013",
+                "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Holkers", "016514485", "Durker Point", "R1223456", "16/10/2013",
+                "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Covertons'", "018214485", "Nurtenville", "R2223456", "15/11/2013",
+                "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("McGrainers", "013214485", "Shelby Town", "G1223456", "16/10/2013",
+                "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Shifferstids", "018214485", "Nurtenville", "B1223456", "14/10/2013",
+                "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Seellyron", "018214485", "Durker Point", "C1223456", "09/10/2013",
+                "16/09/2001"));
+        ShopDriver.addSupplier(new Supplier("James Products", "018214485", "Shelby Town", "F1223456", "13/10/2013",
+                "11/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Grifters & Sons", "018416485", "Newtown", "N1223456", "16/10/2013",
+                "16/10/2001"));
+        ShopDriver.addSupplier(new Supplier("Smertons", "018314485", "Shining Water", "D5223456", "12/10/2013",
+                "16/10/2005"));
+        ShopDriver.addSupplier(new Supplier("Radenso Ltd", "017214485", "Dirtbagtown", "S1223456", "11/10/2013",
+                "16/10/2001"));
     }
 
     /**
@@ -109,52 +107,52 @@ public class InitialiseArray {
      * <code>ArrayList</code>.
      */
     public static void addCustomers() {
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "James Adams", "0185664246", "Islandsville", "D5345446", "16/11/2012", "01/10/2000"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Jennifer Weeds", "0953124456", "New Dobsville", "E5890446", "06/11/2012", "11/01/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "John Murphy", "0192752456", "Fodderville", "J5312346", "16/01/2013", "16/02/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Ricky Martin", "0132169789", "Kasey's Point", "P5354354", "16/02/2013", "16/04/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Marcus Murphy", "0159267891", "Nowhereville", "L5436755", "16/03/2013", "16/05/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Tom Murphy", "0159267891", "Dirtbagtown", "A7546868", "16/03/2013", "17/05/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Dick Murphy", "0153218491", "Durverville", "S9663446", "17/03/2013", "01/06/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Harry Murphy", "0754920075", "Hobtown", "D8656943", "18/03/2013", "11/06/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Marcus Douglas", "0154967891", "Dirtbagtown", "V0643452", "18/03/2013", "16/06/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart, "Adam Tony",
-                "0174348291", "Nowhereville", "C1465446", "20/03/2013", "18/06/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart, "Tony Adam",
-                "0196348491", "Seedyville", "E8588546", "21/03/2013", "20/06/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Albert Adam", "0198657561", "Seedyville", "R5648905", "22/03/2013", "22/06/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Albert Winsor", "0676545891", "Fodderville", "T6956865", "23/03/2013", "24/06/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Elizabeth Winsor", "0678758981", "Dumbcreek", "Z1747454", "24/03/2013", "29/06/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "William Winsor", "0157879691", "Kasey's Point", "B5647632", "25/03/2013", "30/06/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Liam Winsor", "0156587991", "Dublin", "M8795079", "26/03/2013", "02/07/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Harry Winsor", "0658377891", "Cork", "N0723434", "27/03/2013", "07/07/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Tony Winsor", "0678675561", "Kerry", "L5894354", "28/03/2013", "11/07/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Tom Dickens", "0687562791", "Monaghan", "I5635523", "29/03/2013", "12/07/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart, "Tony Gray",
-                "0785766678", "Galway", "P3542153", "30/03/2013", "17/07/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart, "Adam Gray",
-                "6678899877", "Wexford", "Y4723854", "31/03/2013", "20/07/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Jennifer Green", "0843437564", "Belfast", "U7894561", "02/04/2013", "02/08/2001"));
-        ShopDriver.addCustomer(new Customer(ShopDriver.getCustomers().size() + ShopDriver.customerIDStart,
-                "Tony Durkin", "0764567856", "Mayo", "K1234567", "11/04/2013", "20/08/2001"));
+        ShopDriver.addCustomer(new Customer("James Adams", "0185664246", "Islandsville", "D5345446", "16/11/2012",
+                "01/10/2000"));
+        ShopDriver.addCustomer(new Customer("Jennifer Weeds", "0953124456", "New Dobsville", "E5890446", "06/11/2012",
+                "11/01/2001"));
+        ShopDriver.addCustomer(new Customer("John Murphy", "0192752456", "Fodderville", "J5312346", "16/01/2013",
+                "16/02/2001"));
+        ShopDriver.addCustomer(new Customer("Ricky Martin", "0132169789", "Kasey's Point", "P5354354", "16/02/2013",
+                "16/04/2001"));
+        ShopDriver.addCustomer(new Customer("Marcus Murphy", "0159267891", "Nowhereville", "L5436755", "16/03/2013",
+                "16/05/2001"));
+        ShopDriver.addCustomer(new Customer("Tom Murphy", "0159267891", "Dirtbagtown", "A7546868", "16/03/2013",
+                "17/05/2001"));
+        ShopDriver.addCustomer(new Customer("Dick Murphy", "0153218491", "Durverville", "S9663446", "17/03/2013",
+                "01/06/2001"));
+        ShopDriver.addCustomer(new Customer("Harry Murphy", "0754920075", "Hobtown", "D8656943", "18/03/2013",
+                "11/06/2001"));
+        ShopDriver.addCustomer(new Customer("Marcus Douglas", "0154967891", "Dirtbagtown", "V0643452", "18/03/2013",
+                "16/06/2001"));
+        ShopDriver.addCustomer(new Customer("Adam Tony", "0174348291", "Nowhereville", "C1465446", "20/03/2013",
+                "18/06/2001"));
+        ShopDriver.addCustomer(new Customer("Tony Adam", "0196348491", "Seedyville", "E8588546", "21/03/2013",
+                "20/06/2001"));
+        ShopDriver.addCustomer(new Customer("Albert Adam", "0198657561", "Seedyville", "R5648905", "22/03/2013",
+                "22/06/2001"));
+        ShopDriver.addCustomer(new Customer("Albert Winsor", "0676545891", "Fodderville", "T6956865", "23/03/2013",
+                "24/06/2001"));
+        ShopDriver.addCustomer(new Customer("Elizabeth Winsor", "0678758981", "Dumbcreek", "Z1747454", "24/03/2013",
+                "29/06/2001"));
+        ShopDriver.addCustomer(new Customer("William Winsor", "0157879691", "Kasey's Point", "B5647632", "25/03/2013",
+                "30/06/2001"));
+        ShopDriver.addCustomer(new Customer("Liam Winsor", "0156587991", "Dublin", "M8795079", "26/03/2013",
+                "02/07/2001"));
+        ShopDriver.addCustomer(new Customer("Harry Winsor", "0658377891", "Cork", "N0723434", "27/03/2013",
+                "07/07/2001"));
+        ShopDriver.addCustomer(new Customer("Tony Winsor", "0678675561", "Kerry", "L5894354", "28/03/2013",
+                "11/07/2001"));
+        ShopDriver.addCustomer(new Customer("Tom Dickens", "0687562791", "Monaghan", "I5635523", "29/03/2013",
+                "12/07/2001"));
+        ShopDriver
+                .addCustomer(new Customer("Tony Gray", "0785766678", "Galway", "P3542153", "30/03/2013", "17/07/2001"));
+        ShopDriver.addCustomer(new Customer("Adam Gray", "6678899877", "Wexford", "Y4723854", "31/03/2013",
+                "20/07/2001"));
+        ShopDriver.addCustomer(new Customer("Jennifer Green", "0843437564", "Belfast", "U7894561", "02/04/2013",
+                "02/08/2001"));
+        ShopDriver
+                .addCustomer(new Customer("Tony Durkin", "0764567856", "Mayo", "K1234567", "11/04/2013", "20/08/2001"));
     }
 
     /**
@@ -170,10 +168,11 @@ public class InitialiseArray {
         for (int i = 0; i < productNames.length; i++) {
             double cost = (RANDOM.nextInt(100) + 1) * 0.25;
 
-            ShopDriver.addProduct(new Product(ShopDriver.getProducts().size() + ShopDriver.productIDStart,
-                    productNames[i], (RANDOM.nextInt(10) + 1) * 25, (RANDOM.nextInt(6) + 5) * 100, RANDOM
-                            .nextInt(ShopDriver.getSuppliers().size()) + ShopDriver.supplierIDStart, cost, (RANDOM
-                            .nextInt(50) + (Math.ceil(cost) / 0.25)) * 0.25));
+            ShopDriver
+                    .addProduct(new Product(productNames[i], (RANDOM.nextInt(10) + 1) * 25,
+                            (RANDOM.nextInt(6) + 5) * 100, RANDOM.nextInt(ShopDriver.getSuppliers().size())
+                                    + IdManager.SUPPLIER_ID_START, cost,
+                            (RANDOM.nextInt(50) + (Math.ceil(cost) / 0.25)) * 0.25));
         }
     }
 
@@ -189,17 +188,17 @@ public class InitialiseArray {
             items.add(new OrderedItem(ShopDriver.getProducts().get(1), 10));
             items.add(new OrderedItem(ShopDriver.getProducts().get(2), 15));
 
-            ShopDriver.getOrders().add(new Order(ShopDriver.getOrders().size(), 0, 1000, "10/03/2004", items, false));
-            ShopDriver.getOrders().add(new Order(ShopDriver.getOrders().size(), 0, 10001, "04/10/2008", items, false));
-            ShopDriver.getOrders().add(new Order(ShopDriver.getOrders().size(), 1, 10002, "19/12/2009", items, false));
+            ShopDriver.getOrders().add(new Order(0, 1000, "10/03/2004", items, false));
+            ShopDriver.getOrders().add(new Order(0, 10001, "04/10/2008", items, false));
+            ShopDriver.getOrders().add(new Order(1, 10002, "19/12/2009", items, false));
         }
 
         if (extra) {
             items.add(new OrderedItem(ShopDriver.getProducts().get(3), 10));
             items.add(new OrderedItem(ShopDriver.getProducts().get(4), 5));
-            ShopDriver.getOrders().add(new Order(ShopDriver.getOrders().size(), 1, 10003, "20/05/2011", items, false));
-            ShopDriver.getOrders().add(new Order(ShopDriver.getOrders().size(), 2, 10001, "11/02/2013", items, false));
-            ShopDriver.getOrders().add(new Order(ShopDriver.getOrders().size(), 2, 10004, "01/07/2013", items, false));
+            ShopDriver.getOrders().add(new Order(1, 10003, "20/05/2011", items, false));
+            ShopDriver.getOrders().add(new Order(2, 10001, "11/02/2013", items, false));
+            ShopDriver.getOrders().add(new Order(2, 10004, "01/07/2013", items, false));
         }
     }
 
@@ -218,25 +217,26 @@ public class InitialiseArray {
         ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
         int ordersToCreate = 0;
 
-        if (amount == 0)
+        if (amount == 0) {
             ordersToCreate = RANDOM.nextInt(16) + 5;
-        else
+        } else {
             ordersToCreate = amount;
+        }
 
         int i = 0, loops = 0;
         while (i < ordersToCreate && loops < 50) {
             items = new ArrayList<OrderedItem>();
             int itemsToCreate = RANDOM.nextInt(ShopDriver.getProducts().size()) + 1;
-            int staffID = 0;
+            int staffId = 0;
             final Staff currentStaff = ShopDriver.getCurrentStaff();
 
             if (current) {
-                staffID = currentStaff.getStaffID();
+                staffId = currentStaff.getStaffId();
             } else {
-                staffID = RANDOM.nextInt((ShopDriver.getStaffMembers().size()));
+                staffId = RANDOM.nextInt((ShopDriver.getStaffMembers().size()));
             }
 
-            int traderID = 0, randDate = 0, check = 0;
+            int traderId = 0, randDate = 0, check = 0;
             String date = "";
 
             randDate = RANDOM.nextInt(31 - 1) + 1;
@@ -264,27 +264,28 @@ public class InitialiseArray {
             }
 
             if (check == 1) {
-                traderID = RANDOM.nextInt(ShopDriver.getSuppliers().size()) + ShopDriver.supplierIDStart;
+                traderId = RANDOM.nextInt(ShopDriver.getSuppliers().size()) + IdManager.SUPPLIER_ID_START;
             } else if (check == 2) {
-                traderID = RANDOM.nextInt(ShopDriver.getCustomers().size()) + ShopDriver.customerIDStart;
+                traderId = RANDOM.nextInt(ShopDriver.getCustomers().size()) + IdManager.CUSTOMER_ID_START;
             }
 
             ArrayList<Integer> productsCreated = new ArrayList<Integer>();
-            int productID = RANDOM.nextInt(ShopDriver.getProducts().size()) + ShopDriver.productIDStart;
+            int productId = RANDOM.nextInt(ShopDriver.getProducts().size()) + IdManager.PRODUCT_ID_START;
             boolean unique = false;
-            productsCreated.add(productID);
+            productsCreated.add(productId);
 
             for (int j = 0; j < itemsToCreate; j++) {
 
                 int whileLoop = 0;
 
                 while (!unique && whileLoop < 40) {
-                    productID = RANDOM.nextInt(ShopDriver.getProducts().size()) + ShopDriver.productIDStart;
+                    productId = RANDOM.nextInt(ShopDriver.getProducts().size()) + IdManager.PRODUCT_ID_START;
                     unique = true;
 
                     for (int x : productsCreated) {
-                        if (x == productID)
+                        if (x == productId) {
                             unique = false;
+                        }
                     }
 
                     whileLoop++;
@@ -292,31 +293,31 @@ public class InitialiseArray {
 
                 unique = false;
                 for (Product p : ShopDriver.getProducts()) {
-                    if (p.getProductID() == productID) {
+                    if (p.getProductId() == productId) {
                         if (p.getStockLevel() > 1)
                             items.add(new OrderedItem(p, RANDOM.nextInt(p.getStockLevel() / 2) + 1));
                     }
                 }
 
                 if (whileLoop < 40)
-                    productsCreated.add(productID);
+                    productsCreated.add(productId);
             }
 
             if (!items.isEmpty()) {
 
                 boolean valid = true;
 
-                if (traderID > ShopDriver.supplierIDStart && traderID <= ShopDriver.customerIDStart)
+                if (traderId > IdManager.SUPPLIER_ID_START && traderId <= IdManager.CUSTOMER_ID_START)
                     for (OrderedItem oi : items) {
-                        if (oi.getProduct().getStockLevel() + oi.getQuantity() > oi.getProduct().getMaxLevel())
+                        if (oi.getProduct().getStockLevel() + oi.getQuantity() > oi.getProduct().getMaxLevel()) {
                             valid = false;
+                        }
                     }
 
                 boolean active = current && (RANDOM.nextInt(2) + 1) == 1;
 
                 if (valid) {
-                    ShopDriver.getOrders().add(
-                            new Order(ShopDriver.getOrders().size(), staffID, traderID, date, items, active));
+                    ShopDriver.getOrders().add(new Order(staffId, traderId, date, items, active));
                     i++;
                 }
             }

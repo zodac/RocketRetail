@@ -57,7 +57,7 @@ public class StockControlUtilities {
 
         for (Supplier s : ShopDriver.getSuppliers()) {
             for (Product p : productsToReplenish) {
-                if (p.getSupplierID() == s.getSupplierID()) {
+                if (p.getSupplierId() == s.getSupplierId()) {
                     createOrderedItem(percentage, p);
                 }
             }
@@ -115,8 +115,8 @@ public class StockControlUtilities {
      * */
     private static void createAndCompleteSupplierOrder(Supplier s) {
 
-        Order order = new Order(ShopDriver.getOrders().size(), ShopDriver.getCurrentStaff().getStaffID(),
-                s.getSupplierID(), DATE_FORMATTER.format(new Date()), orderToSupplier, true);
+        Order order = new Order(ShopDriver.getCurrentStaff().getStaffId(), s.getSupplierId(),
+                DATE_FORMATTER.format(new Date()), orderToSupplier, true);
         ShopDriver.getOrders().add(order);
 
         for (Order o : ShopDriver.getOrders()) {
@@ -126,7 +126,7 @@ public class StockControlUtilities {
         }
 
         for (Supplier supp : ShopDriver.getSuppliers()) {
-            if (supp.getSupplierID() == s.getSupplierID()) {
+            if (supp.getSupplierId() == s.getSupplierId()) {
                 supp.setLastPurchase(DATE_FORMATTER.format(new Date()));
             }
         }

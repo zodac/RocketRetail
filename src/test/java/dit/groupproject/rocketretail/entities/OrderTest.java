@@ -8,14 +8,11 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import dit.groupproject.rocketretail.entities.Order;
-import dit.groupproject.rocketretail.entities.OrderedItem;
-
 /**
  * A class that is used to test <code>completeOrder()</code>
  */
 public class OrderTest {
-    
+
     private final static String TEST_DATE = "21/08/2013";
 
     private ArrayList<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
@@ -26,8 +23,8 @@ public class OrderTest {
      * */
     @Before
     public void setUp() {
-        orders.add(new Order(001, 201, 562, "15/08/2013", orderedItems, false));
-        orders.add(new Order(002, 225, 594, "20/08/2013", orderedItems, false));
+        orders.add(new Order(201, 562, "15/08/2013", orderedItems, false));
+        orders.add(new Order(225, 594, "20/08/2013", orderedItems, false));
     }
 
     /**

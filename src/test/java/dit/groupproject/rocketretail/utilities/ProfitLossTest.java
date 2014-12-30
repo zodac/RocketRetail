@@ -25,15 +25,15 @@ public class ProfitLossTest {
     @BeforeClass
     public static void setUp() {
         ArrayList<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
-        orderedItems.add(new OrderedItem(new Product(1001, "Oranges", 10, 30, 4321, 0.2, 0.6), 10));
-        orderedItems.add(new OrderedItem(new Product(1002, "Apples", 15, 30, 4321, 0.2, 0.6), 15));
-        orderedItems.add(new OrderedItem(new Product(1003, "Bananas", 10, 30, 4321, 0.2, 0.6), 10));
-        orderedItems.add(new OrderedItem(new Product(1004, "Grapes", 10, 30, 4321, 0.2, 0.6), 10));
+        orderedItems.add(new OrderedItem(new Product("Oranges", 10, 30, 4321, 0.2, 0.6), 10));
+        orderedItems.add(new OrderedItem(new Product("Apples", 15, 30, 4321, 0.2, 0.6), 15));
+        orderedItems.add(new OrderedItem(new Product("Bananas", 10, 30, 4321, 0.2, 0.6), 10));
+        orderedItems.add(new OrderedItem(new Product("Grapes", 10, 30, 4321, 0.2, 0.6), 10));
 
-        ShopDriver.addOrder(new Order(1, 50, 1001, "20/08/2013", orderedItems, false));
-        ShopDriver.addOrder(new Order(2, 50, 1007, "20/08/2013", orderedItems, false));
-        ShopDriver.addOrder(new Order(3, 50, 10005, "20/08/2013", orderedItems, false));
-        ShopDriver.addOrder(new Order(4, 50, 10009, "20/08/2013", orderedItems, false));
+        ShopDriver.addOrder(new Order(50, 1001, "20/08/2013", orderedItems, false));
+        ShopDriver.addOrder(new Order(50, 1007, "20/08/2013", orderedItems, false));
+        ShopDriver.addOrder(new Order(50, 10005, "20/08/2013", orderedItems, false));
+        ShopDriver.addOrder(new Order(50, 10009, "20/08/2013", orderedItems, false));
     }
 
     /**

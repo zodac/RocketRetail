@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.MenuGUI;
@@ -48,7 +49,7 @@ public class SupplierTable extends BaseTable {
      * first time since system has been re-logged into.<br />
      * If true, sorts table by ID.
      * 
-     * @see #SortByID(boolean)
+     * @see #sortByID(boolean)
      */
     public static boolean first = true;
     /**
@@ -56,11 +57,11 @@ public class SupplierTable extends BaseTable {
      * Set to true if chosen sort option (stored in {@link #type}) is already
      * selected.
      * 
-     * @see #SortByID(boolean)
-     * @see #SortByName(boolean)
-     * @see #SortByAddress(boolean)
-     * @see #SortByVatNumber(boolean)
-     * @see #SortByDate(boolean, boolean)
+     * @see #sortByID(boolean)
+     * @see #sortByName(boolean)
+     * @see #sortByAddress(boolean)
+     * @see #sortByVatNumber(boolean)
+     * @see #sortByDate(boolean, boolean)
      */
     static boolean reverse = false;
 
@@ -118,7 +119,7 @@ public class SupplierTable extends BaseTable {
 
         // When first run, ensure ArrayList (and table) is sorted by ID
         if (first) {
-            SortByID(false);
+            sortByID(false);
             first = false;
         }
 
@@ -127,7 +128,7 @@ public class SupplierTable extends BaseTable {
 
         for (int i = 0; i < ShopDriver.getSuppliers().size(); i++) {
 
-            data[i][0] = SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierID());
+            data[i][0] = SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierId());
             data[i][1] = ShopDriver.getSuppliers().get(i).getSupplierName();
             data[i][2] = ShopDriver.getSuppliers().get(i).getPhoneNumber();
             data[i][3] = ShopDriver.getSuppliers().get(i).getAddress();
@@ -147,7 +148,7 @@ public class SupplierTable extends BaseTable {
                     Supplier input = null;
 
                     for (Supplier s : ShopDriver.getSuppliers()) {
-                        if (s.getSupplierID() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
+                        if (s.getSupplierId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
                             input = s;
                     }
                     showSupplierInfo(input);
@@ -166,7 +167,7 @@ public class SupplierTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getSuppliers().size() + 1; i++) {
             if (i < ShopDriver.getSuppliers().size())
                 supplierMemberArrayEdit[i + 1] = "ID: "
-                        + SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierID()) + " ("
+                        + SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierId()) + " ("
                         + ShopDriver.getSuppliers().get(i).getSupplierName() + ")";
         }
 
@@ -175,7 +176,7 @@ public class SupplierTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getSuppliers().size() + 1; i++) {
             if (i < ShopDriver.getSuppliers().size())
                 supplierMemberArrayDelete[i + 1] = "ID: "
-                        + SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierID()) + " ("
+                        + SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierId()) + " ("
                         + ShopDriver.getSuppliers().get(i).getSupplierName() + ")";
         }
 
@@ -303,7 +304,7 @@ public class SupplierTable extends BaseTable {
         g.gridy = 0;
         g.gridwidth = 3;
         final JTextField suppIDField = new JTextField(null, 20);
-        suppIDField.setText("" + firstAvailableID());
+        suppIDField.setText("");
         suppIDField.setEditable(false);
         innerPanel.add(suppIDField, g);
         g.gridy = 1;
@@ -410,21 +411,19 @@ public class SupplierTable extends BaseTable {
                         lastPurchaseBoxes);
 
                 if (valid) {
-                    ShopDriver.getSuppliers().add(
-                            new Supplier(Integer.parseInt(suppIDField.getText()), suppNameField.getText(), phoneNoField
-                                    .getText(), addressField.getText(), vatNoField.getText(), lastPurchaseDay
-                                    .getSelectedItem()
-                                    + "/"
-                                    + lastPurchaseMonth.getSelectedItem()
-                                    + "/"
-                                    + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
-                                    + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
+                    ShopDriver
+                            .getSuppliers()
+                            .add(new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField.getText(),
+                                    vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/"
+                                            + lastPurchaseMonth.getSelectedItem() + "/"
+                                            + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
+                                            + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
                     ShopDriver.setConfirmMessage("New Supplier \"" + suppNameField.getText() + "\" added");
                     ShopDriver.frame.remove(ShopDriver.leftPanel);
                     ShopDriver.frame.repaint();
                     ShopDriver.frame.validate();
-                    SortByID(false);
+                    sortByID(false);
                     createTable();
                 }
             }// actionPerformed
@@ -463,7 +462,7 @@ public class SupplierTable extends BaseTable {
         ShopDriver.leftPanel = new JPanel();
 
         for (Supplier s : ShopDriver.getSuppliers()) {
-            if (supplierID == s.getSupplierID()) {
+            if (supplierID == s.getSupplierId()) {
                 final int index = ShopDriver.getSuppliers().indexOf(s);
                 // Panel items
                 final JPanel innerPanel = new JPanel(new GridBagLayout());
@@ -551,7 +550,7 @@ public class SupplierTable extends BaseTable {
                 innerPanel.add(dateAddedYear, g);
 
                 // Set JTextFields with current data
-                suppIDField.setText("" + s.getSupplierID());
+                suppIDField.setText("" + s.getSupplierId());
                 suppNameField.setText(s.getSupplierName());
                 phoneNoField.setText(s.getPhoneNumber());
                 addressField.setText(s.getAddress());
@@ -609,12 +608,11 @@ public class SupplierTable extends BaseTable {
                                 lastPurchaseBoxes);
 
                         if (valid) {
-                            ShopDriver.getSuppliers().add(
-                                    index,
-                                    new Supplier(Integer.parseInt(suppIDField.getText()), suppNameField.getText(),
-                                            phoneNoField.getText(), addressField.getText(), vatNoField.getText(),
-                                            lastPurchaseDay.getSelectedItem() + "/"
-                                                    + lastPurchaseMonth.getSelectedItem() + "/"
+                            ShopDriver.getSuppliers()
+                                    .add(index,
+                                            new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField
+                                                    .getText(), vatNoField.getText(), lastPurchaseDay.getSelectedItem()
+                                                    + "/" + lastPurchaseMonth.getSelectedItem() + "/"
                                                     + lastPurchaseYear.getSelectedItem(), dateAddedDay
                                                     .getSelectedItem()
                                                     + "/"
@@ -674,7 +672,7 @@ public class SupplierTable extends BaseTable {
             ShopDriver.leftPanel = new JPanel();
 
             for (Supplier c : ShopDriver.getSuppliers()) {
-                if (supplierID == c.getSupplierID())
+                if (supplierID == c.getSupplierId())
                     i = ShopDriver.getSuppliers().indexOf(c); // Object can't be
                 // removed while being
                 // accessed - save its
@@ -745,7 +743,7 @@ public class SupplierTable extends BaseTable {
         int textFieldSize = 20;
 
         JTextField supplierField = new JTextField(s.getSupplierName() + " ("
-                + SUPPLIER_ID_FORMATTER.format(s.getSupplierID()) + ")", textFieldSize);
+                + SUPPLIER_ID_FORMATTER.format(s.getSupplierId()) + ")", textFieldSize);
         supplierField.setEditable(false);
         JTextField vatNumberField = new JTextField(s.getVatNumber(), textFieldSize);
         vatNumberField.setEditable(false);
@@ -789,7 +787,7 @@ public class SupplierTable extends BaseTable {
         int count = 0;
 
         for (Product p : ShopDriver.getProducts()) {
-            if (s.getSupplierID() == p.getSupplierID())
+            if (s.getSupplierId() == p.getSupplierId())
                 count++;
         }
 
@@ -799,10 +797,10 @@ public class SupplierTable extends BaseTable {
 
         for (int i = 0; i < ShopDriver.getProducts().size(); i++) {
 
-            if (s.getSupplierID() == ShopDriver.getProducts().get(i).getSupplierID()) {
+            if (s.getSupplierId() == ShopDriver.getProducts().get(i).getSupplierId()) {
 
                 data[indexArray][0] = ShopDriver.getProducts().get(i).getProductDesc();
-                data[indexArray][1] = ShopDriver.getProducts().get(i).getProductID();
+                data[indexArray][1] = ShopDriver.getProducts().get(i).getProductId();
                 data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getCostPrice());
                 data[indexArray][3] = ShopDriver.getProducts().get(i).getStockLevel() + "/"
                         + ShopDriver.getProducts().get(i).getMaxLevel();
@@ -836,59 +834,30 @@ public class SupplierTable extends BaseTable {
     }
 
     /**
-     * Calculates the first available ID number to use when creating a new
-     * supplier in {@link #add()}.
-     * 
-     * @return the integer to be used as the ID for a new supplier
-     * 
-     * @see #add()
-     */
-    public static int firstAvailableID() {
-        type = "ID";
-        SortByID(false);
-        int output = 0, i = ShopDriver.supplierIDStart;
-        boolean found = false;
-
-        while (!found && i < (ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart)) {
-            if (ShopDriver.getSuppliers().get(i - ShopDriver.supplierIDStart).getSupplierID() == i) {
-            } else {
-                output = i;
-                found = true;
-            }
-            i++;
-        }
-
-        if (found)
-            return output;
-        else
-            return ShopDriver.getSuppliers().size() + ShopDriver.supplierIDStart;
-    }
-
-    /**
      * A switch-like method which decides how to sort the JTable.<br />
      * Uses class variable {@link #type} and calls appropriate sorting method
      * based on its value.
      * 
      * @see #type
-     * @see #SortByID(boolean)
-     * @see #SortByName(boolean)
-     * @see #SortByAddress(boolean)
-     * @see #SortByVatNumber(boolean)
-     * @see #SortByDate(boolean, boolean)
+     * @see #sortByID(boolean)
+     * @see #sortByName(boolean)
+     * @see #sortByAddress(boolean)
+     * @see #sortByVatNumber(boolean)
+     * @see #sortByDate(boolean, boolean)
      */
     public static void sortArrayList() {
         if (type.equals("ID"))
-            SortByID(reverse);
+            sortByID(reverse);
         if (type.equals("Name"))
-            SortByName(reverse);
+            sortByName(reverse);
         if (type.equals("Address"))
-            SortByAddress(reverse);
+            sortByAddress(reverse);
         if (type.equals("VAT Number"))
-            SortByVatNumber(reverse);
+            sortByVatNumber(reverse);
         if (type.equals("Last Purchase"))
-            SortByDate(false, reverse);
+            sortByDate(false, reverse);
         if (type.equals("Date Added"))
-            SortByDate(true, reverse);
+            sortByDate(true, reverse);
     }
 
     /**
@@ -899,7 +868,7 @@ public class SupplierTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortByName(boolean reverse) {
+    public static void sortByName(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
                 public int compare(Supplier s1, Supplier s2) {
@@ -925,7 +894,7 @@ public class SupplierTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortByAddress(boolean reverse) {
+    public static void sortByAddress(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
                 public int compare(Supplier s1, Supplier s2) {
@@ -951,7 +920,7 @@ public class SupplierTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortByVatNumber(boolean reverse) {
+    public static void sortByVatNumber(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
                 public int compare(Supplier s1, Supplier s2) {
@@ -976,15 +945,16 @@ public class SupplierTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortByID(boolean reverse) {
+    public static void sortByID(boolean reverse) {
         ArrayList<Supplier> tempArrayList = new ArrayList<Supplier>();
-        int count = ShopDriver.supplierIDStart, offset = 0;
+        int count = IdManager.SUPPLIER_ID_START;
+        int offset = 0;
         boolean found = false;
 
         for (int i = 0; i < ShopDriver.getSuppliers().size() + offset; i++) {
             found = false;
             for (Supplier p : ShopDriver.getSuppliers()) {
-                if (count == p.getSupplierID()) {
+                if (count == p.getSupplierId()) {
                     tempArrayList.add(p);
                     found = true;
                 }
@@ -1014,7 +984,7 @@ public class SupplierTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortByDate(final boolean DateAdded, final boolean reverse) {
+    public static void sortByDate(final boolean DateAdded, final boolean reverse) {
 
         Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
             DateFormat f = new SimpleDateFormat("dd/MM/yyyy");

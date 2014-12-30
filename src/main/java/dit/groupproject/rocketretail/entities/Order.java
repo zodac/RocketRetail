@@ -9,44 +9,43 @@ import dit.groupproject.rocketretail.main.ShopDriver;
 
 public class Order {
 
-    private int orderID;
-    private int staffID;
-    private int traderID;
+    private int orderId;
+    private int staffId;
+    private int traderId;
     private String orderDate;
     private String deliveryDate = "";
     private boolean isSupplier;
     private boolean isActive = true;
     public ArrayList<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
 
-    public Order(int orderID, int staffID, int traderID, String orderDate, ArrayList<OrderedItem> orderedItems,
-            boolean isActive) {
+    public Order(int staffID, int traderID, String orderDate, ArrayList<OrderedItem> orderedItems, boolean isActive) {
 
-        this.orderID = orderID;
-        this.staffID = staffID;
-        this.traderID = traderID;
+        this.orderId = IdManager.nextOrderId.getAndIncrement();
+        this.staffId = staffID;
+        this.traderId = traderID;
         this.orderDate = orderDate;
         this.orderedItems = orderedItems;
         this.isActive = isActive;
 
-        if (traderID >= ShopDriver.customerIDStart && traderID < ShopDriver.productIDStart)
+        if (traderID >= IdManager.CUSTOMER_ID_START && traderID < IdManager.PRODUCT_ID_START) {
             isSupplier = false;
-        else
+        } else {
             isSupplier = true;
+        }
 
         for (OrderedItem x : orderedItems) {
             // If Customer order, reduce stock level
-            if (traderID >= ShopDriver.customerIDStart && traderID < ShopDriver.productIDStart) {
-                if (x.getProduct().getStockLevel() < x.getQuantity()) {
-                } else
+            if (!isSupplier) {
+                if (x.getProduct().getStockLevel() >= x.getQuantity()) {
                     x.getProduct().setStockLevel(x.getProduct().getStockLevel() - x.getQuantity());
+                }
             }
         }
 
         if (!isActive && isSupplier) {
             for (OrderedItem oi : orderedItems) {
-
                 for (Product p : ShopDriver.getProducts()) {
-                    if (oi.getProduct().getProductID() == p.getProductID())
+                    if (oi.getProduct().getProductId() == p.getProductId())
                         p.setStockLevel(p.getStockLevel() + oi.getQuantity());
                 }
             }
@@ -55,7 +54,7 @@ public class Order {
         DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
 
         for (Supplier s : ShopDriver.getSuppliers()) {
-            if (s.getSupplierID() == traderID) {
+            if (s.getSupplierId() == traderID) {
                 try {
                     if (f.parse(s.getLastPurchase()).compareTo(f.parse(orderDate)) < 0)
                         s.setLastPurchase(orderDate);
@@ -66,7 +65,7 @@ public class Order {
         }
 
         for (Customer c : ShopDriver.getCustomers()) {
-            if (c.getCustomerID() == traderID) {
+            if (c.getCustomerId() == traderID) {
                 try {
                     if (f.parse(c.getLastPurchase()).compareTo(f.parse(orderDate)) < 0)
                         c.setLastPurchase(orderDate);
@@ -84,16 +83,17 @@ public class Order {
     public String printDetails() {
         String suppOrCustLabel = "";
 
-        if (traderID >= ShopDriver.supplierIDStart && traderID < ShopDriver.customerIDStart)
+        if (traderId >= IdManager.SUPPLIER_ID_START && traderId < IdManager.CUSTOMER_ID_START) {
             suppOrCustLabel = "Supplier";
-        else if (traderID >= ShopDriver.customerIDStart && traderID < ShopDriver.productIDStart)
+        } else if (traderId >= IdManager.CUSTOMER_ID_START && traderId < IdManager.PRODUCT_ID_START) {
             suppOrCustLabel = "Customer";
+        }
 
-        String output = "Order ID:\t" + orderID + "\nStaff ID:\t" + staffID + "\n" + suppOrCustLabel + " ID:\t"
-                + traderID + "\nOrder Date:\t" + orderDate;
+        String output = "Order ID:\t" + orderId + "\nStaff ID:\t" + staffId + "\n" + suppOrCustLabel + " ID:\t"
+                + traderId + "\nOrder Date:\t" + orderDate;
 
         for (OrderedItem oi : orderedItems) {
-            output = output + "\nProduct ID:\t" + oi.getProduct().getProductID() + "\nQuantity:\t" + oi.getQuantity();
+            output = output + "\nProduct ID:\t" + oi.getProduct().getProductId() + "\nQuantity:\t" + oi.getQuantity();
         }
 
         return (output + "\n\n");
@@ -123,7 +123,7 @@ public class Order {
     public boolean includesProduct(Product p) {
 
         for (OrderedItem oi : this.orderedItems) {
-            if (oi.getProduct().getProductID() == p.getProductID())
+            if (oi.getProduct().getProductId() == p.getProductId())
                 return true;
         }
 
@@ -143,27 +143,27 @@ public class Order {
     }
 
     public int getOrderID() {
-        return orderID;
+        return orderId;
     }
 
     public void setOrderID(int orderID) {
-        this.orderID = orderID;
+        this.orderId = orderID;
     }
 
     public int getStaffID() {
-        return staffID;
+        return staffId;
     }
 
     public void setStaffID(int staffID) {
-        this.staffID = staffID;
+        this.staffId = staffID;
     }
 
     public int getTraderID() {
-        return traderID;
+        return traderId;
     }
 
     public void setTraderID(int traderID) {
-        this.traderID = traderID;
+        this.traderId = traderID;
     }
 
     public String getOrderDate() {

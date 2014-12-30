@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
@@ -93,7 +94,7 @@ public class CustomerTable extends BaseTable {
         ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         if (first) {
-            SortByID(false);
+            sortById(false);
             first = false;
         }
 
@@ -102,7 +103,7 @@ public class CustomerTable extends BaseTable {
 
         for (int i = 0; i < ShopDriver.getCustomers().size(); i++) {
 
-            data[i][0] = CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerID());
+            data[i][0] = CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerId());
             data[i][1] = ShopDriver.getCustomers().get(i).getCustomerName();
             data[i][2] = ShopDriver.getCustomers().get(i).getPhoneNumber();
             data[i][3] = ShopDriver.getCustomers().get(i).getAddress();
@@ -121,7 +122,7 @@ public class CustomerTable extends BaseTable {
                     Customer input = null;
 
                     for (Customer c : ShopDriver.getCustomers()) {
-                        if (c.getCustomerID() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
+                        if (c.getCustomerId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
                             input = c;
                     }
                     showCustomerInfo(input);
@@ -140,7 +141,7 @@ public class CustomerTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getCustomers().size() + 1; i++) {
             if (i < ShopDriver.getCustomers().size())
                 customerMemberArrayEdit[i + 1] = "ID: "
-                        + CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerID()) + " ("
+                        + CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerId()) + " ("
                         + ShopDriver.getCustomers().get(i).getCustomerName() + ")";
         }
 
@@ -149,7 +150,7 @@ public class CustomerTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getCustomers().size() + 1; i++) {
             if (i < ShopDriver.getCustomers().size())
                 customerMemberArrayDelete[i + 1] = "ID: "
-                        + CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerID()) + " ("
+                        + CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerId()) + " ("
                         + ShopDriver.getCustomers().get(i).getCustomerName() + ")";
         }
 
@@ -268,7 +269,7 @@ public class CustomerTable extends BaseTable {
         g.gridwidth = 3;
         final JTextField custIDField = new JTextField(null, 20);
         custIDField.setEditable(false);
-        custIDField.setText(CUSTOMER_ID_FORMATTER.format(firstAvailableID()));
+        custIDField.setText(CUSTOMER_ID_FORMATTER.format(0));
         innerPanel.add(custIDField, g);
         g.gridy = 1;
         g.gridwidth = 3;
@@ -371,22 +372,20 @@ public class CustomerTable extends BaseTable {
                         lastPurchaseBoxes);
 
                 if (valid) {
-                    ShopDriver.getCustomers().add(
-                            new Customer(Integer.parseInt(custIDField.getText()), custNameField.getText(), phoneNoField
-                                    .getText(), addressField.getText(), vatNoField.getText(), lastPurchaseDay
-                                    .getSelectedItem()
-                                    + "/"
-                                    + lastPurchaseMonth.getSelectedItem()
-                                    + "/"
-                                    + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
-                                    + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
+                    ShopDriver
+                            .getCustomers()
+                            .add(new Customer(custNameField.getText(), phoneNoField.getText(), addressField.getText(),
+                                    vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/"
+                                            + lastPurchaseMonth.getSelectedItem() + "/"
+                                            + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
+                                            + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
                     ShopDriver.setConfirmMessage("Customer " + custNameField.getText() + " added");
                     ShopDriver.frame.remove(ShopDriver.leftPanel);
                     ShopDriver.frame.repaint();
                     ShopDriver.frame.validate();
 
-                    SortByID(false);
+                    sortById(false);
                     createTable();
                 }
             }
@@ -417,7 +416,7 @@ public class CustomerTable extends BaseTable {
         ShopDriver.leftPanel = new JPanel();
 
         for (Customer c : ShopDriver.getCustomers()) {
-            if (customerID == c.getCustomerID()) {
+            if (customerID == c.getCustomerId()) {
                 final int index = ShopDriver.getCustomers().indexOf(c);
 
                 final JPanel innerPanel = new JPanel(new GridBagLayout());
@@ -503,7 +502,7 @@ public class CustomerTable extends BaseTable {
                 final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
                 innerPanel.add(dateAddedYear, g);
 
-                custIDField.setText("" + c.getCustomerID());
+                custIDField.setText("" + c.getCustomerId());
                 custNameField.setText(c.getCustomerName());
                 phoneNoField.setText(c.getPhoneNumber());
                 addressField.setText(c.getAddress());
@@ -557,12 +556,11 @@ public class CustomerTable extends BaseTable {
                                 lastPurchaseBoxes);
 
                         if (valid) {
-                            ShopDriver.getCustomers().add(
-                                    index,
-                                    new Customer(Integer.parseInt(custIDField.getText()), custNameField.getText(),
-                                            phoneNoField.getText(), addressField.getText(), vatNoField.getText(),
-                                            lastPurchaseDay.getSelectedItem() + "/"
-                                                    + lastPurchaseMonth.getSelectedItem() + "/"
+                            ShopDriver.getCustomers()
+                                    .add(index,
+                                            new Customer(custNameField.getText(), phoneNoField.getText(), addressField
+                                                    .getText(), vatNoField.getText(), lastPurchaseDay.getSelectedItem()
+                                                    + "/" + lastPurchaseMonth.getSelectedItem() + "/"
                                                     + lastPurchaseYear.getSelectedItem(), dateAddedDay
                                                     .getSelectedItem()
                                                     + "/"
@@ -613,7 +611,7 @@ public class CustomerTable extends BaseTable {
             ShopDriver.leftPanel = new JPanel();
 
             for (Customer c : ShopDriver.getCustomers()) {
-                if (customerID == c.getCustomerID())
+                if (customerID == c.getCustomerId())
                     i = ShopDriver.getCustomers().indexOf(c);
             }
         }
@@ -671,7 +669,7 @@ public class CustomerTable extends BaseTable {
         int textFieldSize = 20;
 
         JTextField customerField = new JTextField(c.getCustomerName() + " ("
-                + CUSTOMER_ID_FORMATTER.format(c.getCustomerID()) + ")", textFieldSize);
+                + CUSTOMER_ID_FORMATTER.format(c.getCustomerId()) + ")", textFieldSize);
         customerField.setEditable(false);
         JTextField vatNumberField = new JTextField(c.getVatNumber(), textFieldSize);
         vatNumberField.setEditable(false);
@@ -715,7 +713,7 @@ public class CustomerTable extends BaseTable {
         int count = 0;
 
         for (Order o : ShopDriver.getOrders()) {
-            if (o.getTraderID() == c.getCustomerID())
+            if (o.getTraderID() == c.getCustomerId())
                 count++;
         }
 
@@ -725,7 +723,7 @@ public class CustomerTable extends BaseTable {
         double total = 0;
 
         for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
-            if (c.getCustomerID() == ShopDriver.getOrders().get(i).getTraderID()) {
+            if (c.getCustomerId() == ShopDriver.getOrders().get(i).getTraderID()) {
 
                 data[indexArray][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
                 data[indexArray][1] = ShopDriver.getOrders().get(i).getOrderDate();
@@ -762,34 +760,6 @@ public class CustomerTable extends BaseTable {
     }
 
     /**
-     * 
-     * This method creates an unused <code>int</code> that can be used for a new
-     * <code>Customer</code>.
-     * 
-     * @return The first available id for creating a new <code>Customer</code>.
-     */
-    public static int firstAvailableID() {
-        type = "ID";
-        SortByID(false);
-        int output = 0, i = ShopDriver.customerIDStart;
-        boolean found = false;
-
-        while (!found && i < (ShopDriver.getCustomers().size() + ShopDriver.customerIDStart)) {
-            if (ShopDriver.getCustomers().get(i - ShopDriver.customerIDStart).getCustomerID() == i) {
-            } else {
-                output = i;
-                found = true;
-            }
-            i++;
-        }
-
-        if (found)
-            return output;
-        else
-            return ShopDriver.getCustomers().size() + ShopDriver.customerIDStart;
-    }
-
-    /**
      * This method sorts the <code>Customer</code>s by their ID.
      * 
      * @param reverse
@@ -797,21 +767,23 @@ public class CustomerTable extends BaseTable {
      *            to an <code>ArrayList</code> in ascending or descending order.
      */
 
-    public static void SortByID(boolean reverse) {
+    public static void sortById(boolean reverse) {
         ArrayList<Customer> tempArrayList = new ArrayList<Customer>();
-        int count = ShopDriver.customerIDStart, offset = 0;
+        int count = IdManager.CUSTOMER_ID_START;
+        int offset = 0;
         boolean found = false;
 
         for (int i = 0; i < ShopDriver.getCustomers().size() + offset; i++) {
             found = false;
             for (Customer p : ShopDriver.getCustomers()) {
-                if (count == p.getCustomerID()) {
+                if (count == p.getCustomerId()) {
                     tempArrayList.add(p);
                     found = true;
                 }
             }
-            if (!found)
+            if (!found) {
                 offset++;
+            }
             count++;
         }
 
@@ -834,17 +806,17 @@ public class CustomerTable extends BaseTable {
      */
     public static void sortArrayList() {
         if (type.equals("ID"))
-            SortByID(reverse);
+            sortById(reverse);
         if (type.equals("Name"))
-            SortByName(reverse);
+            sortByName(reverse);
         if (type.equals("Address"))
-            SortByAddress(reverse);
+            sortByAddress(reverse);
         if (type.equals("VAT Number"))
-            SortByVatNumber(reverse);
+            sortByVatNumber(reverse);
         if (type.equals("Last Purchase"))
-            SortByDate(false, reverse);
+            sortByDate(false, reverse);
         if (type.equals("Date Added"))
-            SortByDate(true, reverse);
+            sortByDate(true, reverse);
     }
 
     /**
@@ -855,7 +827,7 @@ public class CustomerTable extends BaseTable {
      *            A boolean to decide whether the <code>Customer</code>s should
      *            be sorted in ascending or descending order.
      */
-    public static void SortByName(boolean reverse) {
+    public static void sortByName(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
                 public int compare(Customer s1, Customer s2) {
@@ -881,7 +853,7 @@ public class CustomerTable extends BaseTable {
      *            A boolean to decide whether the <code>Customer</code>
      *            addresses should be sorted in ascending or descending order.
      */
-    public static void SortByAddress(boolean reverse) {
+    public static void sortByAddress(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
                 public int compare(Customer s1, Customer s2) {
@@ -907,7 +879,7 @@ public class CustomerTable extends BaseTable {
      *            A boolean to decide whether the <code>Customer</code> vat
      *            numbers should be sorted in ascending or descending order.
      */
-    public static void SortByVatNumber(boolean reverse) {
+    public static void sortByVatNumber(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
                 public int compare(Customer s1, Customer s2) {
@@ -932,7 +904,7 @@ public class CustomerTable extends BaseTable {
      *            A boolean to decide whether the <code>Customer</code> add
      *            dates should be sorted in ascending or descending order.
      */
-    public static void SortByDate(final boolean DateAdded, final boolean reverse) {
+    public static void sortByDate(final boolean DateAdded, final boolean reverse) {
 
         Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
             DateFormat f = new SimpleDateFormat("dd/MM/yyyy");

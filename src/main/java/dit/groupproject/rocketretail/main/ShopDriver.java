@@ -78,9 +78,6 @@ public class ShopDriver {
     public static final int yearStart = Integer.parseInt(YEARS_AS_NUMBERS[1]);
     public static final int yearCurrent = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date()));
 
-    public static final int supplierIDStart = 1000;
-    public static final int customerIDStart = 10000;
-    public static final int productIDStart = 20000;
     private static Staff currentStaff;
     private static TableState currentTable = TableState.NONE;
 
@@ -279,8 +276,8 @@ public class ShopDriver {
     }
 
     private static boolean hasValidLogonCredentials(JTextField idField, JPasswordField pinField, Staff s) {
-        return s.getStaffID() == Integer.parseInt(idField.getText())
-                && s.getStaffPIN() == Integer.parseInt(String.valueOf(pinField.getPassword()));
+        return s.getStaffId() == Integer.parseInt(idField.getText())
+                && s.getStaffPin() == Integer.parseInt(String.valueOf(pinField.getPassword()));
     }
 
     /**

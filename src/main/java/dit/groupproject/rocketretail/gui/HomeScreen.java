@@ -91,7 +91,7 @@ public class HomeScreen {
                             * o.getOrderedItems().get(i).getProduct().getSalePrice();
                 }
 
-                if (o.getStaffID() == currentStaff.getStaffID()) {
+                if (o.getStaffID() == currentStaff.getStaffId()) {
                     staffTotal += orderTotal;
                 } else {
                     otherTotal += orderTotal;

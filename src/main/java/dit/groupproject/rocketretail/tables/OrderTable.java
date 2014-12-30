@@ -33,6 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
@@ -101,7 +102,7 @@ public class OrderTable extends BaseTable {
     /**
      * An Integer which holds the value of the trader ID for the current order.
      */
-    static int traderID = 0;
+    static int traderId = 0;
 
     /**
      * The JPanel which holds the JTable and JButtons and places them into
@@ -628,7 +629,7 @@ public class OrderTable extends BaseTable {
 
                     for (Customer c : ShopDriver.getCustomers()) {
                         if (c.getCustomerName().equals(customerOptions.getSelectedItem()))
-                            traderID = c.getCustomerID();
+                            traderId = c.getCustomerId();
                     }
 
                     final ArrayList<JLabel> productLabels = new ArrayList<JLabel>();
@@ -715,12 +716,12 @@ public class OrderTable extends BaseTable {
 
                                     if (items.size() > 0)
                                         ShopDriver.getOrders().add(
-                                                new Order(ShopDriver.getOrders().size(), ShopDriver.getCurrentStaff()
-                                                        .getStaffID(), traderID, new SimpleDateFormat("dd/MM/yyyy")
-                                                        .format(new Date()), items, true));
+                                                new Order(ShopDriver.getCurrentStaff().getStaffId(), traderId,
+                                                        new SimpleDateFormat("dd/MM/yyyy").format(new Date()), items,
+                                                        true));
 
                                     for (Customer c : ShopDriver.getCustomers()) {
-                                        if (c.getCustomerID() == traderID) {
+                                        if (c.getCustomerId() == traderId) {
                                             activeCust = c;
                                             c.setLastPurchase(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
                                         }
@@ -829,8 +830,9 @@ public class OrderTable extends BaseTable {
 
         // Create the JComboBox
         final JComboBox<String> supplierOptions = new JComboBox<String>(supplierArray);
-        if (supplierIndex != 0)
-            supplierOptions.setSelectedIndex(supplierIndex - ShopDriver.supplierIDStart + 1);
+        if (supplierIndex != 0) {
+            supplierOptions.setSelectedIndex(supplierIndex - IdManager.SUPPLIER_ID_START + 1);
+        }
 
         supplierOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -870,11 +872,11 @@ public class OrderTable extends BaseTable {
 
                     for (Supplier s : ShopDriver.getSuppliers()) {
                         if (s.getSupplierName().equals(supplierOptions.getSelectedItem()))
-                            traderID = s.getSupplierID();
+                            traderId = s.getSupplierId();
                     }
 
                     for (Product p : ShopDriver.getProducts()) {
-                        if (p.getSupplierID() == traderID)
+                        if (p.getSupplierId() == traderId)
                             supplierProducts.add(p);
                     }
 
@@ -953,13 +955,13 @@ public class OrderTable extends BaseTable {
                                 Supplier activeSupp = null;
 
                                 if (items.size() > 0) {
-                                    ShopDriver.getOrders().add(
-                                            new Order(ShopDriver.getOrders().size(), ShopDriver.getCurrentStaff()
-                                                    .getStaffID(), traderID, new SimpleDateFormat("dd/MM/yyyy")
-                                                    .format(new Date()), items, true));
+                                    ShopDriver
+                                            .getOrders()
+                                            .add(new Order(ShopDriver.getCurrentStaff().getStaffId(), traderId,
+                                                    new SimpleDateFormat("dd/MM/yyyy").format(new Date()), items, true));
 
                                     for (Supplier s : ShopDriver.getSuppliers()) {
-                                        if (s.getSupplierID() == traderID) {
+                                        if (s.getSupplierId() == traderId) {
                                             s.setLastPurchase(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
                                             activeSupp = s;
                                         }
@@ -1104,7 +1106,7 @@ public class OrderTable extends BaseTable {
         String staffName = "", traderName = "", traderTitle = "";
 
         for (Staff s : ShopDriver.getStaffMembers()) {
-            if (s.getStaffID() == o.getStaffID()) {
+            if (s.getStaffId() == o.getStaffID()) {
                 staffName = s.getStaffName();
                 break;
             }
@@ -1116,7 +1118,7 @@ public class OrderTable extends BaseTable {
             isSupplier = true;
 
             for (Supplier s : ShopDriver.getSuppliers()) {
-                if (s.getSupplierID() == o.getTraderID()) {
+                if (s.getSupplierId() == o.getTraderID()) {
                     traderName = s.getSupplierName();
                     break;
                 }
@@ -1127,7 +1129,7 @@ public class OrderTable extends BaseTable {
             traderTitle = "Customer";
 
             for (Customer c : ShopDriver.getCustomers()) {
-                if (c.getCustomerID() == o.getTraderID()) {
+                if (c.getCustomerId() == o.getTraderID()) {
                     traderName = c.getCustomerName();
                     break;
                 }
@@ -1214,7 +1216,7 @@ public class OrderTable extends BaseTable {
                 unitPrice = o.getOrderedItems().get(i).getProduct().getSalePrice();
 
             data[i][0] = o.getOrderedItems().get(i).getProduct().getProductDesc() + " ("
-                    + o.getOrderedItems().get(i).getProduct().getProductID() + ")";
+                    + o.getOrderedItems().get(i).getProduct().getProductId() + ")";
             data[i][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
             data[i][2] = o.getOrderedItems().get(i).getQuantity();
             data[i][3] = "€" + CURRENCY_FORMATTER.format(unitPrice * (int) data[i][2]);

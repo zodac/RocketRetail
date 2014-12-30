@@ -111,7 +111,7 @@ public class StaffTable extends BaseTable {
             else if (ShopDriver.getStaffMembers().get(i).getGender() == 2)
                 gender = "Female";
 
-            data[i][0] = STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffID());
+            data[i][0] = STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffId());
             data[i][1] = ShopDriver.getStaffMembers().get(i).getStaffName();
             data[i][2] = gender;
             data[i][3] = ShopDriver.getStaffMembers().get(i).getPhoneNumber();
@@ -132,7 +132,7 @@ public class StaffTable extends BaseTable {
                     Staff input = null;
 
                     for (Staff s : ShopDriver.getStaffMembers()) {
-                        if (s.getStaffID() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
+                        if (s.getStaffId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
                             input = s;
                     }
                     showStaffInfo(input);
@@ -150,7 +150,7 @@ public class StaffTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getStaffMembers().size() + 1; i++) {
             if (i < ShopDriver.getStaffMembers().size())
                 staffMemberArrayEdit[i + 1] = "ID: "
-                        + STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffID()) + " ("
+                        + STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffId()) + " ("
                         + ShopDriver.getStaffMembers().get(i).getStaffName() + ")";
         }
 
@@ -159,7 +159,7 @@ public class StaffTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getStaffMembers().size() + 1; i++) {
             if (i < ShopDriver.getStaffMembers().size())
                 staffMemberArrayDelete[i + 1] = "ID: "
-                        + STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffID()) + " ("
+                        + STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffId()) + " ("
                         + ShopDriver.getStaffMembers().get(i).getStaffName() + ")";
         }
 
@@ -389,16 +389,12 @@ public class StaffTable extends BaseTable {
                         addedBoxes, null);
 
                 if (valid) {
-                    ShopDriver.getStaffMembers()
-                            .add(new Staff(Integer.parseInt(idField.getText()), Integer.parseInt(String
-                                    .valueOf(pinField.getPassword())), nameField.getText(), genderField
-                                    .getSelectedIndex(), phoneNoField.getText(), addressField.getText(), Double
-                                    .parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(), dateAddedDay
-                                    .getSelectedItem()
-                                    + "/"
-                                    + dateAddedMonth.getSelectedItem()
-                                    + "/"
-                                    + dateAddedYear.getSelectedItem()));
+                    ShopDriver.getStaffMembers().add(
+                            new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField.getText(),
+                                    genderField.getSelectedIndex(), phoneNoField.getText(), addressField.getText(),
+                                    Double.parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(),
+                                    dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
+                                            + dateAddedYear.getSelectedItem()));
 
                     ShopDriver.setConfirmMessage("Staff member " + nameField.getText() + " added");
                     ShopDriver.frame.remove(ShopDriver.leftPanel);
@@ -427,17 +423,17 @@ public class StaffTable extends BaseTable {
      * panel for the user to fill and edit attributes. Requires the staffID to
      * be passed so as to bring up the correct staff member to edit.
      * 
-     * @param staffID
+     * @param staffId
      *            (int)
      * */
-    public static void edit(int staffID) {
+    public static void edit(int staffId) {
         // Reset ShopDriver.frame
         ShopDriver.frame.remove(ShopDriver.leftPanel);
         ShopDriver.frame.repaint();
         ShopDriver.leftPanel = new JPanel();
 
         for (Staff t : ShopDriver.getStaffMembers()) {
-            if (staffID == t.getStaffID()) {
+            if (staffId == t.getStaffId()) {
                 final int index = ShopDriver.getStaffMembers().indexOf(t);
 
                 // Panel items
@@ -527,8 +523,8 @@ public class StaffTable extends BaseTable {
                 innerPanel.add(dateAddedYear, g);
 
                 // Set JTextFields with current data
-                idField.setText(STAFF_ID_FORMATTER.format(staffID));
-                pinField.setText("" + t.getStaffPIN());
+                idField.setText(STAFF_ID_FORMATTER.format(staffId));
+                pinField.setText("" + t.getStaffPin());
                 nameField.setText(t.getStaffName());
                 genderField.setSelectedIndex(t.getGender());
                 phoneNoField.setText(t.getPhoneNumber());
@@ -586,12 +582,12 @@ public class StaffTable extends BaseTable {
                             // Add the staff at this index
                             ShopDriver.getStaffMembers().add(
                                     index,
-                                    new Staff(Integer.parseInt(idField.getText()), Integer.parseInt(String
-                                            .valueOf(pinField.getPassword())), nameField.getText(), genderField
-                                            .getSelectedIndex(), phoneNoField.getText(), addressField.getText(), Double
-                                            .parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(),
-                                            dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem()
-                                                    + "/" + dateAddedYear.getSelectedItem()));
+                                    new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField
+                                            .getText(), genderField.getSelectedIndex(), phoneNoField.getText(),
+                                            addressField.getText(), Double.parseDouble(wageField.getText()),
+                                            staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/"
+                                                    + dateAddedMonth.getSelectedItem() + "/"
+                                                    + dateAddedYear.getSelectedItem()));
 
                             ShopDriver.setConfirmMessage("Staff member " + nameField.getText() + "'s details editted");
                             ShopDriver.frame.remove(ShopDriver.leftPanel);
@@ -631,7 +627,7 @@ public class StaffTable extends BaseTable {
      *            (String)
      * */
     public static void delete(int staffID, String staffName) {
-        if (staffID == ShopDriver.getCurrentStaff().getStaffID()) {
+        if (staffID == ShopDriver.getCurrentStaff().getStaffId()) {
             JOptionPane.showMessageDialog(null, "You can't delete yourself!", "Deletion Error",
                     JOptionPane.PLAIN_MESSAGE);
         } else {
@@ -647,7 +643,7 @@ public class StaffTable extends BaseTable {
                 ShopDriver.leftPanel = new JPanel();
 
                 for (Staff s : ShopDriver.getStaffMembers()) {
-                    if (staffID == s.getStaffID())
+                    if (staffID == s.getStaffId())
                         i = ShopDriver.getStaffMembers().indexOf(s);
                 }
             }
@@ -712,7 +708,7 @@ public class StaffTable extends BaseTable {
 
         int textFieldSize = 15;
 
-        JTextField staffField = new JTextField(s.getStaffName() + " (" + STAFF_ID_FORMATTER.format(s.getStaffID())
+        JTextField staffField = new JTextField(s.getStaffName() + " (" + STAFF_ID_FORMATTER.format(s.getStaffId())
                 + ")", textFieldSize);
         staffField.setEditable(false);
         JTextField levelField = new JTextField(level, textFieldSize);
@@ -764,7 +760,7 @@ public class StaffTable extends BaseTable {
         int arrayIndex = 0;
 
         for (Order o : ShopDriver.getOrders()) {
-            if (o.getStaffID() == s.getStaffID()) {
+            if (o.getStaffID() == s.getStaffId()) {
                 if (!o.isSupplier()) {
                     numberOfCustomerOrders++;
                 } else {
@@ -780,7 +776,7 @@ public class StaffTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
 
             if (!ShopDriver.getOrders().get(i).isSupplier()
-                    && ShopDriver.getOrders().get(i).getStaffID() == s.getStaffID()) {
+                    && ShopDriver.getOrders().get(i).getStaffID() == s.getStaffId()) {
 
                 double totalOrderPrice = 0;
                 for (int j = 0; j < ShopDriver.getOrders().get(i).getOrderedItems().size(); j++) {
@@ -791,7 +787,7 @@ public class StaffTable extends BaseTable {
                 String name = "";
 
                 for (Customer c : ShopDriver.getCustomers()) {
-                    if (ShopDriver.getOrders().get(i).getTraderID() == c.getCustomerID()) {
+                    if (ShopDriver.getOrders().get(i).getTraderID() == c.getCustomerId()) {
                         name = c.getCustomerName();
                     }
                 }
@@ -817,7 +813,7 @@ public class StaffTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
 
             if (ShopDriver.getOrders().get(i).isSupplier()
-                    && ShopDriver.getOrders().get(i).getStaffID() == s.getStaffID()) {
+                    && ShopDriver.getOrders().get(i).getStaffID() == s.getStaffId()) {
 
                 double totalOrderPrice = 0;
                 for (int j = 0; j < ShopDriver.getOrders().get(i).getOrderedItems().size(); j++) {
@@ -828,7 +824,7 @@ public class StaffTable extends BaseTable {
                 String name = "";
 
                 for (Supplier supp : ShopDriver.getSuppliers()) {
-                    if (ShopDriver.getOrders().get(i).getTraderID() == supp.getSupplierID())
+                    if (ShopDriver.getOrders().get(i).getTraderID() == supp.getSupplierId())
                         name = supp.getSupplierName();
                 }
 
@@ -883,7 +879,7 @@ public class StaffTable extends BaseTable {
         boolean found = false;
 
         while (!found && i < ShopDriver.getStaffMembers().size()) {
-            if (ShopDriver.getStaffMembers().get(i).getStaffID() == i) {
+            if (ShopDriver.getStaffMembers().get(i).getStaffId() == i) {
             } else {
                 output = i;
                 found = true;
@@ -993,7 +989,7 @@ public class StaffTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getStaffMembers().size() + offset; i++) {
             found = false;
             for (Staff s : ShopDriver.getStaffMembers()) {
-                if (count == s.getStaffID()) {
+                if (count == s.getStaffId()) {
                     tempArrayList.add(s);
                     found = true;
                 }

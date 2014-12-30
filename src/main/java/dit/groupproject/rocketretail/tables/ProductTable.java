@@ -27,6 +27,7 @@ import javax.swing.JTextField;
 
 import org.jfree.chart.ChartPanel;
 
+import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
@@ -63,7 +64,7 @@ public class ProductTable extends BaseTable {
      * first time since system has been re-logged into.<br />
      * If true, sorts table by ID.
      * 
-     * @see #SortByID(boolean)
+     * @see #sortById(boolean)
      */
     public static boolean first = true;
 
@@ -72,12 +73,12 @@ public class ProductTable extends BaseTable {
      * Set to true if chosen sort option (stored in {@link #type}) is already
      * selected.
      * 
-     * @see #SortByID(boolean)
-     * @see #SortByDescription(boolean)
-     * @see #SortByStockLevel(boolean)
-     * @see #SortBySupplierID(boolean)
-     * @see #SortByCostPrice(boolean)
-     * @see #SortBySalePrice(boolean)
+     * @see #sortById(boolean)
+     * @see #sortByDescription(boolean)
+     * @see #sortByStockLevel(boolean)
+     * @see #sortBySupplierId(boolean)
+     * @see #sortByCostPrice(boolean)
+     * @see #sortBySalePrice(boolean)
      */
     static boolean reverse = false;
 
@@ -135,7 +136,7 @@ public class ProductTable extends BaseTable {
 
         // When first run, ensure ArrayList (and table) is sorted by ID
         if (first) {
-            SortByID(false);
+            sortById(false);
             first = false;
         }
 
@@ -144,11 +145,11 @@ public class ProductTable extends BaseTable {
         Object[][] data = new Object[ShopDriver.getProducts().size()][7];
 
         for (int i = 0; i < ShopDriver.getProducts().size(); i++) {
-            data[i][0] = PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductID());
+            data[i][0] = PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductId());
             data[i][1] = ShopDriver.getProducts().get(i).getProductDesc();
             data[i][2] = ShopDriver.getProducts().get(i).getStockLevel();
             data[i][3] = ShopDriver.getProducts().get(i).getMaxLevel();
-            data[i][4] = ShopDriver.getProducts().get(i).getSupplierID();
+            data[i][4] = ShopDriver.getProducts().get(i).getSupplierId();
             data[i][5] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getCostPrice());
             data[i][6] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getSalePrice());
             ;
@@ -165,7 +166,7 @@ public class ProductTable extends BaseTable {
                     Product input = null;
 
                     for (Product p : ShopDriver.getProducts()) {
-                        if (p.getProductID() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
+                        if (p.getProductId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
                             input = p;
                     }
                     showProductInfo(input);
@@ -183,7 +184,7 @@ public class ProductTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getProducts().size() + 1; i++) {
             if (i < ShopDriver.getProducts().size())
                 productMemberArrayEdit[i + 1] = "ID: "
-                        + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductID()) + " ("
+                        + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductId()) + " ("
                         + ShopDriver.getProducts().get(i).getProductDesc() + ")";
         }
 
@@ -192,7 +193,7 @@ public class ProductTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getProducts().size() + 1; i++) {
             if (i < ShopDriver.getProducts().size())
                 productMemberArrayDelete[i + 1] = "ID: "
-                        + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductID()) + " ("
+                        + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductId()) + " ("
                         + ShopDriver.getProducts().get(i).getProductDesc() + ")";
         }
 
@@ -321,7 +322,7 @@ public class ProductTable extends BaseTable {
         g.gridy = 0;
         g.gridwidth = 3;
         final JTextField prodIDField = new JTextField(null, 20);
-        prodIDField.setText("" + firstAvailableID());
+        prodIDField.setText("");
         prodIDField.setEditable(false);
         innerPanel.add(prodIDField, g);
         g.gridy = 1;
@@ -344,7 +345,7 @@ public class ProductTable extends BaseTable {
         supplierOptions[0] = "";
         for (int i = 1; i < supplierOptions.length; i++) {
             supplierOptions[i] = ShopDriver.getSuppliers().get(i - 1).getSupplierName() + " ("
-                    + ShopDriver.getSuppliers().get(i - 1).getSupplierID() + ")";
+                    + ShopDriver.getSuppliers().get(i - 1).getSupplierId() + ")";
         }
 
         final JComboBox<String> suppIDBox = new JComboBox<String>(supplierOptions);
@@ -398,20 +399,19 @@ public class ProductTable extends BaseTable {
                 if (valid) {
 
                     ShopDriver.getProducts().add(
-                            new Product(Integer.parseInt(prodIDField.getText()), prodDescField.getText(), Integer
-                                    .parseInt(stockLevelField.getText()), Integer.parseInt(maxLevelField.getText()),
-                                    Integer.parseInt(((String) suppIDBox.getSelectedItem()).substring(
-                                            ((String) suppIDBox.getSelectedItem()).length() - 5,
-                                            ((String) suppIDBox.getSelectedItem()).length() - 1)), Double
-                                            .parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField
-                                            .getText())));
+                            new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
+                                    .parseInt(maxLevelField.getText()), Integer.parseInt(((String) suppIDBox
+                                    .getSelectedItem()).substring(((String) suppIDBox.getSelectedItem()).length() - 5,
+                                    ((String) suppIDBox.getSelectedItem()).length() - 1)), Double
+                                    .parseDouble(costPriceField.getText()),
+                                    Double.parseDouble(salePriceField.getText())));
 
                     ShopDriver.setConfirmMessage("Product " + prodDescField.getText() + " added");
                     ShopDriver.frame.remove(ShopDriver.leftPanel);
                     ShopDriver.frame.repaint();
                     ShopDriver.frame.validate();
 
-                    SortByID(false);
+                    sortById(false);
                     createTable();
                 }
             }
@@ -450,7 +450,7 @@ public class ProductTable extends BaseTable {
         ShopDriver.leftPanel = new JPanel();
 
         for (Product p : ShopDriver.getProducts()) {
-            if (productID == p.getProductID()) {
+            if (productID == p.getProductId()) {
 
                 final int index = ShopDriver.getProducts().indexOf(p);
                 // Panel items
@@ -503,7 +503,7 @@ public class ProductTable extends BaseTable {
                 supplierOptions[0] = "";
                 for (int i = 1; i < supplierOptions.length; i++) {
                     supplierOptions[i] = ShopDriver.getSuppliers().get(i - 1).getSupplierName() + " ("
-                            + ShopDriver.getSuppliers().get(i - 1).getSupplierID() + ")";
+                            + ShopDriver.getSuppliers().get(i - 1).getSupplierId() + ")";
                 }
                 final JComboBox<String> suppIDBox = new JComboBox<String>(supplierOptions);
                 innerPanel.add(suppIDBox, g);
@@ -517,11 +517,11 @@ public class ProductTable extends BaseTable {
                 innerPanel.add(salePriceField, g);
 
                 // Set JTextFields with current data
-                prodIDField.setText("" + p.getProductID());
+                prodIDField.setText("" + p.getProductId());
                 prodDescField.setText(p.getProductDesc());
                 stockLevelField.setText("" + p.getStockLevel());
                 maxLevelField.setText("" + p.getMaxLevel());
-                suppIDBox.setSelectedIndex(p.getSupplierID() - ShopDriver.supplierIDStart + 1);
+                suppIDBox.setSelectedIndex(p.getSupplierId() - IdManager.SUPPLIER_ID_START + 1);
                 costPriceField.setText("" + p.getCostPrice());
                 salePriceField.setText("" + p.getSalePrice());
 
@@ -566,13 +566,12 @@ public class ProductTable extends BaseTable {
                             // Add the staff at this index
                             ShopDriver.getProducts().add(
                                     index,
-                                    new Product(Integer.parseInt(prodIDField.getText()), prodDescField.getText(),
-                                            Integer.parseInt(stockLevelField.getText()), Integer.parseInt(maxLevelField
-                                                    .getText()),
-                                            Integer.parseInt(((String) suppIDBox.getSelectedItem()).substring(
-                                                    ((String) suppIDBox.getSelectedItem()).length() - 5,
-                                                    ((String) suppIDBox.getSelectedItem()).length() - 1)), Double
-                                                    .parseDouble(costPriceField.getText()), Double
+                                    new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()),
+                                            Integer.parseInt(maxLevelField.getText()), Integer
+                                                    .parseInt(((String) suppIDBox.getSelectedItem()).substring(
+                                                            ((String) suppIDBox.getSelectedItem()).length() - 5,
+                                                            ((String) suppIDBox.getSelectedItem()).length() - 1)),
+                                            Double.parseDouble(costPriceField.getText()), Double
                                                     .parseDouble(salePriceField.getText())));
 
                             ShopDriver.setConfirmMessage("Product " + prodDescField.getText() + "'s details editted");
@@ -630,7 +629,7 @@ public class ProductTable extends BaseTable {
             ShopDriver.leftPanel = new JPanel();
 
             for (Product s : ShopDriver.getProducts()) {
-                if (productID == s.getProductID())
+                if (productID == s.getProductId())
                     i = ShopDriver.getProducts().indexOf(s); // Object can't be
                 // removed while being
                 // accessed - save its
@@ -703,11 +702,11 @@ public class ProductTable extends BaseTable {
         String supplier = "";
 
         for (Supplier s : ShopDriver.getSuppliers()) {
-            if (s.getSupplierID() == p.getSupplierID())
-                supplier = s.getSupplierName() + " (" + s.getSupplierID() + ")";
+            if (s.getSupplierId() == p.getSupplierId())
+                supplier = s.getSupplierName() + " (" + s.getSupplierId() + ")";
         }
 
-        JTextField productField = new JTextField(p.getProductDesc() + " (" + p.getProductID() + ")", textFieldSize);
+        JTextField productField = new JTextField(p.getProductDesc() + " (" + p.getProductId() + ")", textFieldSize);
         productField.setEditable(false);
         JTextField stockField = new JTextField(p.getStockLevel() + "/" + p.getMaxLevel(), textFieldSize);
         stockField.setEditable(false);
@@ -772,9 +771,9 @@ public class ProductTable extends BaseTable {
                 if (Integer.parseInt(o.getOrderDate().substring(6, 10)) == i + ShopDriver.yearStart) {
 
                     for (OrderedItem oi : o.getOrderedItems()) {
-                        if (oi.getProduct().getProductID() == p.getProductID() && o.isSupplier() && !o.isActive())
+                        if (oi.getProduct().getProductId() == p.getProductId() && o.isSupplier() && !o.isActive())
                             data[i + 1][1] = (int) data[i + 1][1] + oi.getQuantity();
-                        else if (oi.getProduct().getProductID() == p.getProductID() && !o.isSupplier())
+                        else if (oi.getProduct().getProductId() == p.getProductId() && !o.isSupplier())
                             data[i + 1][2] = (int) data[i + 1][2] + oi.getQuantity();
                     }
 
@@ -815,7 +814,7 @@ public class ProductTable extends BaseTable {
         JButton orderButton = new JButton("Order " + p.getProductDesc());
         orderButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                OrderTable.createSupplierOrder(p.getSupplierID());
+                OrderTable.createSupplierOrder(p.getSupplierId());
             }
         });
 
@@ -838,61 +837,32 @@ public class ProductTable extends BaseTable {
     }
 
     /**
-     * Calculates the first available ID number to use when creating a new
-     * product in {@link #add()}.
-     * 
-     * @return the integer to be used as the ID for a new product
-     * 
-     * @see #add()
-     */
-    public static int firstAvailableID() {
-        type = "ID";
-        SortByID(false);
-        int output = 0, i = ShopDriver.productIDStart;
-        boolean found = false;
-
-        while (!found && i < (ShopDriver.getProducts().size() + ShopDriver.productIDStart)) {
-            if (ShopDriver.getProducts().get(i - ShopDriver.productIDStart).getProductID() == i) {
-            } else {
-                output = i;
-                found = true;
-            }
-            i++;
-        }
-
-        if (found)
-            return output;
-        else
-            return ShopDriver.getProducts().size() + ShopDriver.productIDStart;
-    }
-
-    /**
      * A switch-like method which decides how to sort the JTable.<br />
      * Uses class variable {@link #type} and calls appropriate sorting method
      * based on its value.
      * 
      * @see #type
-     * @see #SortByID(boolean)
-     * @see #SortByDescription(boolean)
-     * @see #SortByStockLevel(boolean)
-     * @see #SortBySupplierID(boolean)
-     * @see #SortByCostPrice(boolean)
-     * @see #SortBySalePrice(boolean)
+     * @see #sortById(boolean)
+     * @see #sortByDescription(boolean)
+     * @see #sortByStockLevel(boolean)
+     * @see #sortBySupplierId(boolean)
+     * @see #sortByCostPrice(boolean)
+     * @see #sortBySalePrice(boolean)
      */
     public static void sortArrayList() {
 
         if (type.equals("ID"))
-            SortByID(reverse);
+            sortById(reverse);
         if (type.equals("Description"))
-            SortByDescription(reverse);
+            sortByDescription(reverse);
         if (type.equals("Stock Level"))
-            SortByStockLevel(reverse);
+            sortByStockLevel(reverse);
         if (type.equals("Supplier ID"))
-            SortBySupplierID(reverse);
+            sortBySupplierId(reverse);
         if (type.equals("Cost Price"))
-            SortByCostPrice(reverse);
+            sortByCostPrice(reverse);
         if (type.equals("Sale Price"))
-            SortBySalePrice(reverse);
+            sortBySalePrice(reverse);
     }
 
     /**
@@ -903,7 +873,7 @@ public class ProductTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortByDescription(boolean reverse) {
+    public static void sortByDescription(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getProducts(), new Comparator<Product>() {
                 public int compare(Product s1, Product s2) {
@@ -928,15 +898,16 @@ public class ProductTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortByID(boolean reverse) {
+    public static void sortById(boolean reverse) {
         ArrayList<Product> tempArrayList = new ArrayList<Product>();
-        int count = ShopDriver.productIDStart, offset = 0;
+        int count = IdManager.PRODUCT_ID_START;
+        int offset = 0;
         boolean found = false;
 
         for (int i = 0; i < ShopDriver.getProducts().size() + offset; i++) {
             found = false;
             for (Product p : ShopDriver.getProducts()) {
-                if (count == p.getProductID()) {
+                if (count == p.getProductId()) {
                     tempArrayList.add(p);
                     found = true;
                 }
@@ -967,7 +938,7 @@ public class ProductTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortByCostPrice(boolean reverse) {
+    public static void sortByCostPrice(boolean reverse) {
         double lowestPrice = 999999999;
         ArrayList<Product> tempArrayList = new ArrayList<Product>();
         int indexL = 0;
@@ -1025,7 +996,7 @@ public class ProductTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortBySalePrice(boolean reverse) {
+    public static void sortBySalePrice(boolean reverse) {
         double lowestPrice = 999999999;
         ArrayList<Product> tempArrayList = new ArrayList<Product>();
         int indexL = 0;
@@ -1083,7 +1054,7 @@ public class ProductTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortByStockLevel(boolean reverse) {
+    public static void sortByStockLevel(boolean reverse) {
         int lowestLevel = 999999999;
         ArrayList<Product> tempArrayList = new ArrayList<Product>();
         int indexL = 0;
@@ -1141,7 +1112,7 @@ public class ProductTable extends BaseTable {
      *            a boolean which specifies whether to sort in reverse order or
      *            not
      */
-    public static void SortBySupplierID(boolean reverse) {
+    public static void sortBySupplierId(boolean reverse) {
         int lowestID = 999999999;
         ArrayList<Product> tempArrayList = new ArrayList<Product>();
         int indexL = 0;
@@ -1151,15 +1122,15 @@ public class ProductTable extends BaseTable {
         while (ShopDriver.getProducts().size() != 0) {
             // go through the array list and find the lowest wage listed
             for (Product p : ShopDriver.getProducts()) {
-                if (lowestID > p.getSupplierID())
-                    lowestID = p.getSupplierID();
+                if (lowestID > p.getSupplierId())
+                    lowestID = p.getSupplierId();
             }
             found = false;
 
             // find an entry in the arrayList with a wage matching the lowest
             // wage found
             for (Product p : ShopDriver.getProducts()) {
-                if (lowestID == p.getSupplierID() && !found) {
+                if (lowestID == p.getSupplierId() && !found) {
                     // when a matching entry is found, add to tempArrayList
                     tempArrayList.add(p);
 
