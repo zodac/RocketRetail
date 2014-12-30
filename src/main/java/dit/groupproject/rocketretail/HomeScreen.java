@@ -2,8 +2,10 @@ package dit.groupproject.rocketretail;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.io.IOException;
 import java.text.DecimalFormat;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -47,10 +49,16 @@ public class HomeScreen {
         innerPanel.setBackground(ShopDriver.backgroundColour);
 
         JLabel homeLabel = new JLabel();
-        if (ShopDriver.currentStaff.getGender() == 1)
-            homeLabel = new JLabel(new ImageIcon("src/res/profileMale.png"));
-        else if (ShopDriver.currentStaff.getGender() == 2)
-            homeLabel = new JLabel(new ImageIcon("src/res/profileFemale.png"));
+        try {
+            if (ShopDriver.currentStaff.getGender() == 1)
+                homeLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader
+                        .getSystemResource("images/profileMale.png"))));
+            else if (ShopDriver.currentStaff.getGender() == 2)
+                homeLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader
+                        .getSystemResource("images/profileFemale.png"))));
+        } catch (IOException e) {
+            System.out.println("Error loading profile image.");
+        }
 
         innerPanel.add(homeLabel, BorderLayout.NORTH);
 
@@ -106,5 +114,4 @@ public class HomeScreen {
         // Update frame
         ShopDriver.setFrame(false, false, true);
     }
-
 }

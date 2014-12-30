@@ -8,10 +8,12 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -221,11 +223,17 @@ public class ShopDriver {
         frame.setSize(1150, 700); // Width*Height
         frame.setTitle("Rocket Retail Inc");
 
-        // Initialise panels
-        JLabel headerLabel = new JLabel(new ImageIcon("src/res/rocketRetail.png"));
         headerPanel = new JPanel(new BorderLayout());
-        headerPanel.add(headerLabel, BorderLayout.CENTER);
         headerPanel.setPreferredSize(new Dimension(750, 60));
+
+        // Initialise panels
+        try {
+            JLabel headerLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader
+                    .getSystemResource("images/rocketRetail.png"))));
+            headerPanel.add(headerLabel, BorderLayout.CENTER);
+        } catch (IOException e) {
+            System.out.println("Error loading heading banner.");
+        }
 
         bottomPanel = new JPanel();
         bottomPanel.setPreferredSize(new Dimension(750, 30));
