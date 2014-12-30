@@ -66,7 +66,7 @@ public class StockControlMenu {
         productsToReplenish.clear();
 
         for (Product p : ShopDriver.getProducts()) {
-            productDescription.add(p.getProductDesc());
+            productDescription.add(p.getProductDescription());
 
             Double percentage = StockControlUtilities.calculatePercentage(p.getStockLevel(), p.getMaxLevel());
 

@@ -23,6 +23,8 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  */
 public class HomeScreen {
 
+    private final static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("#,###,##0.00");
+
     /**
      * This method displays the details of the staff member who is currently
      * logged in.
@@ -36,76 +38,67 @@ public class HomeScreen {
         ShopDriver.frame.remove(ShopDriver.mainPanel);
         ShopDriver.frame.repaint();
         ShopDriver.mainPanel = new JPanel(new BorderLayout());
-        DecimalFormat doubleFormatter = new DecimalFormat("#,###,##0.00");
 
         ShopDriver.setCurrentTable(TableState.HOMESCREEN);
 
-        JPanel innerPanel = new JPanel(new BorderLayout());
+        final JPanel innerPanel = new JPanel(new BorderLayout());
         innerPanel.setBackground(ShopDriver.backgroundColour);
 
-        JLabel homeLabel = new JLabel();
         final Staff currentStaff = ShopDriver.getCurrentStaff();
 
         try {
             final int currentStaffGender = currentStaff.getGender();
+            String profileImagePath = "images/profile";
             if (currentStaffGender == 1) {
-                homeLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader
-                        .getSystemResource("images/profileMale.png"))));
-            } else if (currentStaffGender == 2) {
-                homeLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader
-                        .getSystemResource("images/profileFemale.png"))));
+                profileImagePath += "Male.png";
+            } else {
+                profileImagePath += "Female.png";
             }
+            final JLabel homeLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader
+                    .getSystemResource(profileImagePath))));
+            innerPanel.add(homeLabel, BorderLayout.NORTH);
         } catch (IOException e) {
             System.out.println("Error loading profile image.");
         }
 
-        innerPanel.add(homeLabel, BorderLayout.NORTH);
+        final String level = currentStaff.getStaffLevel() == 1 ? "Manager" : "Employee";
+        final String output = "\t" + currentStaff.getStaffName() + "\n" + "\t" + level
+                + " at \"Rocket Retail Inc\" since " + currentStaff.getDateAdded() + "\n" + "\t" + "Phone Number is "
+                + currentStaff.getPhoneNumber() + "\n" + "\t" + "Annual wage is €"
+                + CURRENCY_FORMATTER.format(currentStaff.getWage());
 
-        String level = "";
-        final int currentStaffLevel = currentStaff.getStaffLevel();
-
-        if (currentStaffLevel == 1) {
-            level = "Manager";
-        } else if (currentStaffLevel == 2) {
-            level = "Employee";
-        }
-
-        String output = "\t" + currentStaff.getStaffName() + "\n" + "\t" + level + " at \"Rocket Retail Inc\" since "
-                + currentStaff.getDateAdded() + "\n" + "\t" + "Phone Number is " + currentStaff.getPhoneNumber() + "\n"
-                + "\t" + "Annual wage is €" + doubleFormatter.format(currentStaff.getWage());
-
-        JTextArea staffInfo = new JTextArea(output, 10, 20);
+        final JTextArea staffInfo = new JTextArea(output, 10, 20);
         staffInfo.setBackground(ShopDriver.backgroundColour);
         staffInfo.setEditable(false);
         innerPanel.add(staffInfo, BorderLayout.SOUTH);
         innerPanel.setBackground(ShopDriver.backgroundColour);
 
-        double staffTotal = 0, otherTotal = 0;
+        double currentStaffTotal = 0;
+        double otherStaffTotal = 0;
 
         for (Order o : ShopDriver.getOrders()) {
             if (!o.isSupplier()) {
-
                 double orderTotal = 0;
+
                 for (int i = 0; i < o.getOrderedItems().size(); i++) {
                     orderTotal += o.getOrderedItems().get(i).getQuantity()
                             * o.getOrderedItems().get(i).getProduct().getSalePrice();
                 }
 
-                if (o.getStaffID() == currentStaff.getStaffId()) {
-                    staffTotal += orderTotal;
+                if (o.getStaffId() == currentStaff.getStaffId()) {
+                    currentStaffTotal += orderTotal;
                 } else {
-                    otherTotal += orderTotal;
+                    otherStaffTotal += orderTotal;
                 }
             }
         }
 
         // { Individual sales, non-individual sales
-        double[] salesBreakdown = { staffTotal, otherTotal };
-
-        ChartPanel piePanel = Graphs.createPieChart("Staff sales breakdown", currentStaff.getStaffName(),
+        final double[] salesBreakdown = { currentStaffTotal, otherStaffTotal };
+        final ChartPanel piePanel = Graphs.createPieChart("Staff sales breakdown", currentStaff.getStaffName(),
                 salesBreakdown);
-        piePanel.setPreferredSize(new Dimension(500, 750));
 
+        piePanel.setPreferredSize(new Dimension(500, 750));
         piePanel.setBackground(ShopDriver.backgroundColour);
         piePanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 

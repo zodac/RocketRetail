@@ -116,8 +116,9 @@ public class ShopDriver {
                                  // clearance
 
         logon(); // Authenticates user
-        if (currentStaff.getStaffLevel() == 1)
+        if (currentStaff.getStaffLevel() == 1) {
             manager = true; // Sets boolean to define options available
+        }
 
         JMenuBar menuBar = new JMenuBar(); // Create menuBar
         MenuGUI.createMenuBar(menuBar, manager); // Populate menuBar with menus,

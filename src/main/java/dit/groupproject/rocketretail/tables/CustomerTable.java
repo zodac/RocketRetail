@@ -713,7 +713,7 @@ public class CustomerTable extends BaseTable {
         int count = 0;
 
         for (Order o : ShopDriver.getOrders()) {
-            if (o.getTraderID() == c.getCustomerId())
+            if (o.getTraderId() == c.getCustomerId())
                 count++;
         }
 
@@ -723,9 +723,9 @@ public class CustomerTable extends BaseTable {
         double total = 0;
 
         for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
-            if (c.getCustomerId() == ShopDriver.getOrders().get(i).getTraderID()) {
+            if (c.getCustomerId() == ShopDriver.getOrders().get(i).getTraderId()) {
 
-                data[indexArray][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
+                data[indexArray][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
                 data[indexArray][1] = ShopDriver.getOrders().get(i).getOrderDate();
                 data[indexArray][2] = ShopDriver.getOrders().get(i).getDeliveryDate();
                 data[indexArray][3] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getOrders().get(i).getTotalSale());

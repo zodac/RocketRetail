@@ -120,7 +120,7 @@ public class StockControlUtilities {
         ShopDriver.getOrders().add(order);
 
         for (Order o : ShopDriver.getOrders()) {
-            if (o.getOrderID() == order.getOrderID()) {
+            if (o.getOrderId() == order.getOrderId()) {
                 o.completeOrder(DATE_FORMATTER.format(new Date()));
             }
         }

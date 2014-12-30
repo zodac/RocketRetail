@@ -12,20 +12,21 @@ public class Product {
     private int productId, stockLevel, maxLevel, supplierId;
     private int startLevel;
     private double costPrice, salePrice;
-    private String productDesc;
+    private String productDescription;
 
-    public Product(String productDesc, int stockLevel, int maxLevel, int supplierID, double costPrice, double salePrice) {
-        this.productId = IdManager.nextProductId.getAndIncrement();
-        this.productDesc = productDesc;
+    public Product(final String productDescription, final int stockLevel, final int maxLevel, final int supplierId,
+            final double costPrice, final double salePrice) {
+        this.productId = IdManager.getProductIdAndIncrement();
+        this.productDescription = productDescription;
         this.startLevel = stockLevel;
         this.maxLevel = maxLevel;
-        this.supplierId = supplierID;
+        this.supplierId = supplierId;
         this.costPrice = costPrice;
         this.salePrice = salePrice;
     }
 
     public String printDetails() {
-        return "Product ID:\t" + productId + "\nProduct Desc:\t" + productDesc + "\nStock Level:\t" + stockLevel
+        return "Product ID:\t" + productId + "\nProduct Desc:\t" + productDescription + "\nStock Level:\t" + stockLevel
                 + "\nMaximum Level:\t" + maxLevel + "\nSupplier ID:\t" + supplierId + "\nCost Price:\t€"
                 + CURRENCY_FORMATTER.format(costPrice) + "\nSale Price:\t€" + CURRENCY_FORMATTER.format(salePrice)
                 + "\n\n";
@@ -39,15 +40,15 @@ public class Product {
         return productId;
     }
 
-    public String getProductDesc() {
-        return productDesc;
+    public String getProductDescription() {
+        return productDescription;
     }
 
     public int getStockLevel() {
         return stockLevel;
     }
 
-    public void setStockLevel(int stockLevel) {
+    public void setStockLevel(final int stockLevel) {
         this.stockLevel = stockLevel;
     }
 

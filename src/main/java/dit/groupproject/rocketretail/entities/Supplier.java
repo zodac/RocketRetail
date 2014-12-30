@@ -9,9 +9,9 @@ public class Supplier {
     private String supplierName, phoneNumber, address, vatNumber;
     private String lastPurchase, dateAdded;
 
-    public Supplier(String supplierName, String phoneNumber, String address, String vatNumber, String lastPurchase,
-            String dateAdded) {
-        this.supplierId = IdManager.nextSupplierId.getAndIncrement();
+    public Supplier(final String supplierName, final String phoneNumber, final String address, final String vatNumber,
+            final String lastPurchase, final String dateAdded) {
+        this.supplierId = IdManager.getSupplierIdAndIncrement();
         this.supplierName = supplierName;
         this.phoneNumber = phoneNumber;
         this.address = address;

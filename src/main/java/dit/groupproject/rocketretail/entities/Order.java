@@ -18,16 +18,17 @@ public class Order {
     private boolean isActive = true;
     public ArrayList<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
 
-    public Order(int staffID, int traderID, String orderDate, ArrayList<OrderedItem> orderedItems, boolean isActive) {
+    public Order(final int staffId, final int traderId, final String orderDate,
+            final ArrayList<OrderedItem> orderedItems, final boolean isActive) {
 
-        this.orderId = IdManager.nextOrderId.getAndIncrement();
-        this.staffId = staffID;
-        this.traderId = traderID;
+        this.orderId = IdManager.getOrderIdAndIncrement();
+        this.staffId = staffId;
+        this.traderId = traderId;
         this.orderDate = orderDate;
         this.orderedItems = orderedItems;
         this.isActive = isActive;
 
-        if (traderID >= IdManager.CUSTOMER_ID_START && traderID < IdManager.PRODUCT_ID_START) {
+        if (traderId >= IdManager.CUSTOMER_ID_START && traderId < IdManager.PRODUCT_ID_START) {
             isSupplier = false;
         } else {
             isSupplier = true;
@@ -54,7 +55,7 @@ public class Order {
         DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
 
         for (Supplier s : ShopDriver.getSuppliers()) {
-            if (s.getSupplierId() == traderID) {
+            if (s.getSupplierId() == traderId) {
                 try {
                     if (f.parse(s.getLastPurchase()).compareTo(f.parse(orderDate)) < 0)
                         s.setLastPurchase(orderDate);
@@ -65,7 +66,7 @@ public class Order {
         }
 
         for (Customer c : ShopDriver.getCustomers()) {
-            if (c.getCustomerId() == traderID) {
+            if (c.getCustomerId() == traderId) {
                 try {
                     if (f.parse(c.getLastPurchase()).compareTo(f.parse(orderDate)) < 0)
                         c.setLastPurchase(orderDate);
@@ -120,17 +121,18 @@ public class Order {
         return totalSale;
     }
 
-    public boolean includesProduct(Product p) {
+    public boolean includesProduct(final Product product) {
 
         for (OrderedItem oi : this.orderedItems) {
-            if (oi.getProduct().getProductId() == p.getProductId())
+            if (oi.getProduct().getProductId() == product.getProductId()) {
                 return true;
+            }
         }
 
         return false;
     }
 
-    public void completeOrder(String deliveryDate) {
+    public void completeOrder(final String deliveryDate) {
 
         this.deliveryDate = deliveryDate;
 
@@ -142,67 +144,35 @@ public class Order {
         this.isActive = false;
     }
 
-    public int getOrderID() {
+    public int getOrderId() {
         return orderId;
     }
 
-    public void setOrderID(int orderID) {
-        this.orderId = orderID;
-    }
-
-    public int getStaffID() {
+    public int getStaffId() {
         return staffId;
     }
 
-    public void setStaffID(int staffID) {
-        this.staffId = staffID;
-    }
-
-    public int getTraderID() {
+    public int getTraderId() {
         return traderId;
-    }
-
-    public void setTraderID(int traderID) {
-        this.traderId = traderID;
     }
 
     public String getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate;
-    }
-
     public String getDeliveryDate() {
         return deliveryDate;
-    }
-
-    public void setDeliveryDate(String deliveryDate) {
-        this.deliveryDate = deliveryDate;
     }
 
     public boolean isActive() {
         return isActive;
     }
 
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
     public ArrayList<OrderedItem> getOrderedItems() {
         return orderedItems;
     }
 
-    public void setOrderedItems(ArrayList<OrderedItem> orderedItems) {
-        this.orderedItems = orderedItems;
-    }
-
     public boolean isSupplier() {
         return isSupplier;
-    }
-
-    public void setSupplier(boolean isSupplier) {
-        this.isSupplier = isSupplier;
     }
 }

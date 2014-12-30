@@ -799,7 +799,7 @@ public class SupplierTable extends BaseTable {
 
             if (s.getSupplierId() == ShopDriver.getProducts().get(i).getSupplierId()) {
 
-                data[indexArray][0] = ShopDriver.getProducts().get(i).getProductDesc();
+                data[indexArray][0] = ShopDriver.getProducts().get(i).getProductDescription();
                 data[indexArray][1] = ShopDriver.getProducts().get(i).getProductId();
                 data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getCostPrice());
                 data[indexArray][3] = ShopDriver.getProducts().get(i).getStockLevel() + "/"

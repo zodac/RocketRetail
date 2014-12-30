@@ -1,5 +1,6 @@
 package dit.groupproject.rocketretail.entities;
 
+
 /**
  * A class that is used to model a <code>Customer</code>.
  */
@@ -13,9 +14,9 @@ public class Customer {
     private String lastPurchase;
     private String dateAdded;
 
-    public Customer(String customerName, String phoneNumber, String address, String vatNumber, String lastPurchase,
-            String dateAdded) {
-        this.customerId = IdManager.nextCustomerId.getAndIncrement();
+    public Customer(final String customerName, final String phoneNumber, final String address, final String vatNumber,
+            final String lastPurchase, final String dateAdded) {
+        this.customerId = IdManager.getCustomerIdAndIncrement();
         this.customerName = customerName;
         this.phoneNumber = phoneNumber;
         this.address = address;

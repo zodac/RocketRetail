@@ -146,7 +146,7 @@ public class ProductTable extends BaseTable {
 
         for (int i = 0; i < ShopDriver.getProducts().size(); i++) {
             data[i][0] = PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductId());
-            data[i][1] = ShopDriver.getProducts().get(i).getProductDesc();
+            data[i][1] = ShopDriver.getProducts().get(i).getProductDescription();
             data[i][2] = ShopDriver.getProducts().get(i).getStockLevel();
             data[i][3] = ShopDriver.getProducts().get(i).getMaxLevel();
             data[i][4] = ShopDriver.getProducts().get(i).getSupplierId();
@@ -185,7 +185,7 @@ public class ProductTable extends BaseTable {
             if (i < ShopDriver.getProducts().size())
                 productMemberArrayEdit[i + 1] = "ID: "
                         + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductId()) + " ("
-                        + ShopDriver.getProducts().get(i).getProductDesc() + ")";
+                        + ShopDriver.getProducts().get(i).getProductDescription() + ")";
         }
 
         String[] productMemberArrayDelete = new String[ShopDriver.getProducts().size() + 1];
@@ -194,7 +194,7 @@ public class ProductTable extends BaseTable {
             if (i < ShopDriver.getProducts().size())
                 productMemberArrayDelete[i + 1] = "ID: "
                         + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductId()) + " ("
-                        + ShopDriver.getProducts().get(i).getProductDesc() + ")";
+                        + ShopDriver.getProducts().get(i).getProductDescription() + ")";
         }
 
         JButton addButton = new JButton("Add Product");
@@ -518,7 +518,7 @@ public class ProductTable extends BaseTable {
 
                 // Set JTextFields with current data
                 prodIDField.setText("" + p.getProductId());
-                prodDescField.setText(p.getProductDesc());
+                prodDescField.setText(p.getProductDescription());
                 stockLevelField.setText("" + p.getStockLevel());
                 maxLevelField.setText("" + p.getMaxLevel());
                 suppIDBox.setSelectedIndex(p.getSupplierId() - IdManager.SUPPLIER_ID_START + 1);
@@ -670,7 +670,7 @@ public class ProductTable extends BaseTable {
     public static void showProductInfo(final Product p) {
         // Reset ShopDriver.frame
         ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - " + p.getProductDesc());
+        ShopDriver.frame.setTitle("Rocket Retail Inc - " + p.getProductDescription());
         ShopDriver.frame.repaint();
         ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
 
@@ -706,7 +706,7 @@ public class ProductTable extends BaseTable {
                 supplier = s.getSupplierName() + " (" + s.getSupplierId() + ")";
         }
 
-        JTextField productField = new JTextField(p.getProductDesc() + " (" + p.getProductId() + ")", textFieldSize);
+        JTextField productField = new JTextField(p.getProductDescription() + " (" + p.getProductId() + ")", textFieldSize);
         productField.setEditable(false);
         JTextField stockField = new JTextField(p.getStockLevel() + "/" + p.getMaxLevel(), textFieldSize);
         stockField.setEditable(false);
@@ -803,7 +803,7 @@ public class ProductTable extends BaseTable {
         }
 
         double[][] inputdata = { yearData, productData };
-        ChartPanel chartPanel = Graphs.createLineChart("Past Stock levels", p.getProductDesc(), inputdata);
+        ChartPanel chartPanel = Graphs.createLineChart("Past Stock levels", p.getProductDescription(), inputdata);
         chartPanel.setPreferredSize(new Dimension(500, 750));
 
         myPanel.setBackground(ShopDriver.backgroundColour);
@@ -811,7 +811,7 @@ public class ProductTable extends BaseTable {
 
         innerPanel.add(myPanel, BorderLayout.CENTER);
 
-        JButton orderButton = new JButton("Order " + p.getProductDesc());
+        JButton orderButton = new JButton("Order " + p.getProductDescription());
         orderButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 OrderTable.createSupplierOrder(p.getSupplierId());
@@ -877,7 +877,7 @@ public class ProductTable extends BaseTable {
         if (!reverse) {
             Collections.sort(ShopDriver.getProducts(), new Comparator<Product>() {
                 public int compare(Product s1, Product s2) {
-                    return s1.getProductDesc().compareToIgnoreCase(s2.getProductDesc());
+                    return s1.getProductDescription().compareToIgnoreCase(s2.getProductDescription());
                 }
             });
         }
@@ -885,7 +885,7 @@ public class ProductTable extends BaseTable {
         if (reverse) {
             Collections.sort(ShopDriver.getProducts(), new Comparator<Product>() {
                 public int compare(Product s1, Product s2) {
-                    return s2.getProductDesc().compareToIgnoreCase(s1.getProductDesc());
+                    return s2.getProductDescription().compareToIgnoreCase(s1.getProductDescription());
                 }
             });
         }

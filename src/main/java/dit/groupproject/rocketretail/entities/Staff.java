@@ -14,9 +14,9 @@ public class Staff {
     private String staffName, phoneNumber, address;
     private String dateAdded;
 
-    public Staff(int staffPin, String staffName, int gender, String phoneNumber, String address, double wage,
-            int staffLevel, String dateAdded) {
-        this.staffId = IdManager.nextStaffId.getAndIncrement();
+    public Staff(final int staffPin, final String staffName, final int gender, final String phoneNumber,
+            final String address, final double wage, final int staffLevel, final String dateAdded) {
+        this.staffId = IdManager.getStaffIdAndIncrement();
         this.staffPin = staffPin;
         this.staffName = staffName;
         this.gender = gender;
@@ -25,6 +25,8 @@ public class Staff {
         this.wage = wage;
         this.staffLevel = staffLevel;
         this.dateAdded = dateAdded;
+
+        System.out.println("Adding " + staffName + ", with ID: " + staffId);
     }
 
     public String printDetails() {
@@ -39,7 +41,7 @@ public class Staff {
         return staffId;
     }
 
-    public void setStaffId(int staffId) {
+    public void setStaffId(final int staffId) {
         this.staffId = staffId;
     }
 

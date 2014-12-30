@@ -760,7 +760,7 @@ public class StaffTable extends BaseTable {
         int arrayIndex = 0;
 
         for (Order o : ShopDriver.getOrders()) {
-            if (o.getStaffID() == s.getStaffId()) {
+            if (o.getStaffId() == s.getStaffId()) {
                 if (!o.isSupplier()) {
                     numberOfCustomerOrders++;
                 } else {
@@ -776,7 +776,7 @@ public class StaffTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
 
             if (!ShopDriver.getOrders().get(i).isSupplier()
-                    && ShopDriver.getOrders().get(i).getStaffID() == s.getStaffId()) {
+                    && ShopDriver.getOrders().get(i).getStaffId() == s.getStaffId()) {
 
                 double totalOrderPrice = 0;
                 for (int j = 0; j < ShopDriver.getOrders().get(i).getOrderedItems().size(); j++) {
@@ -787,13 +787,13 @@ public class StaffTable extends BaseTable {
                 String name = "";
 
                 for (Customer c : ShopDriver.getCustomers()) {
-                    if (ShopDriver.getOrders().get(i).getTraderID() == c.getCustomerId()) {
+                    if (ShopDriver.getOrders().get(i).getTraderId() == c.getCustomerId()) {
                         name = c.getCustomerName();
                     }
                 }
 
-                data[arrayIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
-                data[arrayIndex][1] = name + " (" + ShopDriver.getOrders().get(i).getTraderID() + ")";
+                data[arrayIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
+                data[arrayIndex][1] = name + " (" + ShopDriver.getOrders().get(i).getTraderId() + ")";
                 data[arrayIndex][2] = "€" + CURRENCY_FORMATTER.format(totalOrderPrice);
                 arrayIndex++;
                 total += totalOrderPrice;
@@ -813,7 +813,7 @@ public class StaffTable extends BaseTable {
         for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
 
             if (ShopDriver.getOrders().get(i).isSupplier()
-                    && ShopDriver.getOrders().get(i).getStaffID() == s.getStaffId()) {
+                    && ShopDriver.getOrders().get(i).getStaffId() == s.getStaffId()) {
 
                 double totalOrderPrice = 0;
                 for (int j = 0; j < ShopDriver.getOrders().get(i).getOrderedItems().size(); j++) {
@@ -824,12 +824,12 @@ public class StaffTable extends BaseTable {
                 String name = "";
 
                 for (Supplier supp : ShopDriver.getSuppliers()) {
-                    if (ShopDriver.getOrders().get(i).getTraderID() == supp.getSupplierId())
+                    if (ShopDriver.getOrders().get(i).getTraderId() == supp.getSupplierId())
                         name = supp.getSupplierName();
                 }
 
-                data2[arrayIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
-                data2[arrayIndex][1] = name + " (" + ShopDriver.getOrders().get(i).getTraderID() + ")";
+                data2[arrayIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
+                data2[arrayIndex][1] = name + " (" + ShopDriver.getOrders().get(i).getTraderId() + ")";
                 data2[arrayIndex][2] = "€" + CURRENCY_FORMATTER.format(totalOrderPrice);
                 arrayIndex++;
                 total += totalOrderPrice;
