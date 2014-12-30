@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.MenuGUI;
+import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
@@ -55,40 +55,13 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  * Clicking on a row in the table gives more information on the order, including
  * a breakdown of the ordered items, their cost and the quantity.<br />
  */
-public class OrderTable {
-
-    // Class variables
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting.<br />
-     * Formats Order IDs to always have four digits.
-     * 
-     * @see Order
-     */
-    static DecimalFormat doubleFormatter = new DecimalFormat("0000");
-
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting.<br />
-     * Formats Staff IDs to always have three digits.
-     * 
-     * @see Staff
-     */
-    static DecimalFormat doubleFormatter2 = new DecimalFormat("000");
-
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting.<br />
-     * Formats doubles to have commas, always show to two decimal places, and
-     * have at least two digits before the decimal point.
-     */
-    static DecimalFormat doubleFormatter3 = new DecimalFormat("#,###,##0.00");
+public class OrderTable extends BaseTable {
 
     /**
      * A String used to define how the JTable is sorted. Retains value if JTable
      * re-called.
      * 
-     * @see #order()
+     * @see #createTable()
      * @see #sortArrayList()
      */
     static String type = "Sort by...";
@@ -97,7 +70,7 @@ public class OrderTable {
      * A String used to define how the JTable is filtered. Retains value if
      * JTable re-called.
      * 
-     * @see #order()
+     * @see #createTable()
      */
     static String filter = "Show All Orders";
 
@@ -134,7 +107,7 @@ public class OrderTable {
      * The JPanel which holds the JTable and JButtons and places them into
      * mainPanel.
      * 
-     * @see #order()
+     * @see #createTable()
      * @see ShopDriver#mainPanel
      */
     static JPanel innerPanel;
@@ -154,19 +127,19 @@ public class OrderTable {
     /**
      * Creates the JMenuItem for "Order" and defines the ActionListener for the
      * JMenuItem.<br />
-     * The ActionListener calls the {@link #order()} method.
+     * The ActionListener calls the {@link #createTable()} method.
      * 
      * @return the JMenuItem for the "Database" JMenuItem in
      *         {@link MenuGUI#createMenuBar(JMenuBar, boolean)}
      * 
-     * @see #order()
+     * @see #createTable()
      * @see MenuGUI#createMenuBar(JMenuBar, boolean)
      */
     public static JMenuItem createMenu() {
         JMenuItem orderItem = new JMenuItem("Orders");
         orderItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                order();
+                createTable();
             }
         });
 
@@ -181,11 +154,12 @@ public class OrderTable {
      * Calls {@link #showOrderInfo(Order)} when an order is selected from the
      * table.
      */
-    public static void order() {
-        if (!ShopDriver.currentTable.equals("Order"))
+    public static void createTable() {
+        if (!(ShopDriver.getCurrentTableState() == TableState.ORDER)) {
             ShopDriver.frame.remove(ShopDriver.leftPanel);
+        }
 
-        ShopDriver.currentTable = "Order";
+        ShopDriver.setCurrentTable(TableState.ORDER);
 
         // Reset ShopDriver.frame
         ShopDriver.frame.remove(ShopDriver.mainPanel);
@@ -225,10 +199,10 @@ public class OrderTable {
                 else
                     delivery = ShopDriver.getOrders().get(i).getDeliveryDate();
 
-                data[i][0] = doubleFormatter.format(ShopDriver.getOrders().get(i).getOrderID());
-                data[i][1] = doubleFormatter2.format(ShopDriver.getOrders().get(i).getStaffID());
+                data[i][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
+                data[i][1] = STAFF_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getStaffID());
                 data[i][2] = ShopDriver.getOrders().get(i).getTraderID();
-                data[i][3] = "€" + doubleFormatter3.format(totalPrice);
+                data[i][3] = "€" + CURRENCY_FORMATTER.format(totalPrice);
                 data[i][4] = ShopDriver.getOrders().get(i).getOrderDate();
                 data[i][5] = delivery;
             }
@@ -247,7 +221,7 @@ public class OrderTable {
             for (int i = 0; i < ShopDriver.getOrders().size() + 1; i++) {
                 if (i < ShopDriver.getOrders().size() && ShopDriver.getOrders().get(i).isActive()) {
                     orderArrayComplete[arrayIndex] = "ID: "
-                            + doubleFormatter.format(ShopDriver.getOrders().get(i).getOrderID());
+                            + ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
                     arrayIndex++;
                 }
             }
@@ -274,11 +248,11 @@ public class OrderTable {
                     else
                         delivery = ShopDriver.getOrders().get(i).getDeliveryDate();
 
-                    data[supplierIndex][0] = doubleFormatter.format(ShopDriver.getOrders().get(i).getOrderID());
-                    data[supplierIndex][1] = doubleFormatter2.format(ShopDriver.getOrders().get(i).getStaffID());
+                    data[supplierIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
+                    data[supplierIndex][1] = STAFF_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getStaffID());
                     data[supplierIndex][2] = ShopDriver.getOrders().get(i).getTraderID();
                     data[supplierIndex][3] = "€"
-                            + doubleFormatter3.format(ShopDriver.getOrders().get(i).getTotalCost());
+                            + CURRENCY_FORMATTER.format(ShopDriver.getOrders().get(i).getTotalCost());
                     data[supplierIndex][4] = ShopDriver.getOrders().get(i).getOrderDate();
                     data[supplierIndex][5] = delivery;
                     supplierIndex++;
@@ -299,7 +273,7 @@ public class OrderTable {
                 if (i < ShopDriver.getOrders().size() && ShopDriver.getOrders().get(i).isActive()
                         && ShopDriver.getOrders().get(i).isSupplier()) {
                     orderArrayComplete[arrayIndex] = "ID: "
-                            + doubleFormatter.format(ShopDriver.getOrders().get(i).getOrderID());
+                            + ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
                     arrayIndex++;
                 }
             }
@@ -327,11 +301,11 @@ public class OrderTable {
                     else
                         delivery = ShopDriver.getOrders().get(i).getDeliveryDate();
 
-                    data[customerIndex][0] = doubleFormatter.format(ShopDriver.getOrders().get(i).getOrderID());
-                    data[customerIndex][1] = doubleFormatter2.format(ShopDriver.getOrders().get(i).getStaffID());
+                    data[customerIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
+                    data[customerIndex][1] = STAFF_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getStaffID());
                     data[customerIndex][2] = ShopDriver.getOrders().get(i).getTraderID();
                     data[customerIndex][3] = "€"
-                            + doubleFormatter3.format(ShopDriver.getOrders().get(i).getTotalSale());
+                            + CURRENCY_FORMATTER.format(ShopDriver.getOrders().get(i).getTotalSale());
                     data[customerIndex][4] = ShopDriver.getOrders().get(i).getOrderDate();
                     data[customerIndex][5] = delivery;
                     customerIndex++;
@@ -353,7 +327,7 @@ public class OrderTable {
                 if (i < ShopDriver.getOrders().size() && ShopDriver.getOrders().get(i).isActive()
                         && !ShopDriver.getOrders().get(i).isSupplier()) {
                     orderArrayComplete[arrayIndex] = "ID: "
-                            + doubleFormatter.format(ShopDriver.getOrders().get(i).getOrderID());
+                            + ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
                     arrayIndex++;
                 }
             }
@@ -378,11 +352,11 @@ public class OrderTable {
                     else
                         delivery = ShopDriver.getOrders().get(i).getDeliveryDate();
 
-                    data[customerIndex][0] = doubleFormatter.format(ShopDriver.getOrders().get(i).getOrderID());
-                    data[customerIndex][1] = doubleFormatter2.format(ShopDriver.getOrders().get(i).getStaffID());
+                    data[customerIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
+                    data[customerIndex][1] = STAFF_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getStaffID());
                     data[customerIndex][2] = ShopDriver.getOrders().get(i).getTraderID();
                     data[customerIndex][3] = "€"
-                            + doubleFormatter3.format(ShopDriver.getOrders().get(i).getTotalCost());
+                            + CURRENCY_FORMATTER.format(ShopDriver.getOrders().get(i).getTotalCost());
                     data[customerIndex][4] = ShopDriver.getOrders().get(i).getOrderDate();
                     data[customerIndex][5] = delivery;
                     customerIndex++;
@@ -403,7 +377,7 @@ public class OrderTable {
             for (int i = 0; i < ShopDriver.getOrders().size() + 1; i++) {
                 if (i < ShopDriver.getOrders().size() && ShopDriver.getOrders().get(i).isActive()) {
                     orderArrayComplete[arrayIndex] = "ID: "
-                            + doubleFormatter.format(ShopDriver.getOrders().get(i).getOrderID());
+                            + ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
                     arrayIndex++;
                 }
             }
@@ -437,11 +411,13 @@ public class OrderTable {
 
         String[] createOptionsManager = { "Create Order", "Customer Order", "Supplier Order" };
         String[] createOptionsEmployee = { "Create Order", "Customer Order" };
+        final Staff currentStaff = ShopDriver.getCurrentStaff();
 
-        if (ShopDriver.currentStaff.getStaffLevel() == 1)
+        if (currentStaff.getStaffLevel() == 1) {
             createBox = new JComboBox<String>(createOptionsManager);
-        else if (ShopDriver.currentStaff.getStaffLevel() == 2)
+        } else if (currentStaff.getStaffLevel() == 2) {
             createBox = new JComboBox<String>(createOptionsEmployee);
+        }
 
         final JComboBox<String> completeOptions = tempBox;
         if (activeCount == 0)
@@ -509,7 +485,7 @@ public class OrderTable {
                             }
                         }
                         ShopDriver.setConfirmMessage(count + " orders completed");
-                        order();
+                        createTable();
                     }
                 } else if (completeOptions.getSelectedItem().equals("Complete All Customer Orders")) {
 
@@ -525,7 +501,7 @@ public class OrderTable {
                             }
                         }
                         ShopDriver.setConfirmMessage(count + " orders completed");
-                        order();
+                        createTable();
                     }
 
                 } else if (completeOptions.getSelectedItem().equals("Complete All Orders")) {
@@ -542,7 +518,7 @@ public class OrderTable {
                             }
                         }
                         ShopDriver.setConfirmMessage(count + " orders completed");
-                        order();
+                        createTable();
                     }
                 } else
                     completeOrder(Integer.parseInt(((String) completeOptions.getSelectedItem()).substring(4, 8)));
@@ -569,14 +545,14 @@ public class OrderTable {
                     type = (String) sortOptions.getSelectedItem();
                     sortArrayList();
                 }
-                order();
+                createTable();
             }
         });
 
         showOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 filter = (String) showOptions.getSelectedItem();
-                order();
+                createTable();
             }
         });
 
@@ -739,7 +715,7 @@ public class OrderTable {
 
                                     if (items.size() > 0)
                                         ShopDriver.getOrders().add(
-                                                new Order(ShopDriver.getOrders().size(), ShopDriver.currentStaff
+                                                new Order(ShopDriver.getOrders().size(), ShopDriver.getCurrentStaff()
                                                         .getStaffID(), traderID, new SimpleDateFormat("dd/MM/yyyy")
                                                         .format(new Date()), items, true));
 
@@ -751,7 +727,7 @@ public class OrderTable {
                                     }
                                 }
                                 ShopDriver.setConfirmMessage("Order #"
-                                        + doubleFormatter.format(ShopDriver.getOrders()
+                                        + ORDER_ID_FORMATTER.format(ShopDriver.getOrders()
                                                 .get(ShopDriver.getOrders().size() - 1).getOrderID())
                                         + " created for customer \"" + activeCust.getCustomerName() + "\"");
 
@@ -760,7 +736,7 @@ public class OrderTable {
                                 ShopDriver.mainPanel.validate();
                                 ShopDriver.frame.repaint();
                                 ShopDriver.frame.validate();
-                                order();
+                                createTable();
                             }
                         }
                     });// submitOrder
@@ -978,7 +954,7 @@ public class OrderTable {
 
                                 if (items.size() > 0) {
                                     ShopDriver.getOrders().add(
-                                            new Order(ShopDriver.getOrders().size(), ShopDriver.currentStaff
+                                            new Order(ShopDriver.getOrders().size(), ShopDriver.getCurrentStaff()
                                                     .getStaffID(), traderID, new SimpleDateFormat("dd/MM/yyyy")
                                                     .format(new Date()), items, true));
 
@@ -992,7 +968,7 @@ public class OrderTable {
                                 }
 
                                 ShopDriver.setConfirmMessage("Order #"
-                                        + doubleFormatter.format(ShopDriver.getOrders()
+                                        + ORDER_ID_FORMATTER.format(ShopDriver.getOrders()
                                                 .get(ShopDriver.getOrders().size() - 1).getOrderID())
                                         + " created for supplier \"" + activeSupp.getSupplierName() + "\"");
 
@@ -1000,7 +976,7 @@ public class OrderTable {
                                 ShopDriver.frame.remove(ShopDriver.leftPanel);
                                 ShopDriver.frame.repaint();
                                 ShopDriver.frame.validate();
-                                order();
+                                createTable();
                             }
                         }
                     });// submitOrder
@@ -1077,7 +1053,7 @@ public class OrderTable {
      */
     public static void completeOrder(int orderID) {
         JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Are you sure you want to complete order #" + doubleFormatter.format(orderID) + "?"));
+        myPanel.add(new JLabel("Are you sure you want to complete order #" + ORDER_ID_FORMATTER.format(orderID) + "?"));
 
         int result = ShopDriver.showDialog("Please confirm", myPanel);
 
@@ -1092,7 +1068,7 @@ public class OrderTable {
 
         ShopDriver.frame.remove(ShopDriver.leftPanel);
         ShopDriver.frame.validate();
-        order();
+        createTable();
     }
 
     /**
@@ -1102,17 +1078,17 @@ public class OrderTable {
      * Order Date and Delivery Date (if complete).<br />
      * The JTable is updated to include a breakdown of the ordered items, and
      * their unit price, quantity, and total cost.<br />
-     * Also includes a JButton which returns to {@link #order()}.
+     * Also includes a JButton which returns to {@link #createTable()}.
      * 
      * @param o
      *            the Order whose information is displayed on-screen
      * 
-     * @see OrderTable#order()
+     * @see OrderTable#createTable()
      */
     public static void showOrderInfo(Order o) {
         // Reset ShopDriver.frame
         ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Order #" + doubleFormatter.format(o.getOrderID()));
+        ShopDriver.frame.setTitle("Rocket Retail Inc - Order #" + ORDER_ID_FORMATTER.format(o.getOrderID()));
         ShopDriver.frame.repaint();
         ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
 
@@ -1176,9 +1152,9 @@ public class OrderTable {
 
         int textFieldSize = 20;
         // JTextFields
-        JTextField orderField = new JTextField(doubleFormatter.format(o.getOrderID()), textFieldSize);
+        JTextField orderField = new JTextField(ORDER_ID_FORMATTER.format(o.getOrderID()), textFieldSize);
         orderField.setEditable(false);
-        JTextField staffField = new JTextField(staffName + " (" + doubleFormatter2.format(o.getStaffID()) + ")",
+        JTextField staffField = new JTextField(staffName + " (" + STAFF_ID_FORMATTER.format(o.getStaffID()) + ")",
                 textFieldSize);
         staffField.setEditable(false);
         JTextField traderField = new JTextField(traderName + " (" + o.getTraderID() + ")", textFieldSize);
@@ -1239,13 +1215,13 @@ public class OrderTable {
 
             data[i][0] = o.getOrderedItems().get(i).getProduct().getProductDesc() + " ("
                     + o.getOrderedItems().get(i).getProduct().getProductID() + ")";
-            data[i][1] = "€" + doubleFormatter3.format(unitPrice);
+            data[i][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
             data[i][2] = o.getOrderedItems().get(i).getQuantity();
-            data[i][3] = "€" + doubleFormatter3.format(unitPrice * (int) data[i][2]);
+            data[i][3] = "€" + CURRENCY_FORMATTER.format(unitPrice * (int) data[i][2]);
             total += (unitPrice * (int) data[i][2]);
         }
         data[o.orderedItems.size()][2] = "<html><b>Order Total</b></html>";
-        data[o.orderedItems.size()][3] = "<html><b>€" + doubleFormatter3.format(total) + "</b></html>";
+        data[o.orderedItems.size()][3] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
 
         JTable table = new JTable(data, columnNames);
         table.setFillsViewportHeight(true);
@@ -1257,7 +1233,7 @@ public class OrderTable {
         JButton backButton = new JButton("Back to Orders");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                order();
+                createTable();
             }
         });
 

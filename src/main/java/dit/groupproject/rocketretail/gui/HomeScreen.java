@@ -15,19 +15,11 @@ import javax.swing.JTextArea;
 import org.jfree.chart.ChartPanel;
 
 import dit.groupproject.rocketretail.entities.Order;
+import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
  * This class creates the Home screen for the application.
- *
- * @author Sheikh
- * @author Tony
- * @author Jason
- * @author Alan
- * @author Jessica
- * 
- * @version 2.0
- * @since 1.0
  */
 public class HomeScreen {
 
@@ -46,19 +38,23 @@ public class HomeScreen {
         ShopDriver.mainPanel = new JPanel(new BorderLayout());
         DecimalFormat doubleFormatter = new DecimalFormat("#,###,##0.00");
 
-        ShopDriver.currentTable = "Homescreen";
+        ShopDriver.setCurrentTable(TableState.HOMESCREEN);
 
         JPanel innerPanel = new JPanel(new BorderLayout());
         innerPanel.setBackground(ShopDriver.backgroundColour);
 
         JLabel homeLabel = new JLabel();
+        final Staff currentStaff = ShopDriver.getCurrentStaff();
+
         try {
-            if (ShopDriver.currentStaff.getGender() == 1)
+            final int currentStaffGender = currentStaff.getGender();
+            if (currentStaffGender == 1) {
                 homeLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader
                         .getSystemResource("images/profileMale.png"))));
-            else if (ShopDriver.currentStaff.getGender() == 2)
+            } else if (currentStaffGender == 2) {
                 homeLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader
                         .getSystemResource("images/profileFemale.png"))));
+            }
         } catch (IOException e) {
             System.out.println("Error loading profile image.");
         }
@@ -66,15 +62,17 @@ public class HomeScreen {
         innerPanel.add(homeLabel, BorderLayout.NORTH);
 
         String level = "";
-        if (ShopDriver.currentStaff.getStaffLevel() == 1)
-            level = "Manager";
-        else if (ShopDriver.currentStaff.getStaffLevel() == 2)
-            level = "Employee";
+        final int currentStaffLevel = currentStaff.getStaffLevel();
 
-        String output = "\t" + ShopDriver.currentStaff.getStaffName() + "\n" + "\t" + level
-                + " at \"Rocket Retail Inc\" since " + ShopDriver.currentStaff.getDateAdded() + "\n" + "\t"
-                + "Phone Number is " + ShopDriver.currentStaff.getPhoneNumber() + "\n" + "\t" + "Annual wage is €"
-                + doubleFormatter.format(ShopDriver.currentStaff.getWage());
+        if (currentStaffLevel == 1) {
+            level = "Manager";
+        } else if (currentStaffLevel == 2) {
+            level = "Employee";
+        }
+
+        String output = "\t" + currentStaff.getStaffName() + "\n" + "\t" + level + " at \"Rocket Retail Inc\" since "
+                + currentStaff.getDateAdded() + "\n" + "\t" + "Phone Number is " + currentStaff.getPhoneNumber() + "\n"
+                + "\t" + "Annual wage is €" + doubleFormatter.format(currentStaff.getWage());
 
         JTextArea staffInfo = new JTextArea(output, 10, 20);
         staffInfo.setBackground(ShopDriver.backgroundColour);
@@ -93,18 +91,18 @@ public class HomeScreen {
                             * o.getOrderedItems().get(i).getProduct().getSalePrice();
                 }
 
-                if (o.getStaffID() == ShopDriver.currentStaff.getStaffID())
+                if (o.getStaffID() == currentStaff.getStaffID()) {
                     staffTotal += orderTotal;
-                else
+                } else {
                     otherTotal += orderTotal;
-
+                }
             }
         }
 
         // { Individual sales, non-individual sales
         double[] salesBreakdown = { staffTotal, otherTotal };
 
-        ChartPanel piePanel = Graphs.createPieChart("Staff sales breakdown", ShopDriver.currentStaff.getStaffName(),
+        ChartPanel piePanel = Graphs.createPieChart("Staff sales breakdown", currentStaff.getStaffName(),
                 salesBreakdown);
         piePanel.setPreferredSize(new Dimension(500, 750));
 

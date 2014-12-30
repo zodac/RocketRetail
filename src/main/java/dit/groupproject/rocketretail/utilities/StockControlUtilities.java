@@ -15,7 +15,9 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  */
 public class StockControlUtilities {
 
-    static ArrayList<OrderedItem> orderToSupplier;
+    private final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
+
+    private static ArrayList<OrderedItem> orderToSupplier;
 
     /**
      * calculates the percentage of stock level for a product given the current
@@ -113,18 +115,19 @@ public class StockControlUtilities {
      * */
     private static void createAndCompleteSupplierOrder(Supplier s) {
 
-        Order order = new Order(ShopDriver.getOrders().size(), ShopDriver.currentStaff.getStaffID(), s.getSupplierID(),
-                new SimpleDateFormat("dd/MM/yyyy").format(new Date()), orderToSupplier, true);
+        Order order = new Order(ShopDriver.getOrders().size(), ShopDriver.getCurrentStaff().getStaffID(),
+                s.getSupplierID(), DATE_FORMATTER.format(new Date()), orderToSupplier, true);
         ShopDriver.getOrders().add(order);
 
         for (Order o : ShopDriver.getOrders()) {
-            if (o.getOrderID() == order.getOrderID())
-                o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+            if (o.getOrderID() == order.getOrderID()) {
+                o.completeOrder(DATE_FORMATTER.format(new Date()));
+            }
         }
 
         for (Supplier supp : ShopDriver.getSuppliers()) {
             if (supp.getSupplierID() == s.getSupplierID()) {
-                supp.setLastPurchase(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+                supp.setLastPurchase(DATE_FORMATTER.format(new Date()));
             }
         }
 

@@ -76,7 +76,7 @@ public class ProfitLoss {
      * @see DateSort#suppDates
      * @see DateSort#SortDate(int, int)
      */
-    public static StringBuilder createAdvancedReport() {
+    public static String createAdvancedReport() {
         DecimalFormat doubleFormatter = new DecimalFormat("#,###,##0.00");
         StringBuilder budget = new StringBuilder();
         budget.append("Year\tMonth\tPurchases\tSales\n_____________________________________\n");
@@ -108,6 +108,6 @@ public class ProfitLoss {
             }
             year++;
         }
-        return budget;
+        return budget.toString();
     }
 }

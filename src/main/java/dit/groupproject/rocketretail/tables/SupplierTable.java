@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,29 +31,15 @@ import javax.swing.JTextField;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.MenuGUI;
+import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
-public class SupplierTable {
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting.<br />
-     * Formats Supplier IDs to always have five digits.
-     * 
-     * @see Supplier
-     */
-    static DecimalFormat doubleFormatter = new DecimalFormat("0000");
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting.<br />
-     * Formats doubles to have commas, always show to two decimal places, and
-     * have at least two digits before the decimal point.
-     */
-    static DecimalFormat doubleFormatter2 = new DecimalFormat("#,###,#00.00");
+public class SupplierTable extends BaseTable {
     /**
      * A String used to define how the JTable is sorted. Retains value if JTable
      * re-called.
      * 
-     * @see #supplier()
+     * @see #createTable()
      * @see #sortArrayList()
      */
     static String type = "Sort by...";
@@ -83,19 +68,19 @@ public class SupplierTable {
     /**
      * Creates the JMenuItem for "Supplier", and defines the ActionListener for
      * the JMenuItem. <br />
-     * The ActionListener calls the {@link #supplier()} method.
+     * The ActionListener calls the {@link #createTable()} method.
      * 
      * @return the JMenuItem for the "Database" JMenuItem in
      *         {@link MenuGUI#createMenuBar(JMenuBar, boolean)}
      * 
-     * @see #supplier()
+     * @see #createTable()
      * @see MenuGUI#createMenuBar(JMenuBar, boolean)
      */
     public static JMenuItem createMenu(boolean manager) {
         JMenuItem supplierItem = new JMenuItem("Supplier");
         supplierItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                supplier();
+                createTable();
             }
         });
 
@@ -118,11 +103,12 @@ public class SupplierTable {
      * @see #delete(int, String)
      * @see #showSupplierInfo(Supplier)
      */
-    public static void supplier() {
-        if (!ShopDriver.currentTable.equals("Supplier"))
+    public static void createTable() {
+        if (!(ShopDriver.getCurrentTableState() == TableState.SUPPLIER)) {
             ShopDriver.frame.remove(ShopDriver.leftPanel);
+        }
 
-        ShopDriver.currentTable = "Supplier";
+        ShopDriver.setCurrentTable(TableState.SUPPLIER);
 
         // Reset ShopDriver.frame
         ShopDriver.frame.remove(ShopDriver.mainPanel);
@@ -141,7 +127,7 @@ public class SupplierTable {
 
         for (int i = 0; i < ShopDriver.getSuppliers().size(); i++) {
 
-            data[i][0] = doubleFormatter.format(ShopDriver.getSuppliers().get(i).getSupplierID());
+            data[i][0] = SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierID());
             data[i][1] = ShopDriver.getSuppliers().get(i).getSupplierName();
             data[i][2] = ShopDriver.getSuppliers().get(i).getPhoneNumber();
             data[i][3] = ShopDriver.getSuppliers().get(i).getAddress();
@@ -180,7 +166,7 @@ public class SupplierTable {
         for (int i = 0; i < ShopDriver.getSuppliers().size() + 1; i++) {
             if (i < ShopDriver.getSuppliers().size())
                 supplierMemberArrayEdit[i + 1] = "ID: "
-                        + doubleFormatter.format(ShopDriver.getSuppliers().get(i).getSupplierID()) + " ("
+                        + SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierID()) + " ("
                         + ShopDriver.getSuppliers().get(i).getSupplierName() + ")";
         }
 
@@ -189,7 +175,7 @@ public class SupplierTable {
         for (int i = 0; i < ShopDriver.getSuppliers().size() + 1; i++) {
             if (i < ShopDriver.getSuppliers().size())
                 supplierMemberArrayDelete[i + 1] = "ID: "
-                        + doubleFormatter.format(ShopDriver.getSuppliers().get(i).getSupplierID()) + " ("
+                        + SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierID()) + " ("
                         + ShopDriver.getSuppliers().get(i).getSupplierName() + ")";
         }
 
@@ -256,7 +242,7 @@ public class SupplierTable {
                     type = (String) sortOptions.getSelectedItem();
                     sortArrayList();
                 }
-                supplier();
+                createTable();
             }
         });
 
@@ -277,9 +263,9 @@ public class SupplierTable {
      * Opens a form to input information for a new Supplier in the left Panel of
      * the screen. Uses GridBagLayout.<br />
      * Adds JButtons to cancel, or save new supplier and re-runs
-     * {@link #supplier()}
+     * {@link #createTable()}
      * 
-     * @see #supplier()
+     * @see #createTable()
      */
     public static void add() {
         // Reset ShopDriver.frame
@@ -340,39 +326,39 @@ public class SupplierTable {
         g.gridy = 5;
         g.gridx = 1;
         g.gridwidth = 1;
-        final JComboBox<String> lastPurchaseDay = new JComboBox<String>(ShopDriver.days);
+        final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
         innerPanel.add(lastPurchaseDay, g);
 
         g.gridy = 5;
         g.gridx = 2;
         g.gridwidth = 1 - 2;
-        final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(ShopDriver.months);
+        final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
         innerPanel.add(lastPurchaseMonth, g);
 
         g.gridy = 5;
         g.gridx = 3;
         g.gridwidth = 2 - 3;
 
-        final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.years);
+        final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
         g.gridy = 6;
         g.gridx = 1;
         g.gridwidth = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<String>(ShopDriver.days);
+        final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
 
         g.gridy = 6;
         g.gridx = 2;
         g.gridwidth = 1 - 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<String>(ShopDriver.months);
+        final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
 
         g.gridy = 6;
         g.gridx = 3;
         g.gridwidth = 2 - 3;
 
-        final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.years);
+        final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
         dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(
@@ -439,7 +425,7 @@ public class SupplierTable {
                     ShopDriver.frame.repaint();
                     ShopDriver.frame.validate();
                     SortByID(false);
-                    supplier();
+                    createTable();
                 }
             }// actionPerformed
         });
@@ -463,12 +449,12 @@ public class SupplierTable {
      * Opens a form for the chosen product in the left Panel of the screen.
      * Automatically fills form with current supplier information.<br />
      * Adds JButtons to cancel, or save supplier changes and re-runs
-     * {@link #supplier()}
+     * {@link #createTable()}
      * 
      * @param supplierID
      *            an Integer specifying the supplier to edit
      * 
-     * @see #supplier()
+     * @see #createTable()
      */
     public static void edit(int supplierID) {
         // Reset ShopDriver.frame
@@ -529,39 +515,39 @@ public class SupplierTable {
                 g.gridy = 5;
                 g.gridx = 1;
                 g.gridwidth = 1;
-                final JComboBox<String> lastPurchaseDay = new JComboBox<String>(ShopDriver.days);
+                final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
                 innerPanel.add(lastPurchaseDay, g);
 
                 g.gridy = 5;
                 g.gridx = 2;
                 g.gridwidth = 1 - 2;
-                final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(ShopDriver.months);
+                final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
                 innerPanel.add(lastPurchaseMonth, g);
 
                 g.gridy = 5;
                 g.gridx = 3;
                 g.gridwidth = 2 - 3;
 
-                final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.years);
+                final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
                 innerPanel.add(lastPurchaseYear, g);
 
                 g.gridy = 6;
                 g.gridx = 1;
                 g.gridwidth = 1;
-                final JComboBox<String> dateAddedDay = new JComboBox<String>(ShopDriver.days);
+                final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
                 innerPanel.add(dateAddedDay, g);
 
                 g.gridy = 6;
                 g.gridx = 2;
                 g.gridwidth = 1 - 2;
-                final JComboBox<String> dateAddedMonth = new JComboBox<String>(ShopDriver.months);
+                final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
                 innerPanel.add(dateAddedMonth, g);
 
                 g.gridy = 6;
                 g.gridx = 3;
                 g.gridwidth = 2 - 3;
 
-                final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.years);
+                final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
                 innerPanel.add(dateAddedYear, g);
 
                 // Set JTextFields with current data
@@ -640,7 +626,7 @@ public class SupplierTable {
                             ShopDriver.frame.remove(ShopDriver.leftPanel);
                             ShopDriver.frame.validate();
                             ShopDriver.getSuppliers().remove(index + 1);
-                            supplier();
+                            createTable();
                         }
                     }
                 });// actionPerformed
@@ -664,7 +650,7 @@ public class SupplierTable {
      * the selected supplier or not.<br />
      * Both parameters are passed using the selected option in the deletion
      * JComboBox.<br />
-     * Re-runs {@link #supplier()} on completion.
+     * Re-runs {@link #createTable()} on completion.
      * 
      * @param supplierID
      *            an Integer specifying the ID number of the supplier chosen to
@@ -673,7 +659,7 @@ public class SupplierTable {
      *            a String specifying the name/description of the supplier
      *            chosen to be deleted
      * 
-     * @see #supplier()
+     * @see #createTable()
      */
     public static void delete(int supplierID, String supplierName) {
         JPanel myPanel = new JPanel();
@@ -703,7 +689,7 @@ public class SupplierTable {
         ShopDriver.setConfirmMessage(supplierName + " deleted");
 
         // Update ShopDriver.frame
-        supplier();
+        createTable();
 
         ShopDriver.frame.validate();
     }
@@ -716,12 +702,12 @@ public class SupplierTable {
      * purchases.<br />
      * passing an Integer to pre-select the appropriate Supplier in the
      * JComboBox.<br />
-     * It also includes a JButton which returns to {@link #supplier()}.
+     * It also includes a JButton which returns to {@link #createTable()}.
      * 
      * @param s
      *            the Supplier whose information is displayed on-screen
      * 
-     * @see SupplierTable#supplier()
+     * @see SupplierTable#createTable()
      */
     public static void showSupplierInfo(Supplier s) {
         // Reset ShopDriver.frame
@@ -759,7 +745,7 @@ public class SupplierTable {
         int textFieldSize = 20;
 
         JTextField supplierField = new JTextField(s.getSupplierName() + " ("
-                + doubleFormatter.format(s.getSupplierID()) + ")", textFieldSize);
+                + SUPPLIER_ID_FORMATTER.format(s.getSupplierID()) + ")", textFieldSize);
         supplierField.setEditable(false);
         JTextField vatNumberField = new JTextField(s.getVatNumber(), textFieldSize);
         vatNumberField.setEditable(false);
@@ -817,7 +803,7 @@ public class SupplierTable {
 
                 data[indexArray][0] = ShopDriver.getProducts().get(i).getProductDesc();
                 data[indexArray][1] = ShopDriver.getProducts().get(i).getProductID();
-                data[indexArray][2] = "€" + doubleFormatter2.format(ShopDriver.getProducts().get(i).getCostPrice());
+                data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getCostPrice());
                 data[indexArray][3] = ShopDriver.getProducts().get(i).getStockLevel() + "/"
                         + ShopDriver.getProducts().get(i).getMaxLevel();
                 indexArray++;
@@ -835,7 +821,7 @@ public class SupplierTable {
         JButton backButton = new JButton("Back to Suppliers");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                supplier();
+                createTable();
             }
         });
 

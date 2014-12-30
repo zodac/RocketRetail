@@ -33,33 +33,34 @@ public class MainMenu {
             public void actionPerformed(ActionEvent e) {
                 ShopDriver.initialiseArrays();
                 ShopDriver.frame.setTitle("Rocket Retail Inc");
-                if (ShopDriver.currentTable.equals("Staff"))
-                    StaffTable.staff();
-                if (ShopDriver.currentTable.equals("Product"))
-                    ProductTable.product();
-                if (ShopDriver.currentTable.equals("Customer"))
-                    CustomerTable.customer();
-                if (ShopDriver.currentTable.equals("Supplier"))
-                    SupplierTable.supplier();
-                if (ShopDriver.currentTable.equals("Order"))
-                    OrderTable.order();
+                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
+                    StaffTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
+                    ProductTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
+                    CustomerTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
+                    SupplierTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
+                    OrderTable.createTable();
+                }
             }
         });
         JMenuItem generateOrdersOne = new JMenuItem("1 Order");
         generateOrdersOne.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 InitialiseArray.generateOrders(1, true, true);
-                if (ShopDriver.currentTable.equals("Staff"))
-                    StaffTable.staff();
-                if (ShopDriver.currentTable.equals("Product"))
-                    ProductTable.product();
-                if (ShopDriver.currentTable.equals("Customer"))
-                    CustomerTable.customer();
-                if (ShopDriver.currentTable.equals("Supplier"))
-                    SupplierTable.supplier();
-                if (ShopDriver.currentTable.equals("Order")) {
+                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
+                    StaffTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
+                    ProductTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
+                    CustomerTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
+                    SupplierTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
                     OrderTable.first = true;
-                    OrderTable.order();
+                    OrderTable.createTable();
                 }
 
                 if (ShopDriver.rightPanel.getComponentCount() > 0) {
@@ -72,17 +73,17 @@ public class MainMenu {
         generateOrdersFive.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 InitialiseArray.generateOrders(5, true, true);
-                if (ShopDriver.currentTable.equals("Staff"))
-                    StaffTable.staff();
-                if (ShopDriver.currentTable.equals("Product"))
-                    ProductTable.product();
-                if (ShopDriver.currentTable.equals("Customer"))
-                    CustomerTable.customer();
-                if (ShopDriver.currentTable.equals("Supplier"))
-                    SupplierTable.supplier();
-                if (ShopDriver.currentTable.equals("Order")) {
+                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
+                    StaffTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
+                    ProductTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
+                    CustomerTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
+                    SupplierTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
                     OrderTable.first = true;
-                    OrderTable.order();
+                    OrderTable.createTable();
                 }
 
                 if (ShopDriver.rightPanel.getComponentCount() > 0) {
@@ -95,17 +96,17 @@ public class MainMenu {
         generateOrdersTen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 InitialiseArray.generateOrders(10, true, true);
-                if (ShopDriver.currentTable.equals("Staff"))
-                    StaffTable.staff();
-                if (ShopDriver.currentTable.equals("Product"))
-                    ProductTable.product();
-                if (ShopDriver.currentTable.equals("Customer"))
-                    CustomerTable.customer();
-                if (ShopDriver.currentTable.equals("Supplier"))
-                    SupplierTable.supplier();
-                if (ShopDriver.currentTable.equals("Order")) {
+                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
+                    StaffTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
+                    ProductTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
+                    CustomerTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
+                    SupplierTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
                     OrderTable.first = true;
-                    OrderTable.order();
+                    OrderTable.createTable();
                 }
 
                 if (ShopDriver.rightPanel.getComponentCount() > 0) {
@@ -118,17 +119,17 @@ public class MainMenu {
         generateOrdersRandom.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 InitialiseArray.generateOrders(0, true, true);
-                if (ShopDriver.currentTable.equals("Staff"))
-                    StaffTable.staff();
-                if (ShopDriver.currentTable.equals("Product"))
-                    ProductTable.product();
-                if (ShopDriver.currentTable.equals("Customer"))
-                    CustomerTable.customer();
-                if (ShopDriver.currentTable.equals("Supplier"))
-                    SupplierTable.supplier();
-                if (ShopDriver.currentTable.equals("Order")) {
+                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
+                    StaffTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
+                    ProductTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
+                    CustomerTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
+                    SupplierTable.createTable();
+                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
                     OrderTable.first = true;
-                    OrderTable.order();
+                    OrderTable.createTable();
                 }
 
                 if (ShopDriver.rightPanel.getComponentCount() > 0) {
@@ -145,7 +146,7 @@ public class MainMenu {
                 ShopDriver.frame.remove(ShopDriver.rightPanel);
                 ShopDriver.frame.remove(ShopDriver.mainPanel);
 
-                ShopDriver.currentTable = "";
+                ShopDriver.setCurrentTable(TableState.NONE);
 
                 StaffTable.first = true;
                 ProductTable.first = true;

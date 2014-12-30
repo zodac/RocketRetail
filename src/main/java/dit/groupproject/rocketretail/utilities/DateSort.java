@@ -17,12 +17,12 @@ public class DateSort {
     /**
      * A 2D array which stores sales by year and month
      */
-    public static double custDates[][] = new double[ShopDriver.years.length - 1][12];
+    public static double custDates[][] = new double[ShopDriver.YEARS_AS_NUMBERS.length - 1][12];
 
     /**
      * A 2D array which stores purchases by year and month
      */
-    public static double suppDates[][] = new double[ShopDriver.years.length - 1][12];
+    public static double suppDates[][] = new double[ShopDriver.YEARS_AS_NUMBERS.length - 1][12];
 
     /**
      * An ArrayList<Order> which temporarily holds information from
@@ -59,8 +59,8 @@ public class DateSort {
             tempOrdersArrayList.add(ShopDriver.getOrders().get(i));
         }
 
-        custDates = new double[ShopDriver.years.length - 1][12];
-        suppDates = new double[ShopDriver.years.length - 1][12];
+        custDates = new double[ShopDriver.YEARS_AS_NUMBERS.length - 1][12];
+        suppDates = new double[ShopDriver.YEARS_AS_NUMBERS.length - 1][12];
 
         sortMonthOrderDate();
         sortYearOrderDate();

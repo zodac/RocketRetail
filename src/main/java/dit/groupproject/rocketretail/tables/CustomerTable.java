@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,35 +29,15 @@ import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Order;
+import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
  * A class that is used to display a table with multiple <code>Customer</code>
  * entries. It offers sorting options and options to add, edit and delete
  * customers
- * 
- * @author Sheikh
- * @author Tony
- * @author Alan
- * @author Jessica
- * @author Jason
- * @version 2.0
- * @since 1.0
  */
-public class CustomerTable {
-
-    /**
-     * Formats the customer's id.
-     */
-    static DecimalFormat doubleFormatter = new DecimalFormat("00000");
-    /**
-     * Formats monetary values in the customer table.
-     */
-    static DecimalFormat doubleFormatter2 = new DecimalFormat("#,###,#00.00");
-    /**
-     * Formats an order id
-     */
-    static DecimalFormat doubleFormatter3 = new DecimalFormat("0000");
+public class CustomerTable extends BaseTable {
     /**
      * The type to sort the table by
      */
@@ -83,7 +62,7 @@ public class CustomerTable {
         JMenuItem customerItem = new JMenuItem("Customer");
         customerItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                customer();
+                createTable();
             }
         });
 
@@ -101,11 +80,12 @@ public class CustomerTable {
      * This method adds <code>ActionListener</code>s to GUI components such as
      * the <code>JTable</code> and multiple <code>JComboBox</code>.
      */
-    public static void customer() {
-        if (!ShopDriver.currentTable.equals("Customer"))
+    public static void createTable() {
+        if (!(ShopDriver.getCurrentTableState() == TableState.CUSTOMER)) {
             ShopDriver.frame.remove(ShopDriver.leftPanel);
+        }
 
-        ShopDriver.currentTable = "Customer";
+        ShopDriver.setCurrentTable(TableState.CUSTOMER);
 
         ShopDriver.frame.remove(ShopDriver.mainPanel);
         ShopDriver.frame.setTitle("Rocket Retail Inc - Customers");
@@ -122,7 +102,7 @@ public class CustomerTable {
 
         for (int i = 0; i < ShopDriver.getCustomers().size(); i++) {
 
-            data[i][0] = doubleFormatter.format(ShopDriver.getCustomers().get(i).getCustomerID());
+            data[i][0] = CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerID());
             data[i][1] = ShopDriver.getCustomers().get(i).getCustomerName();
             data[i][2] = ShopDriver.getCustomers().get(i).getPhoneNumber();
             data[i][3] = ShopDriver.getCustomers().get(i).getAddress();
@@ -160,7 +140,7 @@ public class CustomerTable {
         for (int i = 0; i < ShopDriver.getCustomers().size() + 1; i++) {
             if (i < ShopDriver.getCustomers().size())
                 customerMemberArrayEdit[i + 1] = "ID: "
-                        + doubleFormatter.format(ShopDriver.getCustomers().get(i).getCustomerID()) + " ("
+                        + CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerID()) + " ("
                         + ShopDriver.getCustomers().get(i).getCustomerName() + ")";
         }
 
@@ -169,7 +149,7 @@ public class CustomerTable {
         for (int i = 0; i < ShopDriver.getCustomers().size() + 1; i++) {
             if (i < ShopDriver.getCustomers().size())
                 customerMemberArrayDelete[i + 1] = "ID: "
-                        + doubleFormatter.format(ShopDriver.getCustomers().get(i).getCustomerID()) + " ("
+                        + CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerID()) + " ("
                         + ShopDriver.getCustomers().get(i).getCustomerName() + ")";
         }
 
@@ -235,7 +215,7 @@ public class CustomerTable {
                     type = (String) sortOptions.getSelectedItem();
                     sortArrayList();
                 }
-                customer();
+                createTable();
             }
         });
 
@@ -288,7 +268,7 @@ public class CustomerTable {
         g.gridwidth = 3;
         final JTextField custIDField = new JTextField(null, 20);
         custIDField.setEditable(false);
-        custIDField.setText(doubleFormatter.format(firstAvailableID()));
+        custIDField.setText(CUSTOMER_ID_FORMATTER.format(firstAvailableID()));
         innerPanel.add(custIDField, g);
         g.gridy = 1;
         g.gridwidth = 3;
@@ -309,39 +289,39 @@ public class CustomerTable {
         g.gridy = 5;
         g.gridx = 1;
         g.gridwidth = 1;
-        final JComboBox<String> lastPurchaseDay = new JComboBox<String>(ShopDriver.days);
+        final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
         innerPanel.add(lastPurchaseDay, g);
 
         g.gridy = 5;
         g.gridx = 2;
         g.gridwidth = 1 - 2;
-        final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(ShopDriver.months);
+        final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
         innerPanel.add(lastPurchaseMonth, g);
 
         g.gridy = 5;
         g.gridx = 3;
         g.gridwidth = 2 - 3;
 
-        final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.years);
+        final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
         g.gridy = 6;
         g.gridx = 1;
         g.gridwidth = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<String>(ShopDriver.days);
+        final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
 
         g.gridy = 6;
         g.gridx = 2;
         g.gridwidth = 1 - 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<String>(ShopDriver.months);
+        final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
 
         g.gridy = 6;
         g.gridx = 3;
         g.gridwidth = 2 - 3;
 
-        final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.years);
+        final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
         dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(
@@ -407,7 +387,7 @@ public class CustomerTable {
                     ShopDriver.frame.validate();
 
                     SortByID(false);
-                    customer();
+                    createTable();
                 }
             }
         });
@@ -488,39 +468,39 @@ public class CustomerTable {
                 g.gridy = 5;
                 g.gridx = 1;
                 g.gridwidth = 1;
-                final JComboBox<String> lastPurchaseDay = new JComboBox<String>(ShopDriver.days);
+                final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
                 innerPanel.add(lastPurchaseDay, g);
 
                 g.gridy = 5;
                 g.gridx = 2;
                 g.gridwidth = 1 - 2;
-                final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(ShopDriver.months);
+                final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
                 innerPanel.add(lastPurchaseMonth, g);
 
                 g.gridy = 5;
                 g.gridx = 3;
                 g.gridwidth = 2 - 3;
 
-                final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.years);
+                final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
                 innerPanel.add(lastPurchaseYear, g);
 
                 g.gridy = 6;
                 g.gridx = 1;
                 g.gridwidth = 1;
-                final JComboBox<String> dateAddedDay = new JComboBox<String>(ShopDriver.days);
+                final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
                 innerPanel.add(dateAddedDay, g);
 
                 g.gridy = 6;
                 g.gridx = 2;
                 g.gridwidth = 1 - 2;
-                final JComboBox<String> dateAddedMonth = new JComboBox<String>(ShopDriver.months);
+                final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
                 innerPanel.add(dateAddedMonth, g);
 
                 g.gridy = 6;
                 g.gridx = 3;
                 g.gridwidth = 2 - 3;
 
-                final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.years);
+                final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
                 innerPanel.add(dateAddedYear, g);
 
                 custIDField.setText("" + c.getCustomerID());
@@ -595,7 +575,7 @@ public class CustomerTable {
                             ShopDriver.frame.repaint();
                             ShopDriver.frame.validate();
                             ShopDriver.getCustomers().remove(index + 1);
-                            customer();
+                            createTable();
                         }
                     }
                 });
@@ -642,7 +622,7 @@ public class CustomerTable {
             ShopDriver.setConfirmMessage(customerName + " deleted");
         ShopDriver.getCustomers().remove(i);
 
-        customer();
+        createTable();
 
         ShopDriver.frame.validate();
     }
@@ -691,7 +671,7 @@ public class CustomerTable {
         int textFieldSize = 20;
 
         JTextField customerField = new JTextField(c.getCustomerName() + " ("
-                + doubleFormatter.format(c.getCustomerID()) + ")", textFieldSize);
+                + CUSTOMER_ID_FORMATTER.format(c.getCustomerID()) + ")", textFieldSize);
         customerField.setEditable(false);
         JTextField vatNumberField = new JTextField(c.getVatNumber(), textFieldSize);
         vatNumberField.setEditable(false);
@@ -747,16 +727,16 @@ public class CustomerTable {
         for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
             if (c.getCustomerID() == ShopDriver.getOrders().get(i).getTraderID()) {
 
-                data[indexArray][0] = doubleFormatter3.format(ShopDriver.getOrders().get(i).getOrderID());
+                data[indexArray][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
                 data[indexArray][1] = ShopDriver.getOrders().get(i).getOrderDate();
                 data[indexArray][2] = ShopDriver.getOrders().get(i).getDeliveryDate();
-                data[indexArray][3] = "€" + doubleFormatter2.format(ShopDriver.getOrders().get(i).getTotalSale());
+                data[indexArray][3] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getOrders().get(i).getTotalSale());
                 total += ShopDriver.getOrders().get(i).getTotalSale();
                 indexArray++;
             }
         }
         data[count][2] = "<html><b>Total Sales</b></html>";
-        data[count][3] = "<html><b>€" + doubleFormatter2.format(total) + "</b></html>";
+        data[count][3] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
 
         JTable table = new JTable(data, columnNames);
         table.setFillsViewportHeight(true);
@@ -768,7 +748,7 @@ public class CustomerTable {
         JButton backButton = new JButton("Back to Customers");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                customer();
+                createTable();
             }
         });
 

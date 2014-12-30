@@ -451,7 +451,7 @@ public class Graphs {
 
         for (int i = 0; i < dataArray.length; i++) {
             if (isYear)
-                xaxis = ShopDriver.years[i + startYearIndex];
+                xaxis = ShopDriver.YEARS_AS_NUMBERS[i + startYearIndex];
             else
                 xaxis = months[i];
 
@@ -539,7 +539,7 @@ public class Graphs {
             if (isYear)
                 xaxis = months[i];
             else
-                xaxis = ShopDriver.years[i];
+                xaxis = ShopDriver.YEARS_AS_NUMBERS[i];
 
             for (int j = 0; j < dataArray[1].length; j++) {
                 dcdM.addValue(dataArray[i][j], titleArray[j], xaxis);
@@ -594,7 +594,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(ShopDriver.years);
+            final JComboBox<String> firstYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -623,7 +623,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(ShopDriver.years);
+            final JComboBox<String> singleYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -693,7 +693,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(ShopDriver.years);
+            final JComboBox<String> firstYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -723,7 +723,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(ShopDriver.years);
+            final JComboBox<String> singleYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -788,7 +788,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(ShopDriver.years);
+            final JComboBox<String> firstYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -819,7 +819,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(ShopDriver.years);
+            final JComboBox<String> singleYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 

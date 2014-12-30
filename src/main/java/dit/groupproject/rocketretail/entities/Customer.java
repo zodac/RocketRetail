@@ -1,44 +1,15 @@
 package dit.groupproject.rocketretail.entities;
 
 /**
- * A class that is used to model a <code>Customer</code>
- * 
- * @author Sheikh
- * @author Tony
- * @author Alan
- * @author Jessica
- * @author Jason
- * @version 2.0
- * @since 1.0
+ * A class that is used to model a <code>Customer</code>.
  */
 public class Customer {
-    /**
-     * The customer id.
-     */
     private int customerID;
-    /**
-     * The customer's name.
-     */
     private String customerName;
-    /**
-     * The customer's phone number.
-     */
     private String phoneNumber;
-    /**
-     * The customer's address.
-     */
     private String address;
-    /**
-     * The customer's vat number.
-     */
     private String vatNumber;
-    /**
-     * The customer's last purchase date.
-     */
     private String lastPurchase;
-    /**
-     * The customer's add date to the system.
-     */
     private String dateAdded;
 
     /**
@@ -72,7 +43,6 @@ public class Customer {
         String output = "Customer ID:\t" + customerID + "\nCustomer Name:\t" + customerName + "\nPhone Number:\t"
                 + phoneNumber + "\nAddress:\t" + address + "\nVat Number:\t" + vatNumber + "\nLast Purchase:\t"
                 + lastPurchase + "\nDate Added:\t" + dateAdded + "\n\n";
-
         return output;
     }
 

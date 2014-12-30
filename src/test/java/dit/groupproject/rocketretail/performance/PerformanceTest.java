@@ -15,13 +15,11 @@ import dit.groupproject.rocketretail.utilities.InitialiseArray;
 /**
  * This is a testing class and it tests that various operations are completed
  * within specified time limits.
- * 
- * @author Sheikh
  */
 public class PerformanceTest {
 
-    private final static int BIG_TIMEOUT_IN_MS = 100;
-    private final static int SMALL_TIMEOUT_IN_MS = 50;
+    private final static int LONG_TIMEOUT_IN_MS = 100;
+    private final static int SHORT_TIMEOUT_IN_MS = 50;
 
     /**
      * This method creates a <code>JPanel</code> and initialises the driver
@@ -32,15 +30,15 @@ public class PerformanceTest {
         ShopDriver.mainPanel = new JPanel();
         ShopDriver.leftPanel = new JPanel();
         ShopDriver.initialiseArrays();
-        ShopDriver.currentStaff = ShopDriver.getStaffMembers().get(0);
+        ShopDriver.setCurrentStaff(ShopDriver.getStaffMembers().get(0));
     }
 
     /**
      * This test is testing that the arrays are initialised within the
      * smallLimit.
      */
-    @Test(timeout = SMALL_TIMEOUT_IN_MS)
-    public void InitialiseArraysTest() {
+    @Test(timeout = SHORT_TIMEOUT_IN_MS)
+    public void initialiseArraysTest() {
         ShopDriver.initialiseArrays();
     }
 
@@ -48,8 +46,8 @@ public class PerformanceTest {
      * This test is testing that the given amount of orders are generated within
      * the smallLimit.
      */
-    @Test(timeout = SMALL_TIMEOUT_IN_MS)
-    public void GenerateOrdersTenTest() {
+    @Test(timeout = SHORT_TIMEOUT_IN_MS)
+    public void generateTenOrdersTest() {
         InitialiseArray.generateOrders(10, false, true);
     }
 
@@ -57,35 +55,35 @@ public class PerformanceTest {
      * This test is testing that the <code>staff()</code> method will complete
      * within the bigLimit.
      */
-    @Test(timeout = BIG_TIMEOUT_IN_MS)
-    public void StaffTest() {
-        StaffTable.staff();
+    @Test(timeout = LONG_TIMEOUT_IN_MS)
+    public void staffTest() {
+        StaffTable.createTable();
     }
 
     /**
      * This test is testing that the <code>product()</code> method will complete
      * within the bigLimit.
      */
-    @Test(timeout = BIG_TIMEOUT_IN_MS)
-    public void ProductTest() {
-        ProductTable.product();
+    @Test(timeout = LONG_TIMEOUT_IN_MS)
+    public void productTest() {
+        ProductTable.createTable();
     }
 
     /**
      * This test is testing that the <code>supplier()</code> method will
      * complete within the bigLimit.
      */
-    @Test(timeout = BIG_TIMEOUT_IN_MS)
-    public void SupplierTest() {
-        SupplierTable.supplier();
+    @Test(timeout = LONG_TIMEOUT_IN_MS)
+    public void supplierTest() {
+        SupplierTable.createTable();
     }
 
     /**
      * This test is testing that the <code>customer()</code> method will
      * complete within the bigLimit.
      */
-    @Test(timeout = BIG_TIMEOUT_IN_MS)
-    public void CustomerTest() {
-        CustomerTable.customer();
+    @Test(timeout = LONG_TIMEOUT_IN_MS)
+    public void customerTest() {
+        CustomerTable.createTable();
     }
 }

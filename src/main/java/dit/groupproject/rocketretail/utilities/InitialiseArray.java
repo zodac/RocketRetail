@@ -15,23 +15,10 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  * This class is a utility class which is used to generate <code>Staff</code>,
  * <code>Supplier</code>s, <code>Product</code>s, <code>Customer</code>s and
  * <code>Order</code>s for the application.
- * 
- * @author Sheikh
- * @author Tony
- * @author Jason
- * @author Alan
- * @author Jessica
- * 
- * @version 2.0
- * @since 1.0
  */
 public class InitialiseArray {
 
-    /**
-     * This <code>Random</code> object is used for random number generation in
-     * the generateOrders() and addProducts() methods.
-     */
-    static Random rand = new Random();
+    private final static Random RANDOM = new Random();
 
     /**
      * This method adds a number of <code>Staff</code> to an
@@ -181,32 +168,12 @@ public class InitialiseArray {
                 "Car Air Freshners", "Rocket Booster" };
 
         for (int i = 0; i < productNames.length; i++) {
-            double cost = (rand.nextInt(100) + 1) * 0.25;
+            double cost = (RANDOM.nextInt(100) + 1) * 0.25;
 
-            ShopDriver.addProduct(new Product(ShopDriver.getProducts().size() + ShopDriver.productIDStart, // Next
-                    // available
-                    // productID
-                    productNames[i], // Pulls product name from array
-                    (rand.nextInt(10) + 1) * 25, // Random stockLevel from 25 to
-                                                 // 250 (multiples of 25)
-                    (rand.nextInt(6) + 5) * 100, // Random maxLevel 500 to 1000
-                                                 // (multiples of 100)
-                    rand.nextInt(ShopDriver.getSuppliers().size()) + ShopDriver.supplierIDStart, // Random
-                    // supplierID
-                    // from
-                    // available
-                    // IDs
-                    cost, // Random cost from €0.05 to €25 (multiples of 0.05)
-                    (rand.nextInt(50) + (Math.ceil(cost) / 0.25)) * 0.25 // Random
-                                                                         // sale
-                                                                         // from
-                                                                         // cost
-                                                                         // to
-                                                                         // cost+€25
-                                                                         // (multiples
-                                                                         // of
-                                                                         // 0.05)
-                    ));
+            ShopDriver.addProduct(new Product(ShopDriver.getProducts().size() + ShopDriver.productIDStart,
+                    productNames[i], (RANDOM.nextInt(10) + 1) * 25, (RANDOM.nextInt(6) + 5) * 100, RANDOM
+                            .nextInt(ShopDriver.getSuppliers().size()) + ShopDriver.supplierIDStart, cost, (RANDOM
+                            .nextInt(50) + (Math.ceil(cost) / 0.25)) * 0.25));
         }
     }
 
@@ -252,31 +219,33 @@ public class InitialiseArray {
         int ordersToCreate = 0;
 
         if (amount == 0)
-            ordersToCreate = rand.nextInt(16) + 5;
+            ordersToCreate = RANDOM.nextInt(16) + 5;
         else
             ordersToCreate = amount;
 
         int i = 0, loops = 0;
         while (i < ordersToCreate && loops < 50) {
             items = new ArrayList<OrderedItem>();
-            int itemsToCreate = rand.nextInt(ShopDriver.getProducts().size()) + 1;
+            int itemsToCreate = RANDOM.nextInt(ShopDriver.getProducts().size()) + 1;
             int staffID = 0;
+            final Staff currentStaff = ShopDriver.getCurrentStaff();
 
-            if (current)
-                staffID = ShopDriver.currentStaff.getStaffID();
-            else
-                staffID = rand.nextInt((ShopDriver.getStaffMembers().size()));
+            if (current) {
+                staffID = currentStaff.getStaffID();
+            } else {
+                staffID = RANDOM.nextInt((ShopDriver.getStaffMembers().size()));
+            }
 
             int traderID = 0, randDate = 0, check = 0;
             String date = "";
 
-            randDate = rand.nextInt(31 - 1) + 1;
+            randDate = RANDOM.nextInt(31 - 1) + 1;
             if (randDate < 10)
                 date += "0" + randDate + "/";
             else
                 date += randDate + "/";
 
-            randDate = rand.nextInt(12 - 1) + 1;
+            randDate = RANDOM.nextInt(12 - 1) + 1;
             if (randDate < 10)
                 date += "0" + randDate + "/";
             else
@@ -285,21 +254,23 @@ public class InitialiseArray {
             if (current)
                 randDate = ShopDriver.yearCurrent;
             else
-                randDate = rand.nextInt(ShopDriver.yearCurrent - ShopDriver.yearStart) + ShopDriver.yearStart;
+                randDate = RANDOM.nextInt(ShopDriver.yearCurrent - ShopDriver.yearStart) + ShopDriver.yearStart;
             date += randDate;
 
-            check = rand.nextInt(2) + 1;
+            check = RANDOM.nextInt(2) + 1;
 
-            if (current && ShopDriver.currentStaff.getStaffLevel() == 2)
+            if (current && currentStaff.getStaffLevel() == 2) {
                 check = 2;
+            }
 
-            if (check == 1)
-                traderID = rand.nextInt(ShopDriver.getSuppliers().size()) + ShopDriver.supplierIDStart;
-            else if (check == 2)
-                traderID = rand.nextInt(ShopDriver.getCustomers().size()) + ShopDriver.customerIDStart;
+            if (check == 1) {
+                traderID = RANDOM.nextInt(ShopDriver.getSuppliers().size()) + ShopDriver.supplierIDStart;
+            } else if (check == 2) {
+                traderID = RANDOM.nextInt(ShopDriver.getCustomers().size()) + ShopDriver.customerIDStart;
+            }
 
             ArrayList<Integer> productsCreated = new ArrayList<Integer>();
-            int productID = rand.nextInt(ShopDriver.getProducts().size()) + ShopDriver.productIDStart;
+            int productID = RANDOM.nextInt(ShopDriver.getProducts().size()) + ShopDriver.productIDStart;
             boolean unique = false;
             productsCreated.add(productID);
 
@@ -308,7 +279,7 @@ public class InitialiseArray {
                 int whileLoop = 0;
 
                 while (!unique && whileLoop < 40) {
-                    productID = rand.nextInt(ShopDriver.getProducts().size()) + ShopDriver.productIDStart;
+                    productID = RANDOM.nextInt(ShopDriver.getProducts().size()) + ShopDriver.productIDStart;
                     unique = true;
 
                     for (int x : productsCreated) {
@@ -323,7 +294,7 @@ public class InitialiseArray {
                 for (Product p : ShopDriver.getProducts()) {
                     if (p.getProductID() == productID) {
                         if (p.getStockLevel() > 1)
-                            items.add(new OrderedItem(p, rand.nextInt(p.getStockLevel() / 2) + 1));
+                            items.add(new OrderedItem(p, RANDOM.nextInt(p.getStockLevel() / 2) + 1));
                     }
                 }
 
@@ -341,10 +312,7 @@ public class InitialiseArray {
                             valid = false;
                     }
 
-                boolean active = false;
-
-                if (current && (rand.nextInt(2) + 1) == 1)
-                    active = true;
+                boolean active = current && (RANDOM.nextInt(2) + 1) == 1;
 
                 if (valid) {
                     ShopDriver.getOrders().add(
@@ -356,15 +324,18 @@ public class InitialiseArray {
         }
 
         String output = "";
-        if (i == 1)
+        if (i == 1) {
             output += "1 order created";
-        else
+        } else {
             output += i + " orders created";
+        }
 
-        if (loops == 50)
+        if (loops == 50) {
             output += " - stock levels getting low";
+        }
 
-        if (confirm)
+        if (confirm) {
             ShopDriver.setConfirmMessage(output);
+        }
     }
 }

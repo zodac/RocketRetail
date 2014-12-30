@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,29 +32,14 @@ import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
+import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 /**
  * A class that is used to model a <code>StaffTable</code>
  */
-public class StaffTable {
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting. Formats doubles to have three digits.
-     */
-    static DecimalFormat doubleFormatter = new DecimalFormat("000");
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting. Formats doubles to have commas, always show to two decimal
-     * places, and have at least two digits before the decimal point.
-     */
-    static DecimalFormat doubleFormatter2 = new DecimalFormat("#,###,#00.00");
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting. Formats doubles to have four digits.
-     */
-    static DecimalFormat doubleFormatter3 = new DecimalFormat("0000");
+public class StaffTable extends BaseTable {
     static String type = "Sort by...";
     public static boolean first = true;
     static boolean reverse = false;
@@ -69,10 +53,10 @@ public class StaffTable {
             /**
              * Calls the staff method on activation i.e. mouse click
              * 
-             * @see StaffTable#staff()
+             * @see StaffTable#createTable()
              * */
             public void actionPerformed(ActionEvent e) {
-                staff();
+                createTable();
             }
         });
 
@@ -92,11 +76,12 @@ public class StaffTable {
      * @see StaffTable#delete(int, String)
      * @see StaffTable#sortArrayList()
      * */
-    public static void staff() {
-        if (!ShopDriver.currentTable.equals("Staff"))
+    public static void createTable() {
+        if (!(ShopDriver.getCurrentTableState() == TableState.STAFF)) {
             ShopDriver.frame.remove(ShopDriver.leftPanel);
+        }
 
-        ShopDriver.currentTable = "Staff";
+        ShopDriver.setCurrentTable(TableState.STAFF);
 
         // Reset ShopDriver.frame
         ShopDriver.frame.remove(ShopDriver.mainPanel);
@@ -106,7 +91,7 @@ public class StaffTable {
 
         // When first run, ensure ArrayList (and table) is sorted by ID
         if (first) {
-            SortByID(false);
+            sortByID(false);
             first = false;
         }
 
@@ -126,12 +111,12 @@ public class StaffTable {
             else if (ShopDriver.getStaffMembers().get(i).getGender() == 2)
                 gender = "Female";
 
-            data[i][0] = doubleFormatter.format(ShopDriver.getStaffMembers().get(i).getStaffID());
+            data[i][0] = STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffID());
             data[i][1] = ShopDriver.getStaffMembers().get(i).getStaffName();
             data[i][2] = gender;
             data[i][3] = ShopDriver.getStaffMembers().get(i).getPhoneNumber();
             data[i][4] = ShopDriver.getStaffMembers().get(i).getAddress();
-            data[i][5] = "€" + doubleFormatter2.format(ShopDriver.getStaffMembers().get(i).getWage());
+            data[i][5] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getWage());
             data[i][6] = level;
             data[i][7] = ShopDriver.getStaffMembers().get(i).getDateAdded();
         }
@@ -165,7 +150,7 @@ public class StaffTable {
         for (int i = 0; i < ShopDriver.getStaffMembers().size() + 1; i++) {
             if (i < ShopDriver.getStaffMembers().size())
                 staffMemberArrayEdit[i + 1] = "ID: "
-                        + doubleFormatter.format(ShopDriver.getStaffMembers().get(i).getStaffID()) + " ("
+                        + STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffID()) + " ("
                         + ShopDriver.getStaffMembers().get(i).getStaffName() + ")";
         }
 
@@ -174,7 +159,7 @@ public class StaffTable {
         for (int i = 0; i < ShopDriver.getStaffMembers().size() + 1; i++) {
             if (i < ShopDriver.getStaffMembers().size())
                 staffMemberArrayDelete[i + 1] = "ID: "
-                        + doubleFormatter.format(ShopDriver.getStaffMembers().get(i).getStaffID()) + " ("
+                        + STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffID()) + " ("
                         + ShopDriver.getStaffMembers().get(i).getStaffName() + ")";
         }
 
@@ -241,7 +226,7 @@ public class StaffTable {
                     type = (String) sortOptions.getSelectedItem();
                     sortArrayList();
                 }
-                staff();
+                createTable();
             }
         });
 
@@ -304,7 +289,7 @@ public class StaffTable {
         g.gridy = 0;
         g.gridwidth = 3;
         final JTextField idField = new JTextField(null, 20);
-        idField.setText(doubleFormatter.format(firstAvailableID()));
+        idField.setText(STAFF_ID_FORMATTER.format(firstAvailableID()));
         idField.setEditable(false);
         innerPanel.add(idField, g);
         g.gridy = 1;
@@ -341,17 +326,17 @@ public class StaffTable {
         g.gridy = 8;
         g.gridx = 1;
         g.gridwidth = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<String>(ShopDriver.days);
+        final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
         g.gridy = 8;
         g.gridx = 2;
         g.gridwidth = 1 - 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<String>(ShopDriver.months);
+        final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
         g.gridy = 8;
         g.gridx = 3;
         g.gridwidth = 2 - 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.years);
+        final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
         dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(
@@ -418,7 +403,7 @@ public class StaffTable {
                     ShopDriver.setConfirmMessage("Staff member " + nameField.getText() + " added");
                     ShopDriver.frame.remove(ShopDriver.leftPanel);
                     ShopDriver.frame.validate();
-                    staff();
+                    createTable();
                 }
             }
         });
@@ -526,23 +511,23 @@ public class StaffTable {
                 g.gridy = 8;
                 g.gridx = 1;
                 g.gridwidth = 1;
-                final JComboBox<String> dateAddedDay = new JComboBox<String>(ShopDriver.days);
+                final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
                 innerPanel.add(dateAddedDay, g);
 
                 g.gridy = 8;
                 g.gridx = 2;
                 g.gridwidth = 1 - 2;
-                final JComboBox<String> dateAddedMonth = new JComboBox<String>(ShopDriver.months);
+                final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
                 innerPanel.add(dateAddedMonth, g);
 
                 g.gridy = 8;
                 g.gridx = 3;
                 g.gridwidth = 2 - 3;
-                final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.years);
+                final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
                 innerPanel.add(dateAddedYear, g);
 
                 // Set JTextFields with current data
-                idField.setText(doubleFormatter.format(staffID));
+                idField.setText(STAFF_ID_FORMATTER.format(staffID));
                 pinField.setText("" + t.getStaffPIN());
                 nameField.setText(t.getStaffName());
                 genderField.setSelectedIndex(t.getGender());
@@ -615,7 +600,7 @@ public class StaffTable {
                             // Since adding an entry to ArrayList pushes down
                             // previous entry, which needs to be removed
                             ShopDriver.getStaffMembers().remove(index + 1);
-                            staff();
+                            createTable();
                         }
                     }
                 });
@@ -646,7 +631,7 @@ public class StaffTable {
      *            (String)
      * */
     public static void delete(int staffID, String staffName) {
-        if (staffID == ShopDriver.currentStaff.getStaffID()) {
+        if (staffID == ShopDriver.getCurrentStaff().getStaffID()) {
             JOptionPane.showMessageDialog(null, "You can't delete yourself!", "Deletion Error",
                     JOptionPane.PLAIN_MESSAGE);
         } else {
@@ -663,25 +648,18 @@ public class StaffTable {
 
                 for (Staff s : ShopDriver.getStaffMembers()) {
                     if (staffID == s.getStaffID())
-                        i = ShopDriver.getStaffMembers().indexOf(s); // Object
-                                                                     // can't
-                    // be removed
-                    // while being
-                    // accessed -
-                    // save its
-                    // index
-                    // location for
-                    // now
+                        i = ShopDriver.getStaffMembers().indexOf(s);
                 }
             }
 
-            if (i != -1) // If an object has been found, we can now remove it
-                         // from the ArrayList
+            if (i != -1) { // If an object has been found, we can now remove it
+                           // from the ArrayList
                 ShopDriver.setConfirmMessage(staffName + " deleted");
-            ShopDriver.getStaffMembers().remove(i);
+                ShopDriver.getStaffMembers().remove(i);
+            }
 
             // Update ShopDriver.frame
-            staff();
+            createTable();
         }
         ShopDriver.frame.validate();
     }
@@ -712,11 +690,7 @@ public class StaffTable {
         myPanel.setBackground(ShopDriver.backgroundColour);
         buttonPanel.setBackground(ShopDriver.backgroundColour);
 
-        String level = "";
-        if (s.getStaffLevel() == 1)
-            level = "Manager";
-        else
-            level = "Employee";
+        final String level = s.getStaffLevel() == 1 ? "Manager" : "Employee";
 
         JLabel staffLabel = new JLabel("Staff");
         JLabel levelLabel = new JLabel("Staff Level");
@@ -738,12 +712,12 @@ public class StaffTable {
 
         int textFieldSize = 15;
 
-        JTextField staffField = new JTextField(s.getStaffName() + " (" + doubleFormatter.format(s.getStaffID()) + ")",
-                textFieldSize);
+        JTextField staffField = new JTextField(s.getStaffName() + " (" + STAFF_ID_FORMATTER.format(s.getStaffID())
+                + ")", textFieldSize);
         staffField.setEditable(false);
         JTextField levelField = new JTextField(level, textFieldSize);
         levelField.setEditable(false);
-        JTextField wageField = new JTextField("€" + doubleFormatter2.format(s.getWage()), textFieldSize);
+        JTextField wageField = new JTextField("€" + CURRENCY_FORMATTER.format(s.getWage()), textFieldSize);
         wageField.setEditable(false);
 
         JTextField phoneNoField = new JTextField(s.getPhoneNumber(), textFieldSize);
@@ -786,19 +760,21 @@ public class StaffTable {
         g.gridwidth = 2;
         titlePanel.add(titleLabel, g);
 
-        int count = 0, count2 = 0;
+        int numberOfCustomerOrders = 0, numberOfSupplierOrders = 0;
         int arrayIndex = 0;
 
         for (Order o : ShopDriver.getOrders()) {
-            if (o.getStaffID() == s.getStaffID())
-                if (!o.isSupplier())
-                    count++;
-                else
-                    count2++;
+            if (o.getStaffID() == s.getStaffID()) {
+                if (!o.isSupplier()) {
+                    numberOfCustomerOrders++;
+                } else {
+                    numberOfSupplierOrders++;
+                }
+            }
         }
 
         String[] columnNames = { "Order ID", "Trader", "Total Cost" };
-        Object[][] data = new Object[count + 1][3];
+        Object[][] data = new Object[numberOfCustomerOrders + 1][3];
         double total = 0;
 
         for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
@@ -815,26 +791,27 @@ public class StaffTable {
                 String name = "";
 
                 for (Customer c : ShopDriver.getCustomers()) {
-                    if (ShopDriver.getOrders().get(i).getTraderID() == c.getCustomerID())
+                    if (ShopDriver.getOrders().get(i).getTraderID() == c.getCustomerID()) {
                         name = c.getCustomerName();
+                    }
                 }
 
-                data[arrayIndex][0] = doubleFormatter3.format(ShopDriver.getOrders().get(i).getOrderID());
+                data[arrayIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
                 data[arrayIndex][1] = name + " (" + ShopDriver.getOrders().get(i).getTraderID() + ")";
-                data[arrayIndex][2] = "€" + doubleFormatter2.format(totalOrderPrice);
+                data[arrayIndex][2] = "€" + CURRENCY_FORMATTER.format(totalOrderPrice);
                 arrayIndex++;
                 total += totalOrderPrice;
             }
         }
-        data[count][1] = "<html><b>Customer Total</b></html>";
-        data[count][2] = "<html><b>€" + doubleFormatter2.format(total) + "</b></html>";
+        data[numberOfCustomerOrders][1] = "<html><b>Customer Total</b></html>";
+        data[numberOfCustomerOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
 
         JTable customerTable = new JTable(data, columnNames);
         customerTable.setFillsViewportHeight(true);
         customerTable.setEnabled(false);
 
         String[] columnNames2 = { "Order ID", "Trader", "Total Cost" };
-        Object[][] data2 = new Object[count2 + 1][3];
+        Object[][] data2 = new Object[numberOfSupplierOrders + 1][3];
         total = arrayIndex = 0;
 
         for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
@@ -855,15 +832,15 @@ public class StaffTable {
                         name = supp.getSupplierName();
                 }
 
-                data2[arrayIndex][0] = doubleFormatter3.format(ShopDriver.getOrders().get(i).getOrderID());
+                data2[arrayIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderID());
                 data2[arrayIndex][1] = name + " (" + ShopDriver.getOrders().get(i).getTraderID() + ")";
-                data2[arrayIndex][2] = "€" + doubleFormatter2.format(totalOrderPrice);
+                data2[arrayIndex][2] = "€" + CURRENCY_FORMATTER.format(totalOrderPrice);
                 arrayIndex++;
                 total += totalOrderPrice;
             }
         }
-        data2[count2][1] = "<html><b>Supplier Total</b></html>";
-        data2[count2][2] = "<html><b>€" + doubleFormatter2.format(total) + "</b></html>";
+        data2[numberOfSupplierOrders][1] = "<html><b>Supplier Total</b></html>";
+        data2[numberOfSupplierOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
 
         JTable supplierTable = new JTable(data2, columnNames2);
         supplierTable.setFillsViewportHeight(true);
@@ -878,7 +855,7 @@ public class StaffTable {
         JButton backButton = new JButton("Back to Staff Members");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                staff();
+                createTable();
             }
         });
 
@@ -901,7 +878,7 @@ public class StaffTable {
      * */
     public static int firstAvailableID() {
         type = "ID";
-        SortByID(false);
+        sortByID(false);
         int output = 0, i = 0;
         boolean found = false;
 
@@ -924,26 +901,26 @@ public class StaffTable {
      * This checks the type of sort method required by the user and calls the
      * relevant method.
      * 
-     * @see StaffTable#SortByID(boolean)
-     * @see StaffTable#SortByName(boolean)
-     * @see StaffTable#SortByAddress(boolean)
-     * @see StaffTable#SortByWage(boolean)
-     * @see StaffTable#SortByDateAdded(boolean)
+     * @see StaffTable#sortByID(boolean)
+     * @see StaffTable#sortByName(boolean)
+     * @see StaffTable#sortByAddress(boolean)
+     * @see StaffTable#sortByWage(boolean)
+     * @see StaffTable#sortByDateAdded(boolean)
      * */
     public static void sortArrayList() {
 
         if (type.equals("ID"))
-            SortByID(reverse);
+            sortByID(reverse);
         if (type.equals("Name"))
-            SortByName(reverse);
+            sortByName(reverse);
         if (type.equals("Address"))
-            SortByAddress(reverse);
+            sortByAddress(reverse);
         if (type.equals("Wage"))
-            SortByWage(reverse);
+            sortByWage(reverse);
         if (type.equals("Level"))
-            SortByLevel(reverse);
+            sortByLevel(reverse);
         if (type.equals("Date Added"))
-            SortByDateAdded(reverse);
+            sortByDateAdded(reverse);
     }
 
     /**
@@ -955,7 +932,7 @@ public class StaffTable {
      * @param reverse
      *            (Boolean)
      * */
-    public static void SortByName(boolean reverse) {
+    public static void sortByName(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getStaffMembers(), new Comparator<Staff>() {
                 public int compare(Staff s1, Staff s2) {
@@ -982,7 +959,7 @@ public class StaffTable {
      * @param reverse
      *            (Boolean)
      * */
-    public static void SortByAddress(boolean reverse) {
+    public static void sortByAddress(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getStaffMembers(), new Comparator<Staff>() {
                 public int compare(Staff s1, Staff s2) {
@@ -1008,7 +985,7 @@ public class StaffTable {
      * @param reverse
      *            (Boolean)
      * */
-    public static void SortByID(boolean reverse) {
+    public static void sortByID(boolean reverse) {
         ArrayList<Staff> tempArrayList = new ArrayList<Staff>();
         int count = 0, offset = 0;
         boolean found = false;
@@ -1048,7 +1025,7 @@ public class StaffTable {
      * @param reverse
      *            (Boolean)
      * */
-    public static void SortByWage(boolean reverse) {
+    public static void sortByWage(boolean reverse) {
         double lowestWage = 999999999;
         ArrayList<Staff> tempArrayList = new ArrayList<Staff>();
         int indexL = 0;
@@ -1106,7 +1083,7 @@ public class StaffTable {
      * @param reverse
      *            (Boolean)
      * */
-    public static void SortByLevel(Boolean reverse) {
+    public static void sortByLevel(Boolean reverse) {
         ArrayList<Staff> tempArrayList = new ArrayList<Staff>();
 
         tempArrayList.clear();
@@ -1143,7 +1120,7 @@ public class StaffTable {
      * @param reverse
      *            (boolean)
      * */
-    public static void SortByDateAdded(final boolean reverse) {
+    public static void sortByDateAdded(final boolean reverse) {
 
         Collections.sort(ShopDriver.getStaffMembers(), new Comparator<Staff>() {
             DateFormat f = new SimpleDateFormat("dd/MM/yyyy");

@@ -28,7 +28,10 @@ import dit.groupproject.rocketretail.utilities.ProfitLoss;
  */
 public class ProfitLossMenu {
 
-    // Methods
+    private final static int TEXT_AREA_HEIGHT = 23;
+    private final static int TEST_AREA_WIDTH = 45;
+    private final static int NUMBER_OF_ROWS = 7;
+
     /**
      * Creates submenu for "Profit & Loss" and defines ActionListeners.<br />
      * ActionListeners call one of:
@@ -90,15 +93,15 @@ public class ProfitLossMenu {
         ShopDriver.rightPanel = new JPanel();
 
         // ActionListener code
-        JTextArea plReportTextArea = new JTextArea(ProfitLoss.createTotals(), ShopDriver.textAreaHeight,
-                ShopDriver.textAreaWidth);
+        JTextArea plReportTextArea = new JTextArea(ProfitLoss.createTotals(), TEXT_AREA_HEIGHT, TEST_AREA_WIDTH);
         plReportTextArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(plReportTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBackground(ShopDriver.backgroundColour);
         ShopDriver.rightPanel.add(scrollPane);
-        if ("Homescreen".equals(ShopDriver.currentTable))
+        if (ShopDriver.getCurrentTableState() == TableState.HOMESCREEN) {
             ShopDriver.mainPanel.removeAll();
+        }
 
         // Update frame
         ShopDriver.setFrame(false, true, false);
@@ -129,11 +132,10 @@ public class ProfitLossMenu {
         ShopDriver.rightPanel = new JPanel(new BorderLayout());
 
         // ActionListener code
-        JTextArea plReportTextArea = new JTextArea(ProfitLoss.createAdvancedReport().toString(),
-                ShopDriver.textAreaHeight, ShopDriver.textAreaWidth);
+        JTextArea plReportTextArea = new JTextArea(ProfitLoss.createAdvancedReport(), TEXT_AREA_HEIGHT, TEST_AREA_WIDTH);
         plReportTextArea.setEditable(false);
 
-        JTextArea plReportTotal = new JTextArea(ProfitLoss.createTotals(), 7, ShopDriver.textAreaWidth);
+        JTextArea plReportTotal = new JTextArea(ProfitLoss.createTotals(), NUMBER_OF_ROWS, TEST_AREA_WIDTH);
         plReportTotal.setEditable(false);
 
         Border border = BorderFactory.createLineBorder(Color.gray);
@@ -143,8 +145,9 @@ public class ProfitLossMenu {
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBackground(ShopDriver.backgroundColour);
 
-        if ("Homescreen".equals(ShopDriver.currentTable))
+        if (ShopDriver.getCurrentTableState() == TableState.HOMESCREEN) {
             ShopDriver.mainPanel.removeAll();
+        }
 
         ShopDriver.rightPanel.add(scrollPane, BorderLayout.CENTER);
         ShopDriver.rightPanel.add(plReportTotal, BorderLayout.SOUTH);

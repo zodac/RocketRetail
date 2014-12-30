@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,6 +33,7 @@ import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.Graphs;
 import dit.groupproject.rocketretail.gui.MenuGUI;
+import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
@@ -47,40 +47,13 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  * which is also displayed on a graph.<br />
  * Users may also place an order for the product on this page.
  */
-public class ProductTable {
-
-    // Class variables
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting.<br />
-     * Formats Product IDs to always have five digits.
-     * 
-     * @see Product
-     */
-    static DecimalFormat doubleFormatter = new DecimalFormat("00000");
-
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting.<br />
-     * Formats doubles to have commas, always show to two decimal places, and
-     * have at least two digits before the decimal point.
-     */
-    static DecimalFormat doubleFormatter2 = new DecimalFormat("#,###,#00.00");
-
-    /**
-     * A DecimalFormatter which formats Integers into Strings with the given
-     * formatting.<br />
-     * Formats Order IDs to always have 5 digits.
-     * 
-     * @see Order
-     */
-    static DecimalFormat doubleFormatter3 = new DecimalFormat("0000");
+public class ProductTable extends BaseTable {
 
     /**
      * A String used to define how the JTable is sorted. Retains value if JTable
      * re-called.
      * 
-     * @see #product()
+     * @see #createTable()
      * @see #sortArrayList()
      */
     static String type = "Sort by...";
@@ -112,19 +85,19 @@ public class ProductTable {
     /**
      * Creates the JMenuItem for "Product", and defines the ActionListener for
      * the JMenuItem. <br />
-     * The ActionListener calls the {@link #product()} method.
+     * The ActionListener calls the {@link #createTable()} method.
      * 
      * @return the JMenuItem for the "Database" JMenuItem in
      *         {@link MenuGUI#createMenuBar(JMenuBar, boolean)}
      * 
-     * @see #product()
+     * @see #createTable()
      * @see MenuGUI#createMenuBar(JMenuBar, boolean)
      */
     public static JMenuItem createMenu(boolean manager) {
         JMenuItem productItem = new JMenuItem("Product");
         productItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                product();
+                createTable();
             }
         });
 
@@ -147,11 +120,12 @@ public class ProductTable {
      * @see #delete(int, String)
      * @see #showProductInfo(Product)
      */
-    public static void product() {
-        if (!ShopDriver.currentTable.equals("Product"))
+    public static void createTable() {
+        if (!(ShopDriver.getCurrentTableState() == TableState.PRODUCT)) {
             ShopDriver.frame.remove(ShopDriver.leftPanel);
+        }
 
-        ShopDriver.currentTable = "Product";
+        ShopDriver.setCurrentTable(TableState.PRODUCT);
 
         // Reset ShopDriver.frame
         ShopDriver.frame.remove(ShopDriver.mainPanel);
@@ -170,13 +144,13 @@ public class ProductTable {
         Object[][] data = new Object[ShopDriver.getProducts().size()][7];
 
         for (int i = 0; i < ShopDriver.getProducts().size(); i++) {
-            data[i][0] = doubleFormatter.format(ShopDriver.getProducts().get(i).getProductID());
+            data[i][0] = PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductID());
             data[i][1] = ShopDriver.getProducts().get(i).getProductDesc();
             data[i][2] = ShopDriver.getProducts().get(i).getStockLevel();
             data[i][3] = ShopDriver.getProducts().get(i).getMaxLevel();
             data[i][4] = ShopDriver.getProducts().get(i).getSupplierID();
-            data[i][5] = "€" + doubleFormatter2.format(ShopDriver.getProducts().get(i).getCostPrice());
-            data[i][6] = "€" + doubleFormatter2.format(ShopDriver.getProducts().get(i).getSalePrice());
+            data[i][5] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getCostPrice());
+            data[i][6] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getSalePrice());
             ;
         }
 
@@ -209,7 +183,7 @@ public class ProductTable {
         for (int i = 0; i < ShopDriver.getProducts().size() + 1; i++) {
             if (i < ShopDriver.getProducts().size())
                 productMemberArrayEdit[i + 1] = "ID: "
-                        + doubleFormatter.format(ShopDriver.getProducts().get(i).getProductID()) + " ("
+                        + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductID()) + " ("
                         + ShopDriver.getProducts().get(i).getProductDesc() + ")";
         }
 
@@ -218,7 +192,7 @@ public class ProductTable {
         for (int i = 0; i < ShopDriver.getProducts().size() + 1; i++) {
             if (i < ShopDriver.getProducts().size())
                 productMemberArrayDelete[i + 1] = "ID: "
-                        + doubleFormatter.format(ShopDriver.getProducts().get(i).getProductID()) + " ("
+                        + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductID()) + " ("
                         + ShopDriver.getProducts().get(i).getProductDesc() + ")";
         }
 
@@ -286,7 +260,7 @@ public class ProductTable {
                     type = (String) sortOptions.getSelectedItem();
                     sortArrayList();
                 }
-                product();
+                createTable();
             }
         });
 
@@ -307,9 +281,9 @@ public class ProductTable {
      * Opens a form to input information for a new Product in the left Panel of
      * the screen. Uses GridBagLayout.<br />
      * Adds JButtons to cancel, or save new product and re-runs
-     * {@link #product()}
+     * {@link #createTable()}
      * 
-     * @see #product()
+     * @see #createTable()
      */
     public static void add() {
         // Reset ShopDriver.frame
@@ -438,7 +412,7 @@ public class ProductTable {
                     ShopDriver.frame.validate();
 
                     SortByID(false);
-                    product();
+                    createTable();
                 }
             }
         });
@@ -462,12 +436,12 @@ public class ProductTable {
      * Opens a form for the chosen product in the left Panel of the screen.
      * Automatically fills form with current product information.<br />
      * Adds JButtons to cancel, or save product changes and re-runs
-     * {@link #product()}
+     * {@link #createTable()}
      * 
      * @param productID
      *            an Integer specifying the product to edit
      * 
-     * @see #product()
+     * @see #createTable()
      */
     public static void edit(int productID) {
         // Reset ShopDriver.frame
@@ -606,7 +580,7 @@ public class ProductTable {
                             ShopDriver.frame.repaint();
                             ShopDriver.frame.validate();
                             ShopDriver.getProducts().remove(index + 1);
-                            product();
+                            createTable();
                         }
                     }// actionPerformed
                 });
@@ -632,7 +606,7 @@ public class ProductTable {
      * the selected product or not.<br />
      * Both parameters are passed using the selected option in the deletion
      * JComboBox.<br />
-     * Re-runs {@link #product()} on completion.
+     * Re-runs {@link #createTable()} on completion.
      * 
      * @param productID
      *            an Integer specifying the ID number of the product chosen to
@@ -641,7 +615,7 @@ public class ProductTable {
      *            a String specifying the name/description of the product chosen
      *            to be deleted
      * 
-     * @see #product()
+     * @see #createTable()
      */
     public static void delete(int productID, String productName) {
         JPanel myPanel = new JPanel();
@@ -671,7 +645,7 @@ public class ProductTable {
         ShopDriver.getProducts().remove(i);
 
         // Update ShopDriver.frame
-        product();
+        createTable();
 
         ShopDriver.frame.validate();
     }
@@ -686,7 +660,7 @@ public class ProductTable {
      * Includes a JButton to order the product, which calls
      * {@link OrderTable#createSupplierOrder(int)}, passing an Integer to
      * pre-select the appropriate Supplier in the JComboBox.<br />
-     * It also includes a JButton which returns to {@link #product()}.
+     * It also includes a JButton which returns to {@link #createTable()}.
      * 
      * @param p
      *            the Product whose information is displayed on-screen
@@ -740,11 +714,11 @@ public class ProductTable {
         JTextField supplierField = new JTextField(supplier, textFieldSize);
         supplierField.setEditable(false);
 
-        JTextField costField = new JTextField("€" + doubleFormatter2.format(p.getCostPrice()), textFieldSize);
+        JTextField costField = new JTextField("€" + CURRENCY_FORMATTER.format(p.getCostPrice()), textFieldSize);
         costField.setEditable(false);
-        JTextField saleField = new JTextField("€" + doubleFormatter2.format(p.getSalePrice()), textFieldSize);
+        JTextField saleField = new JTextField("€" + CURRENCY_FORMATTER.format(p.getSalePrice()), textFieldSize);
         saleField.setEditable(false);
-        JTextField profitField = new JTextField("€" + doubleFormatter2.format(p.getSalePrice() - p.getCostPrice()),
+        JTextField profitField = new JTextField("€" + CURRENCY_FORMATTER.format(p.getSalePrice() - p.getCostPrice()),
                 textFieldSize);
         profitField.setEditable(false);
 
@@ -848,7 +822,7 @@ public class ProductTable {
         JButton backButton = new JButton("Back to Products");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                product();
+                createTable();
             }
         });
 

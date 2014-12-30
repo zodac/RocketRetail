@@ -11,7 +11,7 @@ import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class MenuGUI {
     /**
-     * creates a menubar and adds databaseMenus including staff, product,
+     * Creates a menubar and adds databaseMenus including staff, product,
      * supplier, customer, order, stock control, profitloss and graphs
      * 
      * @param menuBar

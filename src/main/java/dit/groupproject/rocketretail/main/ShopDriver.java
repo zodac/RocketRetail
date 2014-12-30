@@ -38,6 +38,7 @@ import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.HomeScreen;
 import dit.groupproject.rocketretail.gui.MenuGUI;
+import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.utilities.InitialiseArray;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
@@ -56,130 +57,48 @@ public class ShopDriver {
     // public static Color backgroundColour = new Color(238, 238, 238);
     // //Default colour
 
-    /**
-     * An array of Strings holding numeric values for the day (for dates).
-     */
-    public static String[] days = { "", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13",
-            "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" };
-    /**
-     * An array of Strings holding numeric values for the month (for dates).
-     */
-    public static String[] months = { "", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" };
+    public final static String[] YEARS_AS_NUMBERS = { "", "2000", "2001", "2002", "2003", "2004", "2005", "2006",
+            "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",
+            "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030" };
 
-    /**
-     * An array of Strings holding numeric values for the year (for dates). Also
-     * defines the start and end year of the store.
-     */
-    public static String[] years = { "", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008",
-            "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021",
-            "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030" };
+    private static ArrayList<Staff> staffMembers = new ArrayList<Staff>();
+    private static ArrayList<Product> products = new ArrayList<Product>();
+    private static ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
+    private static ArrayList<Customer> customers = new ArrayList<Customer>();
+    private static ArrayList<Order> orders = new ArrayList<Order>();
 
-    /**
-     * An ArrayList of Staff objects
-     */
-    static ArrayList<Staff> staffMembers = new ArrayList<Staff>();
-
-    /**
-     * An ArrayList of Product objects
-     */
-    static ArrayList<Product> products = new ArrayList<Product>();
-
-    /**
-     * An ArrayList of Supplier objects
-     */
-    static ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
-
-    /**
-     * An ArrayList of Customer objects
-     */
-    static ArrayList<Customer> customers = new ArrayList<Customer>();
-
-    /**
-     * An ArrayList of Order objects
-     */
-    static ArrayList<Order> orders = new ArrayList<Order>();
-
-    /**
-     * The frame containing all panels for the GUI.
-     */
     public static JFrame frame = new JFrame(); // Main GUI frame
-
-    /**
-     * The top panel of the frame. Displays the logo.
-     */
     static JPanel headerPanel;
-
-    /**
-     * The central panel of the frame. Displays the JTables and Homescreen.
-     */
     public static JPanel mainPanel;
-
-    /**
-     * The left panel of the frame. Displays the fields for adding/editing.
-     */
     public static JPanel leftPanel;
-
-    /**
-     * The right panel of the frame. Displays the P/L reports.
-     */
     public static JPanel rightPanel;
-
-    /**
-     * The bottom panel of the frame. Displays the confirmation message.
-     */
     static JPanel bottomPanel;
-
-    /**
-     * The JLabel which is set to a confirmation message on operation
-     * completion.
-     */
     static JLabel confirmationLabel;
 
-    /**
-     * Integer defining the height for JTextAreas.
-     */
-    public static final int textAreaHeight = 23;
+    public static final int yearStart = Integer.parseInt(YEARS_AS_NUMBERS[1]);
+    public static final int yearCurrent = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date()));
 
-    /**
-     * Integer defining the width for JTextAreas.
-     */
-    public static final int textAreaWidth = 45;
-
-    /**
-     * Integer defining the start year of the store.
-     */
-    public static final int yearStart = Integer.parseInt(years[1]);
-
-    /**
-     * Integer defining the current year.
-     */
-    public static final int yearCurrent = Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
-            .substring(6, 10));
-
-    /**
-     * Integer defining the start ID values for Suppliers.
-     */
     public static final int supplierIDStart = 1000;
-
-    /**
-     * Integer defining the start ID values for Customers.
-     */
     public static final int customerIDStart = 10000;
-
-    /**
-     * Integer defining the start ID values for Products.
-     */
     public static final int productIDStart = 20000;
+    private static Staff currentStaff;
+    private static TableState currentTable = TableState.NONE;
 
-    /**
-     * A Staff object set to the current logged in staff member.
-     */
-    public static Staff currentStaff;
+    public static TableState getCurrentTableState() {
+        return currentTable;
+    }
 
-    /**
-     * A String holding the title of the current active Table in mainPanel.
-     */
-    public static String currentTable = "";
+    public static void setCurrentTable(final TableState newTable) {
+        currentTable = newTable;
+    }
+
+    public static Staff getCurrentStaff() {
+        return currentStaff;
+    }
+
+    public static void setCurrentStaff(final Staff newStaff) {
+        currentStaff = newStaff;
+    }
 
     // Methods
     /**
@@ -342,14 +261,14 @@ public class ShopDriver {
 
             if (showDialog("Please enter your staff ID and PIN", myPanel) == JOptionPane.OK_OPTION) {
                 for (Staff s : staffMembers) {
-                    if (s.getStaffID() == Integer.parseInt(idField.getText())
-                            && s.getStaffPIN() == Integer.parseInt(String.valueOf(pinField.getPassword()))) {
+                    if (hasValidLogonCredentials(idField, pinField, s)) {
                         currentStaff = s;
                         found = true;
                     }
                 }
-            } else
+            } else {
                 System.exit(0); // If user cancels, the program closes
+            }
             count++; // If incorrect, count increments
         }
         if (!found) {
@@ -357,6 +276,11 @@ public class ShopDriver {
                     JOptionPane.PLAIN_MESSAGE); // Prompts user before closing
             System.exit(0); // Closes after three incorrect attempts
         }
+    }
+
+    private static boolean hasValidLogonCredentials(JTextField idField, JPasswordField pinField, Staff s) {
+        return s.getStaffID() == Integer.parseInt(idField.getText())
+                && s.getStaffPIN() == Integer.parseInt(String.valueOf(pinField.getPassword()));
     }
 
     /**
