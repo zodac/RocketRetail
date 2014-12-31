@@ -69,6 +69,12 @@ public class Customer {
         return dateAdded;
     }
 
+    public static Comparator<Customer> compareById = new Comparator<Customer>() {
+        public int compare(final Customer s1, final Customer s2) {
+            return s1.getCustomerId() - s2.getCustomerId();
+        }
+    };
+
     public static Comparator<Customer> compareByName = new Comparator<Customer>() {
         public int compare(final Customer s1, final Customer s2) {
             return s1.getCustomerName().compareToIgnoreCase(s2.getCustomerName());

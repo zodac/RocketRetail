@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -25,7 +26,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.entities.Customer;
-import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.TableState;
@@ -38,21 +38,13 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  */
 public class CustomerTable extends BaseTable {
 
+    public static boolean first = true;
+
     private final static String[] CUSTOMER_COLUMN_NAMES = { "ID", "Name", "Phone Number", "Address", "VAT Number",
             "Last Purchase", "Date Added" };
-    /**
-     * The type to sort the table by
-     */
-    static String sortType = "Sort by...";
-    /**
-     * A flag to decide if it's the first time the table is being loaded.
-     */
-    public static boolean first = true;
-    /**
-     * A flag to decide whether <code>Customer</code> records are added to an
-     * <code>ArrayList</code in ascending or descending order.
-     */
-    static boolean descendingOrderSort = false;
+
+    private static String sortType = "Sort by...";
+    private static boolean descendingOrderSort = false;
 
     /**
      * This method creates a Customer menu item and adds an
@@ -69,7 +61,6 @@ public class CustomerTable extends BaseTable {
         });
 
         customerItem.setEnabled(manager);
-
         return customerItem;
     }
 
@@ -87,22 +78,19 @@ public class CustomerTable extends BaseTable {
         resetGui();
 
         if (first) {
-            sortById();
+            sortItems();
             first = false;
         }
 
         final Object[][] data = createTableData();
-
         final JTable table = createTable(data);
+        final JPanel buttonPanel = createButtonPanel();
 
         final JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        final JPanel buttonPanel = createButtonPanel();
-
         GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
         GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
-
         GuiCreator.setFrame(false, false, true);
     }
 
@@ -208,7 +196,7 @@ public class CustomerTable extends BaseTable {
                     } else {
                         sortType = (String) sortOptions.getSelectedItem();
                     }
-                    sortArrayList();
+                    sortItems();
                 }
                 createTable();
             }
@@ -343,16 +331,12 @@ public class CustomerTable extends BaseTable {
                 lastPurchaseBoxes.add(lastPurchaseMonth);
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
-                boolean valid = checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
-
-                if (valid) {
-                    ShopDriver
-                            .getCustomers()
-                            .add(new Customer(custNameField.getText(), phoneNoField.getText(), addressField.getText(),
-                                    vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/"
-                                            + lastPurchaseMonth.getSelectedItem() + "/"
-                                            + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
-                                            + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
+                if (checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
+                    ShopDriver.addCustomer(new Customer(custNameField.getText(), phoneNoField.getText(), addressField
+                            .getText(), vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/"
+                            + lastPurchaseMonth.getSelectedItem() + "/" + lastPurchaseYear.getSelectedItem(),
+                            dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
+                                    + dateAddedYear.getSelectedItem()));
 
                     GuiCreator.setConfirmMessage("Customer " + custNameField.getText() + " added");
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -360,7 +344,7 @@ public class CustomerTable extends BaseTable {
                     GuiCreator.frame.validate();
 
                     descendingOrderSort = false;
-                    sortById();
+                    sortItems();
                     createTable();
                 }
             }
@@ -733,104 +717,26 @@ public class CustomerTable extends BaseTable {
         GuiCreator.setFrame(false, false, true);
     }
 
-    /**
-     * This method sorts the <code>Customer</code>s by their ID.
-     * 
-     * @param reverse
-     *            A boolean to decide whether to add the <code>Customer</code>s
-     *            to an <code>ArrayList</code> in ascending or descending order.
-     */
+    private static void sortItems() {
+        Comparator<Customer> comparator = null;
 
-    /**
-     * This method has a control structure to determine which sorting parameter
-     * was chosen to sort the <code>Customer</code>s by.
-     */
-    public static void sortArrayList() {
-        if (sortType.equals("ID")) {
-            sortById();
-        } else if (sortType.equals("Name")) {
-            sortByName();
+        if (sortType.equals("Name")) {
+            comparator = Customer.compareByName;
         } else if (sortType.equals("Address")) {
-            sortByAddress();
+            comparator = Customer.compareByAddress;
         } else if (sortType.equals("VAT Number")) {
-            sortByVatNumber();
+            comparator = Customer.compareByVatNumber;
         } else if (sortType.equals("Last Purchase")) {
-            sortByLastPurchadeDate();
+            comparator = Customer.compareByLastPurchaseDate;
         } else if (sortType.equals("Date Added")) {
-            sortByDateAdded();
-        }
-    }
-
-    public static void sortById() {
-        ArrayList<Customer> tempArrayList = new ArrayList<Customer>();
-        int count = IdManager.CUSTOMER_ID_START;
-        int offset = 0;
-        boolean found = false;
-
-        for (int i = 0; i < ShopDriver.getCustomers().size() + offset; i++) {
-            found = false;
-            for (Customer p : ShopDriver.getCustomers()) {
-                if (count == p.getCustomerId()) {
-                    tempArrayList.add(p);
-                    found = true;
-                }
-            }
-            if (!found) {
-                offset++;
-            }
-            count++;
-        }
-
-        ShopDriver.getCustomers().clear();
-
-        if (!descendingOrderSort) {
-            for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getCustomers().add(tempArrayList.get(i));
-            }
-        } else if (descendingOrderSort) {
-            for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getCustomers().add(tempArrayList.get(i));
-            }
-        }
-    }
-
-    public static void sortByName() {
-        if (descendingOrderSort) {
-            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByName));
+            comparator = Customer.compareByDateAdded;
         } else {
-            Collections.sort(ShopDriver.getCustomers(), Customer.compareByName);
+            comparator = Customer.compareById;
         }
-    }
 
-    public static void sortByAddress() {
         if (descendingOrderSort) {
-            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByAddress));
-        } else {
-            Collections.sort(ShopDriver.getCustomers(), Customer.compareByAddress);
+            comparator = Collections.reverseOrder(comparator);
         }
-    }
-
-    public static void sortByVatNumber() {
-        if (descendingOrderSort) {
-            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByVatNumber));
-        } else {
-            Collections.sort(ShopDriver.getCustomers(), Customer.compareByVatNumber);
-        }
-    }
-
-    public static void sortByLastPurchadeDate() {
-        if (descendingOrderSort) {
-            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByLastPurchaseDate));
-        } else {
-            Collections.sort(ShopDriver.getCustomers(), Customer.compareByLastPurchaseDate);
-        }
-    }
-
-    public static void sortByDateAdded() {
-        if (descendingOrderSort) {
-            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByDateAdded));
-        } else {
-            Collections.sort(ShopDriver.getCustomers(), Customer.compareByDateAdded);
-        }
+        Collections.sort(ShopDriver.getCustomers(), comparator);
     }
 }
