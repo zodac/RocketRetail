@@ -25,8 +25,6 @@ public class Staff {
         this.wage = wage;
         this.staffLevel = staffLevel;
         this.dateAdded = dateAdded;
-
-        System.out.println("Adding " + staffName + ", with ID: " + staffId);
     }
 
     public String printDetails() {

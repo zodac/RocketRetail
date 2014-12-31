@@ -10,6 +10,7 @@ import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
+import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
@@ -336,7 +337,7 @@ public class InitialiseArray {
         }
 
         if (confirm) {
-            ShopDriver.setConfirmMessage(output);
+            GuiCreator.setConfirmMessage(output);
         }
     }
 }

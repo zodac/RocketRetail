@@ -9,10 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -30,6 +29,7 @@ import javax.swing.JTextField;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
+import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
@@ -39,10 +39,13 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  * customers
  */
 public class CustomerTable extends BaseTable {
+
+    private final static String[] CUSTOMER_COLUMN_NAMES = { "ID", "Name", "Phone Number", "Address", "VAT Number",
+            "Last Purchase", "Date Added" };
     /**
      * The type to sort the table by
      */
-    static String type = "Sort by...";
+    static String sortType = "Sort by...";
     /**
      * A flag to decide if it's the first time the table is being loaded.
      */
@@ -51,7 +54,7 @@ public class CustomerTable extends BaseTable {
      * A flag to decide whether <code>Customer</code> records are added to an
      * <code>ArrayList</code in ascending or descending order.
      */
-    static boolean reverse = false;
+    static boolean descendingOrderSort = false;
 
     /**
      * This method creates a Customer menu item and adds an
@@ -60,7 +63,7 @@ public class CustomerTable extends BaseTable {
      * @return A <code>JMenuItem</code> to be added to a <code>JMenu</code>.
      */
     public static JMenuItem createMenu(boolean manager) {
-        JMenuItem customerItem = new JMenuItem("Customer");
+        final JMenuItem customerItem = new JMenuItem("Customer");
         customerItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createTable();
@@ -82,61 +85,74 @@ public class CustomerTable extends BaseTable {
      * the <code>JTable</code> and multiple <code>JComboBox</code>.
      */
     public static void createTable() {
-        if (!(ShopDriver.getCurrentTableState() == TableState.CUSTOMER)) {
-            ShopDriver.frame.remove(ShopDriver.leftPanel);
-        }
-
-        ShopDriver.setCurrentTable(TableState.CUSTOMER);
-
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Customers");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        setTableState();
+        resetGui();
 
         if (first) {
             sortById(false);
             first = false;
         }
 
-        String[] columnNames = { "ID", "Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
-        Object[][] data = new Object[ShopDriver.getCustomers().size()][7];
+        final Object[][] data = createTableData();
+
+        final JTable table = createTable(data);
+
+        final JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
+
+        final JPanel buttonPanel = createButtonPanel();
+
+        GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
+
+        GuiCreator.setFrame(false, false, true);
+    }
+
+    private static Object[][] createTableData() {
+        final Object[][] data = new Object[ShopDriver.getCustomers().size()][7];
 
         for (int i = 0; i < ShopDriver.getCustomers().size(); i++) {
+            final Customer customer = ShopDriver.getCustomers().get(i);
 
-            data[i][0] = CUSTOMER_ID_FORMATTER.format(ShopDriver.getCustomers().get(i).getCustomerId());
-            data[i][1] = ShopDriver.getCustomers().get(i).getCustomerName();
-            data[i][2] = ShopDriver.getCustomers().get(i).getPhoneNumber();
-            data[i][3] = ShopDriver.getCustomers().get(i).getAddress();
-            data[i][4] = ShopDriver.getCustomers().get(i).getVatNumber();
-            data[i][5] = ShopDriver.getCustomers().get(i).getLastPurchase();
-            data[i][6] = ShopDriver.getCustomers().get(i).getDateAdded();
+            data[i][0] = CUSTOMER_ID_FORMATTER.format(customer.getCustomerId());
+            data[i][1] = customer.getCustomerName();
+            data[i][2] = customer.getPhoneNumber();
+            data[i][3] = customer.getAddress();
+            data[i][4] = customer.getVatNumber();
+            data[i][5] = customer.getLastPurchase();
+            data[i][6] = customer.getDateAdded();
         }
+        return data;
+    }
 
-        final JTable table = new JTable(data, columnNames);
+    private static JTable createTable(final Object[][] data) {
+        final JTable table = new JTable(data, CUSTOMER_COLUMN_NAMES);
         table.setColumnSelectionAllowed(false);
         table.setFillsViewportHeight(true);
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (table.getSelectedRow() >= 0) {
-                    Customer input = null;
+                    for (final Customer customer : ShopDriver.getCustomers()) {
+                        final int selectedCustomerId = Integer.parseInt((String) table.getValueAt(
+                                table.getSelectedRow(), 0));
 
-                    for (Customer c : ShopDriver.getCustomers()) {
-                        if (c.getCustomerId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
-                            input = c;
+                        if (customer.getCustomerId() == selectedCustomerId) {
+                            showCustomerInfo(customer);
+                            break;
+                        }
                     }
-                    showCustomerInfo(input);
                 }
             }
         });
+        return table;
+    }
 
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBackground(ShopDriver.backgroundColour);
+    private static JPanel createButtonPanel() {
+        final JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
-
-        String[] customerMemberArrayEdit = new String[ShopDriver.getCustomers().size() + 1];
+        final String[] customerMemberArrayEdit = new String[ShopDriver.getCustomers().size() + 1];
         customerMemberArrayEdit[0] = "Edit Customer";
         for (int i = 0; i < ShopDriver.getCustomers().size() + 1; i++) {
             if (i < ShopDriver.getCustomers().size())
@@ -145,7 +161,7 @@ public class CustomerTable extends BaseTable {
                         + ShopDriver.getCustomers().get(i).getCustomerName() + ")";
         }
 
-        String[] customerMemberArrayDelete = new String[ShopDriver.getCustomers().size() + 1];
+        final String[] customerMemberArrayDelete = new String[ShopDriver.getCustomers().size() + 1];
         customerMemberArrayDelete[0] = "Delete Customer";
         for (int i = 0; i < ShopDriver.getCustomers().size() + 1; i++) {
             if (i < ShopDriver.getCustomers().size())
@@ -154,28 +170,14 @@ public class CustomerTable extends BaseTable {
                         + ShopDriver.getCustomers().get(i).getCustomerName() + ")";
         }
 
-        JButton addButton = new JButton("Add Customer");
+        final JButton addButton = new JButton("Add Customer");
         final JComboBox<String> editBox = new JComboBox<String>(customerMemberArrayEdit);
         final JComboBox<String> deleteBox = new JComboBox<String>(customerMemberArrayDelete);
 
-        String[] options = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
+        final String[] options = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
         final JComboBox<String> sortOptions = new JComboBox<String>(options);
-        int index = 0;
+        final int index = Arrays.asList(options).indexOf(sortType);
 
-        if (type.equals("Sort by..."))
-            index = 0;
-        if (type.equals("ID"))
-            index = 1;
-        if (type.equals("Name"))
-            index = 2;
-        if (type.equals("Address"))
-            index = 3;
-        if (type.equals("VAT Number"))
-            index = 4;
-        if (type.equals("Last Purchase"))
-            index = 5;
-        if (type.equals("Date Added"))
-            index = 6;
         sortOptions.setSelectedIndex(index);
 
         addButton.addActionListener(new ActionListener() {
@@ -200,20 +202,14 @@ public class CustomerTable extends BaseTable {
 
         sortOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 if (sortOptions.getSelectedItem().equals("Sort by...")) {
-                }
-
-                else if (type.equals((String) sortOptions.getSelectedItem())) {
-                    if (reverse)
-                        reverse = false;
-                    else
-                        reverse = true;
-                    sortArrayList();
-                }
-
-                else {
-                    type = (String) sortOptions.getSelectedItem();
+                    // Do nothing
+                } else {
+                    if (sortType.equals((String) sortOptions.getSelectedItem())) {
+                        descendingOrderSort = !descendingOrderSort;
+                    } else {
+                        sortType = (String) sortOptions.getSelectedItem();
+                    }
                     sortArrayList();
                 }
                 createTable();
@@ -224,11 +220,21 @@ public class CustomerTable extends BaseTable {
         buttonPanel.add(editBox);
         buttonPanel.add(deleteBox);
         buttonPanel.add(sortOptions);
+        return buttonPanel;
+    }
 
-        ShopDriver.mainPanel.add(scrollPane, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(buttonPanel, BorderLayout.CENTER);
+    private static void resetGui() {
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Customers");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
+    }
 
-        ShopDriver.setFrame(false, false, true);
+    private static void setTableState() {
+        if (ShopDriver.getCurrentTableState() != TableState.CUSTOMER) {
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
+        }
+        ShopDriver.setCurrentTable(TableState.CUSTOMER);
     }
 
     /**
@@ -237,29 +243,26 @@ public class CustomerTable extends BaseTable {
      * customers.
      */
     public static void add() {
-
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
 
         JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(ShopDriver.backgroundColour);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         GridBagConstraints g = new GridBagConstraints();
         g.gridx = 0;
         g.gridy = 0;
-        innerPanel.add(new JLabel("Customer ID:"), g);
-        g.gridy = 1;
         innerPanel.add(new JLabel("Customer Name:"), g);
-        g.gridy = 2;
+        g.gridy = 1;
         innerPanel.add(new JLabel("Phone Number:"), g);
-        g.gridy = 3;
+        g.gridy = 2;
         innerPanel.add(new JLabel("Address:"), g);
-        g.gridy = 4;
+        g.gridy = 3;
         innerPanel.add(new JLabel("VAT Number:"), g);
-        g.gridy = 5;
+        g.gridy = 4;
         innerPanel.add(new JLabel("Last Purchase:"), g);
-        g.gridy = 6;
+        g.gridy = 5;
         innerPanel.add(new JLabel("Date Added:"), g);
 
         g.insets = new Insets(1, 10, 0, 5);
@@ -267,42 +270,27 @@ public class CustomerTable extends BaseTable {
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
-        final JTextField custIDField = new JTextField(null, 20);
-        custIDField.setEditable(false);
-        custIDField.setText(CUSTOMER_ID_FORMATTER.format(0));
-        innerPanel.add(custIDField, g);
-        g.gridy = 1;
-        g.gridwidth = 3;
         final JTextField custNameField = new JTextField(null, 20);
         innerPanel.add(custNameField, g);
-        g.gridy = 2;
-        g.gridwidth = 3;
+        g.gridy = 1;
         final JTextField phoneNoField = new JTextField(null, 20);
         innerPanel.add(phoneNoField, g);
-        g.gridy = 3;
-        g.gridwidth = 3;
+        g.gridy = 2;
         final JTextField addressField = new JTextField(null, 20);
         innerPanel.add(addressField, g);
-        g.gridy = 4;
-        g.gridwidth = 3;
+        g.gridy = 3;
         final JTextField vatNoField = new JTextField(null, 20);
         innerPanel.add(vatNoField, g);
-        g.gridy = 5;
+
+        g.gridy = 4;
         g.gridx = 1;
         g.gridwidth = 1;
         final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
         innerPanel.add(lastPurchaseDay, g);
-
-        g.gridy = 5;
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
         innerPanel.add(lastPurchaseMonth, g);
-
-        g.gridy = 5;
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
         final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
@@ -311,32 +299,22 @@ public class CustomerTable extends BaseTable {
         g.gridwidth = 1;
         final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
-
-        g.gridy = 6;
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
-
-        g.gridy = 6;
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
         final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
-        dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(
-                0, 2)));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
-                .substring(3, 5)));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
-                .substring(6, 10)) - (ShopDriver.yearStart - 1));
+        dateAddedDay.setSelectedIndex(Integer.parseInt(DAY_FORMATTER.format(new Date())));
+        dateAddedMonth.setSelectedIndex(Integer.parseInt(MONTH_FORMATTER.format(new Date())));
+        dateAddedYear
+                .setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (ShopDriver.yearStart - 1));
 
         g.gridx = 0;
-        g.gridy = 8;
+        g.gridy = 7;
         innerPanel.add(new JLabel(" "), g);
         g.gridx = 1;
-        g.gridy = 8;
         innerPanel.add(new JLabel(" "), g);
 
         JButton save = new JButton("Save");
@@ -344,11 +322,10 @@ public class CustomerTable extends BaseTable {
         g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
-        g.gridy = 9;
+        g.gridy = 8;
         innerPanel.add(save, g);
         JButton cancel = new JButton("Cancel");
         g.gridx = 3;
-        g.gridy = 9;
         innerPanel.add(cancel, g);
 
         save.addActionListener(new ActionListener() {
@@ -368,8 +345,7 @@ public class CustomerTable extends BaseTable {
                 lastPurchaseBoxes.add(lastPurchaseMonth);
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
-                boolean valid = ShopDriver.checkFields(textFields, null, null, null, null, addedBoxes,
-                        lastPurchaseBoxes);
+                boolean valid = checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
 
                 if (valid) {
                     ShopDriver
@@ -380,10 +356,10 @@ public class CustomerTable extends BaseTable {
                                             + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
                                             + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
-                    ShopDriver.setConfirmMessage("Customer " + custNameField.getText() + " added");
-                    ShopDriver.frame.remove(ShopDriver.leftPanel);
-                    ShopDriver.frame.repaint();
-                    ShopDriver.frame.validate();
+                    GuiCreator.setConfirmMessage("Customer " + custNameField.getText() + " added");
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.frame.validate();
 
                     sortById(false);
                     createTable();
@@ -393,15 +369,15 @@ public class CustomerTable extends BaseTable {
 
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.frame.remove(ShopDriver.leftPanel);
-                ShopDriver.frame.repaint();
-                ShopDriver.frame.validate();
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.repaint();
+                GuiCreator.frame.validate();
             }
         });
 
-        ShopDriver.leftPanel.add(innerPanel);
+        GuiCreator.leftPanel.add(innerPanel);
 
-        ShopDriver.setFrame(true, false, false);
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
@@ -411,16 +387,16 @@ public class CustomerTable extends BaseTable {
      */
     public static void edit(int customerID) {
 
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
 
         for (Customer c : ShopDriver.getCustomers()) {
             if (customerID == c.getCustomerId()) {
                 final int index = ShopDriver.getCustomers().indexOf(c);
 
                 final JPanel innerPanel = new JPanel(new GridBagLayout());
-                innerPanel.setBackground(ShopDriver.backgroundColour);
+                innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                 GridBagConstraints g = new GridBagConstraints();
 
                 g.gridx = 0;
@@ -552,8 +528,7 @@ public class CustomerTable extends BaseTable {
                         lastPurchaseBoxes.add(lastPurchaseMonth);
                         lastPurchaseBoxes.add(lastPurchaseYear);
 
-                        boolean valid = ShopDriver.checkFields(textFields, null, null, null, null, addedBoxes,
-                                lastPurchaseBoxes);
+                        boolean valid = checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
 
                         if (valid) {
                             ShopDriver.getCustomers()
@@ -568,10 +543,10 @@ public class CustomerTable extends BaseTable {
                                                     + "/"
                                                     + dateAddedYear.getSelectedItem()));
 
-                            ShopDriver.setConfirmMessage("Customer " + custNameField.getText() + "'s details editted");
-                            ShopDriver.frame.remove(ShopDriver.leftPanel);
-                            ShopDriver.frame.repaint();
-                            ShopDriver.frame.validate();
+                            GuiCreator.setConfirmMessage("Customer " + custNameField.getText() + "'s details editted");
+                            GuiCreator.frame.remove(GuiCreator.leftPanel);
+                            GuiCreator.frame.repaint();
+                            GuiCreator.frame.validate();
                             ShopDriver.getCustomers().remove(index + 1);
                             createTable();
                         }
@@ -580,17 +555,17 @@ public class CustomerTable extends BaseTable {
 
                 cancel.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        ShopDriver.frame.remove(ShopDriver.leftPanel);
-                        ShopDriver.frame.repaint();
-                        ShopDriver.frame.validate();
+                        GuiCreator.frame.remove(GuiCreator.leftPanel);
+                        GuiCreator.frame.repaint();
+                        GuiCreator.frame.validate();
                     }
                 });
 
-                ShopDriver.leftPanel.add(innerPanel);
+                GuiCreator.leftPanel.add(innerPanel);
             }
         }
 
-        ShopDriver.setFrame(true, false, false);
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
@@ -598,31 +573,31 @@ public class CustomerTable extends BaseTable {
      * <code>Customer</code>. This method also has logic to remove the
      * <code>Customer</code> from system records.
      */
-    public static void delete(int customerID, String customerName) {
-        JPanel myPanel = new JPanel();
+    public static void delete(final int customerId, final String customerName) {
+        final JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("Do you want to delete " + customerName + "?"));
 
         int i = -1;
 
-        if (ShopDriver.showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
+            GuiCreator.frame.repaint();
+            GuiCreator.leftPanel = new JPanel();
 
-            ShopDriver.frame.remove(ShopDriver.leftPanel);
-            ShopDriver.frame.repaint();
-            ShopDriver.leftPanel = new JPanel();
-
-            for (Customer c : ShopDriver.getCustomers()) {
-                if (customerID == c.getCustomerId())
+            for (final Customer c : ShopDriver.getCustomers()) {
+                if (customerId == c.getCustomerId()) {
                     i = ShopDriver.getCustomers().indexOf(c);
+                }
             }
         }
 
-        if (i != -1)
-            ShopDriver.setConfirmMessage(customerName + " deleted");
-        ShopDriver.getCustomers().remove(i);
+        if (i != -1) {
+            GuiCreator.setConfirmMessage(customerName + " deleted");
+            ShopDriver.getCustomers().remove(i);
+        }
 
         createTable();
-
-        ShopDriver.frame.validate();
+        GuiCreator.frame.validate();
     }
 
     /**
@@ -635,17 +610,17 @@ public class CustomerTable extends BaseTable {
      */
     public static void showCustomerInfo(Customer c) {
 
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - " + c.getCustomerName());
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + c.getCustomerName());
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         JPanel titlePanel = new JPanel(new GridBagLayout());
         JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
         JPanel buttonPanel = new JPanel();
-        titlePanel.setBackground(ShopDriver.backgroundColour);
-        innerPanel.setBackground(ShopDriver.backgroundColour);
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
+        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         JLabel customerLabel = new JLabel("Customer");
         JLabel vatNumberLabel = new JLabel("VAT Number");
@@ -717,8 +692,8 @@ public class CustomerTable extends BaseTable {
                 count++;
         }
 
-        String[] columnNames = { "Order ID", "Order Date", "Delivery Date", "Total Cost" };
-        Object[][] data = new Object[count + 1][4];
+        final String[] columnNames = { "Order ID", "Order Date", "Delivery Date", "Total Cost" };
+        final Object[][] data = new Object[count + 1][4];
         int indexArray = 0;
         double total = 0;
 
@@ -736,14 +711,14 @@ public class CustomerTable extends BaseTable {
         data[count][2] = "<html><b>Total Sales</b></html>";
         data[count][3] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
 
-        JTable table = new JTable(data, columnNames);
+        final JTable table = new JTable(data, columnNames);
         table.setFillsViewportHeight(true);
         table.setEnabled(false);
 
-        JScrollPane scrollPane = new JScrollPane(table);
+        final JScrollPane scrollPane = new JScrollPane(table);
         innerPanel.add(scrollPane, BorderLayout.CENTER);
 
-        JButton backButton = new JButton("Back to Customers");
+        final JButton backButton = new JButton("Back to Customers");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createTable();
@@ -753,10 +728,10 @@ public class CustomerTable extends BaseTable {
         buttonPanel.add(backButton);
         innerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        ShopDriver.mainPanel.add(titlePanel, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(innerPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
 
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -766,7 +741,6 @@ public class CustomerTable extends BaseTable {
      *            A boolean to decide whether to add the <code>Customer</code>s
      *            to an <code>ArrayList</code> in ascending or descending order.
      */
-
     public static void sortById(boolean reverse) {
         ArrayList<Customer> tempArrayList = new ArrayList<Customer>();
         int count = IdManager.CUSTOMER_ID_START;
@@ -805,18 +779,19 @@ public class CustomerTable extends BaseTable {
      * was chosen to sort the <code>Customer</code>s by.
      */
     public static void sortArrayList() {
-        if (type.equals("ID"))
-            sortById(reverse);
-        if (type.equals("Name"))
-            sortByName(reverse);
-        if (type.equals("Address"))
-            sortByAddress(reverse);
-        if (type.equals("VAT Number"))
-            sortByVatNumber(reverse);
-        if (type.equals("Last Purchase"))
-            sortByDate(false, reverse);
-        if (type.equals("Date Added"))
-            sortByDate(true, reverse);
+        if (sortType.equals("ID")) {
+            sortById(descendingOrderSort);
+        } else if (sortType.equals("Name")) {
+            sortByName(descendingOrderSort);
+        } else if (sortType.equals("Address")) {
+            sortByAddress(descendingOrderSort);
+        } else if (sortType.equals("VAT Number")) {
+            sortByVatNumber(descendingOrderSort);
+        } else if (sortType.equals("Last Purchase")) {
+            sortByDate(false, descendingOrderSort);
+        } else if (sortType.equals("Date Added")) {
+            sortByDate(true, descendingOrderSort);
+        }
     }
 
     /**
@@ -830,7 +805,7 @@ public class CustomerTable extends BaseTable {
     public static void sortByName(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(Customer s1, Customer s2) {
+                public int compare(final Customer s1, final Customer s2) {
                     return s1.getCustomerName().compareToIgnoreCase(s2.getCustomerName());
                 }
             });
@@ -838,7 +813,7 @@ public class CustomerTable extends BaseTable {
 
         if (reverse) {
             Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(Customer s1, Customer s2) {
+                public int compare(final Customer s1, final Customer s2) {
                     return s2.getCustomerName().compareToIgnoreCase(s1.getCustomerName());
                 }
             });
@@ -856,7 +831,7 @@ public class CustomerTable extends BaseTable {
     public static void sortByAddress(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(Customer s1, Customer s2) {
+                public int compare(final Customer s1, final Customer s2) {
                     return s1.getAddress().compareToIgnoreCase(s2.getAddress());
                 }
             });
@@ -864,7 +839,7 @@ public class CustomerTable extends BaseTable {
 
         if (reverse) {
             Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(Customer s1, Customer s2) {
+                public int compare(final Customer s1, final Customer s2) {
                     return s2.getAddress().compareToIgnoreCase(s1.getAddress());
                 }
             });
@@ -882,7 +857,7 @@ public class CustomerTable extends BaseTable {
     public static void sortByVatNumber(boolean reverse) {
         if (!reverse) {
             Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(Customer s1, Customer s2) {
+                public int compare(final Customer s1, final Customer s2) {
                     return s1.getVatNumber().compareToIgnoreCase(s2.getVatNumber());
                 }
             });
@@ -890,7 +865,7 @@ public class CustomerTable extends BaseTable {
 
         if (reverse) {
             Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(Customer s1, Customer s2) {
+                public int compare(final Customer s1, final Customer s2) {
                     return s2.getVatNumber().compareToIgnoreCase(s1.getVatNumber());
                 }
             });
@@ -904,28 +879,28 @@ public class CustomerTable extends BaseTable {
      *            A boolean to decide whether the <code>Customer</code> add
      *            dates should be sorted in ascending or descending order.
      */
-    public static void sortByDate(final boolean DateAdded, final boolean reverse) {
+    public static void sortByDate(final boolean dateAdded, final boolean reverse) {
 
         Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-            DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-
             @Override
             public int compare(Customer c1, Customer c2) {
                 try {
                     String string1 = "";
                     String string2 = "";
 
-                    if (DateAdded) {
+                    if (dateAdded) {
                         string1 = c1.getDateAdded();
                         string2 = c2.getDateAdded();
                     } else {
                         string1 = c1.getLastPurchase();
                         string2 = c2.getLastPurchase();
                     }
-                    if (!reverse)
-                        return f.parse(string1).compareTo(f.parse(string2));
-                    else
-                        return f.parse(string2).compareTo(f.parse(string1));
+
+                    if (!reverse) {
+                        return DATE_FORMATTER.parse(string1).compareTo(DATE_FORMATTER.parse(string2));
+                    } else {
+                        return DATE_FORMATTER.parse(string2).compareTo(DATE_FORMATTER.parse(string1));
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

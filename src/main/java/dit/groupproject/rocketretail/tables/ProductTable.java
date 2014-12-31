@@ -33,6 +33,7 @@ import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.Graphs;
+import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.MenuGUI;
 import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
@@ -123,16 +124,16 @@ public class ProductTable extends BaseTable {
      */
     public static void createTable() {
         if (!(ShopDriver.getCurrentTableState() == TableState.PRODUCT)) {
-            ShopDriver.frame.remove(ShopDriver.leftPanel);
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
         }
 
         ShopDriver.setCurrentTable(TableState.PRODUCT);
 
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Products");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Products");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         // When first run, ensure ArrayList (and table) is sorted by ID
         if (first) {
@@ -173,11 +174,8 @@ public class ProductTable extends BaseTable {
                 }
             }
         });
-
-        JScrollPane scrollPane = new JScrollPane(table);
-
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         String[] productMemberArrayEdit = new String[ShopDriver.getProducts().size() + 1];
         productMemberArrayEdit[0] = "Edit Product";
@@ -270,12 +268,12 @@ public class ProductTable extends BaseTable {
         buttonPanel.add(deleteBox);
         buttonPanel.add(sortOptions);
 
-        // scrollPane.add(table);
-        ShopDriver.mainPanel.add(scrollPane, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        final JScrollPane scrollPane = new JScrollPane(table);
+        GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
         // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -288,13 +286,13 @@ public class ProductTable extends BaseTable {
      */
     public static void add() {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
 
         // Panel items
         final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(ShopDriver.backgroundColour);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         GridBagConstraints g = new GridBagConstraints();
 
         // JLabels with GridBagLayout
@@ -393,8 +391,7 @@ public class ProductTable extends BaseTable {
                 ArrayList<JComboBox<String>> comboBoxes = new ArrayList<JComboBox<String>>();
                 comboBoxes.add(suppIDBox);
 
-                boolean valid = ShopDriver.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null,
-                        null);
+                boolean valid = checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null);
 
                 if (valid) {
 
@@ -406,10 +403,10 @@ public class ProductTable extends BaseTable {
                                     .parseDouble(costPriceField.getText()),
                                     Double.parseDouble(salePriceField.getText())));
 
-                    ShopDriver.setConfirmMessage("Product " + prodDescField.getText() + " added");
-                    ShopDriver.frame.remove(ShopDriver.leftPanel);
-                    ShopDriver.frame.repaint();
-                    ShopDriver.frame.validate();
+                    GuiCreator.setConfirmMessage("Product " + prodDescField.getText() + " added");
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.frame.validate();
 
                     sortById(false);
                     createTable();
@@ -419,17 +416,17 @@ public class ProductTable extends BaseTable {
 
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.frame.remove(ShopDriver.leftPanel);
-                ShopDriver.frame.repaint();
-                ShopDriver.frame.validate();
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.repaint();
+                GuiCreator.frame.validate();
             }
         });
 
         // Add innerPanel
-        ShopDriver.leftPanel.add(innerPanel);
+        GuiCreator.leftPanel.add(innerPanel);
 
         // Update ShopDriver.frame
-        ShopDriver.setFrame(true, false, false);
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
@@ -438,24 +435,24 @@ public class ProductTable extends BaseTable {
      * Adds JButtons to cancel, or save product changes and re-runs
      * {@link #createTable()}
      * 
-     * @param productID
+     * @param productId
      *            an Integer specifying the product to edit
      * 
      * @see #createTable()
      */
-    public static void edit(int productID) {
+    public static void edit(int productId) {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
 
-        for (Product p : ShopDriver.getProducts()) {
-            if (productID == p.getProductId()) {
+        for (final Product p : ShopDriver.getProducts()) {
+            if (productId == p.getProductId()) {
 
                 final int index = ShopDriver.getProducts().indexOf(p);
                 // Panel items
                 JPanel innerPanel = new JPanel(new GridBagLayout());
-                innerPanel.setBackground(ShopDriver.backgroundColour);
+                innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                 GridBagConstraints g = new GridBagConstraints();
 
                 // JLabels with GridBagLayout
@@ -559,8 +556,7 @@ public class ProductTable extends BaseTable {
                         ArrayList<JComboBox<String>> comboBoxes = new ArrayList<JComboBox<String>>();
                         comboBoxes.add(suppIDBox);
 
-                        boolean valid = ShopDriver.checkFields(textFields, intFields, doubleFields, null, comboBoxes,
-                                null, null);
+                        boolean valid = checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null);
 
                         if (valid) {
                             // Add the staff at this index
@@ -574,10 +570,10 @@ public class ProductTable extends BaseTable {
                                             Double.parseDouble(costPriceField.getText()), Double
                                                     .parseDouble(salePriceField.getText())));
 
-                            ShopDriver.setConfirmMessage("Product " + prodDescField.getText() + "'s details editted");
-                            ShopDriver.frame.remove(ShopDriver.leftPanel);
-                            ShopDriver.frame.repaint();
-                            ShopDriver.frame.validate();
+                            GuiCreator.setConfirmMessage("Product " + prodDescField.getText() + "'s details editted");
+                            GuiCreator.frame.remove(GuiCreator.leftPanel);
+                            GuiCreator.frame.repaint();
+                            GuiCreator.frame.validate();
                             ShopDriver.getProducts().remove(index + 1);
                             createTable();
                         }
@@ -586,18 +582,18 @@ public class ProductTable extends BaseTable {
 
                 cancel.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        ShopDriver.frame.remove(ShopDriver.leftPanel);
-                        ShopDriver.frame.repaint();
-                        ShopDriver.frame.validate();
+                        GuiCreator.frame.remove(GuiCreator.leftPanel);
+                        GuiCreator.frame.repaint();
+                        GuiCreator.frame.validate();
                     }
                 });
                 // Add innerPanel
-                ShopDriver.leftPanel.add(innerPanel);
+                GuiCreator.leftPanel.add(innerPanel);
             }
         }
 
         // Update ShopDriver.frame
-        ShopDriver.setFrame(true, false, false);
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
@@ -607,7 +603,7 @@ public class ProductTable extends BaseTable {
      * JComboBox.<br />
      * Re-runs {@link #createTable()} on completion.
      * 
-     * @param productID
+     * @param productId
      *            an Integer specifying the ID number of the product chosen to
      *            be deleted
      * @param productName
@@ -616,20 +612,20 @@ public class ProductTable extends BaseTable {
      * 
      * @see #createTable()
      */
-    public static void delete(int productID, String productName) {
-        JPanel myPanel = new JPanel();
+    public static void delete(final int productId, final String productName) {
+        final JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("Do you want to delete " + productName + "?"));
 
         int i = -1; // Holds index of object to be deleted
 
-        if (ShopDriver.showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
             // Reset ShopDriver.frame
-            ShopDriver.frame.remove(ShopDriver.leftPanel);
-            ShopDriver.frame.repaint();
-            ShopDriver.leftPanel = new JPanel();
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
+            GuiCreator.frame.repaint();
+            GuiCreator.leftPanel = new JPanel();
 
-            for (Product s : ShopDriver.getProducts()) {
-                if (productID == s.getProductId())
+            for (final Product s : ShopDriver.getProducts()) {
+                if (productId == s.getProductId())
                     i = ShopDriver.getProducts().indexOf(s); // Object can't be
                 // removed while being
                 // accessed - save its
@@ -638,15 +634,16 @@ public class ProductTable extends BaseTable {
             }
         }
 
-        if (i != -1) // If an object has been found, we can now remove it from
-                     // the ArrayList
-            ShopDriver.setConfirmMessage(productName + " deleted");
-        ShopDriver.getProducts().remove(i);
+        if (i != -1) { // If an object has been found, we can now remove it from
+                       // the ArrayList
+            GuiCreator.setConfirmMessage(productName + " deleted");
+            ShopDriver.getProducts().remove(i);
+        }
 
         // Update ShopDriver.frame
         createTable();
 
-        ShopDriver.frame.validate();
+        GuiCreator.frame.validate();
     }
 
     /**
@@ -669,17 +666,17 @@ public class ProductTable extends BaseTable {
      */
     public static void showProductInfo(final Product p) {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - " + p.getProductDescription());
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + p.getProductDescription());
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         JPanel titlePanel = new JPanel(new GridBagLayout());
         JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
         JPanel buttonPanel = new JPanel();
-        titlePanel.setBackground(ShopDriver.backgroundColour);
-        innerPanel.setBackground(ShopDriver.backgroundColour);
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
+        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         JLabel productLabel = new JLabel("Product");
         JLabel stockLabel = new JLabel("Stock Level");
@@ -706,7 +703,8 @@ public class ProductTable extends BaseTable {
                 supplier = s.getSupplierName() + " (" + s.getSupplierId() + ")";
         }
 
-        JTextField productField = new JTextField(p.getProductDescription() + " (" + p.getProductId() + ")", textFieldSize);
+        JTextField productField = new JTextField(p.getProductDescription() + " (" + p.getProductId() + ")",
+                textFieldSize);
         productField.setEditable(false);
         JTextField stockField = new JTextField(p.getStockLevel() + "/" + p.getMaxLevel(), textFieldSize);
         stockField.setEditable(false);
@@ -806,7 +804,7 @@ public class ProductTable extends BaseTable {
         ChartPanel chartPanel = Graphs.createLineChart("Past Stock levels", p.getProductDescription(), inputdata);
         chartPanel.setPreferredSize(new Dimension(500, 750));
 
-        myPanel.setBackground(ShopDriver.backgroundColour);
+        myPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         myPanel.add(chartPanel, BorderLayout.CENTER);
 
         innerPanel.add(myPanel, BorderLayout.CENTER);
@@ -829,11 +827,11 @@ public class ProductTable extends BaseTable {
         buttonPanel.add(backButton);
         innerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        ShopDriver.mainPanel.add(titlePanel, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(innerPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
 
         // Update frame
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**

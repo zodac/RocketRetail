@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import dit.groupproject.rocketretail.main.LoginHandler;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.tables.CustomerTable;
 import dit.groupproject.rocketretail.tables.OrderTable;
@@ -24,15 +25,15 @@ public class MainMenu {
         JMenuItem logout = new JMenuItem("Logout");
         logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.frame.setTitle("Rocket Retail Inc");
-                ShopDriver.Logout();
+                GuiCreator.frame.setTitle("Rocket Retail Inc");
+                LoginHandler.logout();
             }
         });
         JMenuItem resetArrays = new JMenuItem("Reset Arrays");
         resetArrays.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ShopDriver.initialiseArrays();
-                ShopDriver.frame.setTitle("Rocket Retail Inc");
+                GuiCreator.frame.setTitle("Rocket Retail Inc");
                 if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
                     StaffTable.createTable();
                 } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
@@ -63,9 +64,9 @@ public class MainMenu {
                     OrderTable.createTable();
                 }
 
-                if (ShopDriver.rightPanel.getComponentCount() > 0) {
-                    ShopDriver.rightPanel.validate();
-                    ShopDriver.frame.validate();
+                if (GuiCreator.rightPanel.getComponentCount() > 0) {
+                    GuiCreator.rightPanel.validate();
+                    GuiCreator.frame.validate();
                 }
             }
         });
@@ -86,9 +87,9 @@ public class MainMenu {
                     OrderTable.createTable();
                 }
 
-                if (ShopDriver.rightPanel.getComponentCount() > 0) {
-                    ShopDriver.rightPanel.validate();
-                    ShopDriver.frame.validate();
+                if (GuiCreator.rightPanel.getComponentCount() > 0) {
+                    GuiCreator.rightPanel.validate();
+                    GuiCreator.frame.validate();
                 }
             }
         });
@@ -109,9 +110,9 @@ public class MainMenu {
                     OrderTable.createTable();
                 }
 
-                if (ShopDriver.rightPanel.getComponentCount() > 0) {
-                    ShopDriver.rightPanel.validate();
-                    ShopDriver.frame.validate();
+                if (GuiCreator.rightPanel.getComponentCount() > 0) {
+                    GuiCreator.rightPanel.validate();
+                    GuiCreator.frame.validate();
                 }
             }
         });
@@ -132,9 +133,9 @@ public class MainMenu {
                     OrderTable.createTable();
                 }
 
-                if (ShopDriver.rightPanel.getComponentCount() > 0) {
-                    ShopDriver.rightPanel.validate();
-                    ShopDriver.frame.validate();
+                if (GuiCreator.rightPanel.getComponentCount() > 0) {
+                    GuiCreator.rightPanel.validate();
+                    GuiCreator.frame.validate();
                 }
             }
         });
@@ -142,9 +143,9 @@ public class MainMenu {
         JMenuItem clearAll = new JMenuItem("Clear All");
         clearAll.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.frame.remove(ShopDriver.leftPanel);
-                ShopDriver.frame.remove(ShopDriver.rightPanel);
-                ShopDriver.frame.remove(ShopDriver.mainPanel);
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.remove(GuiCreator.rightPanel);
+                GuiCreator.frame.remove(GuiCreator.mainPanel);
 
                 ShopDriver.setCurrentTable(TableState.NONE);
 
@@ -154,33 +155,33 @@ public class MainMenu {
                 SupplierTable.first = true;
 
                 HomeScreen.setScreen();
-                ShopDriver.frame.setTitle("Rocket Retail Inc");
-                ShopDriver.frame.validate();
+                GuiCreator.frame.setTitle("Rocket Retail Inc");
+                GuiCreator.frame.validate();
             }
         });
         JMenuItem clearLeft = new JMenuItem("Clear Left Panel");
         clearLeft.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.frame.remove(ShopDriver.leftPanel);
-                ShopDriver.frame.validate();
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.validate();
             }
         });
         JMenuItem clearRight = new JMenuItem("Clear Right Panel");
         clearRight.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.frame.remove(ShopDriver.rightPanel);
-                ShopDriver.frame.validate();
+                GuiCreator.frame.remove(GuiCreator.rightPanel);
+                GuiCreator.frame.validate();
             }
         });
         JMenuItem clearCenter = new JMenuItem("Clear Center Panel");
         clearCenter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.frame.remove(ShopDriver.mainPanel);
+                GuiCreator.frame.remove(GuiCreator.mainPanel);
                 StaffTable.first = true;
                 ProductTable.first = true;
                 SupplierTable.first = true;
                 CustomerTable.first = true;
-                ShopDriver.frame.setTitle("Rocket Retail Inc");
+                GuiCreator.frame.setTitle("Rocket Retail Inc");
 
                 HomeScreen.setScreen();
             }

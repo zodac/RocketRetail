@@ -35,14 +35,14 @@ public class HomeScreen {
      */
     public static void setScreen() {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout());
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout());
 
         ShopDriver.setCurrentTable(TableState.HOMESCREEN);
 
         final JPanel innerPanel = new JPanel(new BorderLayout());
-        innerPanel.setBackground(ShopDriver.backgroundColour);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         final Staff currentStaff = ShopDriver.getCurrentStaff();
 
@@ -68,10 +68,10 @@ public class HomeScreen {
                 + CURRENCY_FORMATTER.format(currentStaff.getWage());
 
         final JTextArea staffInfo = new JTextArea(output, 10, 20);
-        staffInfo.setBackground(ShopDriver.backgroundColour);
+        staffInfo.setBackground(GuiCreator.BACKGROUND_COLOUR);
         staffInfo.setEditable(false);
         innerPanel.add(staffInfo, BorderLayout.SOUTH);
-        innerPanel.setBackground(ShopDriver.backgroundColour);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         double currentStaffTotal = 0;
         double otherStaffTotal = 0;
@@ -99,13 +99,13 @@ public class HomeScreen {
                 salesBreakdown);
 
         piePanel.setPreferredSize(new Dimension(500, 750));
-        piePanel.setBackground(ShopDriver.backgroundColour);
+        piePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         piePanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-        ShopDriver.mainPanel.add(innerPanel, BorderLayout.WEST);
-        ShopDriver.mainPanel.add(piePanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(innerPanel, BorderLayout.WEST);
+        GuiCreator.mainPanel.add(piePanel, BorderLayout.CENTER);
 
         // Update frame
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 }

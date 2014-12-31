@@ -31,6 +31,7 @@ import javax.swing.JTextField;
 import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
+import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.MenuGUI;
 import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
@@ -106,16 +107,16 @@ public class SupplierTable extends BaseTable {
      */
     public static void createTable() {
         if (!(ShopDriver.getCurrentTableState() == TableState.SUPPLIER)) {
-            ShopDriver.frame.remove(ShopDriver.leftPanel);
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
         }
 
         ShopDriver.setCurrentTable(TableState.SUPPLIER);
 
-        // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Suppliers");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        // Reset GuiCreator.frame
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Suppliers");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         // When first run, ensure ArrayList (and table) is sorted by ID
         if (first) {
@@ -157,10 +158,10 @@ public class SupplierTable extends BaseTable {
         });
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBackground(ShopDriver.backgroundColour);
+        scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         String[] supplierMemberArrayEdit = new String[ShopDriver.getSuppliers().size() + 1];
         supplierMemberArrayEdit[0] = "Edit Supplier";
@@ -253,11 +254,11 @@ public class SupplierTable extends BaseTable {
         buttonPanel.add(sortOptions);
 
         // scrollPane.add(table);
-        ShopDriver.mainPanel.add(scrollPane, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -269,14 +270,14 @@ public class SupplierTable extends BaseTable {
      * @see #createTable()
      */
     public static void add() {
-        // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        // Reset GuiCreator.frame
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
 
         // Panel items
         JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(ShopDriver.backgroundColour);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         GridBagConstraints g = new GridBagConstraints();
 
         // JLabels with GridBagLayout
@@ -407,8 +408,7 @@ public class SupplierTable extends BaseTable {
                 lastPurchaseBoxes.add(lastPurchaseMonth);
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
-                boolean valid = ShopDriver.checkFields(textFields, null, null, null, null, addedBoxes,
-                        lastPurchaseBoxes);
+                boolean valid = checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
 
                 if (valid) {
                     ShopDriver
@@ -419,10 +419,10 @@ public class SupplierTable extends BaseTable {
                                             + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
                                             + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
-                    ShopDriver.setConfirmMessage("New Supplier \"" + suppNameField.getText() + "\" added");
-                    ShopDriver.frame.remove(ShopDriver.leftPanel);
-                    ShopDriver.frame.repaint();
-                    ShopDriver.frame.validate();
+                    GuiCreator.setConfirmMessage("New Supplier \"" + suppNameField.getText() + "\" added");
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.frame.validate();
                     sortByID(false);
                     createTable();
                 }
@@ -431,17 +431,17 @@ public class SupplierTable extends BaseTable {
 
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.frame.remove(ShopDriver.leftPanel);
-                ShopDriver.frame.repaint();
-                ShopDriver.frame.validate();
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.repaint();
+                GuiCreator.frame.validate();
             }
         });
 
         // Add innerPanel
-        ShopDriver.leftPanel.add(innerPanel);
+        GuiCreator.leftPanel.add(innerPanel);
 
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(true, false, false);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
@@ -456,17 +456,17 @@ public class SupplierTable extends BaseTable {
      * @see #createTable()
      */
     public static void edit(int supplierID) {
-        // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        // Reset GuiCreator.frame
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
 
         for (Supplier s : ShopDriver.getSuppliers()) {
             if (supplierID == s.getSupplierId()) {
                 final int index = ShopDriver.getSuppliers().indexOf(s);
                 // Panel items
                 final JPanel innerPanel = new JPanel(new GridBagLayout());
-                innerPanel.setBackground(ShopDriver.backgroundColour);
+                innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                 GridBagConstraints g = new GridBagConstraints();
                 g.insets = new Insets(1, 10, 0, 5);
 
@@ -604,8 +604,7 @@ public class SupplierTable extends BaseTable {
                         lastPurchaseBoxes.add(lastPurchaseMonth);
                         lastPurchaseBoxes.add(lastPurchaseYear);
 
-                        boolean valid = ShopDriver.checkFields(textFields, null, null, null, null, addedBoxes,
-                                lastPurchaseBoxes);
+                        boolean valid = checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
 
                         if (valid) {
                             ShopDriver.getSuppliers()
@@ -620,9 +619,9 @@ public class SupplierTable extends BaseTable {
                                                     + "/"
                                                     + dateAddedYear.getSelectedItem()));
 
-                            ShopDriver.setConfirmMessage("Supplier \"" + suppNameField.getText() + "'s details editted");
-                            ShopDriver.frame.remove(ShopDriver.leftPanel);
-                            ShopDriver.frame.validate();
+                            GuiCreator.setConfirmMessage("Supplier \"" + suppNameField.getText() + "'s details editted");
+                            GuiCreator.frame.remove(GuiCreator.leftPanel);
+                            GuiCreator.frame.validate();
                             ShopDriver.getSuppliers().remove(index + 1);
                             createTable();
                         }
@@ -631,16 +630,16 @@ public class SupplierTable extends BaseTable {
 
                 cancel.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        ShopDriver.frame.remove(ShopDriver.leftPanel);
-                        ShopDriver.frame.validate();
+                        GuiCreator.frame.remove(GuiCreator.leftPanel);
+                        GuiCreator.frame.validate();
                     }
                 });
                 // Add innerPanel
-                ShopDriver.leftPanel.add(innerPanel);
+                GuiCreator.leftPanel.add(innerPanel);
             }
         }
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(true, false, false);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
@@ -650,7 +649,7 @@ public class SupplierTable extends BaseTable {
      * JComboBox.<br />
      * Re-runs {@link #createTable()} on completion.
      * 
-     * @param supplierID
+     * @param supplierId
      *            an Integer specifying the ID number of the supplier chosen to
      *            be deleted
      * @param supplierName
@@ -659,37 +658,35 @@ public class SupplierTable extends BaseTable {
      * 
      * @see #createTable()
      */
-    public static void delete(int supplierID, String supplierName) {
-        JPanel myPanel = new JPanel();
+    public static void delete(final int supplierId, final String supplierName) {
+        final JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("Do you want to delete " + supplierName + "?"));
 
         int i = -1; // Holds index of object to be deleted
 
-        if (ShopDriver.showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
-            // Reset ShopDriver.frame
-            ShopDriver.frame.remove(ShopDriver.leftPanel);
-            ShopDriver.frame.repaint();
-            ShopDriver.leftPanel = new JPanel();
+        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+            // Reset GuiCreator.frame
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
+            GuiCreator.frame.repaint();
+            GuiCreator.leftPanel = new JPanel();
 
-            for (Supplier c : ShopDriver.getSuppliers()) {
-                if (supplierID == c.getSupplierId())
-                    i = ShopDriver.getSuppliers().indexOf(c); // Object can't be
-                // removed while being
-                // accessed - save its
-                // index location for
-                // now
+            for (final Supplier c : ShopDriver.getSuppliers()) {
+                if (supplierId == c.getSupplierId()) {
+                    i = ShopDriver.getSuppliers().indexOf(c);
+                }
             }
         }
 
-        if (i != -1) // If an object has been found, we can now remove it from
-                     // the ArrayList
+        if (i != -1) { // If an object has been found, we can now remove it from
+                       // the ArrayList
             ShopDriver.getSuppliers().remove(i);
-        ShopDriver.setConfirmMessage(supplierName + " deleted");
+            GuiCreator.setConfirmMessage(supplierName + " deleted");
+        }
 
-        // Update ShopDriver.frame
+        // Update GuiCreator.frame
         createTable();
 
-        ShopDriver.frame.validate();
+        GuiCreator.frame.validate();
     }
 
     /**
@@ -708,18 +705,18 @@ public class SupplierTable extends BaseTable {
      * @see SupplierTable#createTable()
      */
     public static void showSupplierInfo(Supplier s) {
-        // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - " + s.getSupplierName());
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        // Reset GuiCreator.frame
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + s.getSupplierName());
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         JPanel titlePanel = new JPanel(new GridBagLayout());
         JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
         JPanel buttonPanel = new JPanel();
-        titlePanel.setBackground(ShopDriver.backgroundColour);
-        innerPanel.setBackground(ShopDriver.backgroundColour);
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
+        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         JLabel supplierLabel = new JLabel("Supplier");
         JLabel vatNumberLabel = new JLabel("VAT Number");
@@ -826,11 +823,11 @@ public class SupplierTable extends BaseTable {
         buttonPanel.add(backButton);
         innerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        ShopDriver.mainPanel.add(titlePanel, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(innerPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
 
         // Update frame
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**

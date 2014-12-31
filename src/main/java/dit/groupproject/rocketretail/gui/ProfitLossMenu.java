@@ -88,23 +88,23 @@ public class ProfitLossMenu {
      */
     public static void simpleReport() {
         // Reset frame
-        ShopDriver.frame.remove(ShopDriver.rightPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.rightPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.rightPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.rightPanel = new JPanel();
 
         // ActionListener code
         JTextArea plReportTextArea = new JTextArea(ProfitLoss.createTotals(), TEXT_AREA_HEIGHT, TEST_AREA_WIDTH);
         plReportTextArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(plReportTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBackground(ShopDriver.backgroundColour);
-        ShopDriver.rightPanel.add(scrollPane);
+        scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        GuiCreator.rightPanel.add(scrollPane);
         if (ShopDriver.getCurrentTableState() == TableState.HOMESCREEN) {
-            ShopDriver.mainPanel.removeAll();
+            GuiCreator.mainPanel.removeAll();
         }
 
         // Update frame
-        ShopDriver.setFrame(false, true, false);
+        GuiCreator.setFrame(false, true, false);
     }
 
     /**
@@ -127,9 +127,9 @@ public class ProfitLossMenu {
      */
     public static void advancedReport() {
         // Reset frame
-        ShopDriver.frame.remove(ShopDriver.rightPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.rightPanel = new JPanel(new BorderLayout());
+        GuiCreator.frame.remove(GuiCreator.rightPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.rightPanel = new JPanel(new BorderLayout());
 
         // ActionListener code
         JTextArea plReportTextArea = new JTextArea(ProfitLoss.createAdvancedReport(), TEXT_AREA_HEIGHT, TEST_AREA_WIDTH);
@@ -143,16 +143,16 @@ public class ProfitLossMenu {
 
         JScrollPane scrollPane = new JScrollPane(plReportTextArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setBackground(ShopDriver.backgroundColour);
+        scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         if (ShopDriver.getCurrentTableState() == TableState.HOMESCREEN) {
-            ShopDriver.mainPanel.removeAll();
+            GuiCreator.mainPanel.removeAll();
         }
 
-        ShopDriver.rightPanel.add(scrollPane, BorderLayout.CENTER);
-        ShopDriver.rightPanel.add(plReportTotal, BorderLayout.SOUTH);
+        GuiCreator.rightPanel.add(scrollPane, BorderLayout.CENTER);
+        GuiCreator.rightPanel.add(plReportTotal, BorderLayout.SOUTH);
 
         // Update frame
-        ShopDriver.setFrame(false, true, false);
+        GuiCreator.setFrame(false, true, false);
     }
 }

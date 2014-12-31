@@ -32,6 +32,7 @@ import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
+import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
@@ -78,16 +79,16 @@ public class StaffTable extends BaseTable {
      * */
     public static void createTable() {
         if (!(ShopDriver.getCurrentTableState() == TableState.STAFF)) {
-            ShopDriver.frame.remove(ShopDriver.leftPanel);
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
         }
 
         ShopDriver.setCurrentTable(TableState.STAFF);
 
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Staff Members");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Staff Members");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         // When first run, ensure ArrayList (and table) is sorted by ID
         if (first) {
@@ -143,7 +144,7 @@ public class StaffTable extends BaseTable {
         JScrollPane scrollPane = new JScrollPane(table);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         String[] staffMemberArrayEdit = new String[ShopDriver.getStaffMembers().size() + 1];
         staffMemberArrayEdit[0] = "Edit Staff";
@@ -235,11 +236,11 @@ public class StaffTable extends BaseTable {
         buttonPanel.add(deleteBox);
         buttonPanel.add(sortOptions);
 
-        ShopDriver.mainPanel.add(scrollPane, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
         // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -248,13 +249,13 @@ public class StaffTable extends BaseTable {
      * */
     public static void add() {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
 
         // Panel items
         JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(ShopDriver.backgroundColour);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         GridBagConstraints g = new GridBagConstraints();
 
         // JLabels with GridBagLayout
@@ -385,8 +386,7 @@ public class StaffTable extends BaseTable {
                 addedBoxes.add(dateAddedMonth);
                 addedBoxes.add(dateAddedYear);
 
-                boolean valid = ShopDriver.checkFields(textFields, null, doubleFields, pinFields, comboBoxes,
-                        addedBoxes, null);
+                boolean valid = checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null);
 
                 if (valid) {
                     ShopDriver.getStaffMembers().add(
@@ -396,9 +396,9 @@ public class StaffTable extends BaseTable {
                                     dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
                                             + dateAddedYear.getSelectedItem()));
 
-                    ShopDriver.setConfirmMessage("Staff member " + nameField.getText() + " added");
-                    ShopDriver.frame.remove(ShopDriver.leftPanel);
-                    ShopDriver.frame.validate();
+                    GuiCreator.setConfirmMessage("Staff member " + nameField.getText() + " added");
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.validate();
                     createTable();
                 }
             }
@@ -406,16 +406,16 @@ public class StaffTable extends BaseTable {
 
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.frame.remove(ShopDriver.leftPanel);
-                ShopDriver.frame.validate();
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.validate();
             }
         });
 
         // Add innerPanel
-        ShopDriver.leftPanel.add(innerPanel);
+        GuiCreator.leftPanel.add(innerPanel);
 
         // Update ShopDriver.frame
-        ShopDriver.setFrame(true, false, false);
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
@@ -428,9 +428,9 @@ public class StaffTable extends BaseTable {
      * */
     public static void edit(int staffId) {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
 
         for (Staff t : ShopDriver.getStaffMembers()) {
             if (staffId == t.getStaffId()) {
@@ -438,7 +438,7 @@ public class StaffTable extends BaseTable {
 
                 // Panel items
                 JPanel innerPanel = new JPanel(new GridBagLayout());
-                innerPanel.setBackground(ShopDriver.backgroundColour);
+                innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                 GridBagConstraints g = new GridBagConstraints();
 
                 // JLabels with GridBagLayout
@@ -575,8 +575,8 @@ public class StaffTable extends BaseTable {
                         addedBoxes.add(dateAddedMonth);
                         addedBoxes.add(dateAddedYear);
 
-                        boolean valid = ShopDriver.checkFields(textFields, null, doubleFields, pinFields, comboBoxes,
-                                addedBoxes, null);
+                        boolean valid = checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes,
+                                null);
 
                         if (valid) {
                             // Add the staff at this index
@@ -589,9 +589,9 @@ public class StaffTable extends BaseTable {
                                                     + dateAddedMonth.getSelectedItem() + "/"
                                                     + dateAddedYear.getSelectedItem()));
 
-                            ShopDriver.setConfirmMessage("Staff member " + nameField.getText() + "'s details editted");
-                            ShopDriver.frame.remove(ShopDriver.leftPanel);
-                            ShopDriver.frame.validate();
+                            GuiCreator.setConfirmMessage("Staff member " + nameField.getText() + "'s details editted");
+                            GuiCreator.frame.remove(GuiCreator.leftPanel);
+                            GuiCreator.frame.validate();
 
                             // Since adding an entry to ArrayList pushes down
                             // previous entry, which needs to be removed
@@ -603,16 +603,16 @@ public class StaffTable extends BaseTable {
 
                 cancel.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        ShopDriver.frame.remove(ShopDriver.leftPanel);
-                        ShopDriver.frame.validate();
+                        GuiCreator.frame.remove(GuiCreator.leftPanel);
+                        GuiCreator.frame.validate();
                     }
                 });
                 // Add innerPanel
-                ShopDriver.leftPanel.add(innerPanel);
+                GuiCreator.leftPanel.add(innerPanel);
             }
         }
         // Update ShopDriver.frame
-        ShopDriver.setFrame(true, false, false);
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
@@ -621,43 +621,43 @@ public class StaffTable extends BaseTable {
      * correct staff member. Also shows the staff members name and ID in
      * confirmation window.
      * 
-     * @param staffID
+     * @param staffId
      *            (int)
      * @param staffName
      *            (String)
      * */
-    public static void delete(int staffID, String staffName) {
-        if (staffID == ShopDriver.getCurrentStaff().getStaffId()) {
+    public static void delete(final int staffId, final String staffName) {
+        if (staffId == ShopDriver.getCurrentStaff().getStaffId()) {
             JOptionPane.showMessageDialog(null, "You can't delete yourself!", "Deletion Error",
                     JOptionPane.PLAIN_MESSAGE);
         } else {
-            JPanel myPanel = new JPanel();
+            final JPanel myPanel = new JPanel();
             myPanel.add(new JLabel("Do you want to delete " + staffName + "?"));
 
             int i = -1; // Holds index of object to be deleted
 
-            if (ShopDriver.showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+            if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
                 // Reset ShopDriver.frame
-                ShopDriver.frame.remove(ShopDriver.leftPanel);
-                ShopDriver.frame.repaint();
-                ShopDriver.leftPanel = new JPanel();
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.repaint();
+                GuiCreator.leftPanel = new JPanel();
 
-                for (Staff s : ShopDriver.getStaffMembers()) {
-                    if (staffID == s.getStaffId())
+                for (final Staff s : ShopDriver.getStaffMembers()) {
+                    if (staffId == s.getStaffId())
                         i = ShopDriver.getStaffMembers().indexOf(s);
                 }
             }
 
             if (i != -1) { // If an object has been found, we can now remove it
                            // from the ArrayList
-                ShopDriver.setConfirmMessage(staffName + " deleted");
+                GuiCreator.setConfirmMessage(staffName + " deleted");
                 ShopDriver.getStaffMembers().remove(i);
             }
 
             // Update ShopDriver.frame
             createTable();
         }
-        ShopDriver.frame.validate();
+        GuiCreator.frame.validate();
     }
 
     /**
@@ -672,19 +672,19 @@ public class StaffTable extends BaseTable {
      * */
     public static void showStaffInfo(Staff s) {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - " + s.getStaffName());
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + s.getStaffName());
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         JPanel titlePanel = new JPanel(new GridBagLayout());
         JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
         JPanel myPanel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel();
-        titlePanel.setBackground(ShopDriver.backgroundColour);
-        innerPanel.setBackground(ShopDriver.backgroundColour);
-        myPanel.setBackground(ShopDriver.backgroundColour);
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
+        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        myPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         final String level = s.getStaffLevel() == 1 ? "Manager" : "Employee";
 
@@ -859,11 +859,11 @@ public class StaffTable extends BaseTable {
         innerPanel.add(myPanel, BorderLayout.NORTH);
         innerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        ShopDriver.mainPanel.add(titlePanel, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(innerPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
 
         // Update frame
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**

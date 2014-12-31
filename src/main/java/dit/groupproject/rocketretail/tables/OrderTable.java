@@ -39,6 +39,7 @@ import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
+import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.MenuGUI;
 import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
@@ -157,16 +158,16 @@ public class OrderTable extends BaseTable {
      */
     public static void createTable() {
         if (!(ShopDriver.getCurrentTableState() == TableState.ORDER)) {
-            ShopDriver.frame.remove(ShopDriver.leftPanel);
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
         }
 
         ShopDriver.setCurrentTable(TableState.ORDER);
 
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Orders");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         JComboBox<String> tempBox = new JComboBox<String>();
 
@@ -405,10 +406,10 @@ public class OrderTable extends BaseTable {
         });
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBackground(ShopDriver.backgroundColour);
+        scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         String[] createOptionsManager = { "Create Order", "Customer Order", "Supplier Order" };
         String[] createOptionsEmployee = { "Create Order", "Customer Order" };
@@ -477,7 +478,7 @@ public class OrderTable extends BaseTable {
                     JPanel myPanel = new JPanel();
                     myPanel.add(new JLabel("Do you want to complete ALL supplier orders?"));
 
-                    if (ShopDriver.showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+                    if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
                         int count = 0;
                         for (Order o : ShopDriver.getOrders()) {
                             if (o.isActive() && o.isSupplier()) {
@@ -485,7 +486,7 @@ public class OrderTable extends BaseTable {
                                 count++;
                             }
                         }
-                        ShopDriver.setConfirmMessage(count + " orders completed");
+                        GuiCreator.setConfirmMessage(count + " orders completed");
                         createTable();
                     }
                 } else if (completeOptions.getSelectedItem().equals("Complete All Customer Orders")) {
@@ -493,7 +494,7 @@ public class OrderTable extends BaseTable {
                     JPanel myPanel = new JPanel();
                     myPanel.add(new JLabel("Do you want to complete ALL customer orders?"));
 
-                    if (ShopDriver.showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+                    if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
                         int count = 0;
                         for (Order o : ShopDriver.getOrders()) {
                             if (o.isActive() && !o.isSupplier()) {
@@ -501,7 +502,7 @@ public class OrderTable extends BaseTable {
                                 count++;
                             }
                         }
-                        ShopDriver.setConfirmMessage(count + " orders completed");
+                        GuiCreator.setConfirmMessage(count + " orders completed");
                         createTable();
                     }
 
@@ -510,7 +511,7 @@ public class OrderTable extends BaseTable {
                     JPanel myPanel = new JPanel();
                     myPanel.add(new JLabel("Do you want to complete ALL orders?"));
 
-                    if (ShopDriver.showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+                    if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
                         int count = 0;
                         for (Order o : ShopDriver.getOrders()) {
                             if (o.isActive()) {
@@ -518,7 +519,7 @@ public class OrderTable extends BaseTable {
                                 count++;
                             }
                         }
-                        ShopDriver.setConfirmMessage(count + " orders completed");
+                        GuiCreator.setConfirmMessage(count + " orders completed");
                         createTable();
                     }
                 } else
@@ -562,11 +563,11 @@ public class OrderTable extends BaseTable {
         buttonPanel.add(sortOptions);
         buttonPanel.add(showOptions);
 
-        ShopDriver.mainPanel.add(scrollPane, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
         // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -578,12 +579,12 @@ public class OrderTable extends BaseTable {
      */
     public static void createCustomerOrder() {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
 
         innerPanel = new JPanel(new BorderLayout(0, 2));
-        innerPanel.setBackground(ShopDriver.backgroundColour);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         // Create array of customer names for JComboBox
         String[] customerArray = new String[ShopDriver.getCustomers().size() + 2];
@@ -604,9 +605,9 @@ public class OrderTable extends BaseTable {
                     CustomerTable.add();
                 else {
                     // Reset ShopDriver.frame
-                    ShopDriver.frame.remove(ShopDriver.leftPanel);
-                    ShopDriver.frame.repaint();
-                    ShopDriver.leftPanel = new JPanel();
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.leftPanel = new JPanel();
 
                     // Add labels to panel
                     JLabel productName = new JLabel("Product");
@@ -622,7 +623,7 @@ public class OrderTable extends BaseTable {
                             .getSize()));
 
                     JPanel titlePanel = new JPanel(new GridLayout(0, 3));
-                    titlePanel.setBackground(ShopDriver.backgroundColour);
+                    titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                     titlePanel.add(productName);
                     titlePanel.add(currentStockLevel);
                     titlePanel.add(orderAmount);
@@ -637,7 +638,7 @@ public class OrderTable extends BaseTable {
                     final ArrayList<JTextField> orderAmountFields = new ArrayList<JTextField>();
 
                     JPanel productQuantPanel = new JPanel(new GridLayout(0, 3));
-                    productQuantPanel.setBackground(ShopDriver.backgroundColour);
+                    productQuantPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
                     int i = 0;
                     for (Product p : ShopDriver.getProducts()) {
@@ -661,7 +662,7 @@ public class OrderTable extends BaseTable {
                     }
                     JScrollPane scroll = new JScrollPane(productQuantPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                    scroll.setBackground(ShopDriver.backgroundColour);
+                    scroll.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
                     JButton saveButton = new JButton("Save");
                     saveButton.addActionListener(new ActionListener() {
@@ -727,16 +728,16 @@ public class OrderTable extends BaseTable {
                                         }
                                     }
                                 }
-                                ShopDriver.setConfirmMessage("Order #"
+                                GuiCreator.setConfirmMessage("Order #"
                                         + ORDER_ID_FORMATTER.format(ShopDriver.getOrders()
                                                 .get(ShopDriver.getOrders().size() - 1).getOrderId())
                                         + " created for customer \"" + activeCust.getCustomerName() + "\"");
 
                                 // Reset ShopDriver.frame
-                                ShopDriver.frame.remove(ShopDriver.leftPanel);
-                                ShopDriver.mainPanel.validate();
-                                ShopDriver.frame.repaint();
-                                ShopDriver.frame.validate();
+                                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                                GuiCreator.mainPanel.validate();
+                                GuiCreator.frame.repaint();
+                                GuiCreator.frame.validate();
                                 createTable();
                             }
                         }
@@ -745,10 +746,10 @@ public class OrderTable extends BaseTable {
                     JButton cancelButton = new JButton("Cancel");
                     cancelButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            ShopDriver.frame.remove(ShopDriver.leftPanel);
-                            ShopDriver.mainPanel.validate();
-                            ShopDriver.frame.repaint();
-                            ShopDriver.frame.validate();
+                            GuiCreator.frame.remove(GuiCreator.leftPanel);
+                            GuiCreator.mainPanel.validate();
+                            GuiCreator.frame.repaint();
+                            GuiCreator.frame.validate();
                         }
                     });
                     innerPanel = new JPanel(new BorderLayout());
@@ -756,10 +757,10 @@ public class OrderTable extends BaseTable {
                     JPanel buttonPanel = new JPanel(new BorderLayout());
                     JPanel buttonPanel2 = new JPanel(new GridBagLayout());
 
-                    innerPanel.setBackground(ShopDriver.backgroundColour);
-                    outerTitlePanel.setBackground(ShopDriver.backgroundColour);
-                    buttonPanel.setBackground(ShopDriver.backgroundColour);
-                    buttonPanel2.setBackground(ShopDriver.backgroundColour);
+                    innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+                    outerTitlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+                    buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+                    buttonPanel2.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
                     buttonPanel.add(new JLabel("Customer:  "), BorderLayout.WEST);
                     buttonPanel.add(customerOptions);
@@ -786,19 +787,19 @@ public class OrderTable extends BaseTable {
                     innerPanel.add(buttonPanel2, BorderLayout.SOUTH);
 
                     // Add innerPanel
-                    ShopDriver.leftPanel.add(innerPanel);
+                    GuiCreator.leftPanel.add(innerPanel);
 
                     // Update ShopDriver.frame
-                    ShopDriver.setFrame(true, false, false);
+                    GuiCreator.setFrame(true, false, false);
                 }
             }
         });
         innerPanel.add(new JLabel("Customer:  "), BorderLayout.WEST);
         innerPanel.add(customerOptions);
-        ShopDriver.leftPanel.add(innerPanel);
+        GuiCreator.leftPanel.add(innerPanel);
 
         // Update ShopDriver.frame
-        ShopDriver.setFrame(true, false, false);
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
@@ -812,11 +813,11 @@ public class OrderTable extends BaseTable {
      */
     public static void createSupplierOrder(int supplierIndex) {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.repaint();
-        ShopDriver.leftPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
         innerPanel = new JPanel(new BorderLayout(0, 2));
-        innerPanel.setBackground(ShopDriver.backgroundColour);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         // Create array of supplier names for JComboBox
         String[] supplierArray = new String[ShopDriver.getSuppliers().size() + 2];
@@ -840,9 +841,9 @@ public class OrderTable extends BaseTable {
                     SupplierTable.add();
                 else {
                     // Reset ShopDriver.frame
-                    ShopDriver.frame.remove(ShopDriver.leftPanel);
-                    ShopDriver.frame.repaint();
-                    ShopDriver.leftPanel = new JPanel();
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.leftPanel = new JPanel();
 
                     // Add labels to panel
                     JLabel productName = new JLabel("Product");
@@ -858,7 +859,7 @@ public class OrderTable extends BaseTable {
                             .getSize()));
 
                     JPanel titlePanel = new JPanel(new GridLayout(0, 3));
-                    titlePanel.setBackground(ShopDriver.backgroundColour);
+                    titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                     titlePanel.add(productName);
                     titlePanel.add(currentStockLevel);
                     titlePanel.add(orderAmount);
@@ -881,7 +882,7 @@ public class OrderTable extends BaseTable {
                     }
 
                     JPanel productQuantityPanel = new JPanel(new GridLayout(0, 3));
-                    productQuantityPanel.setBackground(ShopDriver.backgroundColour);
+                    productQuantityPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                     // sp and pl
                     int i = 0;
                     for (Product sp : supplierProducts) {
@@ -904,7 +905,7 @@ public class OrderTable extends BaseTable {
                     }
                     JScrollPane scroll = new JScrollPane(productQuantityPanel,
                             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                    scroll.setBackground(ShopDriver.backgroundColour);
+                    scroll.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
                     JButton saveButton = new JButton("Save");
                     saveButton.addActionListener(new ActionListener() {
@@ -969,15 +970,15 @@ public class OrderTable extends BaseTable {
 
                                 }
 
-                                ShopDriver.setConfirmMessage("Order #"
+                                GuiCreator.setConfirmMessage("Order #"
                                         + ORDER_ID_FORMATTER.format(ShopDriver.getOrders()
                                                 .get(ShopDriver.getOrders().size() - 1).getOrderId())
                                         + " created for supplier \"" + activeSupp.getSupplierName() + "\"");
 
                                 // Reset ShopDriver.frame
-                                ShopDriver.frame.remove(ShopDriver.leftPanel);
-                                ShopDriver.frame.repaint();
-                                ShopDriver.frame.validate();
+                                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                                GuiCreator.frame.repaint();
+                                GuiCreator.frame.validate();
                                 createTable();
                             }
                         }
@@ -986,10 +987,10 @@ public class OrderTable extends BaseTable {
                     JButton cancelButton = new JButton("Cancel");
                     cancelButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            ShopDriver.frame.remove(ShopDriver.leftPanel);
-                            ShopDriver.mainPanel.validate();
-                            ShopDriver.frame.repaint();
-                            ShopDriver.frame.validate();
+                            GuiCreator.frame.remove(GuiCreator.leftPanel);
+                            GuiCreator.mainPanel.validate();
+                            GuiCreator.frame.repaint();
+                            GuiCreator.frame.validate();
                         }
                     });
                     innerPanel = new JPanel(new BorderLayout());
@@ -997,10 +998,10 @@ public class OrderTable extends BaseTable {
                     JPanel buttonPanel = new JPanel(new BorderLayout());
                     JPanel buttonPanel2 = new JPanel(new GridBagLayout());
 
-                    innerPanel.setBackground(ShopDriver.backgroundColour);
-                    outerTitlePanel.setBackground(ShopDriver.backgroundColour);
-                    buttonPanel.setBackground(ShopDriver.backgroundColour);
-                    buttonPanel2.setBackground(ShopDriver.backgroundColour);
+                    innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+                    outerTitlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+                    buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+                    buttonPanel2.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
                     buttonPanel.add(new JLabel("Supplier:  "), BorderLayout.WEST);
                     buttonPanel.add(supplierOptions);
@@ -1027,10 +1028,10 @@ public class OrderTable extends BaseTable {
                     innerPanel.add(buttonPanel2, BorderLayout.SOUTH);
 
                     // Add innerPanel
-                    ShopDriver.leftPanel.add(innerPanel);
+                    GuiCreator.leftPanel.add(innerPanel);
 
                     // Update ShopDriver.frame
-                    ShopDriver.setFrame(true, false, false);
+                    GuiCreator.setFrame(true, false, false);
                 }
             }
         });
@@ -1038,38 +1039,39 @@ public class OrderTable extends BaseTable {
         innerPanel.add(supplierOptions);
 
         // Add innerPanel to leftPanel
-        ShopDriver.leftPanel.add(innerPanel);
+        GuiCreator.leftPanel.add(innerPanel);
 
         // Update ShopDriver.frame
-        ShopDriver.setFrame(true, false, false);
+        GuiCreator.setFrame(true, false, false);
     }
 
     /**
      * Completes an order, at the current date. If a supplier order, the stock
      * levels are updated by {@link Order}.
      * 
-     * @param orderID
+     * @param orderId
      *            an Integer specifying the order to be completed
      * 
      * @see Order
      */
-    public static void completeOrder(int orderID) {
-        JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Are you sure you want to complete order #" + ORDER_ID_FORMATTER.format(orderID) + "?"));
+    public static void completeOrder(int orderId) {
+        final JPanel myPanel = new JPanel();
+        myPanel.add(new JLabel("Are you sure you want to complete order #" + ORDER_ID_FORMATTER.format(orderId) + "?"));
 
-        int result = ShopDriver.showDialog("Please confirm", myPanel);
+        final int result = showDialog("Please confirm", myPanel);
 
         if (result == JOptionPane.OK_OPTION) {
-            for (Order o : ShopDriver.getOrders()) {
-                if (o.getOrderId() == orderID)
+            for (final Order o : ShopDriver.getOrders()) {
+                if (o.getOrderId() == orderId) {
                     o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+                }
 
             }
-            ShopDriver.setConfirmMessage("Order #" + orderID + " completed");
+            GuiCreator.setConfirmMessage("Order #" + orderId + " completed");
         }
 
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
-        ShopDriver.frame.validate();
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.validate();
         createTable();
     }
 
@@ -1089,17 +1091,17 @@ public class OrderTable extends BaseTable {
      */
     public static void showOrderInfo(Order o) {
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Order #" + ORDER_ID_FORMATTER.format(o.getOrderId()));
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout(0, 1));
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Order #" + ORDER_ID_FORMATTER.format(o.getOrderId()));
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
         JPanel titlePanel = new JPanel(new GridBagLayout());
         JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
         JPanel buttonPanel = new JPanel();
-        titlePanel.setBackground(ShopDriver.backgroundColour);
-        innerPanel.setBackground(ShopDriver.backgroundColour);
-        buttonPanel.setBackground(ShopDriver.backgroundColour);
+        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         boolean isSupplier = false;
 
@@ -1242,11 +1244,11 @@ public class OrderTable extends BaseTable {
         buttonPanel.add(backButton);
         innerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        ShopDriver.mainPanel.add(titlePanel, BorderLayout.NORTH);
-        ShopDriver.mainPanel.add(innerPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
 
         // Update frame
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**

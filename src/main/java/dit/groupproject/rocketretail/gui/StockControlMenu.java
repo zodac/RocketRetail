@@ -54,12 +54,12 @@ public class StockControlMenu {
     public static void checkAll() {
 
         // Reset ShopDriver.frame
-        ShopDriver.frame.remove(ShopDriver.rightPanel);
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.remove(ShopDriver.leftPanel);
+        GuiCreator.frame.remove(GuiCreator.rightPanel);
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
 
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel(new BorderLayout());
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout());
 
         productDescription.clear();
         productPercentLevel.clear();
@@ -110,7 +110,7 @@ public class StockControlMenu {
                     if (replenishBox.getSelectedIndex() == 4)
                         StockControlUtilities.replenishStocks(new Double(100.00), productsToReplenish);
 
-                    ShopDriver.setConfirmMessage("Products replensihed to " + (replenishBox.getSelectedIndex() * 25)
+                    GuiCreator.setConfirmMessage("Products replensihed to " + (replenishBox.getSelectedIndex() * 25)
                             + "%");
                     replenishBox.setSelectedIndex(0);
                     replenishBox.setEnabled(false);
@@ -120,13 +120,13 @@ public class StockControlMenu {
         });
 
         JPanel comboPanel = new JPanel();
-        comboPanel.setBackground(ShopDriver.backgroundColour);
+        comboPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         comboPanel.add(replenishBox);
-        ShopDriver.mainPanel.add(comboPanel, BorderLayout.SOUTH);
+        GuiCreator.mainPanel.add(comboPanel, BorderLayout.SOUTH);
 
-        ShopDriver.mainPanel.add(p, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(p, BorderLayout.CENTER);
 
-        ShopDriver.setFrame(false, false, true);
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**

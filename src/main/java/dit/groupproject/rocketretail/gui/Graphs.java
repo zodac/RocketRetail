@@ -218,14 +218,14 @@ public class Graphs {
      * */
     public static void BarGraphLeft(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
         // Reset frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Graphs");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Graphs");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel();
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)",
                 createDataset(dataArray, isYear), PlotOrientation.VERTICAL, true, true, false);
-        chart.setBackgroundPaint(ShopDriver.backgroundColour);
+        chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
@@ -237,10 +237,10 @@ public class Graphs {
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(500, 270));
 
-        ShopDriver.mainPanel.add(chartPanel, BorderLayout.WEST);
+        GuiCreator.mainPanel.add(chartPanel, BorderLayout.WEST);
 
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -257,14 +257,14 @@ public class Graphs {
      * */
     public static void BarGraphLeft5Year(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
         // Reset frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Graphs");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Graphs");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel();
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)",
                 fiveYearCreateDataset(dataArray, isYear), PlotOrientation.VERTICAL, true, true, false);
-        chart.setBackgroundPaint(ShopDriver.backgroundColour);
+        chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
@@ -276,10 +276,10 @@ public class Graphs {
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(500, 270));
 
-        ShopDriver.mainPanel.add(chartPanel, BorderLayout.WEST);
+        GuiCreator.mainPanel.add(chartPanel, BorderLayout.WEST);
 
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -297,14 +297,14 @@ public class Graphs {
      * */
     public static void sixMonthPredictionBarGraph(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
         // Reset frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Prediction");
-        ShopDriver.frame.repaint();
-        // ShopDriver.mainPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Prediction");
+        GuiCreator.frame.repaint();
+        // GuiCreator.mainPanel = new JPanel();
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)",
                 createDatasetMth(dataArray, isYear), PlotOrientation.VERTICAL, true, true, false);
-        chart.setBackgroundPaint(ShopDriver.backgroundColour);
+        chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
@@ -326,10 +326,10 @@ public class Graphs {
         r.setSeriesPaint(1, gradientpaint1);
         r.setSeriesPaint(2, gradientpaint2);
 
-        ShopDriver.mainPanel.add(chartPanel, BorderLayout.EAST);
+        GuiCreator.mainPanel.add(chartPanel, BorderLayout.EAST);
 
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -347,14 +347,14 @@ public class Graphs {
      * */
     public static void twoYearPredictionBarGraph(String title, double[][] dataArray, String xAxisTitle, Boolean isYear) {
         // Reset frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Prediction");
-        ShopDriver.frame.repaint();
-        // ShopDriver.mainPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Prediction");
+        GuiCreator.frame.repaint();
+        // GuiCreator.mainPanel = new JPanel();
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)",
                 twoYearCreateDataset(dataArray, isYear), PlotOrientation.VERTICAL, true, true, false);
-        chart.setBackgroundPaint(ShopDriver.backgroundColour);
+        chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         String yearTitle = "Predictions for " + (ShopDriver.yearCurrent + 1) + "-" + (ShopDriver.yearCurrent + 2);
         chart.addSubtitle(new TextTitle(yearTitle, new Font("SansSerif", Font.PLAIN, 18), new Color(82, 89, 110),
@@ -375,10 +375,10 @@ public class Graphs {
         r.setSeriesPaint(1, gradientpaint1);
         r.setSeriesPaint(2, gradientpaint2);
 
-        ShopDriver.mainPanel.add(chartPanel, BorderLayout.EAST);
+        GuiCreator.mainPanel.add(chartPanel, BorderLayout.EAST);
 
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -397,7 +397,7 @@ public class Graphs {
         JFreeChart chart = ChartFactory.createBarChart(null, xAxis, yAxis,
                 createProductDataset(productDescription, productPercentLevel), PlotOrientation.VERTICAL, true, true,
                 false);
-        chart.setBackgroundPaint(ShopDriver.backgroundColour);
+        chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setTickLabelFont(
                 new java.awt.Font("Dialog", java.awt.Font.PLAIN, 9));
@@ -563,14 +563,14 @@ public class Graphs {
      * */
     public static void BarGraph12Month(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
         // Reset frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Orders");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel();
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)",
                 createDataset(dataArray, isYear), PlotOrientation.VERTICAL, true, true, false);
-        chart.setBackgroundPaint(ShopDriver.backgroundColour);
+        chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
@@ -580,7 +580,7 @@ public class Graphs {
                 RectangleEdge.TOP, HorizontalAlignment.CENTER, VerticalAlignment.TOP, RectangleInsets.ZERO_INSETS));
 
         JPanel myPanel = new JPanel(new GridBagLayout());
-        myPanel.setBackground(ShopDriver.backgroundColour);
+        myPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         GridBagConstraints g = new GridBagConstraints();
 
         ChartPanel chartPanel = new ChartPanel(chart);
@@ -610,7 +610,7 @@ public class Graphs {
                 }
             });
 
-            ShopDriver.mainPanel.add(myPanel, BorderLayout.CENTER);
+            GuiCreator.mainPanel.add(myPanel, BorderLayout.CENTER);
         }
 
         else {
@@ -638,13 +638,13 @@ public class Graphs {
                     }
                 }
             });
-            ShopDriver.mainPanel.add(myPanel, BorderLayout.CENTER);
+            GuiCreator.mainPanel.add(myPanel, BorderLayout.CENTER);
         }
 
-        ShopDriver.mainPanel.add(chartPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(chartPanel, BorderLayout.CENTER);
 
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -662,14 +662,14 @@ public class Graphs {
      * */
     public static void BarGraph5Year(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
         // Reset frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Orders");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel();
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)",
                 createDataset(dataArray, isYear), PlotOrientation.VERTICAL, true, true, false);
-        chart.setBackgroundPaint(ShopDriver.backgroundColour);
+        chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
@@ -679,7 +679,7 @@ public class Graphs {
                 RectangleEdge.TOP, HorizontalAlignment.CENTER, VerticalAlignment.TOP, RectangleInsets.ZERO_INSETS));
 
         JPanel myPanel = new JPanel(new GridBagLayout());
-        myPanel.setBackground(ShopDriver.backgroundColour);
+        myPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         GridBagConstraints g = new GridBagConstraints();
 
         ChartPanel chartPanel = new ChartPanel(chart);
@@ -710,7 +710,7 @@ public class Graphs {
                 }
             });
 
-            ShopDriver.mainPanel.add(myPanel, BorderLayout.CENTER);
+            GuiCreator.mainPanel.add(myPanel, BorderLayout.CENTER);
         }
 
         else {
@@ -738,13 +738,13 @@ public class Graphs {
                     }
                 }
             });
-            ShopDriver.mainPanel.add(myPanel, BorderLayout.CENTER);
+            GuiCreator.mainPanel.add(myPanel, BorderLayout.CENTER);
         }
 
-        ShopDriver.mainPanel.add(chartPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(chartPanel, BorderLayout.CENTER);
 
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
@@ -761,20 +761,20 @@ public class Graphs {
      * */
     public static void BarGraph(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
         // Reset frame
-        ShopDriver.frame.remove(ShopDriver.mainPanel);
-        ShopDriver.frame.setTitle("Rocket Retail Inc - Orders");
-        ShopDriver.frame.repaint();
-        ShopDriver.mainPanel = new JPanel();
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel();
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)",
                 createDataset(dataArray, isYear), PlotOrientation.VERTICAL, true, true, false);
-        chart.setBackgroundPaint(ShopDriver.backgroundColour);
+        chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
 
         JPanel myPanel = new JPanel(new GridBagLayout());
-        myPanel.setBackground(ShopDriver.backgroundColour);
+        myPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         GridBagConstraints g = new GridBagConstraints();
 
         ChartPanel chartPanel = new ChartPanel(chart);
@@ -806,7 +806,7 @@ public class Graphs {
                 }
             });
 
-            ShopDriver.mainPanel.add(myPanel, BorderLayout.CENTER);
+            GuiCreator.mainPanel.add(myPanel, BorderLayout.CENTER);
         }
 
         else {
@@ -834,13 +834,13 @@ public class Graphs {
                     }
                 }
             });
-            ShopDriver.mainPanel.add(myPanel, BorderLayout.CENTER);
+            GuiCreator.mainPanel.add(myPanel, BorderLayout.CENTER);
         }
 
-        ShopDriver.mainPanel.add(chartPanel, BorderLayout.CENTER);
+        GuiCreator.mainPanel.add(chartPanel, BorderLayout.CENTER);
 
-        // Update ShopDriver.frame
-        ShopDriver.setFrame(false, false, true);
+        // Update GuiCreator.frame
+        GuiCreator.setFrame(false, false, true);
     }
 
     /**
