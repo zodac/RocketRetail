@@ -9,11 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -89,7 +87,7 @@ public class CustomerTable extends BaseTable {
         resetGui();
 
         if (first) {
-            sortById(false);
+            sortById();
             first = false;
         }
 
@@ -361,7 +359,8 @@ public class CustomerTable extends BaseTable {
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
 
-                    sortById(false);
+                    descendingOrderSort = false;
+                    sortById();
                     createTable();
                 }
             }
@@ -741,7 +740,28 @@ public class CustomerTable extends BaseTable {
      *            A boolean to decide whether to add the <code>Customer</code>s
      *            to an <code>ArrayList</code> in ascending or descending order.
      */
-    public static void sortById(boolean reverse) {
+
+    /**
+     * This method has a control structure to determine which sorting parameter
+     * was chosen to sort the <code>Customer</code>s by.
+     */
+    public static void sortArrayList() {
+        if (sortType.equals("ID")) {
+            sortById();
+        } else if (sortType.equals("Name")) {
+            sortByName();
+        } else if (sortType.equals("Address")) {
+            sortByAddress();
+        } else if (sortType.equals("VAT Number")) {
+            sortByVatNumber();
+        } else if (sortType.equals("Last Purchase")) {
+            sortByLastPurchadeDate();
+        } else if (sortType.equals("Date Added")) {
+            sortByDateAdded();
+        }
+    }
+
+    public static void sortById() {
         ArrayList<Customer> tempArrayList = new ArrayList<Customer>();
         int count = IdManager.CUSTOMER_ID_START;
         int offset = 0;
@@ -763,149 +783,54 @@ public class CustomerTable extends BaseTable {
 
         ShopDriver.getCustomers().clear();
 
-        if (!reverse) {
+        if (!descendingOrderSort) {
             for (int i = 0; i < tempArrayList.size(); i++) {
                 ShopDriver.getCustomers().add(tempArrayList.get(i));
             }
-        } else if (reverse) {
+        } else if (descendingOrderSort) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
                 ShopDriver.getCustomers().add(tempArrayList.get(i));
             }
         }
     }
 
-    /**
-     * This method has a control structure to determine which sorting parameter
-     * was chosen to sort the <code>Customer</code>s by.
-     */
-    public static void sortArrayList() {
-        if (sortType.equals("ID")) {
-            sortById(descendingOrderSort);
-        } else if (sortType.equals("Name")) {
-            sortByName(descendingOrderSort);
-        } else if (sortType.equals("Address")) {
-            sortByAddress(descendingOrderSort);
-        } else if (sortType.equals("VAT Number")) {
-            sortByVatNumber(descendingOrderSort);
-        } else if (sortType.equals("Last Purchase")) {
-            sortByDate(false, descendingOrderSort);
-        } else if (sortType.equals("Date Added")) {
-            sortByDate(true, descendingOrderSort);
+    public static void sortByName() {
+        if (descendingOrderSort) {
+            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByName));
+        } else {
+            Collections.sort(ShopDriver.getCustomers(), Customer.compareByName);
         }
     }
 
-    /**
-     * This method sorts the <code>Customer</code>s by name using a
-     * <code>Comparator</code>.
-     * 
-     * @param reverse
-     *            A boolean to decide whether the <code>Customer</code>s should
-     *            be sorted in ascending or descending order.
-     */
-    public static void sortByName(boolean reverse) {
-        if (!reverse) {
-            Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(final Customer s1, final Customer s2) {
-                    return s1.getCustomerName().compareToIgnoreCase(s2.getCustomerName());
-                }
-            });
-        }
-
-        if (reverse) {
-            Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(final Customer s1, final Customer s2) {
-                    return s2.getCustomerName().compareToIgnoreCase(s1.getCustomerName());
-                }
-            });
+    public static void sortByAddress() {
+        if (descendingOrderSort) {
+            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByAddress));
+        } else {
+            Collections.sort(ShopDriver.getCustomers(), Customer.compareByAddress);
         }
     }
 
-    /**
-     * This method sorts the <code>Customer</code>s by address using a
-     * <code>Comparator</code>.
-     * 
-     * @param reverse
-     *            A boolean to decide whether the <code>Customer</code>
-     *            addresses should be sorted in ascending or descending order.
-     */
-    public static void sortByAddress(boolean reverse) {
-        if (!reverse) {
-            Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(final Customer s1, final Customer s2) {
-                    return s1.getAddress().compareToIgnoreCase(s2.getAddress());
-                }
-            });
-        }
-
-        if (reverse) {
-            Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(final Customer s1, final Customer s2) {
-                    return s2.getAddress().compareToIgnoreCase(s1.getAddress());
-                }
-            });
+    public static void sortByVatNumber() {
+        if (descendingOrderSort) {
+            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByVatNumber));
+        } else {
+            Collections.sort(ShopDriver.getCustomers(), Customer.compareByVatNumber);
         }
     }
 
-    /**
-     * This method sorts the <code>Customer</code>s by Vat Number using a
-     * <code>Comparator</code>.
-     * 
-     * @param reverse
-     *            A boolean to decide whether the <code>Customer</code> vat
-     *            numbers should be sorted in ascending or descending order.
-     */
-    public static void sortByVatNumber(boolean reverse) {
-        if (!reverse) {
-            Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(final Customer s1, final Customer s2) {
-                    return s1.getVatNumber().compareToIgnoreCase(s2.getVatNumber());
-                }
-            });
-        }
-
-        if (reverse) {
-            Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-                public int compare(final Customer s1, final Customer s2) {
-                    return s2.getVatNumber().compareToIgnoreCase(s1.getVatNumber());
-                }
-            });
+    public static void sortByLastPurchadeDate() {
+        if (descendingOrderSort) {
+            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByLastPurchaseDate));
+        } else {
+            Collections.sort(ShopDriver.getCustomers(), Customer.compareByLastPurchaseDate);
         }
     }
 
-    /**
-     * This method sorts the <code>Customer</code>s by the date they were added.
-     * 
-     * @param reverse
-     *            A boolean to decide whether the <code>Customer</code> add
-     *            dates should be sorted in ascending or descending order.
-     */
-    public static void sortByDate(final boolean dateAdded, final boolean reverse) {
-
-        Collections.sort(ShopDriver.getCustomers(), new Comparator<Customer>() {
-            @Override
-            public int compare(Customer c1, Customer c2) {
-                try {
-                    String string1 = "";
-                    String string2 = "";
-
-                    if (dateAdded) {
-                        string1 = c1.getDateAdded();
-                        string2 = c2.getDateAdded();
-                    } else {
-                        string1 = c1.getLastPurchase();
-                        string2 = c2.getLastPurchase();
-                    }
-
-                    if (!reverse) {
-                        return DATE_FORMATTER.parse(string1).compareTo(DATE_FORMATTER.parse(string2));
-                    } else {
-                        return DATE_FORMATTER.parse(string2).compareTo(DATE_FORMATTER.parse(string1));
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                return 0;
-            }
-        });
+    public static void sortByDateAdded() {
+        if (descendingOrderSort) {
+            Collections.sort(ShopDriver.getCustomers(), Collections.reverseOrder(Customer.compareByDateAdded));
+        } else {
+            Collections.sort(ShopDriver.getCustomers(), Customer.compareByDateAdded);
+        }
     }
 }

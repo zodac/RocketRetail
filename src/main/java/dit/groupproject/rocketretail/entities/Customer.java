@@ -1,10 +1,16 @@
 package dit.groupproject.rocketretail.entities;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
 
 /**
  * A class that is used to model a <code>Customer</code>.
  */
 public class Customer {
+
+    private final static DateFormat DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
     private int customerId;
     private String customerName;
@@ -62,4 +68,42 @@ public class Customer {
     public String getDateAdded() {
         return dateAdded;
     }
+
+    public static Comparator<Customer> compareByName = new Comparator<Customer>() {
+        public int compare(final Customer s1, final Customer s2) {
+            return s1.getCustomerName().compareToIgnoreCase(s2.getCustomerName());
+        }
+    };
+
+    public static Comparator<Customer> compareByAddress = new Comparator<Customer>() {
+        public int compare(final Customer s1, final Customer s2) {
+            return s1.getAddress().compareToIgnoreCase(s2.getAddress());
+        }
+    };
+
+    public static Comparator<Customer> compareByVatNumber = new Comparator<Customer>() {
+        public int compare(final Customer s1, final Customer s2) {
+            return s1.getVatNumber().compareToIgnoreCase(s2.getVatNumber());
+        }
+    };
+
+    public static Comparator<Customer> compareByLastPurchaseDate = new Comparator<Customer>() {
+        public int compare(final Customer s1, final Customer s2) {
+            try {
+                return DATE_FORMATTER.parse(s1.getLastPurchase()).compareTo(DATE_FORMATTER.parse(s2.getLastPurchase()));
+            } catch (ParseException e) {
+                return 0;
+            }
+        }
+    };
+
+    public static Comparator<Customer> compareByDateAdded = new Comparator<Customer>() {
+        public int compare(final Customer s1, final Customer s2) {
+            try {
+                return DATE_FORMATTER.parse(s1.getDateAdded()).compareTo(DATE_FORMATTER.parse(s2.getDateAdded()));
+            } catch (ParseException e) {
+                return 0;
+            }
+        }
+    };
 }
