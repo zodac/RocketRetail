@@ -2,6 +2,7 @@ package dit.groupproject.rocketretail.utilities;
 
 import java.util.ArrayList;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
@@ -52,11 +53,11 @@ public class DateSort {
      * @see #sortYearOrderDate()
      * @see #indexTotal(int, int)
      */
-    public static void SortDate(int yearStart, int yearEnd) {
+    public static void sortDate(int yearStart, int yearEnd) {
 
         tempOrdersArrayList = new ArrayList<Order>();
-        for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
-            tempOrdersArrayList.add(ShopDriver.getOrders().get(i));
+        for (final Order order : Database.getOrders()) {
+            tempOrdersArrayList.add(order);
         }
 
         custDates = new double[ShopDriver.YEARS_AS_NUMBERS.length - 1][12];

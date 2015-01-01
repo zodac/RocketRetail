@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import dit.groupproject.rocketretail.main.ShopDriver;
+
 /**
  * A class that is used to test <code>completeOrder()</code>
  */
@@ -23,8 +25,9 @@ public class OrderTest {
      * */
     @Before
     public void setUp() {
-        orders.add(new Order(201, 562, "15/08/2013", orderedItems, false));
-        orders.add(new Order(225, 594, "20/08/2013", orderedItems, false));
+        ShopDriver.setCurrentStaff(new Staff(0, "Test", 1, "012345678", "Fake Street", 500, 1, "01/01/1970"));
+        orders.add(new Order(562, "15/08/2013", orderedItems, false));
+        orders.add(new Order(594, "20/08/2013", orderedItems, false));
     }
 
     /**
@@ -33,8 +36,9 @@ public class OrderTest {
      * */
     @Test
     public void testCompleteOrder() {
-        orders.get(0).completeOrder(TEST_DATE);
-        assertEquals(TEST_DATE, orders.get(0).getDeliveryDate());
+        final Order order = orders.get(0);
+        order.completeOrder(TEST_DATE);
+        assertEquals(TEST_DATE, order.getDeliveryDate());
     }
 
     /**
@@ -43,7 +47,8 @@ public class OrderTest {
      * */
     @Test
     public void testCompleteOrderFail() {
-        orders.get(1).completeOrder(TEST_DATE);
-        assertNotSame("", orders.get(1).getDeliveryDate());
+        final Order order = orders.get(1);
+        order.completeOrder(TEST_DATE);
+        assertNotSame("", order.getDeliveryDate());
     }
 }

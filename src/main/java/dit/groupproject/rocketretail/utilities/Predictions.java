@@ -2,6 +2,7 @@ package dit.groupproject.rocketretail.utilities;
 
 import java.util.ArrayList;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
@@ -23,11 +24,12 @@ public class Predictions {
      * @param yearEnd
      *            An integer used to determine the year to work until
      */
-    public static void SortDate(int yearStart, int yearEnd) {
+    public static void sortDate(int yearStart, int yearEnd) {
 
         tempOrdersArrayList = new ArrayList<Order>();
-        for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
-            tempOrdersArrayList.add(ShopDriver.getOrders().get(i));
+
+        for (final Order order : Database.getOrders()) {
+            tempOrdersArrayList.add(order);
         }
 
         custDates = new double[51][12];
@@ -217,7 +219,7 @@ public class Predictions {
         double[][] dataArray = new double[12][3]; // 12 months, 3 entries per
                                                   // month (sales, purchases,
                                                   // profit/loss)
-        DateSort.SortDate(selectedYear, selectedYear + 1);
+        DateSort.sortDate(selectedYear, selectedYear + 1);
 
         for (int i = 0; i < 12; i++) {
             double custTotal = 0, suppTotal = 0;

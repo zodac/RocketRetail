@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
-import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
  * A class that is used to test <code>testCreateReport()</code>
@@ -30,10 +30,10 @@ public class ProfitLossTest {
         orderedItems.add(new OrderedItem(new Product("Bananas", 10, 30, 4321, 0.2, 0.6), 10));
         orderedItems.add(new OrderedItem(new Product("Grapes", 10, 30, 4321, 0.2, 0.6), 10));
 
-        ShopDriver.addOrder(new Order(50, 1001, "20/08/2013", orderedItems, false));
-        ShopDriver.addOrder(new Order(50, 1007, "20/08/2013", orderedItems, false));
-        ShopDriver.addOrder(new Order(50, 10005, "20/08/2013", orderedItems, false));
-        ShopDriver.addOrder(new Order(50, 10009, "20/08/2013", orderedItems, false));
+        Database.addOrder(new Order(1001, "20/08/2013", orderedItems, false));
+        Database.addOrder(new Order(1007, "20/08/2013", orderedItems, false));
+        Database.addOrder(new Order(10005, "20/08/2013", orderedItems, false));
+        Database.addOrder(new Order(10009, "20/08/2013", orderedItems, false));
     }
 
     /**

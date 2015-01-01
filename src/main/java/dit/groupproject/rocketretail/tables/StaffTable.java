@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.Staff;
@@ -97,29 +98,29 @@ public class StaffTable extends BaseTable {
         }
 
         String[] columnNames = { "ID", "Name", "Gender", "Phone Number", "Address", "Wage", "Level", "Date Added" };
-        Object[][] data = new Object[ShopDriver.getStaffMembers().size()][8];
+        Object[][] data = new Object[Database.getStaffMembers().size()][8];
 
-        for (int i = 0; i < ShopDriver.getStaffMembers().size(); i++) {
+        for (int i = 0; i < Database.getStaffMembers().size(); i++) {
             String level = "";
-            if (ShopDriver.getStaffMembers().get(i).getStaffLevel() == 2)
+            if (Database.getStaffMembers().get(i).getStaffLevel() == 2)
                 level = "Employee";
             else
                 level = "Manager";
 
             String gender = "";
-            if (ShopDriver.getStaffMembers().get(i).getGender() == 1)
+            if (Database.getStaffMembers().get(i).getGender() == 1)
                 gender = "Male";
-            else if (ShopDriver.getStaffMembers().get(i).getGender() == 2)
+            else if (Database.getStaffMembers().get(i).getGender() == 2)
                 gender = "Female";
 
-            data[i][0] = STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffId());
-            data[i][1] = ShopDriver.getStaffMembers().get(i).getStaffName();
+            data[i][0] = STAFF_ID_FORMATTER.format(Database.getStaffMembers().get(i).getStaffId());
+            data[i][1] = Database.getStaffMembers().get(i).getStaffName();
             data[i][2] = gender;
-            data[i][3] = ShopDriver.getStaffMembers().get(i).getPhoneNumber();
-            data[i][4] = ShopDriver.getStaffMembers().get(i).getAddress();
-            data[i][5] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getWage());
+            data[i][3] = Database.getStaffMembers().get(i).getPhoneNumber();
+            data[i][4] = Database.getStaffMembers().get(i).getAddress();
+            data[i][5] = "€" + CURRENCY_FORMATTER.format(Database.getStaffMembers().get(i).getWage());
             data[i][6] = level;
-            data[i][7] = ShopDriver.getStaffMembers().get(i).getDateAdded();
+            data[i][7] = Database.getStaffMembers().get(i).getDateAdded();
         }
 
         final JTable table = new JTable(data, columnNames);
@@ -132,7 +133,7 @@ public class StaffTable extends BaseTable {
                                                    // -1
                     Staff input = null;
 
-                    for (Staff s : ShopDriver.getStaffMembers()) {
+                    for (Staff s : Database.getStaffMembers()) {
                         if (s.getStaffId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
                             input = s;
                     }
@@ -146,22 +147,22 @@ public class StaffTable extends BaseTable {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        String[] staffMemberArrayEdit = new String[ShopDriver.getStaffMembers().size() + 1];
+        String[] staffMemberArrayEdit = new String[Database.getStaffMembers().size() + 1];
         staffMemberArrayEdit[0] = "Edit Staff";
-        for (int i = 0; i < ShopDriver.getStaffMembers().size() + 1; i++) {
-            if (i < ShopDriver.getStaffMembers().size())
+        for (int i = 0; i < Database.getStaffMembers().size() + 1; i++) {
+            if (i < Database.getStaffMembers().size())
                 staffMemberArrayEdit[i + 1] = "ID: "
-                        + STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffId()) + " ("
-                        + ShopDriver.getStaffMembers().get(i).getStaffName() + ")";
+                        + STAFF_ID_FORMATTER.format(Database.getStaffMembers().get(i).getStaffId()) + " ("
+                        + Database.getStaffMembers().get(i).getStaffName() + ")";
         }
 
-        String[] staffMemberArrayDelete = new String[ShopDriver.getStaffMembers().size() + 1];
+        String[] staffMemberArrayDelete = new String[Database.getStaffMembers().size() + 1];
         staffMemberArrayDelete[0] = "Delete Staff";
-        for (int i = 0; i < ShopDriver.getStaffMembers().size() + 1; i++) {
-            if (i < ShopDriver.getStaffMembers().size())
+        for (int i = 0; i < Database.getStaffMembers().size() + 1; i++) {
+            if (i < Database.getStaffMembers().size())
                 staffMemberArrayDelete[i + 1] = "ID: "
-                        + STAFF_ID_FORMATTER.format(ShopDriver.getStaffMembers().get(i).getStaffId()) + " ("
-                        + ShopDriver.getStaffMembers().get(i).getStaffName() + ")";
+                        + STAFF_ID_FORMATTER.format(Database.getStaffMembers().get(i).getStaffId()) + " ("
+                        + Database.getStaffMembers().get(i).getStaffName() + ")";
         }
 
         JButton addButton = new JButton("Add Staff");
@@ -389,7 +390,7 @@ public class StaffTable extends BaseTable {
                 boolean valid = checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null);
 
                 if (valid) {
-                    ShopDriver.getStaffMembers().add(
+                    Database.getStaffMembers().add(
                             new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField.getText(),
                                     genderField.getSelectedIndex(), phoneNoField.getText(), addressField.getText(),
                                     Double.parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(),
@@ -432,9 +433,9 @@ public class StaffTable extends BaseTable {
         GuiCreator.frame.repaint();
         GuiCreator.leftPanel = new JPanel();
 
-        for (Staff t : ShopDriver.getStaffMembers()) {
+        for (Staff t : Database.getStaffMembers()) {
             if (staffId == t.getStaffId()) {
-                final int index = ShopDriver.getStaffMembers().indexOf(t);
+                final int index = Database.getStaffMembers().indexOf(t);
 
                 // Panel items
                 JPanel innerPanel = new JPanel(new GridBagLayout());
@@ -580,7 +581,7 @@ public class StaffTable extends BaseTable {
 
                         if (valid) {
                             // Add the staff at this index
-                            ShopDriver.getStaffMembers().add(
+                            Database.getStaffMembers().add(
                                     index,
                                     new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField
                                             .getText(), genderField.getSelectedIndex(), phoneNoField.getText(),
@@ -595,7 +596,7 @@ public class StaffTable extends BaseTable {
 
                             // Since adding an entry to ArrayList pushes down
                             // previous entry, which needs to be removed
-                            ShopDriver.getStaffMembers().remove(index + 1);
+                            Database.getStaffMembers().remove(index + 1);
                             createTable();
                         }
                     }
@@ -642,16 +643,16 @@ public class StaffTable extends BaseTable {
                 GuiCreator.frame.repaint();
                 GuiCreator.leftPanel = new JPanel();
 
-                for (final Staff s : ShopDriver.getStaffMembers()) {
+                for (final Staff s : Database.getStaffMembers()) {
                     if (staffId == s.getStaffId())
-                        i = ShopDriver.getStaffMembers().indexOf(s);
+                        i = Database.getStaffMembers().indexOf(s);
                 }
             }
 
             if (i != -1) { // If an object has been found, we can now remove it
                            // from the ArrayList
                 GuiCreator.setConfirmMessage(staffName + " deleted");
-                ShopDriver.getStaffMembers().remove(i);
+                Database.getStaffMembers().remove(i);
             }
 
             // Update ShopDriver.frame
@@ -759,7 +760,7 @@ public class StaffTable extends BaseTable {
         int numberOfCustomerOrders = 0, numberOfSupplierOrders = 0;
         int arrayIndex = 0;
 
-        for (Order o : ShopDriver.getOrders()) {
+        for (Order o : Database.getOrders()) {
             if (o.getStaffId() == s.getStaffId()) {
                 if (!o.isSupplier()) {
                     numberOfCustomerOrders++;
@@ -773,27 +774,26 @@ public class StaffTable extends BaseTable {
         Object[][] data = new Object[numberOfCustomerOrders + 1][3];
         double total = 0;
 
-        for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
+        for (int i = 0; i < Database.getOrders().size(); i++) {
 
-            if (!ShopDriver.getOrders().get(i).isSupplier()
-                    && ShopDriver.getOrders().get(i).getStaffId() == s.getStaffId()) {
+            if (!Database.getOrders().get(i).isSupplier() && Database.getOrders().get(i).getStaffId() == s.getStaffId()) {
 
                 double totalOrderPrice = 0;
-                for (int j = 0; j < ShopDriver.getOrders().get(i).getOrderedItems().size(); j++) {
-                    totalOrderPrice += ShopDriver.getOrders().get(i).getOrderedItems().get(j).getQuantity()
-                            * ShopDriver.getOrders().get(i).getOrderedItems().get(j).getProduct().getSalePrice();
+                for (int j = 0; j < Database.getOrders().get(i).getOrderedItems().size(); j++) {
+                    totalOrderPrice += Database.getOrders().get(i).getOrderedItems().get(j).getQuantity()
+                            * Database.getOrders().get(i).getOrderedItems().get(j).getProduct().getSalePrice();
                 }
 
                 String name = "";
 
-                for (Customer c : ShopDriver.getCustomers()) {
-                    if (ShopDriver.getOrders().get(i).getTraderId() == c.getCustomerId()) {
+                for (Customer c : Database.getCustomers()) {
+                    if (Database.getOrders().get(i).getTraderId() == c.getCustomerId()) {
                         name = c.getCustomerName();
                     }
                 }
 
-                data[arrayIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
-                data[arrayIndex][1] = name + " (" + ShopDriver.getOrders().get(i).getTraderId() + ")";
+                data[arrayIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
+                data[arrayIndex][1] = name + " (" + Database.getOrders().get(i).getTraderId() + ")";
                 data[arrayIndex][2] = "€" + CURRENCY_FORMATTER.format(totalOrderPrice);
                 arrayIndex++;
                 total += totalOrderPrice;
@@ -810,26 +810,25 @@ public class StaffTable extends BaseTable {
         Object[][] data2 = new Object[numberOfSupplierOrders + 1][3];
         total = arrayIndex = 0;
 
-        for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
+        for (int i = 0; i < Database.getOrders().size(); i++) {
 
-            if (ShopDriver.getOrders().get(i).isSupplier()
-                    && ShopDriver.getOrders().get(i).getStaffId() == s.getStaffId()) {
+            if (Database.getOrders().get(i).isSupplier() && Database.getOrders().get(i).getStaffId() == s.getStaffId()) {
 
                 double totalOrderPrice = 0;
-                for (int j = 0; j < ShopDriver.getOrders().get(i).getOrderedItems().size(); j++) {
-                    totalOrderPrice += ShopDriver.getOrders().get(i).getOrderedItems().get(j).getQuantity()
-                            * ShopDriver.getOrders().get(i).getOrderedItems().get(j).getProduct().getCostPrice();
+                for (int j = 0; j < Database.getOrders().get(i).getOrderedItems().size(); j++) {
+                    totalOrderPrice += Database.getOrders().get(i).getOrderedItems().get(j).getQuantity()
+                            * Database.getOrders().get(i).getOrderedItems().get(j).getProduct().getCostPrice();
                 }
 
                 String name = "";
 
-                for (Supplier supp : ShopDriver.getSuppliers()) {
-                    if (ShopDriver.getOrders().get(i).getTraderId() == supp.getSupplierId())
+                for (Supplier supp : Database.getSuppliers()) {
+                    if (Database.getOrders().get(i).getTraderId() == supp.getSupplierId())
                         name = supp.getSupplierName();
                 }
 
-                data2[arrayIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
-                data2[arrayIndex][1] = name + " (" + ShopDriver.getOrders().get(i).getTraderId() + ")";
+                data2[arrayIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
+                data2[arrayIndex][1] = name + " (" + Database.getOrders().get(i).getTraderId() + ")";
                 data2[arrayIndex][2] = "€" + CURRENCY_FORMATTER.format(totalOrderPrice);
                 arrayIndex++;
                 total += totalOrderPrice;
@@ -878,8 +877,8 @@ public class StaffTable extends BaseTable {
         int output = 0, i = 0;
         boolean found = false;
 
-        while (!found && i < ShopDriver.getStaffMembers().size()) {
-            if (ShopDriver.getStaffMembers().get(i).getStaffId() == i) {
+        while (!found && i < Database.getStaffMembers().size()) {
+            if (Database.getStaffMembers().get(i).getStaffId() == i) {
             } else {
                 output = i;
                 found = true;
@@ -890,7 +889,7 @@ public class StaffTable extends BaseTable {
         if (found)
             return output;
         else
-            return ShopDriver.getStaffMembers().size();
+            return Database.getStaffMembers().size();
     }
 
     /**
@@ -930,7 +929,7 @@ public class StaffTable extends BaseTable {
      * */
     public static void sortByName(boolean reverse) {
         if (!reverse) {
-            Collections.sort(ShopDriver.getStaffMembers(), new Comparator<Staff>() {
+            Collections.sort(Database.getStaffMembers(), new Comparator<Staff>() {
                 public int compare(Staff s1, Staff s2) {
                     return s1.getStaffName().compareToIgnoreCase(s2.getStaffName());
                 }
@@ -938,7 +937,7 @@ public class StaffTable extends BaseTable {
         }
 
         if (reverse) {
-            Collections.sort(ShopDriver.getStaffMembers(), new Comparator<Staff>() {
+            Collections.sort(Database.getStaffMembers(), new Comparator<Staff>() {
                 public int compare(Staff s1, Staff s2) {
                     return s2.getStaffName().compareToIgnoreCase(s1.getStaffName());
                 }
@@ -957,7 +956,7 @@ public class StaffTable extends BaseTable {
      * */
     public static void sortByAddress(boolean reverse) {
         if (!reverse) {
-            Collections.sort(ShopDriver.getStaffMembers(), new Comparator<Staff>() {
+            Collections.sort(Database.getStaffMembers(), new Comparator<Staff>() {
                 public int compare(Staff s1, Staff s2) {
                     return s1.getAddress().compareToIgnoreCase(s2.getAddress());
                 }
@@ -965,7 +964,7 @@ public class StaffTable extends BaseTable {
         }
 
         if (reverse) {
-            Collections.sort(ShopDriver.getStaffMembers(), new Comparator<Staff>() {
+            Collections.sort(Database.getStaffMembers(), new Comparator<Staff>() {
                 public int compare(Staff s1, Staff s2) {
                     return s2.getAddress().compareToIgnoreCase(s1.getAddress());
                 }
@@ -986,9 +985,9 @@ public class StaffTable extends BaseTable {
         int count = 0, offset = 0;
         boolean found = false;
 
-        for (int i = 0; i < ShopDriver.getStaffMembers().size() + offset; i++) {
+        for (int i = 0; i < Database.getStaffMembers().size() + offset; i++) {
             found = false;
-            for (Staff s : ShopDriver.getStaffMembers()) {
+            for (Staff s : Database.getStaffMembers()) {
                 if (count == s.getStaffId()) {
                     tempArrayList.add(s);
                     found = true;
@@ -999,15 +998,15 @@ public class StaffTable extends BaseTable {
             count++;
         }
 
-        ShopDriver.getStaffMembers().clear();
+        Database.getStaffMembers().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getStaffMembers().add(tempArrayList.get(i));
+                Database.getStaffMembers().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getStaffMembers().add(tempArrayList.get(i));
+                Database.getStaffMembers().add(tempArrayList.get(i));
             }
         }
     }
@@ -1029,9 +1028,9 @@ public class StaffTable extends BaseTable {
         tempArrayList.clear();
         boolean found;
 
-        while (ShopDriver.getStaffMembers().size() != 0) {
+        while (Database.getStaffMembers().size() != 0) {
             // go through the array list and find the lowest wage listed
-            for (Staff s : ShopDriver.getStaffMembers()) {
+            for (Staff s : Database.getStaffMembers()) {
                 if (lowestWage > s.getWage()) {
                     lowestWage = s.getWage();
                 }
@@ -1040,33 +1039,33 @@ public class StaffTable extends BaseTable {
             found = false;
             // find an entry in the arrayList with a wage matching the lowest
             // wage found
-            for (Staff s : ShopDriver.getStaffMembers()) {
+            for (Staff s : Database.getStaffMembers()) {
                 if (lowestWage == s.getWage() && !found) {
                     // when a matching entry is found, add to tempArrayList
                     tempArrayList.add(s);
 
                     // note the index of this entry
-                    indexL = ShopDriver.getStaffMembers().indexOf(s);
+                    indexL = Database.getStaffMembers().indexOf(s);
 
                     found = true;
                 }
                 if (found)
                     break;
             }
-            ShopDriver.getStaffMembers().remove(indexL);
+            Database.getStaffMembers().remove(indexL);
 
             lowestWage = 99999999;
         }
 
-        ShopDriver.getStaffMembers().clear();
+        Database.getStaffMembers().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getStaffMembers().add(tempArrayList.get(i));
+                Database.getStaffMembers().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getStaffMembers().add(tempArrayList.get(i));
+                Database.getStaffMembers().add(tempArrayList.get(i));
             }
         }
     }
@@ -1084,24 +1083,24 @@ public class StaffTable extends BaseTable {
 
         tempArrayList.clear();
 
-        for (Staff s : ShopDriver.getStaffMembers()) {
+        for (Staff s : Database.getStaffMembers()) {
             if (s.getStaffLevel() == 1)
                 tempArrayList.add(s);
         }
-        for (Staff s : ShopDriver.getStaffMembers()) {
+        for (Staff s : Database.getStaffMembers()) {
             if (s.getStaffLevel() == 2)
                 tempArrayList.add(s);
         }
 
-        ShopDriver.getStaffMembers().clear();
+        Database.getStaffMembers().clear();
 
         if (reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getStaffMembers().add(tempArrayList.get(i));
+                Database.getStaffMembers().add(tempArrayList.get(i));
             }
         } else if (!reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getStaffMembers().add(tempArrayList.get(i));
+                Database.getStaffMembers().add(tempArrayList.get(i));
             }
         }
     }
@@ -1118,7 +1117,7 @@ public class StaffTable extends BaseTable {
      * */
     public static void sortByDateAdded(final boolean reverse) {
 
-        Collections.sort(ShopDriver.getStaffMembers(), new Comparator<Staff>() {
+        Collections.sort(Database.getStaffMembers(), new Comparator<Staff>() {
             DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
 
             @Override

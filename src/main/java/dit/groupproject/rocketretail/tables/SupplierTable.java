@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
@@ -125,17 +126,17 @@ public class SupplierTable extends BaseTable {
         }
 
         String[] columnNames = { "ID", "Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
-        Object[][] data = new Object[ShopDriver.getSuppliers().size()][7];
+        Object[][] data = new Object[Database.getSuppliers().size()][7];
 
-        for (int i = 0; i < ShopDriver.getSuppliers().size(); i++) {
+        for (int i = 0; i < Database.getSuppliers().size(); i++) {
 
-            data[i][0] = SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierId());
-            data[i][1] = ShopDriver.getSuppliers().get(i).getSupplierName();
-            data[i][2] = ShopDriver.getSuppliers().get(i).getPhoneNumber();
-            data[i][3] = ShopDriver.getSuppliers().get(i).getAddress();
-            data[i][4] = ShopDriver.getSuppliers().get(i).getVatNumber();
-            data[i][5] = ShopDriver.getSuppliers().get(i).getLastPurchase();
-            data[i][6] = ShopDriver.getSuppliers().get(i).getDateAdded();
+            data[i][0] = SUPPLIER_ID_FORMATTER.format(Database.getSuppliers().get(i).getSupplierId());
+            data[i][1] = Database.getSuppliers().get(i).getSupplierName();
+            data[i][2] = Database.getSuppliers().get(i).getPhoneNumber();
+            data[i][3] = Database.getSuppliers().get(i).getAddress();
+            data[i][4] = Database.getSuppliers().get(i).getVatNumber();
+            data[i][5] = Database.getSuppliers().get(i).getLastPurchase();
+            data[i][6] = Database.getSuppliers().get(i).getDateAdded();
         }
 
         final JTable table = new JTable(data, columnNames);
@@ -148,7 +149,7 @@ public class SupplierTable extends BaseTable {
                                                    // -1
                     Supplier input = null;
 
-                    for (Supplier s : ShopDriver.getSuppliers()) {
+                    for (Supplier s : Database.getSuppliers()) {
                         if (s.getSupplierId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
                             input = s;
                     }
@@ -163,22 +164,22 @@ public class SupplierTable extends BaseTable {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        String[] supplierMemberArrayEdit = new String[ShopDriver.getSuppliers().size() + 1];
+        String[] supplierMemberArrayEdit = new String[Database.getSuppliers().size() + 1];
         supplierMemberArrayEdit[0] = "Edit Supplier";
-        for (int i = 0; i < ShopDriver.getSuppliers().size() + 1; i++) {
-            if (i < ShopDriver.getSuppliers().size())
+        for (int i = 0; i < Database.getSuppliers().size() + 1; i++) {
+            if (i < Database.getSuppliers().size())
                 supplierMemberArrayEdit[i + 1] = "ID: "
-                        + SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierId()) + " ("
-                        + ShopDriver.getSuppliers().get(i).getSupplierName() + ")";
+                        + SUPPLIER_ID_FORMATTER.format(Database.getSuppliers().get(i).getSupplierId()) + " ("
+                        + Database.getSuppliers().get(i).getSupplierName() + ")";
         }
 
-        String[] supplierMemberArrayDelete = new String[ShopDriver.getSuppliers().size() + 1];
+        String[] supplierMemberArrayDelete = new String[Database.getSuppliers().size() + 1];
         supplierMemberArrayDelete[0] = "Delete Supplier";
-        for (int i = 0; i < ShopDriver.getSuppliers().size() + 1; i++) {
-            if (i < ShopDriver.getSuppliers().size())
+        for (int i = 0; i < Database.getSuppliers().size() + 1; i++) {
+            if (i < Database.getSuppliers().size())
                 supplierMemberArrayDelete[i + 1] = "ID: "
-                        + SUPPLIER_ID_FORMATTER.format(ShopDriver.getSuppliers().get(i).getSupplierId()) + " ("
-                        + ShopDriver.getSuppliers().get(i).getSupplierName() + ")";
+                        + SUPPLIER_ID_FORMATTER.format(Database.getSuppliers().get(i).getSupplierId()) + " ("
+                        + Database.getSuppliers().get(i).getSupplierName() + ")";
         }
 
         JButton addButton = new JButton("Add Supplier");
@@ -411,8 +412,7 @@ public class SupplierTable extends BaseTable {
                 boolean valid = checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
 
                 if (valid) {
-                    ShopDriver
-                            .getSuppliers()
+                    Database.getSuppliers()
                             .add(new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField.getText(),
                                     vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/"
                                             + lastPurchaseMonth.getSelectedItem() + "/"
@@ -461,9 +461,9 @@ public class SupplierTable extends BaseTable {
         GuiCreator.frame.repaint();
         GuiCreator.leftPanel = new JPanel();
 
-        for (Supplier s : ShopDriver.getSuppliers()) {
+        for (Supplier s : Database.getSuppliers()) {
             if (supplierID == s.getSupplierId()) {
-                final int index = ShopDriver.getSuppliers().indexOf(s);
+                final int index = Database.getSuppliers().indexOf(s);
                 // Panel items
                 final JPanel innerPanel = new JPanel(new GridBagLayout());
                 innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
@@ -607,7 +607,7 @@ public class SupplierTable extends BaseTable {
                         boolean valid = checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
 
                         if (valid) {
-                            ShopDriver.getSuppliers()
+                            Database.getSuppliers()
                                     .add(index,
                                             new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField
                                                     .getText(), vatNoField.getText(), lastPurchaseDay.getSelectedItem()
@@ -622,7 +622,7 @@ public class SupplierTable extends BaseTable {
                             GuiCreator.setConfirmMessage("Supplier \"" + suppNameField.getText() + "'s details editted");
                             GuiCreator.frame.remove(GuiCreator.leftPanel);
                             GuiCreator.frame.validate();
-                            ShopDriver.getSuppliers().remove(index + 1);
+                            Database.getSuppliers().remove(index + 1);
                             createTable();
                         }
                     }
@@ -670,16 +670,16 @@ public class SupplierTable extends BaseTable {
             GuiCreator.frame.repaint();
             GuiCreator.leftPanel = new JPanel();
 
-            for (final Supplier c : ShopDriver.getSuppliers()) {
+            for (final Supplier c : Database.getSuppliers()) {
                 if (supplierId == c.getSupplierId()) {
-                    i = ShopDriver.getSuppliers().indexOf(c);
+                    i = Database.getSuppliers().indexOf(c);
                 }
             }
         }
 
         if (i != -1) { // If an object has been found, we can now remove it from
                        // the ArrayList
-            ShopDriver.getSuppliers().remove(i);
+            Database.getSuppliers().remove(i);
             GuiCreator.setConfirmMessage(supplierName + " deleted");
         }
 
@@ -783,7 +783,7 @@ public class SupplierTable extends BaseTable {
 
         int count = 0;
 
-        for (Product p : ShopDriver.getProducts()) {
+        for (Product p : Database.getProducts()) {
             if (s.getSupplierId() == p.getSupplierId())
                 count++;
         }
@@ -792,15 +792,15 @@ public class SupplierTable extends BaseTable {
         Object[][] data = new Object[count][4];
         int indexArray = 0;
 
-        for (int i = 0; i < ShopDriver.getProducts().size(); i++) {
+        for (int i = 0; i < Database.getProducts().size(); i++) {
 
-            if (s.getSupplierId() == ShopDriver.getProducts().get(i).getSupplierId()) {
+            if (s.getSupplierId() == Database.getProducts().get(i).getSupplierId()) {
 
-                data[indexArray][0] = ShopDriver.getProducts().get(i).getProductDescription();
-                data[indexArray][1] = ShopDriver.getProducts().get(i).getProductId();
-                data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getCostPrice());
-                data[indexArray][3] = ShopDriver.getProducts().get(i).getStockLevel() + "/"
-                        + ShopDriver.getProducts().get(i).getMaxLevel();
+                data[indexArray][0] = Database.getProducts().get(i).getProductDescription();
+                data[indexArray][1] = Database.getProducts().get(i).getProductId();
+                data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(Database.getProducts().get(i).getCostPrice());
+                data[indexArray][3] = Database.getProducts().get(i).getStockLevel() + "/"
+                        + Database.getProducts().get(i).getMaxLevel();
                 indexArray++;
             }
 
@@ -867,7 +867,7 @@ public class SupplierTable extends BaseTable {
      */
     public static void sortByName(boolean reverse) {
         if (!reverse) {
-            Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
+            Collections.sort(Database.getSuppliers(), new Comparator<Supplier>() {
                 public int compare(Supplier s1, Supplier s2) {
                     return s1.getSupplierName().compareToIgnoreCase(s2.getSupplierName());
                 }
@@ -875,7 +875,7 @@ public class SupplierTable extends BaseTable {
         }
 
         if (reverse) {
-            Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
+            Collections.sort(Database.getSuppliers(), new Comparator<Supplier>() {
                 public int compare(Supplier s1, Supplier s2) {
                     return s2.getSupplierName().compareToIgnoreCase(s1.getSupplierName());
                 }
@@ -893,7 +893,7 @@ public class SupplierTable extends BaseTable {
      */
     public static void sortByAddress(boolean reverse) {
         if (!reverse) {
-            Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
+            Collections.sort(Database.getSuppliers(), new Comparator<Supplier>() {
                 public int compare(Supplier s1, Supplier s2) {
                     return s1.getAddress().compareToIgnoreCase(s2.getAddress());
                 }
@@ -901,7 +901,7 @@ public class SupplierTable extends BaseTable {
         }
 
         if (reverse) {
-            Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
+            Collections.sort(Database.getSuppliers(), new Comparator<Supplier>() {
                 public int compare(Supplier s1, Supplier s2) {
                     return s2.getAddress().compareToIgnoreCase(s1.getAddress());
                 }
@@ -919,7 +919,7 @@ public class SupplierTable extends BaseTable {
      */
     public static void sortByVatNumber(boolean reverse) {
         if (!reverse) {
-            Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
+            Collections.sort(Database.getSuppliers(), new Comparator<Supplier>() {
                 public int compare(Supplier s1, Supplier s2) {
                     return s1.getVatNumber().compareToIgnoreCase(s2.getVatNumber());
                 }
@@ -927,7 +927,7 @@ public class SupplierTable extends BaseTable {
         }
 
         if (reverse) {
-            Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
+            Collections.sort(Database.getSuppliers(), new Comparator<Supplier>() {
                 public int compare(Supplier s1, Supplier s2) {
                     return s2.getVatNumber().compareToIgnoreCase(s1.getVatNumber());
                 }
@@ -948,9 +948,9 @@ public class SupplierTable extends BaseTable {
         int offset = 0;
         boolean found = false;
 
-        for (int i = 0; i < ShopDriver.getSuppliers().size() + offset; i++) {
+        for (int i = 0; i < Database.getSuppliers().size() + offset; i++) {
             found = false;
-            for (Supplier p : ShopDriver.getSuppliers()) {
+            for (Supplier p : Database.getSuppliers()) {
                 if (count == p.getSupplierId()) {
                     tempArrayList.add(p);
                     found = true;
@@ -961,15 +961,15 @@ public class SupplierTable extends BaseTable {
             count++;
         }
 
-        ShopDriver.getSuppliers().clear();
+        Database.getSuppliers().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getSuppliers().add(tempArrayList.get(i));
+                Database.getSuppliers().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getSuppliers().add(tempArrayList.get(i));
+                Database.getSuppliers().add(tempArrayList.get(i));
             }
         }
     }
@@ -983,7 +983,7 @@ public class SupplierTable extends BaseTable {
      */
     public static void sortByDate(final boolean DateAdded, final boolean reverse) {
 
-        Collections.sort(ShopDriver.getSuppliers(), new Comparator<Supplier>() {
+        Collections.sort(Database.getSuppliers(), new Comparator<Supplier>() {
             DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
 
             @Override

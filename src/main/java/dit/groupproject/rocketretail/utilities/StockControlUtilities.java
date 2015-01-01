@@ -4,11 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
-import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
  * A class that is used to model <code>StockControlUtilities</code>
@@ -55,28 +55,19 @@ public class StockControlUtilities {
 
         orderToSupplier = new ArrayList<OrderedItem>();
 
-        for (Supplier s : ShopDriver.getSuppliers()) {
+        for (final Supplier supplier : Database.getSuppliers()) {
             for (Product p : productsToReplenish) {
-                if (p.getSupplierId() == s.getSupplierId()) {
+                if (p.getSupplierId() == supplier.getSupplierId()) {
                     createOrderedItem(percentage, p);
                 }
             }
 
             if (!orderToSupplier.isEmpty()) {
-                createAndCompleteSupplierOrder(s);
+                createAndCompleteSupplierOrder(supplier.getSupplierId());
             }
         }
     }
 
-    /**
-     * creates the arrayList of items and quantities to be ordered
-     * 
-     * @param percentageThreshold
-     *            (double)
-     * @param p
-     *            (Product)
-     * @see StockControlUtilities#getOrderAmount(Double, Product)
-     * */
     private static void createOrderedItem(Double percentageThreshold, Product p) {
 
         int numberToOrder = getOrderAmount(percentageThreshold, p);
@@ -85,15 +76,6 @@ public class StockControlUtilities {
         orderToSupplier.add(item);
     }
 
-    /**
-     * decides the quantity of a product to be ordered based on the current %
-     * stock level and the desired % stock level.
-     * 
-     * @param percentageThreshold
-     *            (double)
-     * @param p
-     *            (Product)
-     * */
     private static int getOrderAmount(Double percentageThreshold, Product p) {
 
         double percentageOfMaxStock = calculatePercentage(p.getStockLevel(), p.getMaxLevel());
@@ -101,37 +83,32 @@ public class StockControlUtilities {
 
         int orderNumber = (int) (p.getMaxLevel() * percentIncreaseToOrder);
 
-        if (((orderNumber + p.getStockLevel()) * 100) / p.getMaxLevel() < percentageThreshold)
+        if (((orderNumber + p.getStockLevel()) * 100) / p.getMaxLevel() < percentageThreshold) {
             orderNumber++;
+        }
 
         return orderNumber;
     }
 
-    /**
-     * creates and completes supplier orders
-     * 
-     * @param s
-     *            (Supplier)
-     * */
-    private static void createAndCompleteSupplierOrder(Supplier s) {
+    private static void createAndCompleteSupplierOrder(final int supplierId) {
+        final Order newOrder = new Order(supplierId, DATE_FORMATTER.format(new Date()), orderToSupplier, true);
+        final String currentDate = DATE_FORMATTER.format(new Date());
 
-        Order order = new Order(ShopDriver.getCurrentStaff().getStaffId(), s.getSupplierId(),
-                DATE_FORMATTER.format(new Date()), orderToSupplier, true);
-        ShopDriver.getOrders().add(order);
-
-        for (Order o : ShopDriver.getOrders()) {
-            if (o.getOrderId() == order.getOrderId()) {
-                o.completeOrder(DATE_FORMATTER.format(new Date()));
-            }
-        }
-
-        for (Supplier supp : ShopDriver.getSuppliers()) {
-            if (supp.getSupplierId() == s.getSupplierId()) {
-                supp.setLastPurchase(DATE_FORMATTER.format(new Date()));
-            }
-        }
+        Database.addOrder(newOrder);
+        completeOrder(newOrder.getOrderId(), currentDate);
+        setSupplierLastPurchaseDate(supplierId, currentDate);
 
         orderToSupplier = new ArrayList<OrderedItem>();
+    }
+
+    private static void completeOrder(final int idOfOrderToComplete, final String currentDate) {
+        final Order orderToComplete = Database.getOrderById(idOfOrderToComplete);
+        orderToComplete.completeOrder(currentDate);
+    }
+
+    private static void setSupplierLastPurchaseDate(final int idOfSupplierToUpdate, final String currentDate) {
+        final Supplier supplierToUpdate = Database.getSupplierById(idOfSupplierToUpdate);
+        supplierToUpdate.setLastPurchase(currentDate);
     }
 
     /**

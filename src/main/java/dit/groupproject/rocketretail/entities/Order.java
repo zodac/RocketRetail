@@ -5,9 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
 public class Order {
+
+    public ArrayList<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
+
+    private final static DateFormat DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
     private int orderId;
     private int staffId;
@@ -16,13 +21,12 @@ public class Order {
     private String deliveryDate = "";
     private boolean isSupplier;
     private boolean isActive = true;
-    public ArrayList<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
 
-    public Order(final int staffId, final int traderId, final String orderDate,
-            final ArrayList<OrderedItem> orderedItems, final boolean isActive) {
+    public Order(final int traderId, final String orderDate, final ArrayList<OrderedItem> orderedItems,
+            final boolean isActive) {
 
         this.orderId = IdManager.getOrderIdAndIncrement();
-        this.staffId = staffId;
+        this.staffId = ShopDriver.getCurrentStaff().getStaffId();
         this.traderId = traderId;
         this.orderDate = orderDate;
         this.orderedItems = orderedItems;
@@ -44,32 +48,30 @@ public class Order {
         }
 
         if (!isActive && isSupplier) {
-            for (OrderedItem oi : orderedItems) {
-                for (Product p : ShopDriver.getProducts()) {
-                    if (oi.getProduct().getProductId() == p.getProductId())
-                        p.setStockLevel(p.getStockLevel() + oi.getQuantity());
+            for (final OrderedItem orderedItem : orderedItems) {
+                for (Product p : Database.getProducts()) {
+                    if (orderedItem.getProduct().getProductId() == p.getProductId())
+                        p.setStockLevel(p.getStockLevel() + orderedItem.getQuantity());
                 }
             }
         }
 
-        DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-
-        for (Supplier s : ShopDriver.getSuppliers()) {
-            if (s.getSupplierId() == traderId) {
+        for (final Supplier supplier : Database.getSuppliers()) {
+            if (supplier.getSupplierId() == traderId) {
                 try {
-                    if (f.parse(s.getLastPurchase()).compareTo(f.parse(orderDate)) < 0)
-                        s.setLastPurchase(orderDate);
+                    if (DATE_FORMATTER.parse(supplier.getLastPurchase()).compareTo(DATE_FORMATTER.parse(orderDate)) < 0)
+                        supplier.setLastPurchase(orderDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        for (Customer c : ShopDriver.getCustomers()) {
-            if (c.getCustomerId() == traderId) {
+        for (final Customer customer : Database.getCustomers()) {
+            if (customer.getCustomerId() == traderId) {
                 try {
-                    if (f.parse(c.getLastPurchase()).compareTo(f.parse(orderDate)) < 0)
-                        c.setLastPurchase(orderDate);
+                    if (DATE_FORMATTER.parse(customer.getLastPurchase()).compareTo(DATE_FORMATTER.parse(orderDate)) < 0)
+                        customer.setLastPurchase(orderDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -82,29 +84,27 @@ public class Order {
     }
 
     public String printDetails() {
-        String suppOrCustLabel = "";
-
-        if (traderId >= IdManager.SUPPLIER_ID_START && traderId < IdManager.CUSTOMER_ID_START) {
-            suppOrCustLabel = "Supplier";
-        } else if (traderId >= IdManager.CUSTOMER_ID_START && traderId < IdManager.PRODUCT_ID_START) {
-            suppOrCustLabel = "Customer";
-        }
+        final String suppOrCustLabel = isSupplierId() ? "Supplier" : "Customer";
 
         String output = "Order ID:\t" + orderId + "\nStaff ID:\t" + staffId + "\n" + suppOrCustLabel + " ID:\t"
                 + traderId + "\nOrder Date:\t" + orderDate;
 
-        for (OrderedItem oi : orderedItems) {
-            output = output + "\nProduct ID:\t" + oi.getProduct().getProductId() + "\nQuantity:\t" + oi.getQuantity();
+        for (final OrderedItem oi : orderedItems) {
+            output += "\nProduct ID:\t" + oi.getProduct().getProductId() + "\nQuantity:\t" + oi.getQuantity();
         }
 
         return (output + "\n\n");
+    }
+
+    private boolean isSupplierId() {
+        return traderId >= IdManager.SUPPLIER_ID_START && traderId < IdManager.CUSTOMER_ID_START;
     }
 
     public double getTotalCost() {
 
         double totalCost = 0;
 
-        for (OrderedItem oi : this.orderedItems) {
+        for (final OrderedItem oi : this.orderedItems) {
             totalCost += oi.getQuantity() * oi.getProduct().getCostPrice();
         }
 
@@ -114,7 +114,7 @@ public class Order {
     public double getTotalSale() {
         double totalSale = 0;
 
-        for (OrderedItem oi : this.orderedItems) {
+        for (final OrderedItem oi : this.orderedItems) {
             totalSale += oi.getQuantity() * oi.getProduct().getSalePrice();
         }
 
@@ -136,9 +136,11 @@ public class Order {
 
         this.deliveryDate = deliveryDate;
 
-        for (OrderedItem oi : orderedItems) {
-            if (this.isSupplier()) // ifSupplier
-                oi.getProduct().setStockLevel(oi.getProduct().getStockLevel() + oi.getQuantity());
+        for (final OrderedItem orderedItem : orderedItems) {
+            if (isSupplier()) {
+                orderedItem.getProduct().setStockLevel(
+                        orderedItem.getProduct().getStockLevel() + orderedItem.getQuantity());
+            }
         }
 
         this.isActive = false;

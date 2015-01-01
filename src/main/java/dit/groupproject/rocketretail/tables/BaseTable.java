@@ -78,15 +78,114 @@ public abstract class BaseTable {
      * 
      * @return a boolean set to true if no invalid entries, or else false
      */
-    protected static boolean checkFields(ArrayList<JTextField> textFields, ArrayList<JTextField> intFields,
+    protected static boolean checkFields(final ArrayList<JTextField> textFields, ArrayList<JTextField> intFields,
             ArrayList<JTextField> doubleFields, ArrayList<JPasswordField> pinFields,
             ArrayList<JComboBox<String>> comboBoxes, ArrayList<JComboBox<String>> addedBoxes,
             ArrayList<JComboBox<String>> lastPurchaseBoxes) {
 
         boolean valid = true;
-        Border errorBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red);
-        Border validBorder = UIManager.getBorder("TextField.border");
+        final Border errorBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red);
+        final Border validBorder = UIManager.getBorder("TextField.border");
 
+        valid = validateTextFields(textFields, intFields, doubleFields, valid, errorBorder, validBorder);
+        valid = validatePinField(pinFields, valid, errorBorder, validBorder);
+        valid = validateComboBoxes(comboBoxes, valid, errorBorder, validBorder);
+        valid = validateDateBoxes(addedBoxes, lastPurchaseBoxes, valid, errorBorder, validBorder);
+
+        if (!valid) {
+            GuiCreator.setConfirmMessage("Invalid entry!");
+        }
+
+        return valid;
+    }
+
+    private static boolean validatePinField(ArrayList<JPasswordField> pinFields, boolean valid,
+            final Border errorBorder, final Border validBorder) {
+        if (pinFields != null) {
+            for (JPasswordField password : pinFields) {
+                String input = String.valueOf(password.getPassword());
+                if (!input.matches("^\\d*$") || input.length() != 4) {
+                    password.setBorder(errorBorder);
+                    valid = false;
+                } else
+                    password.setBorder(validBorder);
+            }
+        }
+        return valid;
+    }
+
+    private static boolean validateDateBoxes(ArrayList<JComboBox<String>> addedBoxes,
+            ArrayList<JComboBox<String>> lastPurchaseBoxes, boolean valid, final Border errorBorder,
+            final Border validBorder) {
+        if (addedBoxes != null) {
+
+            for (final JComboBox<String> addedBox : addedBoxes) {
+                if (((String) addedBox.getSelectedItem()).length() == 0) {
+                    addedBox.setBorder(errorBorder);
+                    valid = false;
+                } else {
+                    addedBox.setBorder(validBorder);
+                }
+            }
+
+            int day = addedBoxes.get(0).getSelectedIndex();
+            int month = addedBoxes.get(1).getSelectedIndex();
+            int year = addedBoxes.get(2).getSelectedIndex() + (ShopDriver.yearStart - 1);
+
+            // If month is April, June, September or November, day cannot be 31
+            // OR if month is February and is leap year, day cannot be 30 or 31
+            // OR if February but not a leap year, day cannot be 29, 30 or 31
+
+            if (isInvalidDate(day, month, year)) {
+                addedBoxes.get(0).setBorder(errorBorder);
+                valid = false;
+            }
+        }
+
+        if (lastPurchaseBoxes != null) {
+
+            for (final JComboBox<String> lastPurchaseBox : lastPurchaseBoxes) {
+                if (((String) lastPurchaseBox.getSelectedItem()).length() == 0) {
+                    lastPurchaseBox.setBorder(errorBorder);
+                    valid = false;
+                } else {
+                    lastPurchaseBox.setBorder(validBorder);
+                }
+            }
+
+            int day = lastPurchaseBoxes.get(0).getSelectedIndex();
+            int month = lastPurchaseBoxes.get(1).getSelectedIndex();
+            int year = lastPurchaseBoxes.get(2).getSelectedIndex() + (ShopDriver.yearStart - 1);
+
+            // If month is April, June, September or November, day cannot be 31
+            // OR if month is February and is leap year, day cannot be 30 or 31
+            // OR if February but not a leap year, day cannot be 29, 30 or 31
+
+            if (isInvalidDate(day, month, year)) {
+                lastPurchaseBoxes.get(0).setBorder(errorBorder);
+                valid = false;
+            }
+        }
+        return valid;
+    }
+
+    private static boolean validateComboBoxes(ArrayList<JComboBox<String>> comboBoxes, boolean valid,
+            final Border errorBorder, final Border validBorder) {
+        if (comboBoxes != null) {
+            for (final JComboBox<String> stringBox : comboBoxes) {
+                if (((String) stringBox.getSelectedItem()).length() == 0) {
+                    stringBox.setBorder(errorBorder);
+                    valid = false;
+                } else {
+                    stringBox.setBorder(validBorder);
+                }
+            }
+        }
+        return valid;
+    }
+
+    private static boolean validateTextFields(final ArrayList<JTextField> textFields, ArrayList<JTextField> intFields,
+            ArrayList<JTextField> doubleFields, boolean valid, final Border errorBorder, final Border validBorder) {
         if (textFields.size() > 0) {
             for (JTextField text : textFields) {
                 if (text.getText().length() == 0) {
@@ -98,19 +197,8 @@ public abstract class BaseTable {
             }
         }
 
-        if (pinFields != null) {
-            for (JPasswordField password : pinFields) {
-                String input = String.valueOf(password.getPassword());
-                if (!input.matches("^\\d*$") || input.length() != 4) {
-                    password.setBorder(errorBorder);
-                    valid = false;
-                } else
-                    password.setBorder(validBorder);
-            }
-        }
-
         if (intFields != null) {
-            for (JTextField intField : intFields) {
+            for (final JTextField intField : intFields) {
                 try {
                     Integer.parseInt(intField.getText());
                     intField.setBorder(validBorder);
@@ -122,7 +210,7 @@ public abstract class BaseTable {
         }
 
         if (doubleFields != null) {
-            for (JTextField doubleField : doubleFields) {
+            for (final JTextField doubleField : doubleFields) {
                 try {
                     Double.parseDouble(doubleField.getText());
                     doubleField.setBorder(validBorder);
@@ -132,71 +220,11 @@ public abstract class BaseTable {
                 }
             }
         }
-
-        if (comboBoxes != null) {
-            for (JComboBox<String> stringBox : comboBoxes) {
-                if (((String) stringBox.getSelectedItem()).length() == 0) {
-                    stringBox.setBorder(errorBorder);
-                    valid = false;
-                } else
-                    stringBox.setBorder(validBorder);
-            }
-        }
-
-        if (addedBoxes != null) {
-
-            for (JComboBox<String> addedBox : addedBoxes) {
-                if (((String) addedBox.getSelectedItem()).length() == 0) {
-                    addedBox.setBorder(errorBorder);
-                    valid = false;
-                } else
-                    addedBox.setBorder(validBorder);
-            }
-
-            int day = addedBoxes.get(0).getSelectedIndex();
-            int month = addedBoxes.get(1).getSelectedIndex();
-            int year = addedBoxes.get(2).getSelectedIndex() + (ShopDriver.yearStart - 1);
-
-            // If month is April, June, September or November, day cannot be 31
-            // OR if month is February and is leap year, day cannot be 30 or 31
-            // OR if February but not a leap year, day cannot be 29, 30 or 31
-
-            if ((day == 31 && (month == 2 || month == 4 || month == 6 || month == 9 || month == 11))
-                    || (day == 30 && month == 2) || (day == 29 && month == 2 && year % 4 != 0)) {
-                addedBoxes.get(0).setBorder(errorBorder);
-                valid = false;
-            }
-        }
-
-        if (lastPurchaseBoxes != null) {
-
-            for (JComboBox<String> lastPurchaseBox : lastPurchaseBoxes) {
-                if (((String) lastPurchaseBox.getSelectedItem()).length() == 0) {
-                    lastPurchaseBox.setBorder(errorBorder);
-                    valid = false;
-                } else
-                    lastPurchaseBox.setBorder(validBorder);
-            }
-
-            int day = lastPurchaseBoxes.get(0).getSelectedIndex();
-            int month = lastPurchaseBoxes.get(1).getSelectedIndex();
-            int year = lastPurchaseBoxes.get(2).getSelectedIndex() + (ShopDriver.yearStart - 1);
-
-            // If month is April, June, September or November, day cannot be 31
-            // OR if month is February and is leap year, day cannot be 30 or 31
-            // OR if February but not a leap year, day cannot be 29, 30 or 31
-
-            if ((day == 31 && (month == 2 || month == 4 || month == 6 || month == 9 || month == 11))
-                    || (day == 30 && month == 2) || (day == 29 && month == 2 && year % 4 != 0)) {
-                lastPurchaseBoxes.get(0).setBorder(errorBorder);
-                valid = false;
-            }
-        }
-
-        if (!valid) {
-            GuiCreator.setConfirmMessage("Invalid entry!");
-        }
-
         return valid;
+    }
+
+    private static boolean isInvalidDate(int day, int month, int year) {
+        return (day == 31 && (month == 2 || month == 4 || month == 6 || month == 9 || month == 11))
+                || (day == 30 && month == 2) || (day == 29 && month == 2 && year % 4 != 0);
     }
 }

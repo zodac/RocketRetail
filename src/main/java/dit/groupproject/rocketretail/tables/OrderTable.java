@@ -32,6 +32,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
@@ -182,35 +183,35 @@ public class OrderTable extends BaseTable {
         String[] columnNames = { "Order ID", "Staff ID", "Trader ID", "Total Price", "Order Date", "Delivery Date" };
 
         if (filter.equals("Show All Orders")) {
-            Object[][] data = new Object[ShopDriver.getOrders().size()][6];
+            Object[][] data = new Object[Database.getOrders().size()][6];
             double totalPrice = 0;
             String delivery = " ";
 
-            for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
+            for (int i = 0; i < Database.getOrders().size(); i++) {
 
                 totalPrice = 0;
 
-                if (ShopDriver.getOrders().get(i).isSupplier())
-                    totalPrice = ShopDriver.getOrders().get(i).getTotalCost();
+                if (Database.getOrders().get(i).isSupplier())
+                    totalPrice = Database.getOrders().get(i).getTotalCost();
 
                 else
-                    totalPrice = ShopDriver.getOrders().get(i).getTotalSale();
+                    totalPrice = Database.getOrders().get(i).getTotalSale();
 
-                if (ShopDriver.getOrders().get(i).getDeliveryDate().length() == 0)
+                if (Database.getOrders().get(i).getDeliveryDate().length() == 0)
                     delivery = " ";
                 else
-                    delivery = ShopDriver.getOrders().get(i).getDeliveryDate();
+                    delivery = Database.getOrders().get(i).getDeliveryDate();
 
-                data[i][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
-                data[i][1] = STAFF_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getStaffId());
-                data[i][2] = ShopDriver.getOrders().get(i).getTraderId();
+                data[i][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
+                data[i][1] = STAFF_ID_FORMATTER.format(Database.getOrders().get(i).getStaffId());
+                data[i][2] = Database.getOrders().get(i).getTraderId();
                 data[i][3] = "€" + CURRENCY_FORMATTER.format(totalPrice);
-                data[i][4] = ShopDriver.getOrders().get(i).getOrderDate();
+                data[i][4] = Database.getOrders().get(i).getOrderDate();
                 data[i][5] = delivery;
             }
             table = new JTable(data, columnNames);
 
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (o.isActive())
                     activeCount++;
             }
@@ -220,10 +221,10 @@ public class OrderTable extends BaseTable {
             orderArrayComplete[0] = "Complete Order";
             orderArrayComplete[1] = "Complete All Orders";
 
-            for (int i = 0; i < ShopDriver.getOrders().size() + 1; i++) {
-                if (i < ShopDriver.getOrders().size() && ShopDriver.getOrders().get(i).isActive()) {
+            for (int i = 0; i < Database.getOrders().size() + 1; i++) {
+                if (i < Database.getOrders().size() && Database.getOrders().get(i).isActive()) {
                     orderArrayComplete[arrayIndex] = "ID: "
-                            + ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
+                            + ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
                     arrayIndex++;
                 }
             }
@@ -233,7 +234,7 @@ public class OrderTable extends BaseTable {
 
         else if (filter.equals("Show Supplier Orders")) {
             int supplierSize = 0;
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (o.isSupplier())
                     supplierSize++;
             }
@@ -241,27 +242,27 @@ public class OrderTable extends BaseTable {
             Object[][] data = new Object[supplierSize][6];
             String delivery = " ";
             int supplierIndex = 0;
-            for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
+            for (int i = 0; i < Database.getOrders().size(); i++) {
 
-                if (ShopDriver.getOrders().get(i).isSupplier()) {
+                if (Database.getOrders().get(i).isSupplier()) {
 
-                    if (ShopDriver.getOrders().get(i).getDeliveryDate().length() == 0)
+                    if (Database.getOrders().get(i).getDeliveryDate().length() == 0)
                         delivery = " ";
                     else
-                        delivery = ShopDriver.getOrders().get(i).getDeliveryDate();
+                        delivery = Database.getOrders().get(i).getDeliveryDate();
 
-                    data[supplierIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
-                    data[supplierIndex][1] = STAFF_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getStaffId());
-                    data[supplierIndex][2] = ShopDriver.getOrders().get(i).getTraderId();
+                    data[supplierIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
+                    data[supplierIndex][1] = STAFF_ID_FORMATTER.format(Database.getOrders().get(i).getStaffId());
+                    data[supplierIndex][2] = Database.getOrders().get(i).getTraderId();
                     data[supplierIndex][3] = "€"
-                            + CURRENCY_FORMATTER.format(ShopDriver.getOrders().get(i).getTotalCost());
-                    data[supplierIndex][4] = ShopDriver.getOrders().get(i).getOrderDate();
+                            + CURRENCY_FORMATTER.format(Database.getOrders().get(i).getTotalCost());
+                    data[supplierIndex][4] = Database.getOrders().get(i).getOrderDate();
                     data[supplierIndex][5] = delivery;
                     supplierIndex++;
                 }
             }
             table = new JTable(data, columnNames);
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (o.isActive() && o.isSupplier())
                     activeCount++;
             }
@@ -271,11 +272,11 @@ public class OrderTable extends BaseTable {
             orderArrayComplete[0] = "Complete Supplier Orders";
             orderArrayComplete[1] = "Complete All Supplier Orders";
 
-            for (int i = 0; i < ShopDriver.getOrders().size() + 1; i++) {
-                if (i < ShopDriver.getOrders().size() && ShopDriver.getOrders().get(i).isActive()
-                        && ShopDriver.getOrders().get(i).isSupplier()) {
+            for (int i = 0; i < Database.getOrders().size() + 1; i++) {
+                if (i < Database.getOrders().size() && Database.getOrders().get(i).isActive()
+                        && Database.getOrders().get(i).isSupplier()) {
                     orderArrayComplete[arrayIndex] = "ID: "
-                            + ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
+                            + ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
                     arrayIndex++;
                 }
             }
@@ -286,7 +287,7 @@ public class OrderTable extends BaseTable {
 
         else if (filter.equals("Show Customer Orders")) {
             int customerSize = 0;
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (!o.isSupplier())
                     customerSize++;
             }
@@ -294,28 +295,28 @@ public class OrderTable extends BaseTable {
             Object[][] data = new Object[customerSize][6];
             String delivery = " ";
             int customerIndex = 0;
-            for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
+            for (int i = 0; i < Database.getOrders().size(); i++) {
 
-                if (!ShopDriver.getOrders().get(i).isSupplier()) {
+                if (!Database.getOrders().get(i).isSupplier()) {
 
-                    if (ShopDriver.getOrders().get(i).getDeliveryDate() == null)
+                    if (Database.getOrders().get(i).getDeliveryDate() == null)
                         delivery = " ";
                     else
-                        delivery = ShopDriver.getOrders().get(i).getDeliveryDate();
+                        delivery = Database.getOrders().get(i).getDeliveryDate();
 
-                    data[customerIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
-                    data[customerIndex][1] = STAFF_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getStaffId());
-                    data[customerIndex][2] = ShopDriver.getOrders().get(i).getTraderId();
+                    data[customerIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
+                    data[customerIndex][1] = STAFF_ID_FORMATTER.format(Database.getOrders().get(i).getStaffId());
+                    data[customerIndex][2] = Database.getOrders().get(i).getTraderId();
                     data[customerIndex][3] = "€"
-                            + CURRENCY_FORMATTER.format(ShopDriver.getOrders().get(i).getTotalSale());
-                    data[customerIndex][4] = ShopDriver.getOrders().get(i).getOrderDate();
+                            + CURRENCY_FORMATTER.format(Database.getOrders().get(i).getTotalSale());
+                    data[customerIndex][4] = Database.getOrders().get(i).getOrderDate();
                     data[customerIndex][5] = delivery;
                     customerIndex++;
                 }
             }
             table = new JTable(data, columnNames);
 
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (o.isActive() && !o.isSupplier())
                     activeCount++;
             }
@@ -325,11 +326,11 @@ public class OrderTable extends BaseTable {
             orderArrayComplete[0] = "Complete Customer Orders";
             orderArrayComplete[1] = "Complete All Customer Orders";
 
-            for (int i = 0; i < ShopDriver.getOrders().size() + 1; i++) {
-                if (i < ShopDriver.getOrders().size() && ShopDriver.getOrders().get(i).isActive()
-                        && !ShopDriver.getOrders().get(i).isSupplier()) {
+            for (int i = 0; i < Database.getOrders().size() + 1; i++) {
+                if (i < Database.getOrders().size() && Database.getOrders().get(i).isActive()
+                        && !Database.getOrders().get(i).isSupplier()) {
                     orderArrayComplete[arrayIndex] = "ID: "
-                            + ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
+                            + ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
                     arrayIndex++;
                 }
             }
@@ -338,7 +339,7 @@ public class OrderTable extends BaseTable {
 
         else if (filter.equals("Show Active Orders")) {
             int activeSize = 0;
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (o.isActive())
                     activeSize++;
             }
@@ -346,27 +347,27 @@ public class OrderTable extends BaseTable {
             Object[][] data = new Object[activeSize][6];
             String delivery = " ";
             int customerIndex = 0;
-            for (int i = 0; i < ShopDriver.getOrders().size(); i++) {
+            for (int i = 0; i < Database.getOrders().size(); i++) {
 
-                if (ShopDriver.getOrders().get(i).isActive()) {
-                    if (ShopDriver.getOrders().get(i).getDeliveryDate() == null)
+                if (Database.getOrders().get(i).isActive()) {
+                    if (Database.getOrders().get(i).getDeliveryDate() == null)
                         delivery = " ";
                     else
-                        delivery = ShopDriver.getOrders().get(i).getDeliveryDate();
+                        delivery = Database.getOrders().get(i).getDeliveryDate();
 
-                    data[customerIndex][0] = ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
-                    data[customerIndex][1] = STAFF_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getStaffId());
-                    data[customerIndex][2] = ShopDriver.getOrders().get(i).getTraderId();
+                    data[customerIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
+                    data[customerIndex][1] = STAFF_ID_FORMATTER.format(Database.getOrders().get(i).getStaffId());
+                    data[customerIndex][2] = Database.getOrders().get(i).getTraderId();
                     data[customerIndex][3] = "€"
-                            + CURRENCY_FORMATTER.format(ShopDriver.getOrders().get(i).getTotalCost());
-                    data[customerIndex][4] = ShopDriver.getOrders().get(i).getOrderDate();
+                            + CURRENCY_FORMATTER.format(Database.getOrders().get(i).getTotalCost());
+                    data[customerIndex][4] = Database.getOrders().get(i).getOrderDate();
                     data[customerIndex][5] = delivery;
                     customerIndex++;
                 }
             }
             table = new JTable(data, columnNames);
 
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (o.isActive())
                     activeCount++;
             }
@@ -376,10 +377,10 @@ public class OrderTable extends BaseTable {
             orderArrayComplete[0] = "Complete Active Orders";
             orderArrayComplete[1] = "Complete All Orders";
 
-            for (int i = 0; i < ShopDriver.getOrders().size() + 1; i++) {
-                if (i < ShopDriver.getOrders().size() && ShopDriver.getOrders().get(i).isActive()) {
+            for (int i = 0; i < Database.getOrders().size() + 1; i++) {
+                if (i < Database.getOrders().size() && Database.getOrders().get(i).isActive()) {
                     orderArrayComplete[arrayIndex] = "ID: "
-                            + ORDER_ID_FORMATTER.format(ShopDriver.getOrders().get(i).getOrderId());
+                            + ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
                     arrayIndex++;
                 }
             }
@@ -395,7 +396,7 @@ public class OrderTable extends BaseTable {
                                                    // -1
                     Order input = null;
 
-                    for (Order o : ShopDriver.getOrders()) {
+                    for (Order o : Database.getOrders()) {
                         if (o.getOrderId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
                             input = o;
                     }
@@ -480,7 +481,7 @@ public class OrderTable extends BaseTable {
 
                     if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
                         int count = 0;
-                        for (Order o : ShopDriver.getOrders()) {
+                        for (Order o : Database.getOrders()) {
                             if (o.isActive() && o.isSupplier()) {
                                 o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
                                 count++;
@@ -496,7 +497,7 @@ public class OrderTable extends BaseTable {
 
                     if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
                         int count = 0;
-                        for (Order o : ShopDriver.getOrders()) {
+                        for (Order o : Database.getOrders()) {
                             if (o.isActive() && !o.isSupplier()) {
                                 o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
                                 count++;
@@ -513,7 +514,7 @@ public class OrderTable extends BaseTable {
 
                     if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
                         int count = 0;
-                        for (Order o : ShopDriver.getOrders()) {
+                        for (Order o : Database.getOrders()) {
                             if (o.isActive()) {
                                 o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
                                 count++;
@@ -587,10 +588,10 @@ public class OrderTable extends BaseTable {
         innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         // Create array of customer names for JComboBox
-        String[] customerArray = new String[ShopDriver.getCustomers().size() + 2];
+        String[] customerArray = new String[Database.getCustomers().size() + 2];
         customerArray[0] = "";
-        for (int i = 1; i < ShopDriver.getCustomers().size() + 1; i++) {
-            customerArray[i] = ShopDriver.getCustomers().get(i - 1).getCustomerName();
+        for (int i = 1; i < Database.getCustomers().size() + 1; i++) {
+            customerArray[i] = Database.getCustomers().get(i - 1).getCustomerName();
         }
 
         // Add a string to the end of the array
@@ -628,7 +629,7 @@ public class OrderTable extends BaseTable {
                     titlePanel.add(currentStockLevel);
                     titlePanel.add(orderAmount);
 
-                    for (Customer c : ShopDriver.getCustomers()) {
+                    for (Customer c : Database.getCustomers()) {
                         if (c.getCustomerName().equals(customerOptions.getSelectedItem()))
                             traderId = c.getCustomerId();
                     }
@@ -641,7 +642,7 @@ public class OrderTable extends BaseTable {
                     productQuantPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
                     int i = 0;
-                    for (Product p : ShopDriver.getProducts()) {
+                    for (Product p : Database.getProducts()) {
 
                         JLabel pl = new JLabel("" + p.getProductDescription());
                         pl.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
@@ -674,8 +675,8 @@ public class OrderTable extends BaseTable {
                             for (JLabel label : productLabels) {
                                 if (orderAmountFields.get(productLabels.indexOf(label)).getText().length() == 0
                                         || Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
-                                                .getText()) > ShopDriver.getProducts()
-                                                .get(productLabels.indexOf(label)).getStockLevel()) {
+                                                .getText()) > Database.getProducts().get(productLabels.indexOf(label))
+                                                .getStockLevel()) {
                                     valid = false;
                                     orderAmountFields.get(productLabels.indexOf(label)).setBorder(
                                             BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
@@ -698,7 +699,7 @@ public class OrderTable extends BaseTable {
                             if (valid) {
                                 ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
 
-                                for (Product p : ShopDriver.getProducts()) {
+                                for (Product p : Database.getProducts()) {
                                     for (JLabel label : productLabels) {
                                         if (label.getText().equals(p.getProductDescription())
                                                 && Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
@@ -711,27 +712,25 @@ public class OrderTable extends BaseTable {
                                     }
                                 }
 
-                                Customer activeCust = null;
+                                Customer activeCustomer = null;
 
                                 if (items.size() > 0) {
 
                                     if (items.size() > 0)
-                                        ShopDriver.getOrders().add(
-                                                new Order(ShopDriver.getCurrentStaff().getStaffId(), traderId,
-                                                        new SimpleDateFormat("dd/MM/yyyy").format(new Date()), items,
-                                                        true));
+                                        Database.getOrders().add(
+                                                new Order(traderId, DATE_FORMATTER.format(new Date()), items, true));
 
-                                    for (Customer c : ShopDriver.getCustomers()) {
-                                        if (c.getCustomerId() == traderId) {
-                                            activeCust = c;
-                                            c.setLastPurchase(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+                                    for (final Customer customer : Database.getCustomers()) {
+                                        if (customer.getCustomerId() == traderId) {
+                                            activeCustomer = customer;
+                                            customer.setLastPurchase(DATE_FORMATTER.format(new Date()));
                                         }
                                     }
                                 }
                                 GuiCreator.setConfirmMessage("Order #"
-                                        + ORDER_ID_FORMATTER.format(ShopDriver.getOrders()
-                                                .get(ShopDriver.getOrders().size() - 1).getOrderId())
-                                        + " created for customer \"" + activeCust.getCustomerName() + "\"");
+                                        + ORDER_ID_FORMATTER.format(Database.getOrders()
+                                                .get(Database.getOrders().size() - 1).getOrderId())
+                                        + " created for customer \"" + activeCustomer.getCustomerName() + "\"");
 
                                 // Reset ShopDriver.frame
                                 GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -820,10 +819,10 @@ public class OrderTable extends BaseTable {
         innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         // Create array of supplier names for JComboBox
-        String[] supplierArray = new String[ShopDriver.getSuppliers().size() + 2];
+        String[] supplierArray = new String[Database.getSuppliers().size() + 2];
         supplierArray[0] = "";
-        for (int i = 1; i < ShopDriver.getSuppliers().size() + 1; i++) {
-            supplierArray[i] = ShopDriver.getSuppliers().get(i - 1).getSupplierName();
+        for (int i = 1; i < Database.getSuppliers().size() + 1; i++) {
+            supplierArray[i] = Database.getSuppliers().get(i - 1).getSupplierName();
         }
 
         // Add a string to the end of the array
@@ -871,12 +870,12 @@ public class OrderTable extends BaseTable {
                     // Add products and quantity text fields
                     ArrayList<Product> supplierProducts = new ArrayList<Product>();
 
-                    for (Supplier s : ShopDriver.getSuppliers()) {
+                    for (Supplier s : Database.getSuppliers()) {
                         if (s.getSupplierName().equals(supplierOptions.getSelectedItem()))
                             traderId = s.getSupplierId();
                     }
 
-                    for (Product p : ShopDriver.getProducts()) {
+                    for (Product p : Database.getProducts()) {
                         if (p.getSupplierId() == traderId)
                             supplierProducts.add(p);
                     }
@@ -917,9 +916,9 @@ public class OrderTable extends BaseTable {
                             for (JLabel label : productLabels) {
                                 if (orderAmountFields.get(productLabels.indexOf(label)).getText().length() == 0
                                         || (Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
-                                                .getText()) + ShopDriver.getProducts()
-                                                .get(productLabels.indexOf(label)).getStockLevel()) > ShopDriver
-                                                .getProducts().get(productLabels.indexOf(label)).getMaxLevel()) {
+                                                .getText()) + Database.getProducts().get(productLabels.indexOf(label))
+                                                .getStockLevel()) > Database.getProducts()
+                                                .get(productLabels.indexOf(label)).getMaxLevel()) {
                                     valid = false;
                                     orderAmountFields.get(productLabels.indexOf(label)).setBorder(
                                             BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
@@ -942,7 +941,7 @@ public class OrderTable extends BaseTable {
                             if (valid) {
                                 ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
 
-                                for (Product p : ShopDriver.getProducts()) {
+                                for (Product p : Database.getProducts()) {
                                     for (JLabel label : productLabels) {
                                         if (label.getText().equals(p.getProductDescription())) {
                                             if (Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
@@ -956,12 +955,10 @@ public class OrderTable extends BaseTable {
                                 Supplier activeSupp = null;
 
                                 if (items.size() > 0) {
-                                    ShopDriver
-                                            .getOrders()
-                                            .add(new Order(ShopDriver.getCurrentStaff().getStaffId(), traderId,
-                                                    new SimpleDateFormat("dd/MM/yyyy").format(new Date()), items, true));
+                                    Database.addOrder(new Order(traderId, DATE_FORMATTER.format(new Date()), items,
+                                            true));
 
-                                    for (Supplier s : ShopDriver.getSuppliers()) {
+                                    for (Supplier s : Database.getSuppliers()) {
                                         if (s.getSupplierId() == traderId) {
                                             s.setLastPurchase(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
                                             activeSupp = s;
@@ -971,8 +968,8 @@ public class OrderTable extends BaseTable {
                                 }
 
                                 GuiCreator.setConfirmMessage("Order #"
-                                        + ORDER_ID_FORMATTER.format(ShopDriver.getOrders()
-                                                .get(ShopDriver.getOrders().size() - 1).getOrderId())
+                                        + ORDER_ID_FORMATTER.format(Database.getOrders()
+                                                .get(Database.getOrders().size() - 1).getOrderId())
                                         + " created for supplier \"" + activeSupp.getSupplierName() + "\"");
 
                                 // Reset ShopDriver.frame
@@ -1061,7 +1058,7 @@ public class OrderTable extends BaseTable {
         final int result = showDialog("Please confirm", myPanel);
 
         if (result == JOptionPane.OK_OPTION) {
-            for (final Order o : ShopDriver.getOrders()) {
+            for (final Order o : Database.getOrders()) {
                 if (o.getOrderId() == orderId) {
                     o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
                 }
@@ -1107,7 +1104,7 @@ public class OrderTable extends BaseTable {
 
         String staffName = "", traderName = "", traderTitle = "";
 
-        for (Staff s : ShopDriver.getStaffMembers()) {
+        for (Staff s : Database.getStaffMembers()) {
             if (s.getStaffId() == o.getStaffId()) {
                 staffName = s.getStaffName();
                 break;
@@ -1119,7 +1116,7 @@ public class OrderTable extends BaseTable {
             traderTitle = "Supplier";
             isSupplier = true;
 
-            for (Supplier s : ShopDriver.getSuppliers()) {
+            for (Supplier s : Database.getSuppliers()) {
                 if (s.getSupplierId() == o.getTraderId()) {
                     traderName = s.getSupplierName();
                     break;
@@ -1130,7 +1127,7 @@ public class OrderTable extends BaseTable {
             isSupplier = false;
             traderTitle = "Customer";
 
-            for (Customer c : ShopDriver.getCustomers()) {
+            for (Customer c : Database.getCustomers()) {
                 if (c.getCustomerId() == o.getTraderId()) {
                     traderName = c.getCustomerName();
                     break;
@@ -1291,9 +1288,9 @@ public class OrderTable extends BaseTable {
         int count = 0, offset = 0;
         boolean found = false;
 
-        for (int i = 0; i < ShopDriver.getOrders().size() + offset; i++) {
+        for (int i = 0; i < Database.getOrders().size() + offset; i++) {
             found = false;
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (count == o.getOrderId()) {
                     tempArrayList.add(o);
                     found = true;
@@ -1304,15 +1301,15 @@ public class OrderTable extends BaseTable {
             count++;
         }
 
-        ShopDriver.getOrders().clear();
+        Database.getOrders().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getOrders().add(tempArrayList.get(i));
+                Database.getOrders().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getOrders().add(tempArrayList.get(i));
+                Database.getOrders().add(tempArrayList.get(i));
             }
         }
 
@@ -1333,9 +1330,9 @@ public class OrderTable extends BaseTable {
         tempArrayList.clear();
         boolean found;
 
-        while (ShopDriver.getOrders().size() != 0) {
+        while (Database.getOrders().size() != 0) {
             // go through the array list and find the lowest wage listed
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (lowestID > o.getStaffId())
                     lowestID = o.getStaffId();
             }
@@ -1343,30 +1340,30 @@ public class OrderTable extends BaseTable {
 
             // find an entry in the arrayList with a wage matching the lowest
             // wage found
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (lowestID == o.getStaffId() && !found) {
                     // when a matching entry is found, add to tempArrayList
                     tempArrayList.add(o);
 
                     // note the index of this entry
-                    indexL = ShopDriver.getOrders().indexOf(o);
+                    indexL = Database.getOrders().indexOf(o);
                     found = true;
                 }
                 if (found)
                     break;
             }
-            ShopDriver.getOrders().remove(indexL);
+            Database.getOrders().remove(indexL);
             lowestID = 99999999;
         }
-        ShopDriver.getOrders().clear();
+        Database.getOrders().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getOrders().add(tempArrayList.get(i));
+                Database.getOrders().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getOrders().add(tempArrayList.get(i));
+                Database.getOrders().add(tempArrayList.get(i));
             }
         }
     }
@@ -1386,9 +1383,9 @@ public class OrderTable extends BaseTable {
         tempArrayList.clear();
         boolean found;
 
-        while (ShopDriver.getOrders().size() != 0) {
+        while (Database.getOrders().size() != 0) {
             // go through the array list and find the lowest wage listed
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (lowestID > o.getTraderId())
                     lowestID = o.getTraderId();
             }
@@ -1396,30 +1393,30 @@ public class OrderTable extends BaseTable {
 
             // find an entry in the arrayList with a wage matching the lowest
             // wage found
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (lowestID == o.getTraderId() && !found) {
                     // when a matching entry is found, add to tempArrayList
                     tempArrayList.add(o);
 
                     // note the index of this entry
-                    indexL = ShopDriver.getOrders().indexOf(o);
+                    indexL = Database.getOrders().indexOf(o);
                     found = true;
                 }
                 if (found)
                     break;
             }
-            ShopDriver.getOrders().remove(indexL);
+            Database.getOrders().remove(indexL);
             lowestID = 99999999;
         }
-        ShopDriver.getOrders().clear();
+        Database.getOrders().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getOrders().add(tempArrayList.get(i));
+                Database.getOrders().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getOrders().add(tempArrayList.get(i));
+                Database.getOrders().add(tempArrayList.get(i));
             }
         }
     }
@@ -1439,12 +1436,12 @@ public class OrderTable extends BaseTable {
         tempArrayList.clear();
         boolean found;
 
-        while (ShopDriver.getOrders().size() != 0) {
+        while (Database.getOrders().size() != 0) {
             // go through the array list and find the lowest wage listed
 
             double totalPrice = 0;
 
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (o.isSupplier())
                     totalPrice = o.getTotalCost();
                 else
@@ -1458,7 +1455,7 @@ public class OrderTable extends BaseTable {
 
             // find an entry in the arrayList with a wage matching the lowest
             // wage found
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
 
                 if (o.isSupplier())
                     totalPrice = o.getTotalCost();
@@ -1470,27 +1467,27 @@ public class OrderTable extends BaseTable {
                     tempArrayList.add(o);
 
                     // note the index of this entry
-                    indexL = ShopDriver.getOrders().indexOf(o);
+                    indexL = Database.getOrders().indexOf(o);
 
                     found = true;
                 }
                 if (found)
                     break;
             }
-            ShopDriver.getOrders().remove(indexL);
+            Database.getOrders().remove(indexL);
 
             lowestTotal = 99999999;
         }
 
-        ShopDriver.getOrders().clear();
+        Database.getOrders().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getOrders().add(tempArrayList.get(i));
+                Database.getOrders().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getOrders().add(tempArrayList.get(i));
+                Database.getOrders().add(tempArrayList.get(i));
             }
         }
     }
@@ -1503,7 +1500,7 @@ public class OrderTable extends BaseTable {
      *            not
      */
     public static void SortByOrderDate(final boolean reverse) {
-        Collections.sort(ShopDriver.getOrders(), new Comparator<Order>() {
+        Collections.sort(Database.getOrders(), new Comparator<Order>() {
             DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
 
             @Override
@@ -1532,28 +1529,28 @@ public class OrderTable extends BaseTable {
         ArrayList<Order> activeArrayList = new ArrayList<Order>();
         ArrayList<Order> inactiveArrayList = new ArrayList<Order>();
 
-        for (Order o : ShopDriver.getOrders()) {
+        for (Order o : Database.getOrders()) {
             if (o.isActive())
                 activeArrayList.add(o);
             else if (!o.isActive())
                 inactiveArrayList.add(o);
         }
 
-        ShopDriver.getOrders().clear();
+        Database.getOrders().clear();
 
         if (!reverse) {
             for (int i = 0; i < activeArrayList.size(); i++) {
-                ShopDriver.getOrders().add(activeArrayList.get(i));
+                Database.getOrders().add(activeArrayList.get(i));
             }
             for (int i = 0; i < inactiveArrayList.size(); i++) {
-                ShopDriver.getOrders().add(inactiveArrayList.get(i));
+                Database.getOrders().add(inactiveArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = 0; i < inactiveArrayList.size(); i++) {
-                ShopDriver.getOrders().add(inactiveArrayList.get(i));
+                Database.getOrders().add(inactiveArrayList.get(i));
             }
             for (int i = 0; i < activeArrayList.size(); i++) {
-                ShopDriver.getOrders().add(activeArrayList.get(i));
+                Database.getOrders().add(activeArrayList.get(i));
             }
         }
     }

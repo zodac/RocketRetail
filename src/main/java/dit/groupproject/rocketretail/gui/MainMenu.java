@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.main.LoginHandler;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.tables.CustomerTable;
@@ -32,7 +33,7 @@ public class MainMenu {
         JMenuItem resetArrays = new JMenuItem("Reset Arrays");
         resetArrays.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ShopDriver.initialiseArrays();
+                Database.initialiseDatabase();
                 GuiCreator.frame.setTitle("Rocket Retail Inc");
                 if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
                     StaffTable.createTable();

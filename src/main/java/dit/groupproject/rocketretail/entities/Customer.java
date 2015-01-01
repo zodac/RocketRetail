@@ -41,6 +41,10 @@ public class Customer {
         return customerId;
     }
 
+    public void setCustomerId(final int customerId) {
+        this.customerId = customerId;
+    }
+
     public String getCustomerName() {
         return customerName;
     }
@@ -69,31 +73,47 @@ public class Customer {
         return dateAdded;
     }
 
-    public static Comparator<Customer> compareById = new Comparator<Customer>() {
+    public static Comparator<Customer> getComparator(final String sortType) {
+        if (sortType.equals("Name")) {
+            return compareByName;
+        } else if (sortType.equals("Address")) {
+            return compareByAddress;
+        } else if (sortType.equals("VAT Number")) {
+            return compareByVatNumber;
+        } else if (sortType.equals("Last Purchase")) {
+            return compareByLastPurchaseDate;
+        } else if (sortType.equals("Date Added")) {
+            return compareByDateAdded;
+        } else {
+            return compareById;
+        }
+    }
+
+    private static Comparator<Customer> compareById = new Comparator<Customer>() {
         public int compare(final Customer s1, final Customer s2) {
             return s1.getCustomerId() - s2.getCustomerId();
         }
     };
 
-    public static Comparator<Customer> compareByName = new Comparator<Customer>() {
+    private static Comparator<Customer> compareByName = new Comparator<Customer>() {
         public int compare(final Customer s1, final Customer s2) {
             return s1.getCustomerName().compareToIgnoreCase(s2.getCustomerName());
         }
     };
 
-    public static Comparator<Customer> compareByAddress = new Comparator<Customer>() {
+    private static Comparator<Customer> compareByAddress = new Comparator<Customer>() {
         public int compare(final Customer s1, final Customer s2) {
             return s1.getAddress().compareToIgnoreCase(s2.getAddress());
         }
     };
 
-    public static Comparator<Customer> compareByVatNumber = new Comparator<Customer>() {
+    private static Comparator<Customer> compareByVatNumber = new Comparator<Customer>() {
         public int compare(final Customer s1, final Customer s2) {
             return s1.getVatNumber().compareToIgnoreCase(s2.getVatNumber());
         }
     };
 
-    public static Comparator<Customer> compareByLastPurchaseDate = new Comparator<Customer>() {
+    private static Comparator<Customer> compareByLastPurchaseDate = new Comparator<Customer>() {
         public int compare(final Customer s1, final Customer s2) {
             try {
                 return DATE_FORMATTER.parse(s1.getLastPurchase()).compareTo(DATE_FORMATTER.parse(s2.getLastPurchase()));
@@ -103,7 +123,7 @@ public class Customer {
         }
     };
 
-    public static Comparator<Customer> compareByDateAdded = new Comparator<Customer>() {
+    private static Comparator<Customer> compareByDateAdded = new Comparator<Customer>() {
         public int compare(final Customer s1, final Customer s2) {
             try {
                 return DATE_FORMATTER.parse(s1.getDateAdded()).compareTo(DATE_FORMATTER.parse(s2.getDateAdded()));

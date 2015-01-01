@@ -27,6 +27,7 @@ import javax.swing.JTextField;
 
 import org.jfree.chart.ChartPanel;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
@@ -143,16 +144,16 @@ public class ProductTable extends BaseTable {
 
         String[] columnNames = { "ID", "Description", "Stock Level", "Max Level", "Supplier ID", "Cost Price",
                 "Sale Price" };
-        Object[][] data = new Object[ShopDriver.getProducts().size()][7];
+        Object[][] data = new Object[Database.getProducts().size()][7];
 
-        for (int i = 0; i < ShopDriver.getProducts().size(); i++) {
-            data[i][0] = PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductId());
-            data[i][1] = ShopDriver.getProducts().get(i).getProductDescription();
-            data[i][2] = ShopDriver.getProducts().get(i).getStockLevel();
-            data[i][3] = ShopDriver.getProducts().get(i).getMaxLevel();
-            data[i][4] = ShopDriver.getProducts().get(i).getSupplierId();
-            data[i][5] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getCostPrice());
-            data[i][6] = "€" + CURRENCY_FORMATTER.format(ShopDriver.getProducts().get(i).getSalePrice());
+        for (int i = 0; i < Database.getProducts().size(); i++) {
+            data[i][0] = PRODUCT_ID_FORMATTER.format(Database.getProducts().get(i).getProductId());
+            data[i][1] = Database.getProducts().get(i).getProductDescription();
+            data[i][2] = Database.getProducts().get(i).getStockLevel();
+            data[i][3] = Database.getProducts().get(i).getMaxLevel();
+            data[i][4] = Database.getProducts().get(i).getSupplierId();
+            data[i][5] = "€" + CURRENCY_FORMATTER.format(Database.getProducts().get(i).getCostPrice());
+            data[i][6] = "€" + CURRENCY_FORMATTER.format(Database.getProducts().get(i).getSalePrice());
             ;
         }
 
@@ -166,7 +167,7 @@ public class ProductTable extends BaseTable {
                                                    // -1
                     Product input = null;
 
-                    for (Product p : ShopDriver.getProducts()) {
+                    for (Product p : Database.getProducts()) {
                         if (p.getProductId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
                             input = p;
                     }
@@ -177,22 +178,22 @@ public class ProductTable extends BaseTable {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        String[] productMemberArrayEdit = new String[ShopDriver.getProducts().size() + 1];
+        String[] productMemberArrayEdit = new String[Database.getProducts().size() + 1];
         productMemberArrayEdit[0] = "Edit Product";
-        for (int i = 0; i < ShopDriver.getProducts().size() + 1; i++) {
-            if (i < ShopDriver.getProducts().size())
+        for (int i = 0; i < Database.getProducts().size() + 1; i++) {
+            if (i < Database.getProducts().size())
                 productMemberArrayEdit[i + 1] = "ID: "
-                        + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductId()) + " ("
-                        + ShopDriver.getProducts().get(i).getProductDescription() + ")";
+                        + PRODUCT_ID_FORMATTER.format(Database.getProducts().get(i).getProductId()) + " ("
+                        + Database.getProducts().get(i).getProductDescription() + ")";
         }
 
-        String[] productMemberArrayDelete = new String[ShopDriver.getProducts().size() + 1];
+        String[] productMemberArrayDelete = new String[Database.getProducts().size() + 1];
         productMemberArrayDelete[0] = "Delete Product";
-        for (int i = 0; i < ShopDriver.getProducts().size() + 1; i++) {
-            if (i < ShopDriver.getProducts().size())
+        for (int i = 0; i < Database.getProducts().size() + 1; i++) {
+            if (i < Database.getProducts().size())
                 productMemberArrayDelete[i + 1] = "ID: "
-                        + PRODUCT_ID_FORMATTER.format(ShopDriver.getProducts().get(i).getProductId()) + " ("
-                        + ShopDriver.getProducts().get(i).getProductDescription() + ")";
+                        + PRODUCT_ID_FORMATTER.format(Database.getProducts().get(i).getProductId()) + " ("
+                        + Database.getProducts().get(i).getProductDescription() + ")";
         }
 
         JButton addButton = new JButton("Add Product");
@@ -338,12 +339,12 @@ public class ProductTable extends BaseTable {
         g.gridy = 4;
         g.gridwidth = 3;
 
-        String[] supplierOptions = new String[ShopDriver.getSuppliers().size() + 1];
+        String[] supplierOptions = new String[Database.getSuppliers().size() + 1];
 
         supplierOptions[0] = "";
         for (int i = 1; i < supplierOptions.length; i++) {
-            supplierOptions[i] = ShopDriver.getSuppliers().get(i - 1).getSupplierName() + " ("
-                    + ShopDriver.getSuppliers().get(i - 1).getSupplierId() + ")";
+            supplierOptions[i] = Database.getSuppliers().get(i - 1).getSupplierName() + " ("
+                    + Database.getSuppliers().get(i - 1).getSupplierId() + ")";
         }
 
         final JComboBox<String> suppIDBox = new JComboBox<String>(supplierOptions);
@@ -395,7 +396,7 @@ public class ProductTable extends BaseTable {
 
                 if (valid) {
 
-                    ShopDriver.getProducts().add(
+                    Database.getProducts().add(
                             new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
                                     .parseInt(maxLevelField.getText()), Integer.parseInt(((String) suppIDBox
                                     .getSelectedItem()).substring(((String) suppIDBox.getSelectedItem()).length() - 5,
@@ -446,10 +447,10 @@ public class ProductTable extends BaseTable {
         GuiCreator.frame.repaint();
         GuiCreator.leftPanel = new JPanel();
 
-        for (final Product p : ShopDriver.getProducts()) {
+        for (final Product p : Database.getProducts()) {
             if (productId == p.getProductId()) {
 
-                final int index = ShopDriver.getProducts().indexOf(p);
+                final int index = Database.getProducts().indexOf(p);
                 // Panel items
                 JPanel innerPanel = new JPanel(new GridBagLayout());
                 innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
@@ -495,12 +496,12 @@ public class ProductTable extends BaseTable {
                 innerPanel.add(maxLevelField, g);
                 g.gridy = 4;
                 g.gridwidth = 3;
-                String[] supplierOptions = new String[ShopDriver.getSuppliers().size() + 1];
+                String[] supplierOptions = new String[Database.getSuppliers().size() + 1];
 
                 supplierOptions[0] = "";
                 for (int i = 1; i < supplierOptions.length; i++) {
-                    supplierOptions[i] = ShopDriver.getSuppliers().get(i - 1).getSupplierName() + " ("
-                            + ShopDriver.getSuppliers().get(i - 1).getSupplierId() + ")";
+                    supplierOptions[i] = Database.getSuppliers().get(i - 1).getSupplierName() + " ("
+                            + Database.getSuppliers().get(i - 1).getSupplierId() + ")";
                 }
                 final JComboBox<String> suppIDBox = new JComboBox<String>(supplierOptions);
                 innerPanel.add(suppIDBox, g);
@@ -560,7 +561,7 @@ public class ProductTable extends BaseTable {
 
                         if (valid) {
                             // Add the staff at this index
-                            ShopDriver.getProducts().add(
+                            Database.getProducts().add(
                                     index,
                                     new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()),
                                             Integer.parseInt(maxLevelField.getText()), Integer
@@ -574,7 +575,7 @@ public class ProductTable extends BaseTable {
                             GuiCreator.frame.remove(GuiCreator.leftPanel);
                             GuiCreator.frame.repaint();
                             GuiCreator.frame.validate();
-                            ShopDriver.getProducts().remove(index + 1);
+                            Database.getProducts().remove(index + 1);
                             createTable();
                         }
                     }// actionPerformed
@@ -624,9 +625,9 @@ public class ProductTable extends BaseTable {
             GuiCreator.frame.repaint();
             GuiCreator.leftPanel = new JPanel();
 
-            for (final Product s : ShopDriver.getProducts()) {
+            for (final Product s : Database.getProducts()) {
                 if (productId == s.getProductId())
-                    i = ShopDriver.getProducts().indexOf(s); // Object can't be
+                    i = Database.getProducts().indexOf(s); // Object can't be
                 // removed while being
                 // accessed - save its
                 // index location for
@@ -637,7 +638,7 @@ public class ProductTable extends BaseTable {
         if (i != -1) { // If an object has been found, we can now remove it from
                        // the ArrayList
             GuiCreator.setConfirmMessage(productName + " deleted");
-            ShopDriver.getProducts().remove(i);
+            Database.getProducts().remove(i);
         }
 
         // Update ShopDriver.frame
@@ -698,7 +699,7 @@ public class ProductTable extends BaseTable {
         int textFieldSize = 20;
         String supplier = "";
 
-        for (Supplier s : ShopDriver.getSuppliers()) {
+        for (Supplier s : Database.getSuppliers()) {
             if (s.getSupplierId() == p.getSupplierId())
                 supplier = s.getSupplierName() + " (" + s.getSupplierId() + ")";
         }
@@ -765,7 +766,7 @@ public class ProductTable extends BaseTable {
         data[0][3] = "<html><b>" + p.getStartLevel() + "</html></b>";
 
         for (int i = 0; i < ShopDriver.yearCurrent - ShopDriver.yearStart + 1; i++) {
-            for (Order o : ShopDriver.getOrders()) {
+            for (Order o : Database.getOrders()) {
                 if (Integer.parseInt(o.getOrderDate().substring(6, 10)) == i + ShopDriver.yearStart) {
 
                     for (OrderedItem oi : o.getOrderedItems()) {
@@ -873,7 +874,7 @@ public class ProductTable extends BaseTable {
      */
     public static void sortByDescription(boolean reverse) {
         if (!reverse) {
-            Collections.sort(ShopDriver.getProducts(), new Comparator<Product>() {
+            Collections.sort(Database.getProducts(), new Comparator<Product>() {
                 public int compare(Product s1, Product s2) {
                     return s1.getProductDescription().compareToIgnoreCase(s2.getProductDescription());
                 }
@@ -881,7 +882,7 @@ public class ProductTable extends BaseTable {
         }
 
         if (reverse) {
-            Collections.sort(ShopDriver.getProducts(), new Comparator<Product>() {
+            Collections.sort(Database.getProducts(), new Comparator<Product>() {
                 public int compare(Product s1, Product s2) {
                     return s2.getProductDescription().compareToIgnoreCase(s1.getProductDescription());
                 }
@@ -902,9 +903,9 @@ public class ProductTable extends BaseTable {
         int offset = 0;
         boolean found = false;
 
-        for (int i = 0; i < ShopDriver.getProducts().size() + offset; i++) {
+        for (int i = 0; i < Database.getProducts().size() + offset; i++) {
             found = false;
-            for (Product p : ShopDriver.getProducts()) {
+            for (Product p : Database.getProducts()) {
                 if (count == p.getProductId()) {
                     tempArrayList.add(p);
                     found = true;
@@ -915,15 +916,15 @@ public class ProductTable extends BaseTable {
             count++;
         }
 
-        ShopDriver.getProducts().clear();
+        Database.getProducts().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         }
     }
@@ -944,9 +945,9 @@ public class ProductTable extends BaseTable {
         tempArrayList.clear();
         boolean found;
 
-        while (ShopDriver.getProducts().size() != 0) {
+        while (Database.getProducts().size() != 0) {
             // go through the array list and find the lowest wage listed
-            for (Product p : ShopDriver.getProducts()) {
+            for (Product p : Database.getProducts()) {
                 if (lowestPrice > p.getCostPrice()) {
                     lowestPrice = p.getCostPrice();
                 }
@@ -955,33 +956,33 @@ public class ProductTable extends BaseTable {
             found = false;
             // find an entry in the arrayList with a wage matching the lowest
             // wage found
-            for (Product p : ShopDriver.getProducts()) {
+            for (Product p : Database.getProducts()) {
                 if (lowestPrice == p.getCostPrice() && !found) {
                     // when a matching entry is found, add to tempArrayList
                     tempArrayList.add(p);
 
                     // note the index of this entry
-                    indexL = ShopDriver.getProducts().indexOf(p);
+                    indexL = Database.getProducts().indexOf(p);
 
                     found = true;
                 }
                 if (found)
                     break;
             }
-            ShopDriver.getProducts().remove(indexL);
+            Database.getProducts().remove(indexL);
 
             lowestPrice = 99999999;
         }
 
-        ShopDriver.getProducts().clear();
+        Database.getProducts().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         }
     }
@@ -1002,9 +1003,9 @@ public class ProductTable extends BaseTable {
         tempArrayList.clear();
         boolean found;
 
-        while (ShopDriver.getProducts().size() != 0) {
+        while (Database.getProducts().size() != 0) {
             // go through the array list and find the lowest wage listed
-            for (Product p : ShopDriver.getProducts()) {
+            for (Product p : Database.getProducts()) {
                 if (lowestPrice > p.getSalePrice()) {
                     lowestPrice = p.getSalePrice();
                 }
@@ -1013,33 +1014,33 @@ public class ProductTable extends BaseTable {
             found = false;
             // find an entry in the arrayList with a wage matching the lowest
             // wage found
-            for (Product p : ShopDriver.getProducts()) {
+            for (Product p : Database.getProducts()) {
                 if (lowestPrice == p.getSalePrice() && !found) {
                     // when a matching entry is found, add to tempArrayList
                     tempArrayList.add(p);
 
                     // note the index of this entry
-                    indexL = ShopDriver.getProducts().indexOf(p);
+                    indexL = Database.getProducts().indexOf(p);
 
                     found = true;
                 }
                 if (found)
                     break;
             }
-            ShopDriver.getProducts().remove(indexL);
+            Database.getProducts().remove(indexL);
 
             lowestPrice = 99999999;
         }
 
-        ShopDriver.getProducts().clear();
+        Database.getProducts().clear();
 
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         }
     }
@@ -1060,9 +1061,9 @@ public class ProductTable extends BaseTable {
         tempArrayList.clear();
         boolean found;
 
-        while (ShopDriver.getProducts().size() != 0) {
+        while (Database.getProducts().size() != 0) {
             // go through the array list and find the lowest wage listed
-            for (Product p : ShopDriver.getProducts()) {
+            for (Product p : Database.getProducts()) {
                 if (lowestLevel > p.getStockLevel()) {
                     lowestLevel = p.getStockLevel();
                 }
@@ -1071,33 +1072,33 @@ public class ProductTable extends BaseTable {
             found = false;
             // find an entry in the arrayList with a wage matching the lowest
             // wage found
-            for (Product p : ShopDriver.getProducts()) {
+            for (Product p : Database.getProducts()) {
                 if (lowestLevel == p.getStockLevel() && !found) {
                     // when a matching entry is found, add to tempArrayList
                     tempArrayList.add(p);
 
                     // note the index of this entry
-                    indexL = ShopDriver.getProducts().indexOf(p);
+                    indexL = Database.getProducts().indexOf(p);
 
                     found = true;
                 }
                 if (found)
                     break;
             }
-            ShopDriver.getProducts().remove(indexL);
+            Database.getProducts().remove(indexL);
 
             lowestLevel = 99999999;
         }
 
-        ShopDriver.getProducts().clear();
+        Database.getProducts().clear();
 
         if (reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         } else if (!reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         }
     }
@@ -1117,9 +1118,9 @@ public class ProductTable extends BaseTable {
 
         tempArrayList.clear();
         boolean found;
-        while (ShopDriver.getProducts().size() != 0) {
+        while (Database.getProducts().size() != 0) {
             // go through the array list and find the lowest wage listed
-            for (Product p : ShopDriver.getProducts()) {
+            for (Product p : Database.getProducts()) {
                 if (lowestID > p.getSupplierId())
                     lowestID = p.getSupplierId();
             }
@@ -1127,30 +1128,30 @@ public class ProductTable extends BaseTable {
 
             // find an entry in the arrayList with a wage matching the lowest
             // wage found
-            for (Product p : ShopDriver.getProducts()) {
+            for (Product p : Database.getProducts()) {
                 if (lowestID == p.getSupplierId() && !found) {
                     // when a matching entry is found, add to tempArrayList
                     tempArrayList.add(p);
 
                     // note the index of this entry
-                    indexL = ShopDriver.getProducts().indexOf(p);
+                    indexL = Database.getProducts().indexOf(p);
 
                     found = true;
                 }
                 if (found)
                     break;
             }
-            ShopDriver.getProducts().remove(indexL);
+            Database.getProducts().remove(indexL);
             lowestID = 99999999;
         }
-        ShopDriver.getProducts().clear();
+        Database.getProducts().clear();
         if (!reverse) {
             for (int i = 0; i < tempArrayList.size(); i++) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         } else if (reverse) {
             for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                ShopDriver.getProducts().add(tempArrayList.get(i));
+                Database.getProducts().add(tempArrayList.get(i));
             }
         }
     }

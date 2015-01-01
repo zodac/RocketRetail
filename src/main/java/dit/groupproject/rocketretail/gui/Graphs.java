@@ -161,7 +161,7 @@ public class Graphs {
                                                                              // (sales,
                                                                              // purchases,
                                                                              // profit/loss)
-        DateSort.SortDate(firstYear, (secondYear + 1));
+        DateSort.sortDate(firstYear, (secondYear + 1));
 
         for (int i = 0; i < (secondYear - firstYear) + 1; i++) {
             double custTotal = 0, suppTotal = 0;
@@ -189,7 +189,7 @@ public class Graphs {
         double[][] dataArray = new double[12][3]; // 12 months, 3 entries per
                                                   // month (sales, purchases,
                                                   // profit/loss)
-        DateSort.SortDate(selectedYear, selectedYear + 1);
+        DateSort.sortDate(selectedYear, selectedYear + 1);
 
         for (int i = 0; i < 12; i++) {
             double custTotal = 0, suppTotal = 0;

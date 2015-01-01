@@ -11,21 +11,9 @@ import javax.swing.text.PlainDocument;
  */
 public class JTextFieldLimit extends PlainDocument {
 
-    // Class variables
-    /**
-     * Default version ID
-     */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * An Integer which defines the maximum characters allowed. Set by
-     * {@link #JTextFieldLimit(int)}.
-     * 
-     * @see #JTextFieldLimit(int)
-     */
     private int limit;
 
-    // Methods
     /**
      * Sets the character limit of the input field.
      * 

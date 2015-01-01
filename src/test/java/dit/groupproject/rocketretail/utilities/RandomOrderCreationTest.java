@@ -4,8 +4,7 @@ import static org.junit.Assert.assertNotSame;
 
 import org.junit.Test;
 
-import dit.groupproject.rocketretail.main.ShopDriver;
-import dit.groupproject.rocketretail.utilities.InitialiseArray;
+import dit.groupproject.rocketretail.database.Database;
 
 /**
  * Test class to check robustness of random order creation in
@@ -26,14 +25,15 @@ public class RandomOrderCreationTest {
         Throwable caught = null;
         try {
             for (int i = 0; i < 100000; i++) {
-                ShopDriver.initialiseArrays();
+                Database.initialiseDatabase();
                 InitialiseArray.generateOrders(25, false, false);
             }
         } catch (Throwable t) {
             caught = t;
         }
 
-        if (caught != null)
+        if (caught != null) {
             assertNotSame(IllegalArgumentException.class, caught.getClass());
+        }
     }
 }

@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 
 import org.jfree.chart.ChartPanel;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.main.ShopDriver;
@@ -76,7 +77,7 @@ public class HomeScreen {
         double currentStaffTotal = 0;
         double otherStaffTotal = 0;
 
-        for (Order o : ShopDriver.getOrders()) {
+        for (final Order o : Database.getOrders()) {
             if (!o.isSupplier()) {
                 double orderTotal = 0;
 

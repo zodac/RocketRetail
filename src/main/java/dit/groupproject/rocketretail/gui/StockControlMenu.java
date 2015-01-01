@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 
 import org.jfree.chart.ChartPanel;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Product;
-import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.utilities.StockControlUtilities;
 
 /**
@@ -65,7 +65,7 @@ public class StockControlMenu {
         productPercentLevel.clear();
         productsToReplenish.clear();
 
-        for (Product p : ShopDriver.getProducts()) {
+        for (final Product p : Database.getProducts()) {
             productDescription.add(p.getProductDescription());
 
             Double percentage = StockControlUtilities.calculatePercentage(p.getStockLevel(), p.getMaxLevel());

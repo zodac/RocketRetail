@@ -2,6 +2,7 @@ package dit.groupproject.rocketretail.utilities;
 
 import java.text.DecimalFormat;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.main.ShopDriver;
@@ -34,7 +35,7 @@ public class ProfitLoss {
         double loss = 0;
         double profit = 0;
 
-        for (Order o : ShopDriver.getOrders()) {
+        for (final Order o : Database.getOrders()) {
 
             // Supplier
             if (o.isSupplier()) {
@@ -74,7 +75,7 @@ public class ProfitLoss {
      * 
      * @see DateSort#custDates
      * @see DateSort#suppDates
-     * @see DateSort#SortDate(int, int)
+     * @see DateSort#sortDate(int, int)
      */
     public static String createAdvancedReport() {
         DecimalFormat doubleFormatter = new DecimalFormat("#,###,##0.00");
@@ -83,7 +84,7 @@ public class ProfitLoss {
 
         int year = ShopDriver.yearStart;
 
-        DateSort.SortDate(year, ShopDriver.yearCurrent + 1);
+        DateSort.sortDate(year, ShopDriver.yearCurrent + 1);
 
         for (int i = 0; i < ShopDriver.yearCurrent - ShopDriver.yearStart + 1; i++) {
 

@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
@@ -44,7 +45,7 @@ public class LoginHandler {
                 errorLabel.setText("1 attempt remaining");
 
             if (showDialog("Please enter your staff ID and PIN", myPanel) == JOptionPane.OK_OPTION) {
-                for (Staff staff : ShopDriver.getStaffMembers()) {
+                for (final Staff staff : Database.getStaffMembers()) {
                     if (hasValidLogonCredentials(idField, pinField, staff)) {
                         ShopDriver.setCurrentStaff(staff);
                         found = true;
