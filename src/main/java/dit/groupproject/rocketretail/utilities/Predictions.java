@@ -1,10 +1,11 @@
 package dit.groupproject.rocketretail.utilities;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+
 import java.util.ArrayList;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Order;
-import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
  * A class that is used to generate prediction forecasts
@@ -40,31 +41,8 @@ public class Predictions {
         indexTotal(yearStart, yearEnd);
     }
 
-    // This method should probably be used as the Profit/Loss advanced report
     /**
-     * A method used to print the order dates to console. -Divided into customer
-     * orders and supplier orders.
-     * 
-     * @param yearStart
-     *            An integer used to determine the start year to work from
-     * @param yearEnd
-     *            An integer used to determine the year to work until
-     */
-    public static void printDatesOrders(int yearStart, int yearEnd) {
-        for (int i = yearStart - ShopDriver.yearStart; i < yearEnd - ShopDriver.yearStart; i++) {
-            System.out.println("Year " + (i + ShopDriver.yearStart) + "\n===============");
-            for (int j = 0; j < 12; j++) {
-                if (custDates[i][j] != 0)
-                    System.out.println("Customer: " + custDates[i][j]);
-                if (suppDates[i][j] != 0)
-                    System.out.println("Supplier: " + suppDates[i][j]);
-            }
-            System.out.println();
-        }
-    }
-
-    /**
-     * A method to sort an arrayList by orderDate -by year
+     * A method to sort an arrayList by orderDate by year
      */
     public static void sortYearOrderDate() {
         double lowestYear = 9999;
@@ -149,10 +127,10 @@ public class Predictions {
 
         double custTotal = 0;
         double suppTotal = 0;
-        for (int i = (startYear - ShopDriver.yearStart); i < (endYear - ShopDriver.yearStart); i++) {
+        for (int i = (startYear - YEAR_START); i < (endYear - YEAR_START); i++) {
             yearList = new ArrayList<Order>();
             for (int x = 0; x < tempOrdersArrayList.size(); x++) {
-                if (Integer.parseInt(tempOrdersArrayList.get(x).getOrderDate().substring(6, 10)) - ShopDriver.yearStart == i) {
+                if (Integer.parseInt(tempOrdersArrayList.get(x).getOrderDate().substring(6, 10)) - YEAR_START == i) {
                     yearList.add(tempOrdersArrayList.get(x));
                 }
             }
@@ -223,8 +201,8 @@ public class Predictions {
 
         for (int i = 0; i < 12; i++) {
             double custTotal = 0, suppTotal = 0;
-            custTotal += DateSort.custDates[selectedYear - ShopDriver.yearStart][i];
-            suppTotal += DateSort.suppDates[selectedYear - ShopDriver.yearStart][i];
+            custTotal += DateSort.custDates[selectedYear - YEAR_START][i];
+            suppTotal += DateSort.suppDates[selectedYear - YEAR_START][i];
 
             dataArray[i][0] = custTotal;
             dataArray[i][1] = suppTotal; // Comes into this method as a negative

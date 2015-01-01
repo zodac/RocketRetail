@@ -1,5 +1,7 @@
 package dit.groupproject.rocketretail.tables;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.DATE_FORMATTER;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;

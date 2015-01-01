@@ -1,5 +1,8 @@
 package dit.groupproject.rocketretail.utilities;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -236,9 +239,9 @@ public class InitialiseArray {
                 date += randDate + "/";
 
             if (current)
-                randDate = ShopDriver.yearCurrent;
+                randDate = YEAR_CURRENT;
             else
-                randDate = RANDOM.nextInt(ShopDriver.yearCurrent - ShopDriver.yearStart) + ShopDriver.yearStart;
+                randDate = RANDOM.nextInt(YEAR_CURRENT - YEAR_START) + YEAR_START;
             date += randDate;
 
             check = RANDOM.nextInt(2) + 1;

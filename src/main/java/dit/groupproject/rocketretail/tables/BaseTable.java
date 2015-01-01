@@ -1,9 +1,7 @@
 package dit.groupproject.rocketretail.tables;
 
 import java.awt.Color;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -16,14 +14,9 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 import dit.groupproject.rocketretail.gui.GuiCreator;
-import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.utilities.DateHandler;
 
 public abstract class BaseTable {
-
-    protected final static DateFormat DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
-    protected final static DateFormat DAY_FORMATTER = new SimpleDateFormat("dd");
-    protected final static DateFormat MONTH_FORMATTER = new SimpleDateFormat("MM");
-    protected final static DateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy");
 
     protected final static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("#,###,#00.00");
     protected final static DecimalFormat CUSTOMER_ID_FORMATTER = new DecimalFormat("00000");
@@ -31,12 +24,6 @@ public abstract class BaseTable {
     protected final static DecimalFormat PRODUCT_ID_FORMATTER = new DecimalFormat("00000");
     protected final static DecimalFormat STAFF_ID_FORMATTER = new DecimalFormat("000");
     protected final static DecimalFormat SUPPLIER_ID_FORMATTER = new DecimalFormat("0000");
-
-    protected final static String[] DAYS_AS_NUMBERS = { "", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10",
-            "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
-            "29", "30", "31" };
-    protected final static String[] MONTHS_AS_NUMBERS = { "", "01", "02", "03", "04", "05", "06", "07", "08", "09",
-            "10", "11", "12" };
 
     protected static int showDialog(final String title, final JPanel myPanel) {
         return JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION,
@@ -130,7 +117,7 @@ public abstract class BaseTable {
 
             int day = addedBoxes.get(0).getSelectedIndex();
             int month = addedBoxes.get(1).getSelectedIndex();
-            int year = addedBoxes.get(2).getSelectedIndex() + (ShopDriver.yearStart - 1);
+            int year = addedBoxes.get(2).getSelectedIndex() + (DateHandler.YEAR_START - 1);
 
             // If month is April, June, September or November, day cannot be 31
             // OR if month is February and is leap year, day cannot be 30 or 31
@@ -155,7 +142,7 @@ public abstract class BaseTable {
 
             int day = lastPurchaseBoxes.get(0).getSelectedIndex();
             int month = lastPurchaseBoxes.get(1).getSelectedIndex();
-            int year = lastPurchaseBoxes.get(2).getSelectedIndex() + (ShopDriver.yearStart - 1);
+            int year = lastPurchaseBoxes.get(2).getSelectedIndex() + (DateHandler.YEAR_START - 1);
 
             // If month is April, June, September or November, day cannot be 31
             // OR if month is February and is leap year, day cannot be 30 or 31

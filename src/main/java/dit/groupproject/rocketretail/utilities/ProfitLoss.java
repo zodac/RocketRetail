@@ -1,5 +1,8 @@
 package dit.groupproject.rocketretail.utilities;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+
 import java.text.DecimalFormat;
 
 import dit.groupproject.rocketretail.database.Database;
@@ -82,11 +85,11 @@ public class ProfitLoss {
         StringBuilder budget = new StringBuilder();
         budget.append("Year\tMonth\tPurchases\tSales\n_____________________________________\n");
 
-        int year = ShopDriver.yearStart;
+        int year = YEAR_START;
 
-        DateSort.sortDate(year, ShopDriver.yearCurrent + 1);
+        DateSort.sortDate(year, YEAR_CURRENT + 1);
 
-        for (int i = 0; i < ShopDriver.yearCurrent - ShopDriver.yearStart + 1; i++) {
+        for (int i = 0; i < YEAR_CURRENT - YEAR_START + 1; i++) {
 
             for (int j = 0; j < 12; j++) {
                 double purchase = -1 * DateSort.suppDates[i][j];

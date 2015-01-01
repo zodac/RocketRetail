@@ -1,5 +1,10 @@
 package dit.groupproject.rocketretail.tables;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.DAYS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.DateHandler.MONTHS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEARS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -338,7 +343,7 @@ public class StaffTable extends BaseTable {
         g.gridy = 8;
         g.gridx = 3;
         g.gridwidth = 2 - 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+        final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
         dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(
@@ -346,7 +351,7 @@ public class StaffTable extends BaseTable {
         dateAddedMonth.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
                 .substring(3, 5)));
         dateAddedYear.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
-                .substring(6, 10)) - (ShopDriver.yearStart - 1));
+                .substring(6, 10)) - (YEAR_START - 1));
 
         // Spacer
         g.gridx = 0;
@@ -520,7 +525,7 @@ public class StaffTable extends BaseTable {
                 g.gridy = 8;
                 g.gridx = 3;
                 g.gridwidth = 2 - 3;
-                final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+                final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
                 innerPanel.add(dateAddedYear, g);
 
                 // Set JTextFields with current data
@@ -534,8 +539,7 @@ public class StaffTable extends BaseTable {
                 staffLevelField.setSelectedIndex(t.getStaffLevel());
                 dateAddedDay.setSelectedIndex(Integer.parseInt(t.getDateAdded().substring(0, 2)));
                 dateAddedMonth.setSelectedIndex(Integer.parseInt(t.getDateAdded().substring(3, 5)));
-                dateAddedYear.setSelectedIndex(Integer.parseInt(t.getDateAdded().substring(6, 10))
-                        - (ShopDriver.yearStart - 1));
+                dateAddedYear.setSelectedIndex(Integer.parseInt(t.getDateAdded().substring(6, 10)) - (YEAR_START - 1));
 
                 // Spacer
                 g.gridx = 0;

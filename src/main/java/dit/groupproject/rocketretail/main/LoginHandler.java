@@ -1,6 +1,7 @@
 package dit.groupproject.rocketretail.main;
 
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -9,6 +10,8 @@ import javax.swing.JTextField;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.gui.HomeScreen;
+import dit.groupproject.rocketretail.gui.MenuGUI;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 public class LoginHandler {
@@ -82,7 +85,28 @@ public class LoginHandler {
      */
     public static void logout() {
         GuiCreator.clearScreen();
+        launchGui();
+    }
 
-        new ShopDriver();
+    /**
+     * The ShopDriver constructor. Called at the start of the program (again if
+     * user chooses to logout).<br />
+     * Calls the {@link #logon()} method, creates the menu-bar, and sets
+     * {@link #mainPanel} to the homescreen.<br />
+     * Then shows the GUI on-screen.
+     * 
+     * @see #logon()
+     * @see MenuGUI#createMenuBar(JMenuBar, boolean)
+     * @see HomeScreen#setScreen()
+     * @see #showGui(JMenuBar)
+     */
+    public static void launchGui() {
+        // final boolean manager = logon();
+        final boolean manager = true;
+
+        JMenuBar menuBar = new JMenuBar();
+        MenuGUI.createMenuBar(menuBar, manager);
+        HomeScreen.setScreen();
+        GuiCreator.showGui(menuBar);
     }
 }

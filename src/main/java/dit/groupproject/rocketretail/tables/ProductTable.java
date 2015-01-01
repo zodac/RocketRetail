@@ -1,5 +1,8 @@
 package dit.groupproject.rocketretail.tables;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -750,13 +753,13 @@ public class ProductTable extends BaseTable {
 
         JPanel myPanel = new JPanel(new BorderLayout());
 
-        double[] yearData = new double[ShopDriver.yearCurrent - ShopDriver.yearStart + 1];
-        double[] productData = new double[ShopDriver.yearCurrent - ShopDriver.yearStart + 1];
+        double[] yearData = new double[YEAR_CURRENT - YEAR_START + 1];
+        double[] productData = new double[YEAR_CURRENT - YEAR_START + 1];
 
         String[] columnNames = { "Year", "Total Qty Bought", "Total Qty Sold", "Year Change" };
-        Object[][] data = new Object[ShopDriver.yearCurrent - ShopDriver.yearStart + 1 + 1][4];
+        Object[][] data = new Object[YEAR_CURRENT - YEAR_START + 1 + 1][4];
 
-        for (int i = 0; i < ShopDriver.yearCurrent - ShopDriver.yearStart + 2; i++) {
+        for (int i = 0; i < YEAR_CURRENT - YEAR_START + 2; i++) {
             for (int j = 0; j < 4; j++) {
                 data[i][j] = 0;
             }
@@ -765,9 +768,9 @@ public class ProductTable extends BaseTable {
         data[0][2] = "<html><b>Start Level</b></html>";
         data[0][3] = "<html><b>" + p.getStartLevel() + "</html></b>";
 
-        for (int i = 0; i < ShopDriver.yearCurrent - ShopDriver.yearStart + 1; i++) {
+        for (int i = 0; i < YEAR_CURRENT - YEAR_START + 1; i++) {
             for (Order o : Database.getOrders()) {
-                if (Integer.parseInt(o.getOrderDate().substring(6, 10)) == i + ShopDriver.yearStart) {
+                if (Integer.parseInt(o.getOrderDate().substring(6, 10)) == i + YEAR_START) {
 
                     for (OrderedItem oi : o.getOrderedItems()) {
                         if (oi.getProduct().getProductId() == p.getProductId() && o.isSupplier() && !o.isActive())
@@ -777,7 +780,7 @@ public class ProductTable extends BaseTable {
                     }
 
                 }
-                data[i + 1][0] = (i + ShopDriver.yearStart);
+                data[i + 1][0] = (i + YEAR_START);
                 if ((int) data[i + 1][1] - (int) data[i + 1][2] > 0)
                     data[i + 1][3] = "<html><b><font color=\"blue\">" + ((int) data[i + 1][1] - (int) data[i + 1][2])
                             + "</font></b></html>";
@@ -795,8 +798,8 @@ public class ProductTable extends BaseTable {
         myPanel.add(scrollPane, BorderLayout.WEST);
         int runningTotal = p.getStartLevel();
 
-        for (int j = 0; j < ShopDriver.yearCurrent - ShopDriver.yearStart + 1; j++) {
-            yearData[j] = j + ShopDriver.yearStart;
+        for (int j = 0; j < YEAR_CURRENT - YEAR_START + 1; j++) {
+            yearData[j] = j + YEAR_START;
             runningTotal += (int) data[j + 1][1] - (int) data[j + 1][2];
             productData[j] = runningTotal;
         }

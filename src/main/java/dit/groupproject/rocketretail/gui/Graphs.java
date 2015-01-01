@@ -1,6 +1,9 @@
 //Main
 package dit.groupproject.rocketretail.gui;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,7 +39,7 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.VerticalAlignment;
 
-import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.utilities.DateHandler;
 import dit.groupproject.rocketretail.utilities.DateSort;
 import dit.groupproject.rocketretail.utilities.Predictions;
 
@@ -46,6 +49,7 @@ public class Graphs {
      */
     static String[] titleArray = { "Sales", "Purchases", "Gross Profit" };
     static int startYearIndex;
+
     /**
      * A DecimalFormatter which formats Integers into Strings with the given
      * formatting. Formats doubles to have commas, always show to two decimal
@@ -69,7 +73,7 @@ public class Graphs {
     // current year finder
     // public static int yearInt = Calendar.getInstance().get(Calendar.YEAR);
     // **************
-    // Replaced with ShopDriver.yearCurrent - we needed a reference to the
+    // Replaced with yearCurrent - we needed a reference to the
     // current year in the rest of the project, so just combining it into one
     // place
     /**
@@ -106,14 +110,14 @@ public class Graphs {
             public void actionPerformed(ActionEvent e) {
 
                 int firstYear = 0, secondYear = 0;
-                firstYear = ShopDriver.yearCurrent - 4;
-                secondYear = ShopDriver.yearCurrent;
+                firstYear = YEAR_CURRENT - 4;
+                secondYear = YEAR_CURRENT;
 
                 double[][] inputArray = createArrayMultipleYears(firstYear, secondYear);
                 BarGraphLeft5Year("Title", inputArray, "Years", true);
 
                 double[][] twoYearPredictionArray = Predictions.twoYrPrediction(Predictions
-                        .createArrayFiveYear(ShopDriver.yearCurrent));
+                        .createArrayFiveYear(YEAR_CURRENT));
                 twoYearPredictionBarGraph("Two Year Prediction", twoYearPredictionArray, "Years", true);
             }
         });
@@ -122,11 +126,11 @@ public class Graphs {
         predBarGraphSixMonthItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // also show 12 month for this year
-                double[][] inputArray = createArraySingleYear(ShopDriver.yearCurrent);
+                double[][] inputArray = createArraySingleYear(YEAR_CURRENT);
                 BarGraphLeft("Title", inputArray, "" + "Months", false);
 
                 double[][] sixMonthPredictionArray = Predictions.sixMthPrediction(Predictions
-                        .createArrayFiveYear(ShopDriver.yearCurrent));
+                        .createArrayFiveYear(YEAR_CURRENT));
                 sixMonthPredictionBarGraph("Six Month Prediction", sixMonthPredictionArray, "Months", true);
 
             }
@@ -167,8 +171,8 @@ public class Graphs {
             double custTotal = 0, suppTotal = 0;
 
             for (int j = 0; j < 12; j++) {
-                custTotal += DateSort.custDates[i + (firstYear - ShopDriver.yearStart)][j];
-                suppTotal += DateSort.suppDates[i + (firstYear - ShopDriver.yearStart)][j];
+                custTotal += DateSort.custDates[i + (firstYear - YEAR_START)][j];
+                suppTotal += DateSort.suppDates[i + (firstYear - YEAR_START)][j];
             }
 
             inputArray[i][0] = custTotal;
@@ -193,8 +197,8 @@ public class Graphs {
 
         for (int i = 0; i < 12; i++) {
             double custTotal = 0, suppTotal = 0;
-            custTotal += DateSort.custDates[selectedYear - ShopDriver.yearStart][i];
-            suppTotal += DateSort.suppDates[selectedYear - ShopDriver.yearStart][i];
+            custTotal += DateSort.custDates[selectedYear - YEAR_START][i];
+            suppTotal += DateSort.suppDates[selectedYear - YEAR_START][i];
 
             dataArray[i][0] = custTotal;
             dataArray[i][1] = suppTotal; // Comes into this method as a negative
@@ -230,7 +234,7 @@ public class Graphs {
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
 
-        String yearTitle = "Plot for " + (ShopDriver.yearCurrent);
+        String yearTitle = "Plot for " + (YEAR_CURRENT);
         chart.addSubtitle(new TextTitle(yearTitle, new Font("SansSerif", Font.PLAIN, 18), new Color(82, 89, 110),
                 RectangleEdge.TOP, HorizontalAlignment.CENTER, VerticalAlignment.TOP, RectangleInsets.ZERO_INSETS));
 
@@ -269,7 +273,7 @@ public class Graphs {
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
 
-        String yearTitle = "Plot for " + (ShopDriver.yearCurrent - 5) + "-" + "" + (ShopDriver.yearCurrent);
+        String yearTitle = "Plot for " + (YEAR_CURRENT - 5) + "-" + "" + (YEAR_CURRENT);
         chart.addSubtitle(new TextTitle(yearTitle, new Font("SansSerif", Font.PLAIN, 18), new Color(82, 89, 110),
                 RectangleEdge.TOP, HorizontalAlignment.CENTER, VerticalAlignment.TOP, RectangleInsets.ZERO_INSETS));
 
@@ -312,7 +316,7 @@ public class Graphs {
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(470, 270));
 
-        String yearTitle = "" + (ShopDriver.yearCurrent + 1);
+        String yearTitle = "" + (YEAR_CURRENT + 1);
         chart.addSubtitle(new TextTitle("Prediction for " + yearTitle, new Font("SansSerif", Font.PLAIN, 18),
                 new Color(82, 89, 110), RectangleEdge.TOP, HorizontalAlignment.CENTER, VerticalAlignment.TOP,
                 RectangleInsets.ZERO_INSETS));
@@ -356,7 +360,7 @@ public class Graphs {
                 twoYearCreateDataset(dataArray, isYear), PlotOrientation.VERTICAL, true, true, false);
         chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
-        String yearTitle = "Predictions for " + (ShopDriver.yearCurrent + 1) + "-" + (ShopDriver.yearCurrent + 2);
+        String yearTitle = "Predictions for " + (YEAR_CURRENT + 1) + "-" + (YEAR_CURRENT + 2);
         chart.addSubtitle(new TextTitle(yearTitle, new Font("SansSerif", Font.PLAIN, 18), new Color(82, 89, 110),
                 RectangleEdge.TOP, HorizontalAlignment.CENTER, VerticalAlignment.TOP, RectangleInsets.ZERO_INSETS));
 
@@ -451,7 +455,7 @@ public class Graphs {
 
         for (int i = 0; i < dataArray.length; i++) {
             if (isYear)
-                xaxis = ShopDriver.YEARS_AS_NUMBERS[i + startYearIndex];
+                xaxis = DateHandler.YEARS_AS_NUMBERS[i + startYearIndex];
             else
                 xaxis = months[i];
 
@@ -475,7 +479,7 @@ public class Graphs {
         String xaxis = "";
         String[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan",
                 "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-        String[] years = { "" + (ShopDriver.yearCurrent + 1), "" + (ShopDriver.yearCurrent + 2) };
+        String[] years = { "" + (YEAR_CURRENT + 1), "" + (YEAR_CURRENT + 2) };
 
         for (int i = 0; i < dataArray.length; i++) {
             if (isYear) {
@@ -504,9 +508,8 @@ public class Graphs {
         String xaxis = "";
         String[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan",
                 "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-        String[] years = { "" + (ShopDriver.yearCurrent - 4), "" + (ShopDriver.yearCurrent - 3),
-                "" + (ShopDriver.yearCurrent - 2), "" + (ShopDriver.yearCurrent - 1),
-                "" + (ShopDriver.yearCurrent - 0), "" + ShopDriver.yearCurrent };
+        String[] years = { "" + (YEAR_CURRENT - 4), "" + (YEAR_CURRENT - 3), "" + (YEAR_CURRENT - 2),
+                "" + (YEAR_CURRENT - 1), "" + (YEAR_CURRENT - 0), "" + YEAR_CURRENT };
 
         for (int i = 0; i < dataArray.length; i++) {
             if (isYear) {
@@ -539,7 +542,7 @@ public class Graphs {
             if (isYear)
                 xaxis = months[i];
             else
-                xaxis = ShopDriver.YEARS_AS_NUMBERS[i];
+                xaxis = DateHandler.YEARS_AS_NUMBERS[i];
 
             for (int j = 0; j < dataArray[1].length; j++) {
                 dcdM.addValue(dataArray[i][j], titleArray[j], xaxis);
@@ -594,7 +597,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+            final JComboBox<String> firstYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -602,8 +605,7 @@ public class Graphs {
                 public void actionPerformed(ActionEvent e) {
                     if (firstYear.getSelectedIndex() != 0) {
                         double[][] inputArray = createArrayMultipleYears(firstYear.getSelectedIndex()
-                                + (ShopDriver.yearStart - 1), (firstYear.getSelectedIndex() + 4)
-                                + (ShopDriver.yearStart - 1));
+                                + (YEAR_START - 1), (firstYear.getSelectedIndex() + 4) + (YEAR_START - 1));
                         startYearIndex = firstYear.getSelectedIndex();
                         BarGraph12Month("Title", inputArray, "Months", true);
                     }
@@ -623,7 +625,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+            final JComboBox<String> singleYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -633,7 +635,7 @@ public class Graphs {
 
                     if (singleYear.getSelectedIndex() != 0) {
                         startYearIndex = singleYear.getSelectedIndex();
-                        double[][] inputArray = createArraySingleYear((singleYear.getSelectedIndex() + (ShopDriver.yearStart - 1)));
+                        double[][] inputArray = createArraySingleYear((singleYear.getSelectedIndex() + (YEAR_START - 1)));
                         BarGraph12Month("Title", inputArray, "Years", false);
                     }
                 }
@@ -693,7 +695,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+            final JComboBox<String> firstYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -702,8 +704,7 @@ public class Graphs {
 
                     if (firstYear.getSelectedIndex() != 0) {
                         double[][] inputArray = createArrayMultipleYears(firstYear.getSelectedIndex()
-                                + (ShopDriver.yearStart - 1), (firstYear.getSelectedIndex() + 4)
-                                + (ShopDriver.yearStart - 1));
+                                + (YEAR_START - 1), (firstYear.getSelectedIndex() + 4) + (YEAR_START - 1));
                         startYearIndex = firstYear.getSelectedIndex();
                         BarGraph5Year("Title", inputArray, "Years", true);
                     }
@@ -723,7 +724,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+            final JComboBox<String> singleYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -733,7 +734,7 @@ public class Graphs {
 
                     if (singleYear.getSelectedIndex() != 0) {
                         startYearIndex = singleYear.getSelectedIndex();
-                        double[][] inputArray = createArraySingleYear((singleYear.getSelectedIndex() + (ShopDriver.yearStart - 1)));
+                        double[][] inputArray = createArraySingleYear((singleYear.getSelectedIndex() + (YEAR_START - 1)));
                         BarGraph5Year("Title", inputArray, "Months", false);
                     }
                 }
@@ -788,7 +789,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+            final JComboBox<String> firstYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -797,11 +798,10 @@ public class Graphs {
 
                     if (firstYear.getSelectedIndex() != 0) {
                         double[][] inputArray = createArrayMultipleYears(firstYear.getSelectedIndex()
-                                + (ShopDriver.yearStart - 1), (firstYear.getSelectedIndex() + 4)
-                                + (ShopDriver.yearStart - 1));
+                                + (YEAR_START - 1), (firstYear.getSelectedIndex() + 4) + (YEAR_START - 1));
                         startYearIndex = firstYear.getSelectedIndex();
                         BarGraph("Title", inputArray, firstYear.getSelectedItem() + "-"
-                                + (firstYear.getSelectedIndex() + ShopDriver.yearStart + 4), true);
+                                + (firstYear.getSelectedIndex() + YEAR_START + 4), true);
                     }
                 }
             });
@@ -819,7 +819,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+            final JComboBox<String> singleYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -829,7 +829,7 @@ public class Graphs {
 
                     if (singleYear.getSelectedIndex() != 0) {
                         startYearIndex = singleYear.getSelectedIndex();
-                        double[][] inputArray = createArraySingleYear((singleYear.getSelectedIndex() + (ShopDriver.yearStart - 1)));
+                        double[][] inputArray = createArraySingleYear((singleYear.getSelectedIndex() + (YEAR_START - 1)));
                         BarGraph("Title", inputArray, (String) singleYear.getSelectedItem(), false);
                     }
                 }

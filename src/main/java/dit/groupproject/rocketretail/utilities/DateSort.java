@@ -1,5 +1,8 @@
 package dit.groupproject.rocketretail.utilities;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEARS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+
 import java.util.ArrayList;
 
 import dit.groupproject.rocketretail.database.Database;
@@ -14,27 +17,11 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  */
 public class DateSort {
 
-    // Class variables
-    /**
-     * A 2D array which stores sales by year and month
-     */
-    public static double custDates[][] = new double[ShopDriver.YEARS_AS_NUMBERS.length - 1][12];
+    public static double custDates[][] = new double[YEARS_AS_NUMBERS.length - 1][12];
+    public static double suppDates[][] = new double[YEARS_AS_NUMBERS.length - 1][12];
 
-    /**
-     * A 2D array which stores purchases by year and month
-     */
-    public static double suppDates[][] = new double[ShopDriver.YEARS_AS_NUMBERS.length - 1][12];
-
-    /**
-     * An ArrayList<Order> which temporarily holds information from
-     * {@link ShopDriver#orders} to be manipulated by
-     * {@link #indexTotal(int, int)}.
-     * 
-     * @see #indexTotal(int, int)
-     */
     private static ArrayList<Order> tempOrdersArrayList = new ArrayList<Order>();
 
-    // Methods
     /**
      * Copies orders from {@link ShopDriver#orders} into
      * {@link #tempOrdersArrayList} and sorts by month and year. Initialises
@@ -60,36 +47,12 @@ public class DateSort {
             tempOrdersArrayList.add(order);
         }
 
-        custDates = new double[ShopDriver.YEARS_AS_NUMBERS.length - 1][12];
-        suppDates = new double[ShopDriver.YEARS_AS_NUMBERS.length - 1][12];
+        custDates = new double[YEARS_AS_NUMBERS.length - 1][12];
+        suppDates = new double[YEARS_AS_NUMBERS.length - 1][12];
 
         sortMonthOrderDate();
         sortYearOrderDate();
         indexTotal(yearStart, yearEnd);
-    }
-
-    /**
-     * Prints out contents of {@link #custDates} and {@link #suppDates} between
-     * chosen years.
-     * 
-     * @param yearStart
-     *            an integer defining the start date for sales/purchases to be
-     *            accessed
-     * @param yearEnd
-     *            an integer defining the end date for sales/purchases to be
-     *            accessed
-     */
-    public static void printDatesOrders(int yearStart, int yearEnd) {
-        for (int i = yearStart - ShopDriver.yearStart; i < yearEnd - ShopDriver.yearStart; i++) {
-            System.out.println("Year " + (i + ShopDriver.yearStart) + "\n===============");
-            for (int j = 0; j < 12; j++) {
-                if (custDates[i][j] != 0)
-                    System.out.println("Customer: " + custDates[i][j]);
-                if (suppDates[i][j] != 0)
-                    System.out.println("Supplier: " + suppDates[i][j]);
-            }
-            System.out.println();
-        }
     }
 
     /**
@@ -181,10 +144,10 @@ public class DateSort {
 
         double custTotal = 0;
         double suppTotal = 0;
-        for (int i = (yearStart - ShopDriver.yearStart); i < (yearEnd - ShopDriver.yearStart); i++) {
+        for (int i = (yearStart - YEAR_START); i < (yearEnd - YEAR_START); i++) {
             yearList = new ArrayList<Order>();
             for (int x = 0; x < tempOrdersArrayList.size(); x++) {
-                if (Integer.parseInt(tempOrdersArrayList.get(x).getOrderDate().substring(6, 10)) - ShopDriver.yearStart == i) {
+                if (Integer.parseInt(tempOrdersArrayList.get(x).getOrderDate().substring(6, 10)) - YEAR_START == i) {
                     yearList.add(tempOrdersArrayList.get(x));
                 }
             }

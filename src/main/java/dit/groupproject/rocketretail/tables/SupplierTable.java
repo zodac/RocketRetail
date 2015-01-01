@@ -1,5 +1,10 @@
 package dit.groupproject.rocketretail.tables;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.DAYS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.DateHandler.MONTHS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEARS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -342,7 +347,7 @@ public class SupplierTable extends BaseTable {
         g.gridx = 3;
         g.gridwidth = 2 - 3;
 
-        final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+        final JComboBox<String> lastPurchaseYear = new JComboBox<String>(YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
         g.gridy = 6;
@@ -361,7 +366,7 @@ public class SupplierTable extends BaseTable {
         g.gridx = 3;
         g.gridwidth = 2 - 3;
 
-        final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+        final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
         dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(
@@ -369,7 +374,7 @@ public class SupplierTable extends BaseTable {
         dateAddedMonth.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
                 .substring(3, 5)));
         dateAddedYear.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
-                .substring(6, 10)) - (ShopDriver.yearStart - 1));
+                .substring(6, 10)) - (YEAR_START - 1));
 
         // Spacer
         g.gridx = 0;
@@ -527,7 +532,7 @@ public class SupplierTable extends BaseTable {
                 g.gridx = 3;
                 g.gridwidth = 2 - 3;
 
-                final JComboBox<String> lastPurchaseYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+                final JComboBox<String> lastPurchaseYear = new JComboBox<String>(YEARS_AS_NUMBERS);
                 innerPanel.add(lastPurchaseYear, g);
 
                 g.gridy = 6;
@@ -546,7 +551,7 @@ public class SupplierTable extends BaseTable {
                 g.gridx = 3;
                 g.gridwidth = 2 - 3;
 
-                final JComboBox<String> dateAddedYear = new JComboBox<String>(ShopDriver.YEARS_AS_NUMBERS);
+                final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
                 innerPanel.add(dateAddedYear, g);
 
                 // Set JTextFields with current data
@@ -558,11 +563,10 @@ public class SupplierTable extends BaseTable {
                 lastPurchaseDay.setSelectedIndex(Integer.parseInt(s.getLastPurchase().substring(0, 2)));
                 lastPurchaseMonth.setSelectedIndex(Integer.parseInt(s.getLastPurchase().substring(3, 5)));
                 lastPurchaseYear.setSelectedIndex(Integer.parseInt(s.getLastPurchase().substring(6, 10))
-                        - (ShopDriver.yearStart - 1));
+                        - (YEAR_START - 1));
                 dateAddedDay.setSelectedIndex(Integer.parseInt(s.getDateAdded().substring(0, 2)));
                 dateAddedMonth.setSelectedIndex(Integer.parseInt(s.getDateAdded().substring(3, 5)));
-                dateAddedYear.setSelectedIndex(Integer.parseInt(s.getDateAdded().substring(6, 10))
-                        - (ShopDriver.yearStart - 1));
+                dateAddedYear.setSelectedIndex(Integer.parseInt(s.getDateAdded().substring(6, 10)) - (YEAR_START - 1));
 
                 JLabel spaceLabel1 = new JLabel();
                 spaceLabel1.setText(" ");
