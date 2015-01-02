@@ -8,7 +8,7 @@ import java.util.Comparator;
 /**
  * A class that is used to model a <code>Customer</code>.
  */
-public class Customer {
+public class Customer implements Entity {
 
     private final static DateFormat DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -132,4 +132,23 @@ public class Customer {
             }
         }
     };
+
+    @Override
+    public Object[] getData() {
+        Object[] data = new Object[getNumberOfFields()];
+        data[0] = CUSTOMER_ID_FORMATTER.format(customerId);
+        data[1] = customerName;
+        data[2] = phoneNumber;
+        data[3] = address;
+        data[4] = vatNumber;
+        data[5] = lastPurchase;
+        data[6] = dateAdded;
+
+        return data;
+    }
+
+    @Override
+    public int getNumberOfFields() {
+        return 7;
+    }
 }
