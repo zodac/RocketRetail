@@ -107,7 +107,7 @@ public abstract class BaseTable {
         if (addedBoxes != null) {
 
             for (final JComboBox<String> addedBox : addedBoxes) {
-                if (((String) addedBox.getSelectedItem()).length() == 0) {
+                if (((String) addedBox.getSelectedItem()).isEmpty()) {
                     addedBox.setBorder(errorBorder);
                     valid = false;
                 } else {
@@ -175,7 +175,7 @@ public abstract class BaseTable {
             ArrayList<JTextField> doubleFields, boolean valid, final Border errorBorder, final Border validBorder) {
         if (textFields.size() > 0) {
             for (JTextField text : textFields) {
-                if (text.getText().length() == 0) {
+                if (text.getText().isEmpty()) {
                     // matching label = red
                     text.setBorder(errorBorder);
                     valid = false;

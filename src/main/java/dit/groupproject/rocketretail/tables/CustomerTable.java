@@ -303,7 +303,7 @@ public class CustomerTable extends BaseTable {
         final JComboBox<String> lastPurchaseYear = new JComboBox<String>(YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
-        g.gridy = 6;
+        g.gridy = 5;
         g.gridx = 1;
         g.gridwidth = 1;
         final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
@@ -320,7 +320,7 @@ public class CustomerTable extends BaseTable {
         dateAddedYear.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
 
         g.gridx = 0;
-        g.gridy = 7;
+        g.gridy = 6;
         innerPanel.add(new JLabel(" "), g);
         g.gridx = 1;
         innerPanel.add(new JLabel(" "), g);
@@ -330,7 +330,7 @@ public class CustomerTable extends BaseTable {
         g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
-        g.gridy = 8;
+        g.gridy = 7;
         innerPanel.add(save, g);
         JButton cancel = new JButton("Cancel");
         g.gridx = 3;
