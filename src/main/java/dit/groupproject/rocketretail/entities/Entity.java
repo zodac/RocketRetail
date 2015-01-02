@@ -12,4 +12,8 @@ public interface Entity {
     public Object[] getData();
 
     public int getNumberOfFields();
+
+    public int getId();
+
+    public void setId(final int id);
 }

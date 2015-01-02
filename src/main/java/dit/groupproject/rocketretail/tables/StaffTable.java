@@ -791,7 +791,7 @@ public class StaffTable extends BaseTable {
                 String name = "";
 
                 for (Customer c : Database.getCustomers()) {
-                    if (Database.getOrders().get(i).getTraderId() == c.getCustomerId()) {
+                    if (Database.getOrders().get(i).getTraderId() == c.getId()) {
                         name = c.getCustomerName();
                     }
                 }

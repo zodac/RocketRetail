@@ -1,16 +1,12 @@
 package dit.groupproject.rocketretail.entities;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
 
 /**
  * A class that is used to model a <code>Customer</code>.
  */
 public class Customer implements Entity {
-
-    private final static DateFormat DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
     private int customerId;
     private String customerName;
@@ -20,8 +16,8 @@ public class Customer implements Entity {
     private String lastPurchase;
     private String dateAdded;
 
-    public Customer(final String customerName, final String phoneNumber, final String address, final String vatNumber,
-            final String lastPurchase, final String dateAdded) {
+    public Customer(final String customerName, final String phoneNumber, final String address, final String vatNumber, final String lastPurchase,
+            final String dateAdded) {
         this.customerId = IdManager.getCustomerIdAndIncrement();
         this.customerName = customerName;
         this.phoneNumber = phoneNumber;
@@ -31,17 +27,13 @@ public class Customer implements Entity {
         this.dateAdded = dateAdded;
     }
 
-    public String printDetails() {
-        return "Customer ID:\t" + customerId + "\nCustomer Name:\t" + customerName + "\nPhone Number:\t" + phoneNumber
-                + "\nAddress:\t" + address + "\nVat Number:\t" + vatNumber + "\nLast Purchase:\t" + lastPurchase
-                + "\nDate Added:\t" + dateAdded + "\n\n";
-    }
-
-    public int getCustomerId() {
+    @Override
+    public int getId() {
         return customerId;
     }
 
-    public void setCustomerId(final int customerId) {
+    @Override
+    public void setId(final int customerId) {
         this.customerId = customerId;
     }
 
@@ -91,7 +83,7 @@ public class Customer implements Entity {
 
     private static Comparator<Customer> compareById = new Comparator<Customer>() {
         public int compare(final Customer s1, final Customer s2) {
-            return s1.getCustomerId() - s2.getCustomerId();
+            return s1.getId() - s2.getId();
         }
     };
 
@@ -135,7 +127,7 @@ public class Customer implements Entity {
 
     @Override
     public Object[] getData() {
-        Object[] data = new Object[getNumberOfFields()];
+        final Object[] data = new Object[getNumberOfFields()];
         data[0] = CUSTOMER_ID_FORMATTER.format(customerId);
         data[1] = customerName;
         data[2] = phoneNumber;

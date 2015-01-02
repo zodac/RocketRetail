@@ -50,11 +50,9 @@ public class CustomerTable extends BaseTable {
 
     public static boolean first = true;
 
-    private final static String[] CUSTOMER_COLUMN_NAMES = { "ID", "Name", "Phone Number", "Address", "VAT Number",
-            "Last Purchase", "Date Added" };
+    private final static String[] CUSTOMER_COLUMN_NAMES = { "ID", "Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
     private final static String[] ORDER_COLUMN_NAMES = { "Order ID", "Order Date", "Delivery Date", "Total Cost" };
-    private final static String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "VAT Number",
-            "Last Purchase", "Date Added" };
+    private final static String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
 
     private static String sortType = "Sort by...";
     private static boolean descendingOrderSort = false;
@@ -150,8 +148,7 @@ public class CustomerTable extends BaseTable {
 
         int editAndDeleteIndex = 1;
         for (final Customer customer : customers) {
-            itemsToEdit[editAndDeleteIndex] = "ID: " + CUSTOMER_ID_FORMATTER.format(customer.getCustomerId()) + " ("
-                    + customer.getCustomerName() + ")";
+            itemsToEdit[editAndDeleteIndex] = "ID: " + CUSTOMER_ID_FORMATTER.format(customer.getId()) + " (" + customer.getCustomerName() + ")";
             itemsToDelete[editAndDeleteIndex] = itemsToDelete[editAndDeleteIndex++];
         }
         final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
@@ -214,8 +211,7 @@ public class CustomerTable extends BaseTable {
         deleteBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 delete(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9)),
-                        ((String) deleteBox.getSelectedItem()).substring(11,
-                                ((String) deleteBox.getSelectedItem()).length() - 1));
+                        ((String) deleteBox.getSelectedItem()).substring(11, ((String) deleteBox.getSelectedItem()).length() - 1));
             }
         });
         return deleteBox;
@@ -343,11 +339,9 @@ public class CustomerTable extends BaseTable {
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
                 if (checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    Database.addCustomer(new Customer(custNameField.getText(), phoneNoField.getText(), addressField
-                            .getText(), vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/"
-                            + lastPurchaseMonth.getSelectedItem() + "/" + lastPurchaseYear.getSelectedItem(),
-                            dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
-                                    + dateAddedYear.getSelectedItem()));
+                    Database.addCustomer(new Customer(custNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField.getText(),
+                            lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/" + lastPurchaseYear.getSelectedItem(),
+                            dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
                     GuiCreator.setConfirmMessage("Customer " + custNameField.getText() + " added");
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -471,15 +465,14 @@ public class CustomerTable extends BaseTable {
         final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
-        custIDField.setText("" + customer.getCustomerId());
+        custIDField.setText("" + customer.getId());
         custNameField.setText(customer.getCustomerName());
         phoneNoField.setText(customer.getPhoneNumber());
         addressField.setText(customer.getAddress());
         vatNoField.setText(customer.getVatNumber());
         lastPurchaseDay.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(0, 2)));
         lastPurchaseMonth.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(3, 5)));
-        lastPurchaseYear.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(6, 10))
-                - (YEAR_START - 1));
+        lastPurchaseYear.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(6, 10)) - (YEAR_START - 1));
         dateAddedDay.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(0, 2)));
         dateAddedMonth.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(3, 5)));
         dateAddedYear.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(6, 10)) - (YEAR_START - 1));
@@ -521,12 +514,11 @@ public class CustomerTable extends BaseTable {
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
                 if (checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    final Customer editedCustomer = new Customer(custNameField.getText(), phoneNoField.getText(),
-                            addressField.getText(), vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/"
-                                    + lastPurchaseMonth.getSelectedItem() + "/" + lastPurchaseYear.getSelectedItem(),
-                            dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
-                                    + dateAddedYear.getSelectedItem());
-                    editedCustomer.setCustomerId(index + IdManager.CUSTOMER_ID_START);
+                    final Customer editedCustomer = new Customer(custNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField
+                            .getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
+                            + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
+                            + dateAddedYear.getSelectedItem());
+                    editedCustomer.setId(index + IdManager.CUSTOMER_ID_START);
                     Database.addCustomerByIndex(index, editedCustomer);
 
                     GuiCreator.setConfirmMessage("Customer " + custNameField.getText() + "'s details editted");
@@ -624,8 +616,7 @@ public class CustomerTable extends BaseTable {
 
         final int textFieldSize = 20;
 
-        final JTextField customerField = new JTextField(customerName + " ("
-                + CUSTOMER_ID_FORMATTER.format(customer.getCustomerId()) + ")", textFieldSize);
+        final JTextField customerField = new JTextField(customerName + " (" + CUSTOMER_ID_FORMATTER.format(customer.getId()) + ")", textFieldSize);
         customerField.setEditable(false);
         JTextField vatNumberField = new JTextField(customer.getVatNumber(), textFieldSize);
         vatNumberField.setEditable(false);
@@ -669,7 +660,7 @@ public class CustomerTable extends BaseTable {
         ArrayList<Order> customerOrders = new ArrayList<>();
 
         for (final Order order : Database.getOrders()) {
-            if (order.getTraderId() == customer.getCustomerId()) {
+            if (order.getTraderId() == customer.getId()) {
                 customerOrders.add(order);
             }
         }

@@ -45,7 +45,7 @@ public class Database {
 
     public static Customer getCustomerById(final int customerId) {
         for (final Customer customer : customers) {
-            if (customer.getCustomerId() == customerId) {
+            if (customer.getId() == customerId) {
                 return customer;
             }
         }

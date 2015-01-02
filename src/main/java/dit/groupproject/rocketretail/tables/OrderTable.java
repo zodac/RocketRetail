@@ -633,7 +633,7 @@ public class OrderTable extends BaseTable {
 
                     for (Customer c : Database.getCustomers()) {
                         if (c.getCustomerName().equals(customerOptions.getSelectedItem()))
-                            traderId = c.getCustomerId();
+                            traderId = c.getId();
                     }
 
                     final ArrayList<JLabel> productLabels = new ArrayList<JLabel>();
@@ -723,7 +723,7 @@ public class OrderTable extends BaseTable {
                                                 new Order(traderId, DATE_FORMATTER.format(new Date()), items, true));
 
                                     for (final Customer customer : Database.getCustomers()) {
-                                        if (customer.getCustomerId() == traderId) {
+                                        if (customer.getId() == traderId) {
                                             activeCustomer = customer;
                                             customer.setLastPurchase(DATE_FORMATTER.format(new Date()));
                                         }
@@ -1130,7 +1130,7 @@ public class OrderTable extends BaseTable {
             traderTitle = "Customer";
 
             for (Customer c : Database.getCustomers()) {
-                if (c.getCustomerId() == o.getTraderId()) {
+                if (c.getId() == o.getTraderId()) {
                     traderName = c.getCustomerName();
                     break;
                 }
