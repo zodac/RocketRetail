@@ -10,22 +10,22 @@ import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
- * The DateSort class fills two 2D arrays ({@link #custDates} and
- * {@link #suppDates}) with sales and purchases by year and month. These two
+ * The DateSort class fills two 2D arrays ({@link #customerOrderDates} and
+ * {@link #supplierOrderDates}) with sales and purchases by year and month. These two
  * arrays can be used by other classes for graphing or printing out
  * sales/purchases over a period of time.
  */
 public class DateSort {
 
-    public static double custDates[][] = new double[YEARS_AS_NUMBERS.length - 1][12];
-    public static double suppDates[][] = new double[YEARS_AS_NUMBERS.length - 1][12];
+    public static double customerOrderDates[][];
+    public static double supplierOrderDates[][];
 
     private static ArrayList<Order> tempOrdersArrayList = new ArrayList<Order>();
 
     /**
      * Copies orders from {@link ShopDriver#orders} into
      * {@link #tempOrdersArrayList} and sorts by month and year. Initialises
-     * {@link #custDates} and {@link #suppDates}, then calls
+     * {@link #customerOrderDates} and {@link #supplierOrderDates}, then calls
      * {@link #indexTotal(int, int)}
      * 
      * @param yearStart
@@ -41,104 +41,80 @@ public class DateSort {
      * @see #indexTotal(int, int)
      */
     public static void sortDate(int yearStart, int yearEnd) {
-
         tempOrdersArrayList = new ArrayList<Order>();
+
         for (final Order order : Database.getOrders()) {
             tempOrdersArrayList.add(order);
         }
 
-        custDates = new double[YEARS_AS_NUMBERS.length - 1][12];
-        suppDates = new double[YEARS_AS_NUMBERS.length - 1][12];
+        customerOrderDates = new double[YEARS_AS_NUMBERS.length - 1][12];
+        supplierOrderDates = new double[YEARS_AS_NUMBERS.length - 1][12];
 
         sortMonthOrderDate();
         sortYearOrderDate();
         indexTotal(yearStart, yearEnd);
     }
 
-    /**
-     * Sorts orders in {@link #tempOrdersArrayList} by month.
-     */
-    public static void sortYearOrderDate() {
+    private static void sortYearOrderDate() {
         double lowestYear = 9999;
         ArrayList<Order> tempYearArrayList = new ArrayList<Order>();
-        int indexY = 0;
-        tempYearArrayList.clear();
-        boolean found;
+        int orderMonthIndex = 0;
 
         while (tempOrdersArrayList.size() != 0) {
-            for (Order s : tempOrdersArrayList) {
-                if (lowestYear > Integer.parseInt(s.getOrderDate().substring(6, 10))) {
-                    lowestYear = Integer.parseInt(s.getOrderDate().substring(6, 10));
+            for (final Order order : tempOrdersArrayList) {
+                final int orderYear = Integer.parseInt(order.getOrderDate().substring(6, 10));
+
+                if (lowestYear > orderYear) {
+                    lowestYear = orderYear;
                 }
-            }
-            found = false;
-            for (Order s : tempOrdersArrayList) {
-                if (lowestYear == Integer.parseInt(s.getOrderDate().substring(6, 10)) && !found) {
-                    tempYearArrayList.add(s);
-                    indexY = tempOrdersArrayList.indexOf(s);
-                    found = true;
-                }
-                if (found)
+
+                if (lowestYear == orderYear) {
+                    tempYearArrayList.add(order);
+                    orderMonthIndex = tempOrdersArrayList.indexOf(order);
                     break;
+                }
             }
-            tempOrdersArrayList.remove(indexY);
+            tempOrdersArrayList.remove(orderMonthIndex);
             lowestYear = 9999;
         }
+
         tempOrdersArrayList.clear();
-        for (int i = 0; i < tempYearArrayList.size(); i++) {
-            tempOrdersArrayList.add(tempYearArrayList.get(i));
+
+        for (final Order order : tempYearArrayList) {
+            tempOrdersArrayList.add(order);
         }
     }
 
-    /**
-     * Sorts orders in {@link #tempOrdersArrayList} by year.
-     */
-    public static void sortMonthOrderDate() {
+    private static void sortMonthOrderDate() {
         double lowestMonth = 9999;
         ArrayList<Order> tempMonthArrayList = new ArrayList<Order>();
-        int indexM = 0;
-        tempMonthArrayList.clear();
-        boolean found;
+        int orderMonthIndex = 0;
 
         while (tempOrdersArrayList.size() != 0) {
-            for (Order s : tempOrdersArrayList) {
-                if (lowestMonth > Integer.parseInt(s.getOrderDate().substring(3, 5))) {
-                    lowestMonth = Integer.parseInt(s.getOrderDate().substring(3, 5));
+            for (final Order order : tempOrdersArrayList) {
+                final int orderMonth = Integer.parseInt(order.getOrderDate().substring(3, 5));
+
+                if (lowestMonth > orderMonth) {
+                    lowestMonth = orderMonth;
                 }
-            }
-            found = false;
-            for (Order s : tempOrdersArrayList) {
-                if (lowestMonth == Integer.parseInt(s.getOrderDate().substring(3, 5)) && !found) {
-                    tempMonthArrayList.add(s);
-                    indexM = tempOrdersArrayList.indexOf(s);
-                    found = true;
-                }
-                if (found)
+
+                if (lowestMonth == orderMonth) {
+                    tempMonthArrayList.add(order);
+                    orderMonthIndex = tempOrdersArrayList.indexOf(order);
                     break;
+                }
             }
-            tempOrdersArrayList.remove(indexM);
+            tempOrdersArrayList.remove(orderMonthIndex);
             lowestMonth = 9999;
         }
         tempOrdersArrayList.clear();
-        for (int i = 0; i < tempMonthArrayList.size(); i++) {
-            tempOrdersArrayList.add(tempMonthArrayList.get(i));
+
+        for (final Order order : tempMonthArrayList) {
+            tempOrdersArrayList.add(order);
         }
     }
 
-    /**
-     * Cycles through {@link ShopDriver#orders} and sorts sales and purchases
-     * into {@link #custDates} and {@link #suppDates} by year and month.
-     * Purchases are negative.
-     * 
-     * @param yearStart
-     *            an integer defining the start date for sales/purchases to be
-     *            accessed
-     * @param yearEnd
-     *            an integer defining the end date for sales/purchases to be
-     *            accessed
-     */
-    public static void indexTotal(int yearStart, int yearEnd) {
-
+    private static void indexTotal(int yearStart, int yearEnd) {
         ArrayList<Order> yearList = new ArrayList<Order>();
         ArrayList<Order> monthList = new ArrayList<Order>();
 
@@ -163,7 +139,7 @@ public class DateSort {
                     }
                 }
 
-                for (Order o : monthList) {
+                for (final Order o : monthList) {
                     for (int k = 0; k < o.getOrderedItems().size(); k++) {
                         if (o.isSupplier())
                             suppTotal += o.getOrderedItems().get(k).getProduct().getCostPrice()
@@ -174,8 +150,8 @@ public class DateSort {
                     }
                 }
 
-                suppDates[i][j] = (-1) * suppTotal;
-                custDates[i][j] = custTotal;
+                supplierOrderDates[i][j] = (-1) * suppTotal;
+                customerOrderDates[i][j] = custTotal;
             }
         }
     }

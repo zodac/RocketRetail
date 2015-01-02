@@ -16,14 +16,10 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  */
 public class ProfitLoss {
 
-    // Class variables
-    /**
-     * Array of month names as Strings.
-     */
-    private static String[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
-            "Dec" };
+    private final static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("#,###,##0.00");
+    private final static String[] MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
+            "Nov", "Dec" };
 
-    // Methods
     /**
      * Cycles through {@link ShopDriver#orders} and adds the total values for
      * sales, purchases and gross profit to a String.
@@ -34,83 +30,73 @@ public class ProfitLoss {
      * @see ShopDriver#orders
      */
     public static String createTotals() {
-        DecimalFormat doubleFormatter = new DecimalFormat("#,###,##0.00");
         double loss = 0;
         double profit = 0;
 
         for (final Order o : Database.getOrders()) {
 
-            // Supplier
             if (o.isSupplier()) {
-                for (OrderedItem oi : o.getOrderedItems()) {
+                for (final OrderedItem oi : o.getOrderedItems()) {
                     loss += oi.getProduct().getCostPrice() * oi.getQuantity();
                 }
-            }
-
-            // Customer
-            else if (!o.isSupplier()) {
-                for (OrderedItem oi : o.getOrderedItems()) {
+            } else {
+                for (final OrderedItem oi : o.getOrderedItems()) {
                     profit += oi.getProduct().getSalePrice() * oi.getQuantity();
                 }
             }
         }
 
-        String profitOutput = "";
-        if (profit - loss < 0)
-            profitOutput = "\nGross Profit:\t-€" + doubleFormatter.format((-1) * (profit - loss));
-        else
-            profitOutput = "\nGross Profit:\t€" + doubleFormatter.format(profit - loss);
+        final StringBuilder profitOutput = new StringBuilder();
+        if (profit - loss < 0) {
+            profitOutput.append("\nGross Profit:\t-€" + CURRENCY_FORMATTER.format((-1) * (profit - loss)));
+        } else {
+            profitOutput.append("\nGross Profit:\t€" + CURRENCY_FORMATTER.format(profit - loss));
+        }
 
-        String result = "Totals\n=====\nSales:\t\t€" + doubleFormatter.format(profit) + "\nPurchases:\t€"
-                + doubleFormatter.format(loss) + "\n============================" + profitOutput;
+        final StringBuilder result = new StringBuilder();
+        result.append("Totals\n=====\nSales:\t\t€" + CURRENCY_FORMATTER.format(profit) + "\nPurchases:\t€"
+                + CURRENCY_FORMATTER.format(loss) + "\n============================" + profitOutput.toString());
 
-        return result;
-
+        return result.toString();
     }
 
     /**
-     * Cycles through the two 2D arrays {@link DateSort#custDates} and
-     * {@link DateSort#suppDates}, and appends the monthly totals to a
+     * Cycles through the two 2D arrays {@link DateSort#customerOrderDates} and
+     * {@link DateSort#supplierOrderDates}, and appends the monthly totals to a
      * StringBuilder.
      * 
      * @return a StringBuilder with the breakdown of sales and purchases by year
      *         and month
      * 
-     * @see DateSort#custDates
-     * @see DateSort#suppDates
+     * @see DateSort#customerOrderDates
+     * @see DateSort#supplierOrderDates
      * @see DateSort#sortDate(int, int)
      */
     public static String createAdvancedReport() {
-        DecimalFormat doubleFormatter = new DecimalFormat("#,###,##0.00");
-        StringBuilder budget = new StringBuilder();
+        final StringBuilder budget = new StringBuilder();
         budget.append("Year\tMonth\tPurchases\tSales\n_____________________________________\n");
 
+        DateSort.sortDate(YEAR_START, YEAR_CURRENT + 1);
+
         int year = YEAR_START;
-
-        DateSort.sortDate(year, YEAR_CURRENT + 1);
-
-        for (int i = 0; i < YEAR_CURRENT - YEAR_START + 1; i++) {
+        for (int i = 0; i <= YEAR_CURRENT - YEAR_START; i++) {
 
             for (int j = 0; j < 12; j++) {
-                double purchase = -1 * DateSort.suppDates[i][j];
-                double sale = DateSort.custDates[i][j];
+                final double purchase = -1 * DateSort.supplierOrderDates[i][j];
+                final double sale = DateSort.customerOrderDates[i][j];
 
-                if (j == 0)
-                    budget.append(year);
+                if (j == 0) {
+                    budget.append(year++);
+                }
 
-                if (doubleFormatter.format(purchase).length() == 6)
-                    budget.append("\t" + months[j] + "\t€" + doubleFormatter.format(purchase) + "\t\t€"
-                            + doubleFormatter.format(sale) + "\n");
+                budget.append("\t").append(MONTHS[j]).append("\t€").append(CURRENCY_FORMATTER.format(purchase));
 
-                else if (doubleFormatter.format(purchase).length() >= 8)
-                    budget.append("\t" + months[j] + "\t€" + doubleFormatter.format(purchase) + "\t€"
-                            + doubleFormatter.format(sale) + "\n");
+                if (purchase > 1000) {
+                    budget.append("\t");
+                }
 
-                else
-                    budget.append("\t" + months[j] + "\t€" + doubleFormatter.format(purchase) + "\t\t€"
-                            + doubleFormatter.format(sale) + "\n");
+                budget.append("\t€").append(CURRENCY_FORMATTER.format(sale)).append("\n");
             }
-            year++;
         }
         return budget.toString();
     }

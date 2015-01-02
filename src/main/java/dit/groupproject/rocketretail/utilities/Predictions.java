@@ -2,166 +2,10 @@ package dit.groupproject.rocketretail.utilities;
 
 import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
 
-import java.util.ArrayList;
-
-import dit.groupproject.rocketretail.database.Database;
-import dit.groupproject.rocketretail.entities.Order;
-
 /**
  * A class that is used to generate prediction forecasts
  */
 public class Predictions {
-
-    static double custDates[][] = new double[51][12];
-    static double suppDates[][] = new double[51][12];
-
-    private static ArrayList<Order> tempOrdersArrayList = new ArrayList<Order>();
-
-    /**
-     * A method to sort the tempOrdersArrayList by date
-     * 
-     * @param yearStart
-     *            An integer used to determine the start year to work from
-     * @param yearEnd
-     *            An integer used to determine the year to work until
-     */
-    public static void sortDate(int yearStart, int yearEnd) {
-
-        tempOrdersArrayList = new ArrayList<Order>();
-
-        for (final Order order : Database.getOrders()) {
-            tempOrdersArrayList.add(order);
-        }
-
-        custDates = new double[51][12];
-        suppDates = new double[51][12];
-
-        sortMonthOrderDate();
-        sortYearOrderDate();
-        indexTotal(yearStart, yearEnd);
-    }
-
-    /**
-     * A method to sort an arrayList by orderDate by year
-     */
-    public static void sortYearOrderDate() {
-        double lowestYear = 9999;
-        ArrayList<Order> tempYearArrayList = new ArrayList<Order>();
-        int indexY = 0;
-        tempYearArrayList.clear();
-        boolean found;
-
-        while (tempOrdersArrayList.size() != 0) {
-            for (Order s : tempOrdersArrayList) {
-                if (lowestYear > Integer.parseInt(s.getOrderDate().substring(6, 10))) {
-                    lowestYear = Integer.parseInt(s.getOrderDate().substring(6, 10));
-                }
-            }
-            found = false;
-            for (Order s : tempOrdersArrayList) {
-                if (lowestYear == Integer.parseInt(s.getOrderDate().substring(6, 10)) && !found) {
-                    tempYearArrayList.add(s);
-                    indexY = tempOrdersArrayList.indexOf(s);
-                    found = true;
-                }
-                if (found)
-                    break;
-            }
-            tempOrdersArrayList.remove(indexY);
-            lowestYear = 9999;
-        }
-        tempOrdersArrayList.clear();
-        for (int i = 0; i < tempYearArrayList.size(); i++) {
-            tempOrdersArrayList.add(tempYearArrayList.get(i));
-        }
-    }
-
-    /**
-     * A method to sort an arrayList by orderDate -by month
-     */
-    public static void sortMonthOrderDate() {
-        double lowestMonth = 9999;
-        ArrayList<Order> tempMonthArrayList = new ArrayList<Order>();
-        int indexM = 0;
-        tempMonthArrayList.clear();
-        boolean found;
-
-        while (tempOrdersArrayList.size() != 0) {
-            for (Order s : tempOrdersArrayList) {
-                if (lowestMonth > Integer.parseInt(s.getOrderDate().substring(3, 5))) {
-                    lowestMonth = Integer.parseInt(s.getOrderDate().substring(3, 5));
-                }
-            }
-            found = false;
-            for (Order s : tempOrdersArrayList) {
-                if (lowestMonth == Integer.parseInt(s.getOrderDate().substring(3, 5)) && !found) {
-                    tempMonthArrayList.add(s);
-                    indexM = tempOrdersArrayList.indexOf(s);
-                    found = true;
-                }
-                if (found)
-                    break;
-            }
-            tempOrdersArrayList.remove(indexM);
-            lowestMonth = 9999;
-        }
-        tempOrdersArrayList.clear();
-        for (int i = 0; i < tempMonthArrayList.size(); i++) {
-            tempOrdersArrayList.add(tempMonthArrayList.get(i));
-        }
-    }
-
-    /**
-     * A method used to fill the Customer 2D array and Supplier 2D arrays with
-     * their relevant totals.
-     * 
-     * @param startYear
-     *            An integer to define the start year of the method
-     * @param endYear
-     *            An integer to define the end year of the method
-     */
-    public static void indexTotal(int startYear, int endYear) {
-
-        ArrayList<Order> yearList = new ArrayList<Order>();
-        ArrayList<Order> monthList = new ArrayList<Order>();
-
-        double custTotal = 0;
-        double suppTotal = 0;
-        for (int i = (startYear - YEAR_START); i < (endYear - YEAR_START); i++) {
-            yearList = new ArrayList<Order>();
-            for (int x = 0; x < tempOrdersArrayList.size(); x++) {
-                if (Integer.parseInt(tempOrdersArrayList.get(x).getOrderDate().substring(6, 10)) - YEAR_START == i) {
-                    yearList.add(tempOrdersArrayList.get(x));
-                }
-            }
-
-            for (int j = 0; j < 12; j++) {
-                custTotal = 0;
-                suppTotal = 0;
-                monthList = new ArrayList<Order>();
-
-                for (int x = 0; x < yearList.size(); x++) {
-                    if (Integer.parseInt(yearList.get(x).getOrderDate().substring(3, 5)) == (j + 1)) {
-                        monthList.add(yearList.get(x));
-                    }
-                }
-
-                for (Order o : monthList) {
-                    for (int k = 0; k < o.getOrderedItems().size(); k++) {
-                        if (o.isSupplier())
-                            suppTotal += o.getOrderedItems().get(k).getProduct().getCostPrice()
-                                    * o.getOrderedItems().get(k).getQuantity();
-                        else
-                            custTotal += o.getOrderedItems().get(k).getProduct().getSalePrice()
-                                    * o.getOrderedItems().get(k).getQuantity();
-                    }
-                }
-
-                suppDates[i][j] = (-1) * suppTotal;
-                custDates[i][j] = custTotal;
-            }
-        }
-    }
 
     /**
      * Creates a 2D double array for 5 years based on the start date passed into
@@ -180,20 +24,11 @@ public class Predictions {
         array = append(array, createArrayOneYear(selectedYear - 2));
         array = append(array, createArrayOneYear(selectedYear - 1));
         array = append(array, createArrayOneYear(selectedYear));
+
         return array;
     }
 
-    /**
-     * Creates a 2D double array for 1 year based on the start date passed into
-     * it. (Forms an array of data for the prediction model to work on. Creates
-     * an array of customer totals supplier totals and totals by month for one
-     * year.)
-     * 
-     * @param selectedYear
-     *            An integer determining the year the data is required for.
-     * @return Returns the 2D double array of years data.
-     */
-    public static double[][] createArrayOneYear(int selectedYear) {
+    private static double[][] createArrayOneYear(int selectedYear) {
         double[][] dataArray = new double[12][3]; // 12 months, 3 entries per
                                                   // month (sales, purchases,
                                                   // profit/loss)
@@ -201,8 +36,8 @@ public class Predictions {
 
         for (int i = 0; i < 12; i++) {
             double custTotal = 0, suppTotal = 0;
-            custTotal += DateSort.custDates[selectedYear - YEAR_START][i];
-            suppTotal += DateSort.suppDates[selectedYear - YEAR_START][i];
+            custTotal += DateSort.customerOrderDates[selectedYear - YEAR_START][i];
+            suppTotal += DateSort.supplierOrderDates[selectedYear - YEAR_START][i];
 
             dataArray[i][0] = custTotal;
             dataArray[i][1] = suppTotal; // Comes into this method as a negative
@@ -303,37 +138,10 @@ public class Predictions {
         return newPredictionArray;
     }
 
-    /**
-     * A method used to append one 2D double array to another.
-     * 
-     * @param a
-     *            A 2D double array at needs another 2D double array attached.
-     * @param b
-     *            A 2D double array that needs to be attached to the end of
-     *            another 2D double array.
-     * @return The 2D double array created when the second parameter is appended
-     *         to the first.
-     */
-    public static double[][] append(double[][] a, double[][] b) {
+    private static double[][] append(double[][] a, double[][] b) {
         double[][] result = new double[a.length + b.length][];
         System.arraycopy(a, 0, result, 0, a.length);
         System.arraycopy(b, 0, result, a.length, b.length);
         return result;
-    }
-
-    /**
-     * A method used to print a 2D double array to console.
-     * 
-     * @param array
-     *            The 2D double array to be printed to console.
-     */
-    public static void print2DArray(double[][] array) {
-        for (int k = 0; k < array.length; k++) {
-            System.out.println("row# " + k);
-            for (int b = 0; b < 3; b++) {
-                System.out.print("\t" + array[k][b]);
-            }
-            System.out.println("\n");
-        }
     }
 }

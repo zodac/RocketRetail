@@ -171,8 +171,8 @@ public class Graphs {
             double custTotal = 0, suppTotal = 0;
 
             for (int j = 0; j < 12; j++) {
-                custTotal += DateSort.custDates[i + (firstYear - YEAR_START)][j];
-                suppTotal += DateSort.suppDates[i + (firstYear - YEAR_START)][j];
+                custTotal += DateSort.customerOrderDates[i + (firstYear - YEAR_START)][j];
+                suppTotal += DateSort.supplierOrderDates[i + (firstYear - YEAR_START)][j];
             }
 
             inputArray[i][0] = custTotal;
@@ -197,8 +197,8 @@ public class Graphs {
 
         for (int i = 0; i < 12; i++) {
             double custTotal = 0, suppTotal = 0;
-            custTotal += DateSort.custDates[selectedYear - YEAR_START][i];
-            suppTotal += DateSort.suppDates[selectedYear - YEAR_START][i];
+            custTotal += DateSort.customerOrderDates[selectedYear - YEAR_START][i];
+            suppTotal += DateSort.supplierOrderDates[selectedYear - YEAR_START][i];
 
             dataArray[i][0] = custTotal;
             dataArray[i][1] = suppTotal; // Comes into this method as a negative
