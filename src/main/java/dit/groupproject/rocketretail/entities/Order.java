@@ -31,60 +31,51 @@ public class Order {
         this.orderDate = orderDate;
         this.orderedItems = orderedItems;
         this.isActive = isActive;
+        this.isSupplier = traderId >= IdManager.SUPPLIER_ID_START && traderId < IdManager.CUSTOMER_ID_START;
 
-        if (traderId >= IdManager.CUSTOMER_ID_START && traderId < IdManager.PRODUCT_ID_START) {
-            isSupplier = false;
-        } else {
-            isSupplier = true;
-        }
-
-        for (OrderedItem x : orderedItems) {
-            // If Customer order, reduce stock level
+        for (final OrderedItem orderedItem : orderedItems) {
             if (!isSupplier) {
-                if (x.getProduct().getStockLevel() >= x.getQuantity()) {
-                    x.getProduct().setStockLevel(x.getProduct().getStockLevel() - x.getQuantity());
+                if (orderedItem.getProduct().getStockLevel() >= orderedItem.getQuantity()) {
+                    orderedItem.getProduct().setStockLevel(
+                            orderedItem.getProduct().getStockLevel() - orderedItem.getQuantity());
                 }
             }
         }
 
-        if (!isActive && isSupplier) {
-            for (final OrderedItem orderedItem : orderedItems) {
-                for (Product p : Database.getProducts()) {
-                    if (orderedItem.getProduct().getProductId() == p.getProductId())
-                        p.setStockLevel(p.getStockLevel() + orderedItem.getQuantity());
-                }
-            }
-        }
-
-        for (final Supplier supplier : Database.getSuppliers()) {
-            if (supplier.getSupplierId() == traderId) {
-                try {
-                    if (DATE_FORMATTER.parse(supplier.getLastPurchase()).compareTo(DATE_FORMATTER.parse(orderDate)) < 0)
-                        supplier.setLastPurchase(orderDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        for (final Customer customer : Database.getCustomers()) {
-            if (customer.getCustomerId() == traderId) {
-                try {
-                    if (DATE_FORMATTER.parse(customer.getLastPurchase()).compareTo(DATE_FORMATTER.parse(orderDate)) < 0)
-                        customer.setLastPurchase(orderDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-
-        if (!isActive)
+        if (!isActive) {
             this.deliveryDate = orderDate;
+
+            if (isSupplier) {
+                for (final OrderedItem orderedItem : orderedItems) {
+                    final Product product = Database.getProductById(orderedItem.getProduct().getProductId());
+                    product.setStockLevel(product.getStockLevel() + orderedItem.getQuantity());
+                }
+            }
+        }
+
+        if (isSupplier) {
+            final Supplier supplier = Database.getSupplierById(traderId);
+            try {
+                if (DATE_FORMATTER.parse(supplier.getLastPurchase()).compareTo(DATE_FORMATTER.parse(orderDate)) < 0) {
+                    supplier.setLastPurchase(orderDate);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            final Customer customer = Database.getCustomerById(traderId);
+            try {
+                if (DATE_FORMATTER.parse(customer.getLastPurchase()).compareTo(DATE_FORMATTER.parse(orderDate)) < 0)
+                    customer.setLastPurchase(orderDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public String printDetails() {
-        final String suppOrCustLabel = isSupplierId() ? "Supplier" : "Customer";
+        final String suppOrCustLabel = isSupplier ? "Supplier" : "Customer";
 
         String output = "Order ID:\t" + orderId + "\nStaff ID:\t" + staffId + "\n" + suppOrCustLabel + " ID:\t"
                 + traderId + "\nOrder Date:\t" + orderDate;
@@ -93,15 +84,10 @@ public class Order {
             output += "\nProduct ID:\t" + oi.getProduct().getProductId() + "\nQuantity:\t" + oi.getQuantity();
         }
 
-        return (output + "\n\n");
-    }
-
-    private boolean isSupplierId() {
-        return traderId >= IdManager.SUPPLIER_ID_START && traderId < IdManager.CUSTOMER_ID_START;
+        return output + "\n\n";
     }
 
     public double getTotalCost() {
-
         double totalCost = 0;
 
         for (final OrderedItem oi : this.orderedItems) {

@@ -48,11 +48,14 @@ public class LoginHandler {
                 errorLabel.setText("1 attempt remaining");
 
             if (showDialog("Please enter your staff ID and PIN", myPanel) == JOptionPane.OK_OPTION) {
-                for (final Staff staff : Database.getStaffMembers()) {
-                    if (hasValidLogonCredentials(idField, pinField, staff)) {
+                try {
+                    final Staff staff = Database.getStaffMemberById(Integer.parseInt(idField.getText()));
+                    if (hasValidLogonCredentials(staff, Integer.parseInt(String.valueOf(pinField.getPassword())))) {
                         ShopDriver.setCurrentStaff(staff);
                         found = true;
                     }
+                } catch (IllegalArgumentException e) {
+
                 }
             } else {
                 System.exit(0);
@@ -62,7 +65,7 @@ public class LoginHandler {
 
         if (!found) {
             JOptionPane.showMessageDialog(null, "Too many incorrect logon attempts!", "Logon Fail",
-                    JOptionPane.PLAIN_MESSAGE); // Prompts user before closing
+                    JOptionPane.PLAIN_MESSAGE);
             System.exit(0);
         }
 
@@ -74,9 +77,8 @@ public class LoginHandler {
                 JOptionPane.PLAIN_MESSAGE, null);
     }
 
-    private static boolean hasValidLogonCredentials(JTextField idField, JPasswordField pinField, Staff s) {
-        return s.getStaffId() == Integer.parseInt(idField.getText())
-                && s.getStaffPin() == Integer.parseInt(String.valueOf(pinField.getPassword()));
+    private static boolean hasValidLogonCredentials(final Staff staff, final int inputPin) {
+        return staff.getStaffPin() == inputPin;
     }
 
     /**

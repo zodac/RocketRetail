@@ -155,11 +155,13 @@ public class InitialiseArray {
                 "Car Air Freshners", "Rocket Booster" };
 
         for (final String productName : productNames) {
-            double cost = (RANDOM.nextInt(100) + 1) * 0.25;
+            final int stockLevel = (RANDOM.nextInt(10) + 1) * 25;
+            final int maxLevel = (RANDOM.nextInt(6) + 5) * 100;
+            final double costPrice = (RANDOM.nextInt(100) + 1) * 0.25;
+            final double salePrice = (RANDOM.nextInt(50) + (Math.ceil(costPrice) / 0.25)) * 0.25;
 
-            Database.addProduct(new Product(productName, (RANDOM.nextInt(10) + 1) * 25, (RANDOM.nextInt(6) + 5) * 100,
-                    RANDOM.nextInt(Database.getSuppliers().size()) + IdManager.SUPPLIER_ID_START, cost, (RANDOM
-                            .nextInt(50) + (Math.ceil(cost) / 0.25)) * 0.25));
+            Database.addProduct(new Product(productName, stockLevel, maxLevel, Database.getRandomSupplier()
+                    .getSupplierId(), costPrice, salePrice));
         }
     }
 
@@ -203,11 +205,11 @@ public class InitialiseArray {
      *            An integer defining the number of orders to generate.
      * @param confirm
      *            A boolean to decide if a confirmation message is needed.
-     * @param current
+     * @param orderInCurrentYear
      *            A boolean to decide if randDate should be set to the current
      *            year.
      */
-    public static void generateOrders(int amount, boolean confirm, boolean current) {
+    public static void generateOrders(int amount, boolean confirm, boolean orderInCurrentYear) {
         ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
         int ordersToCreate = 0;
 
@@ -223,41 +225,30 @@ public class InitialiseArray {
             int itemsToCreate = RANDOM.nextInt(Database.getProducts().size()) + 1;
             final Staff currentStaff = ShopDriver.getCurrentStaff();
 
-            int traderId = 0, randDate = 0, check = 0;
-            String date = "";
+            int traderId = 0, check = 0;
 
-            randDate = RANDOM.nextInt(31 - 1) + 1;
-            if (randDate < 10)
-                date += "0" + randDate + "/";
-            else
-                date += randDate + "/";
+            final int randomDay = RANDOM.nextInt(31 - 1) + 1;
+            final int randomMonth = RANDOM.nextInt(12 - 1) + 1;
+            final int randomYear = RANDOM.nextInt(YEAR_CURRENT - YEAR_START) + YEAR_START;
 
-            randDate = RANDOM.nextInt(12 - 1) + 1;
-            if (randDate < 10)
-                date += "0" + randDate + "/";
-            else
-                date += randDate + "/";
-
-            if (current)
-                randDate = YEAR_CURRENT;
-            else
-                randDate = RANDOM.nextInt(YEAR_CURRENT - YEAR_START) + YEAR_START;
-            date += randDate;
+            String date = (randomDay < 10) ? "0" + randomDay + "/" : randomDay + "/";
+            date += (randomMonth < 10) ? "0" + randomMonth + "/" : randomMonth + "/";
+            date += orderInCurrentYear ? YEAR_CURRENT : randomYear;
 
             check = RANDOM.nextInt(2) + 1;
 
-            if (current && currentStaff.getStaffLevel() == 2) {
+            if (orderInCurrentYear && currentStaff.getStaffLevel() == 2) {
                 check = 2;
             }
 
             if (check == 1) {
-                traderId = RANDOM.nextInt(Database.getSuppliers().size()) + IdManager.SUPPLIER_ID_START;
+                traderId = Database.getRandomSupplier().getSupplierId();
             } else if (check == 2) {
-                traderId = RANDOM.nextInt(Database.getCustomers().size()) + IdManager.CUSTOMER_ID_START;
+                traderId = Database.getRandomCustomer().getCustomerId();
             }
 
             ArrayList<Integer> productsCreated = new ArrayList<Integer>();
-            int productId = RANDOM.nextInt(Database.getProducts().size()) + IdManager.PRODUCT_ID_START;
+            int productId = Database.getRandomProduct().getProductId();
             boolean unique = false;
             productsCreated.add(productId);
 
@@ -266,7 +257,7 @@ public class InitialiseArray {
                 int whileLoop = 0;
 
                 while (!unique && whileLoop < 40) {
-                    productId = RANDOM.nextInt(Database.getProducts().size()) + IdManager.PRODUCT_ID_START;
+                    productId = Database.getRandomProduct().getProductId();
                     unique = true;
 
                     for (int x : productsCreated) {
@@ -279,15 +270,15 @@ public class InitialiseArray {
                 }
 
                 unique = false;
-                for (Product p : Database.getProducts()) {
-                    if (p.getProductId() == productId) {
-                        if (p.getStockLevel() > 1)
-                            items.add(new OrderedItem(p, RANDOM.nextInt(p.getStockLevel() / 2) + 1));
-                    }
+
+                final Product product = Database.getProductById(productId);
+                if (product.getStockLevel() > 1) {
+                    items.add(new OrderedItem(product, RANDOM.nextInt(product.getStockLevel() / 2) + 1));
                 }
 
-                if (whileLoop < 40)
+                if (whileLoop < 40) {
                     productsCreated.add(productId);
+                }
             }
 
             if (!items.isEmpty()) {
@@ -301,29 +292,22 @@ public class InitialiseArray {
                         }
                     }
 
-                boolean active = current && (RANDOM.nextInt(2) + 1) == 1;
+                boolean activeOrder = orderInCurrentYear && (RANDOM.nextInt(2) + 1) == 1;
 
                 if (valid) {
-                    Database.addOrder(new Order(traderId, date, items, active));
+                    Database.addOrder(new Order(traderId, date, items, activeOrder));
                     i++;
                 }
             }
             loops++;
         }
 
-        String output = "";
-        if (i == 1) {
-            output += "1 order created";
-        } else {
-            output += i + " orders created";
-        }
-
-        if (loops == 50) {
-            output += " - stock levels getting low";
-        }
+        final StringBuilder output = new StringBuilder();
+        output.append((i == 1) ? "1 order created" : i + " orders created");
+        output.append((loops == 50) ? " - stock levels getting low" : "");
 
         if (confirm) {
-            GuiCreator.setConfirmMessage(output);
+            GuiCreator.setConfirmMessage(output.toString());
         }
     }
 }

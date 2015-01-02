@@ -28,15 +28,8 @@ public class StockControlUtilities {
      * @param maxLevel
      *            (int)
      * */
-    public static Double calculatePercentage(int stockLevel, int maxLevel) {
-        double percentage;
-        double stock = (double) stockLevel;
-        double max = (double) maxLevel;
-        double percentValue = (stock / max) * 100;
-
-        percentage = new Double(percentValue);
-
-        return percentage;
+    public static double calculatePercentage(final int stockLevel, final int maxLevel) {
+        return (stockLevel / maxLevel) * 100;
     }
 
     /**
@@ -44,21 +37,21 @@ public class StockControlUtilities {
      * to be increased to. If a product is below 25% and the user selects 25%
      * that product will be replenished to 25%
      * 
-     * @param percentage
+     * @param percentagetoOrder
      *            (double) current percentage of stock to order
      * @param productsToReplenish
      *            (ArrayList) the list of products that need to be replenished
-     * @see StockControlUtilities#createOrderedItem(Double, Product)
+     * @see StockControlUtilities#createOrderedItem(double, Product)
      * @see StockControlUtilities#createAndCompleteSupplierOrder(Supplier)
      * */
-    public static void replenishStocks(Double percentage, ArrayList<Product> productsToReplenish) {
+    public static void replenishStocks(final double percentagetoOrder, final ArrayList<Product> productsToReplenish) {
 
         orderToSupplier = new ArrayList<OrderedItem>();
 
         for (final Supplier supplier : Database.getSuppliers()) {
-            for (Product p : productsToReplenish) {
+            for (final Product p : productsToReplenish) {
                 if (p.getSupplierId() == supplier.getSupplierId()) {
-                    createOrderedItem(percentage, p);
+                    createOrderedItem(percentagetoOrder, p);
                 }
             }
 
@@ -68,11 +61,10 @@ public class StockControlUtilities {
         }
     }
 
-    private static void createOrderedItem(Double percentageThreshold, Product p) {
+    private static void createOrderedItem(final double percentageThreshold, final Product product) {
+        final int numberToOrder = getOrderAmount(percentageThreshold, product);
 
-        int numberToOrder = getOrderAmount(percentageThreshold, p);
-
-        OrderedItem item = new OrderedItem(p, numberToOrder);
+        OrderedItem item = new OrderedItem(product, numberToOrder);
         orderToSupplier.add(item);
     }
 
@@ -126,7 +118,7 @@ public class StockControlUtilities {
      * @param orderToSupplier
      *            (ArrayList)
      */
-    public static void setOrderToSupplier(ArrayList<OrderedItem> orderToSupplier) {
+    public static void setOrderToSupplier(final ArrayList<OrderedItem> orderToSupplier) {
         StockControlUtilities.orderToSupplier = orderToSupplier;
     }
 }

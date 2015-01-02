@@ -109,10 +109,11 @@ public class CustomerTable extends BaseTable {
     }
 
     private static Object[][] createTableData() {
-        final Object[][] data = new Object[Database.getCustomers().size()][7];
+        final ArrayList<Customer> customers = Database.getCustomers();
+        final Object[][] data = new Object[customers.size()][7];
 
-        for (int i = 0; i < Database.getCustomers().size(); i++) {
-            final Customer customer = Database.getCustomers().get(i);
+        for (int i = 0; i < customers.size(); i++) {
+            final Customer customer = customers.get(i);
 
             data[i][0] = CUSTOMER_ID_FORMATTER.format(customer.getCustomerId());
             data[i][1] = customer.getCustomerName();
@@ -133,15 +134,10 @@ public class CustomerTable extends BaseTable {
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (table.getSelectedRow() >= 0) {
-                    for (final Customer customer : Database.getCustomers()) {
-                        final int selectedCustomerId = Integer.parseInt((String) table.getValueAt(
-                                table.getSelectedRow(), 0));
+                    final int selectedCustomerId = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0));
 
-                        if (customer.getCustomerId() == selectedCustomerId) {
-                            showCustomerInfo(customer);
-                            break;
-                        }
-                    }
+                    final Customer customer = Database.getCustomerById(selectedCustomerId);
+                    showCustomerInfo(customer);
                 }
             }
         });
@@ -396,176 +392,172 @@ public class CustomerTable extends BaseTable {
         GuiCreator.frame.repaint();
         GuiCreator.leftPanel = new JPanel();
 
-        for (final Customer customer : Database.getCustomers()) {
-            if (customerId == customer.getCustomerId()) {
-                final int index = Database.getCustomers().indexOf(customer);
+        final Customer customer = Database.getCustomerById(customerId);
 
-                final JPanel innerPanel = new JPanel(new GridBagLayout());
-                innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-                GridBagConstraints g = new GridBagConstraints();
+        if (customerId == customer.getCustomerId()) {
+            final int index = Database.getIndexOfCustomer(customer);
 
-                g.gridx = 0;
-                g.gridy = 0;
-                innerPanel.add(new JLabel("Customer ID:"), g);
-                g.gridy = 1;
-                innerPanel.add(new JLabel("Customer Name:"), g);
-                g.gridy = 2;
-                innerPanel.add(new JLabel("Phone Number:"), g);
-                g.gridy = 3;
-                innerPanel.add(new JLabel("Address:"), g);
-                g.gridy = 4;
-                innerPanel.add(new JLabel("VAT Number:"), g);
-                g.gridy = 5;
-                innerPanel.add(new JLabel("Last Purchase:"), g);
-                g.gridy = 6;
-                innerPanel.add(new JLabel("Date Added:"), g);
+            final JPanel innerPanel = new JPanel(new GridBagLayout());
+            innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+            GridBagConstraints g = new GridBagConstraints();
 
-                g.insets = new Insets(1, 10, 0, 5);
+            g.gridx = 0;
+            g.gridy = 0;
+            innerPanel.add(new JLabel("Customer ID:"), g);
+            g.gridy = 1;
+            innerPanel.add(new JLabel("Customer Name:"), g);
+            g.gridy = 2;
+            innerPanel.add(new JLabel("Phone Number:"), g);
+            g.gridy = 3;
+            innerPanel.add(new JLabel("Address:"), g);
+            g.gridy = 4;
+            innerPanel.add(new JLabel("VAT Number:"), g);
+            g.gridy = 5;
+            innerPanel.add(new JLabel("Last Purchase:"), g);
+            g.gridy = 6;
+            innerPanel.add(new JLabel("Date Added:"), g);
 
-                g.gridx = 1;
-                g.gridy = 0;
-                g.gridwidth = 3;
-                final JTextField custIDField = new JTextField(null, 20);
-                custIDField.setEditable(false);
-                innerPanel.add(custIDField, g);
-                g.gridy = 1;
-                g.gridwidth = 3;
-                final JTextField custNameField = new JTextField(null, 20);
-                innerPanel.add(custNameField, g);
-                g.gridy = 2;
-                g.gridwidth = 3;
-                final JTextField phoneNoField = new JTextField(null, 20);
-                innerPanel.add(phoneNoField, g);
-                g.gridy = 3;
-                g.gridwidth = 3;
-                final JTextField addressField = new JTextField(null, 20);
-                innerPanel.add(addressField, g);
-                g.gridy = 4;
-                g.gridwidth = 3;
-                final JTextField vatNoField = new JTextField(null, 20);
-                innerPanel.add(vatNoField, g);
+            g.insets = new Insets(1, 10, 0, 5);
 
-                g.gridy = 5;
-                g.gridx = 1;
-                g.gridwidth = 1;
-                final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
-                innerPanel.add(lastPurchaseDay, g);
+            g.gridx = 1;
+            g.gridy = 0;
+            g.gridwidth = 3;
+            final JTextField custIDField = new JTextField(null, 20);
+            custIDField.setEditable(false);
+            innerPanel.add(custIDField, g);
+            g.gridy = 1;
+            g.gridwidth = 3;
+            final JTextField custNameField = new JTextField(null, 20);
+            innerPanel.add(custNameField, g);
+            g.gridy = 2;
+            g.gridwidth = 3;
+            final JTextField phoneNoField = new JTextField(null, 20);
+            innerPanel.add(phoneNoField, g);
+            g.gridy = 3;
+            g.gridwidth = 3;
+            final JTextField addressField = new JTextField(null, 20);
+            innerPanel.add(addressField, g);
+            g.gridy = 4;
+            g.gridwidth = 3;
+            final JTextField vatNoField = new JTextField(null, 20);
+            innerPanel.add(vatNoField, g);
 
-                g.gridy = 5;
-                g.gridx = 2;
-                g.gridwidth = 1 - 2;
-                final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
-                innerPanel.add(lastPurchaseMonth, g);
+            g.gridy = 5;
+            g.gridx = 1;
+            g.gridwidth = 1;
+            final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
+            innerPanel.add(lastPurchaseDay, g);
 
-                g.gridy = 5;
-                g.gridx = 3;
-                g.gridwidth = 2 - 3;
+            g.gridy = 5;
+            g.gridx = 2;
+            g.gridwidth = 1 - 2;
+            final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
+            innerPanel.add(lastPurchaseMonth, g);
 
-                final JComboBox<String> lastPurchaseYear = new JComboBox<String>(YEARS_AS_NUMBERS);
-                innerPanel.add(lastPurchaseYear, g);
+            g.gridy = 5;
+            g.gridx = 3;
+            g.gridwidth = 2 - 3;
 
-                g.gridy = 6;
-                g.gridx = 1;
-                g.gridwidth = 1;
-                final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
-                innerPanel.add(dateAddedDay, g);
+            final JComboBox<String> lastPurchaseYear = new JComboBox<String>(YEARS_AS_NUMBERS);
+            innerPanel.add(lastPurchaseYear, g);
 
-                g.gridy = 6;
-                g.gridx = 2;
-                g.gridwidth = 1 - 2;
-                final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
-                innerPanel.add(dateAddedMonth, g);
+            g.gridy = 6;
+            g.gridx = 1;
+            g.gridwidth = 1;
+            final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
+            innerPanel.add(dateAddedDay, g);
 
-                g.gridy = 6;
-                g.gridx = 3;
-                g.gridwidth = 2 - 3;
+            g.gridy = 6;
+            g.gridx = 2;
+            g.gridwidth = 1 - 2;
+            final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
+            innerPanel.add(dateAddedMonth, g);
 
-                final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
-                innerPanel.add(dateAddedYear, g);
+            g.gridy = 6;
+            g.gridx = 3;
+            g.gridwidth = 2 - 3;
 
-                custIDField.setText("" + customer.getCustomerId());
-                custNameField.setText(customer.getCustomerName());
-                phoneNoField.setText(customer.getPhoneNumber());
-                addressField.setText(customer.getAddress());
-                vatNoField.setText(customer.getVatNumber());
-                lastPurchaseDay.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(0, 2)));
-                lastPurchaseMonth.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(3, 5)));
-                lastPurchaseYear.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(6, 10))
-                        - (YEAR_START - 1));
-                dateAddedDay.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(0, 2)));
-                dateAddedMonth.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(3, 5)));
-                dateAddedYear.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(6, 10))
-                        - (YEAR_START - 1));
+            final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
+            innerPanel.add(dateAddedYear, g);
 
-                g.gridx = 0;
-                g.gridy = 8;
-                innerPanel.add(new JLabel(" "), g);
-                g.gridx = 1;
-                g.gridy = 8;
-                innerPanel.add(new JLabel(" "), g);
+            custIDField.setText("" + customer.getCustomerId());
+            custNameField.setText(customer.getCustomerName());
+            phoneNoField.setText(customer.getPhoneNumber());
+            addressField.setText(customer.getAddress());
+            vatNoField.setText(customer.getVatNumber());
+            lastPurchaseDay.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(0, 2)));
+            lastPurchaseMonth.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(3, 5)));
+            lastPurchaseYear.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(6, 10))
+                    - (YEAR_START - 1));
+            dateAddedDay.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(0, 2)));
+            dateAddedMonth.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(3, 5)));
+            dateAddedYear.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(6, 10))
+                    - (YEAR_START - 1));
 
-                final JButton save = new JButton("Save");
-                save.setLayout(new GridBagLayout());
-                g = new GridBagConstraints();
-                g.insets = new Insets(1, 0, 0, 0);
-                g.gridx = 1;
-                g.gridy = 9;
-                innerPanel.add(save, g);
-                final JButton cancel = new JButton("Cancel");
-                g.gridx = 3;
-                g.gridy = 9;
-                innerPanel.add(cancel, g);
+            g.gridx = 0;
+            g.gridy = 8;
+            innerPanel.add(new JLabel(" "), g);
+            g.gridx = 1;
+            g.gridy = 8;
+            innerPanel.add(new JLabel(" "), g);
 
-                save.addActionListener(new ActionListener() {
-                    public void actionPerformed(final ActionEvent e) {
+            final JButton save = new JButton("Save");
+            save.setLayout(new GridBagLayout());
+            g = new GridBagConstraints();
+            g.insets = new Insets(1, 0, 0, 0);
+            g.gridx = 1;
+            g.gridy = 9;
+            innerPanel.add(save, g);
+            final JButton cancel = new JButton("Cancel");
+            g.gridx = 3;
+            g.gridy = 9;
+            innerPanel.add(cancel, g);
 
-                        final ArrayList<JTextField> textFields = new ArrayList<JTextField>();
-                        textFields.add(custNameField);
-                        textFields.add(phoneNoField);
-                        textFields.add(addressField);
-                        textFields.add(vatNoField);
-                        final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<JComboBox<String>>();
-                        addedBoxes.add(dateAddedDay);
-                        addedBoxes.add(dateAddedMonth);
-                        addedBoxes.add(dateAddedYear);
-                        final ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<JComboBox<String>>();
-                        lastPurchaseBoxes.add(lastPurchaseDay);
-                        lastPurchaseBoxes.add(lastPurchaseMonth);
-                        lastPurchaseBoxes.add(lastPurchaseYear);
+            save.addActionListener(new ActionListener() {
+                public void actionPerformed(final ActionEvent e) {
 
-                        if (checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                            final Customer editedCustomer = new Customer(custNameField.getText(), phoneNoField
-                                    .getText(), addressField.getText(), vatNoField.getText(), lastPurchaseDay
-                                    .getSelectedItem()
-                                    + "/"
-                                    + lastPurchaseMonth.getSelectedItem()
-                                    + "/"
-                                    + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
-                                    + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem());
-                            editedCustomer.setCustomerId(index + IdManager.CUSTOMER_ID_START);
-                            Database.getCustomers().add(index, editedCustomer);
+                    final ArrayList<JTextField> textFields = new ArrayList<JTextField>();
+                    textFields.add(custNameField);
+                    textFields.add(phoneNoField);
+                    textFields.add(addressField);
+                    textFields.add(vatNoField);
+                    final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<JComboBox<String>>();
+                    addedBoxes.add(dateAddedDay);
+                    addedBoxes.add(dateAddedMonth);
+                    addedBoxes.add(dateAddedYear);
+                    final ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<JComboBox<String>>();
+                    lastPurchaseBoxes.add(lastPurchaseDay);
+                    lastPurchaseBoxes.add(lastPurchaseMonth);
+                    lastPurchaseBoxes.add(lastPurchaseYear);
 
-                            GuiCreator.setConfirmMessage("Customer " + custNameField.getText() + "'s details editted");
-                            GuiCreator.frame.remove(GuiCreator.leftPanel);
-                            GuiCreator.frame.repaint();
-                            GuiCreator.frame.validate();
-                            Database.getCustomers().remove(index + 1);
-                            createTable();
-                        }
-                    }
-                });
+                    if (checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
+                        final Customer editedCustomer = new Customer(custNameField.getText(), phoneNoField.getText(),
+                                addressField.getText(), vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/"
+                                        + lastPurchaseMonth.getSelectedItem() + "/"
+                                        + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
+                                        + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem());
+                        editedCustomer.setCustomerId(index + IdManager.CUSTOMER_ID_START);
+                        Database.addCustomerByIndex(index, editedCustomer);
 
-                cancel.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
+                        GuiCreator.setConfirmMessage("Customer " + custNameField.getText() + "'s details editted");
                         GuiCreator.frame.remove(GuiCreator.leftPanel);
                         GuiCreator.frame.repaint();
                         GuiCreator.frame.validate();
+                        Database.removeCustomerByIndex(index + 1);
+                        createTable();
                     }
-                });
+                }
+            });
 
-                GuiCreator.leftPanel.add(innerPanel);
-            }
-            break;
+            cancel.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.frame.validate();
+                }
+            });
+
+            GuiCreator.leftPanel.add(innerPanel);
         }
 
         GuiCreator.setFrame(true, false, false);
@@ -580,23 +572,20 @@ public class CustomerTable extends BaseTable {
         final JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("Do you want to delete " + customerName + "?"));
 
-        int i = -1;
+        int indexToRemove = -1;
 
         if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
             GuiCreator.frame.remove(GuiCreator.leftPanel);
             GuiCreator.frame.repaint();
             GuiCreator.leftPanel = new JPanel();
 
-            for (final Customer customer : Database.getCustomers()) {
-                if (customerId == customer.getCustomerId()) {
-                    i = Database.getCustomers().indexOf(customer);
-                }
-            }
+            final Customer customer = Database.getCustomerById(customerId);
+            indexToRemove = Database.getIndexOfCustomer(customer);
         }
 
-        if (i != -1) {
+        if (indexToRemove != -1) {
             GuiCreator.setConfirmMessage(customerName + " deleted");
-            Database.getCustomers().remove(i);
+            Database.removeCustomerByIndex(indexToRemove);
         }
 
         createTable();
