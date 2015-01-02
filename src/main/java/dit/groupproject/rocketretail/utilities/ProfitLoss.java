@@ -91,7 +91,7 @@ public class ProfitLoss {
 
                 budget.append("\t").append(MONTHS[j]).append("\t€").append(CURRENCY_FORMATTER.format(purchase));
 
-                if (purchase > 1000) {
+                if (purchase >= 1000) {
                     budget.append("\t");
                 }
 
