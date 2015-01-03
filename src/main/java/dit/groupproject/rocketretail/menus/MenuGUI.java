@@ -1,4 +1,4 @@
-package dit.grroupproject.rocketretail.menus;
+package dit.groupproject.rocketretail.menus;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;

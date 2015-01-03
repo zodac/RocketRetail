@@ -30,10 +30,11 @@ import dit.groupproject.rocketretail.main.TableState;
 public class CustomerTable extends BaseTable {
 
     public static boolean first = true;
+    public static boolean descendingOrderSort = false;
+
     private final static String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
 
     private static String sortType = "Sort by...";
-    public static boolean descendingOrderSort = false;
 
     /**
      * This method creates a Customer menu item and adds an

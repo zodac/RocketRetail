@@ -11,8 +11,8 @@ import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.HomeScreen;
+import dit.groupproject.rocketretail.menus.MenuGUI;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
-import dit.grroupproject.rocketretail.menus.MenuGUI;
 
 public class LoginHandler {
 

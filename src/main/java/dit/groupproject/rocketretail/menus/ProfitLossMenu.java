@@ -1,4 +1,4 @@
-package dit.grroupproject.rocketretail.menus;
+package dit.groupproject.rocketretail.menus;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -41,7 +41,7 @@ import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.grroupproject.rocketretail.menus.MenuGUI;
+import dit.groupproject.rocketretail.menus.MenuGUI;
 
 public class SupplierTable extends BaseTable {
     /**
