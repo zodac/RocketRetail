@@ -3,7 +3,6 @@ package dit.groupproject.rocketretail.main;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.gui.GuiCreator;
-import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.utilities.InitialiseArray;
 
 /**

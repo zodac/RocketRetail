@@ -37,10 +37,11 @@ import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
+import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
-import dit.groupproject.rocketretail.gui.MenuGUI;
-import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.main.TableState;
+import dit.grroupproject.rocketretail.menus.MenuGUI;
 
 public class SupplierTable extends BaseTable {
     /**
@@ -173,8 +174,7 @@ public class SupplierTable extends BaseTable {
         supplierMemberArrayEdit[0] = "Edit Supplier";
         for (int i = 0; i < Database.getSuppliers().size() + 1; i++) {
             if (i < Database.getSuppliers().size())
-                supplierMemberArrayEdit[i + 1] = "ID: "
-                        + SUPPLIER_ID_FORMATTER.format(Database.getSuppliers().get(i).getSupplierId()) + " ("
+                supplierMemberArrayEdit[i + 1] = "ID: " + SUPPLIER_ID_FORMATTER.format(Database.getSuppliers().get(i).getSupplierId()) + " ("
                         + Database.getSuppliers().get(i).getSupplierName() + ")";
         }
 
@@ -182,8 +182,7 @@ public class SupplierTable extends BaseTable {
         supplierMemberArrayDelete[0] = "Delete Supplier";
         for (int i = 0; i < Database.getSuppliers().size() + 1; i++) {
             if (i < Database.getSuppliers().size())
-                supplierMemberArrayDelete[i + 1] = "ID: "
-                        + SUPPLIER_ID_FORMATTER.format(Database.getSuppliers().get(i).getSupplierId()) + " ("
+                supplierMemberArrayDelete[i + 1] = "ID: " + SUPPLIER_ID_FORMATTER.format(Database.getSuppliers().get(i).getSupplierId()) + " ("
                         + Database.getSuppliers().get(i).getSupplierName() + ")";
         }
 
@@ -226,8 +225,7 @@ public class SupplierTable extends BaseTable {
         deleteBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 delete(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 8)),
-                        ((String) deleteBox.getSelectedItem()).substring(10,
-                                ((String) deleteBox.getSelectedItem()).length() - 1));
+                        ((String) deleteBox.getSelectedItem()).substring(10, ((String) deleteBox.getSelectedItem()).length() - 1));
             }
         });
 
@@ -369,12 +367,9 @@ public class SupplierTable extends BaseTable {
         final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
-        dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(
-                0, 2)));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
-                .substring(3, 5)));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
-                .substring(6, 10)) - (YEAR_START - 1));
+        dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(0, 2)));
+        dateAddedMonth.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(3, 5)));
+        dateAddedYear.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(6, 10)) - (YEAR_START - 1));
 
         // Spacer
         g.gridx = 0;
@@ -414,13 +409,12 @@ public class SupplierTable extends BaseTable {
                 lastPurchaseBoxes.add(lastPurchaseMonth);
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
-                boolean valid = checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
+                boolean valid = FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
 
                 if (valid) {
-                    Database.getSuppliers()
-                            .add(new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField.getText(),
-                                    vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/"
-                                            + lastPurchaseMonth.getSelectedItem() + "/"
+                    Database.getSuppliers().add(
+                            new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField.getText(),
+                                    lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
                                             + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
                                             + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
@@ -562,8 +556,7 @@ public class SupplierTable extends BaseTable {
                 vatNoField.setText(s.getVatNumber());
                 lastPurchaseDay.setSelectedIndex(Integer.parseInt(s.getLastPurchase().substring(0, 2)));
                 lastPurchaseMonth.setSelectedIndex(Integer.parseInt(s.getLastPurchase().substring(3, 5)));
-                lastPurchaseYear.setSelectedIndex(Integer.parseInt(s.getLastPurchase().substring(6, 10))
-                        - (YEAR_START - 1));
+                lastPurchaseYear.setSelectedIndex(Integer.parseInt(s.getLastPurchase().substring(6, 10)) - (YEAR_START - 1));
                 dateAddedDay.setSelectedIndex(Integer.parseInt(s.getDateAdded().substring(0, 2)));
                 dateAddedMonth.setSelectedIndex(Integer.parseInt(s.getDateAdded().substring(3, 5)));
                 dateAddedYear.setSelectedIndex(Integer.parseInt(s.getDateAdded().substring(6, 10)) - (YEAR_START - 1));
@@ -608,20 +601,15 @@ public class SupplierTable extends BaseTable {
                         lastPurchaseBoxes.add(lastPurchaseMonth);
                         lastPurchaseBoxes.add(lastPurchaseYear);
 
-                        boolean valid = checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
+                        boolean valid = FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes);
 
                         if (valid) {
-                            Database.getSuppliers()
-                                    .add(index,
-                                            new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField
-                                                    .getText(), vatNoField.getText(), lastPurchaseDay.getSelectedItem()
-                                                    + "/" + lastPurchaseMonth.getSelectedItem() + "/"
-                                                    + lastPurchaseYear.getSelectedItem(), dateAddedDay
-                                                    .getSelectedItem()
-                                                    + "/"
-                                                    + dateAddedMonth.getSelectedItem()
-                                                    + "/"
-                                                    + dateAddedYear.getSelectedItem()));
+                            Database.getSuppliers().add(
+                                    index,
+                                    new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField.getText(),
+                                            lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
+                                                    + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
+                                                    + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
                             GuiCreator.setConfirmationMessage("Supplier \"" + suppNameField.getText() + "'s details editted");
                             GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -729,22 +717,16 @@ public class SupplierTable extends BaseTable {
         JLabel dateAddedLabel = new JLabel("Date Added");
         JLabel titleLabel = new JLabel("Products supplied by " + s.getSupplierName());
 
-        supplierLabel.setFont(new Font(supplierLabel.getFont().getFontName(), Font.BOLD, supplierLabel.getFont()
-                .getSize()));
-        vatNumberLabel.setFont(new Font(vatNumberLabel.getFont().getFontName(), Font.BOLD, vatNumberLabel.getFont()
-                .getSize()));
-        phoneNoLabel
-                .setFont(new Font(phoneNoLabel.getFont().getFontName(), Font.BOLD, phoneNoLabel.getFont().getSize()));
-        addressLabel
-                .setFont(new Font(addressLabel.getFont().getFontName(), Font.BOLD, addressLabel.getFont().getSize()));
-        dateAddedLabel.setFont(new Font(dateAddedLabel.getFont().getFontName(), Font.BOLD, dateAddedLabel.getFont()
-                .getSize()));
+        supplierLabel.setFont(new Font(supplierLabel.getFont().getFontName(), Font.BOLD, supplierLabel.getFont().getSize()));
+        vatNumberLabel.setFont(new Font(vatNumberLabel.getFont().getFontName(), Font.BOLD, vatNumberLabel.getFont().getSize()));
+        phoneNoLabel.setFont(new Font(phoneNoLabel.getFont().getFontName(), Font.BOLD, phoneNoLabel.getFont().getSize()));
+        addressLabel.setFont(new Font(addressLabel.getFont().getFontName(), Font.BOLD, addressLabel.getFont().getSize()));
+        dateAddedLabel.setFont(new Font(dateAddedLabel.getFont().getFontName(), Font.BOLD, dateAddedLabel.getFont().getSize()));
         titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), Font.BOLD, titleLabel.getFont().getSize()));
 
         int textFieldSize = 20;
 
-        JTextField supplierField = new JTextField(s.getSupplierName() + " ("
-                + SUPPLIER_ID_FORMATTER.format(s.getSupplierId()) + ")", textFieldSize);
+        JTextField supplierField = new JTextField(s.getSupplierName() + " (" + SUPPLIER_ID_FORMATTER.format(s.getSupplierId()) + ")", textFieldSize);
         supplierField.setEditable(false);
         JTextField vatNumberField = new JTextField(s.getVatNumber(), textFieldSize);
         vatNumberField.setEditable(false);
@@ -803,8 +785,7 @@ public class SupplierTable extends BaseTable {
                 data[indexArray][0] = Database.getProducts().get(i).getProductDescription();
                 data[indexArray][1] = Database.getProducts().get(i).getProductId();
                 data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(Database.getProducts().get(i).getCostPrice());
-                data[indexArray][3] = Database.getProducts().get(i).getStockLevel() + "/"
-                        + Database.getProducts().get(i).getMaxLevel();
+                data[indexArray][3] = Database.getProducts().get(i).getStockLevel() + "/" + Database.getProducts().get(i).getMaxLevel();
                 indexArray++;
             }
 

@@ -43,10 +43,11 @@ import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
+import dit.groupproject.rocketretail.entityhelpers.AddEntityHelper;
 import dit.groupproject.rocketretail.gui.GuiCreator;
-import dit.groupproject.rocketretail.gui.MenuGUI;
-import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.main.TableState;
+import dit.grroupproject.rocketretail.menus.MenuGUI;
 
 /**
  * OrderTable adds the "Order" menu-item to the menu-bar (within "Database"),
@@ -595,9 +596,9 @@ public class OrderTable extends BaseTable {
 
         customerOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (customerOptions.getSelectedItem().equals("New Customer"))
-                    CustomerTable.add();
-                else {
+                if (customerOptions.getSelectedItem().equals("New Customer")) {
+                    AddEntityHelper.addCustomerPanel();
+                } else {
                     // Reset ShopDriver.frame
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();

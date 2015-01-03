@@ -1,4 +1,4 @@
-package dit.groupproject.rocketretail.gui;
+package dit.grroupproject.rocketretail.menus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,8 +7,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import dit.groupproject.rocketretail.database.Database;
+import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.gui.HomeScreen;
 import dit.groupproject.rocketretail.main.LoginHandler;
 import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
 import dit.groupproject.rocketretail.tables.OrderTable;
 import dit.groupproject.rocketretail.tables.ProductTable;

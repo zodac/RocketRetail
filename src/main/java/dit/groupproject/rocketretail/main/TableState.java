@@ -1,4 +1,4 @@
-package dit.groupproject.rocketretail.gui;
+package dit.groupproject.rocketretail.main;
 
 public enum TableState {
     NONE(""), HOMESCREEN("HomeScreen"), CUSTOMER("Customer"), ORDER("Order"), PRODUCT("Product"), STAFF("Staff"), SUPPLIER("Supplier");

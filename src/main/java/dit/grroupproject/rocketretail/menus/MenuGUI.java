@@ -1,8 +1,10 @@
-package dit.groupproject.rocketretail.gui;
+package dit.grroupproject.rocketretail.menus;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
+import dit.groupproject.rocketretail.gui.Graphs;
+import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
 import dit.groupproject.rocketretail.tables.OrderTable;
 import dit.groupproject.rocketretail.tables.ProductTable;

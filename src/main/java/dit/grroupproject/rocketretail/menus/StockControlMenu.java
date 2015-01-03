@@ -1,4 +1,4 @@
-package dit.groupproject.rocketretail.gui;
+package dit.grroupproject.rocketretail.menus;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -14,6 +14,8 @@ import org.jfree.chart.ChartPanel;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Product;
+import dit.groupproject.rocketretail.gui.Graphs;
+import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.utilities.StockControlUtilities;
 
 /**

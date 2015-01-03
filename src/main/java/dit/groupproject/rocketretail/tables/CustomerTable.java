@@ -1,13 +1,5 @@
 package dit.groupproject.rocketretail.tables;
 
-import static dit.groupproject.rocketretail.utilities.DateHandler.DAYS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.DAY_FORMATTER;
-import static dit.groupproject.rocketretail.utilities.DateHandler.MONTHS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.MONTH_FORMATTER;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEARS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_FORMATTER;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
-
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -21,13 +13,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -36,11 +26,13 @@ import javax.swing.JTextField;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Entity;
-import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
+import dit.groupproject.rocketretail.entityhelpers.AddEntityHelper;
+import dit.groupproject.rocketretail.entityhelpers.DeleteEntityHelper;
+import dit.groupproject.rocketretail.entityhelpers.EditEntityHelper;
 import dit.groupproject.rocketretail.gui.GuiCreator;
-import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.main.TableState;
 
 /**
  * A class that is used to display a table with multiple <code>Customer</code>
@@ -55,7 +47,7 @@ public class CustomerTable extends BaseTable {
     private final static String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
 
     private static String sortType = "Sort by...";
-    private static boolean descendingOrderSort = false;
+    public static boolean descendingOrderSort = false;
 
     /**
      * This method creates a Customer menu item and adds an
@@ -94,7 +86,6 @@ public class CustomerTable extends BaseTable {
             first = false;
         }
 
-        // TODO Specific item
         final String[] customerColumnNames = { "ID", "Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
 
         final Object[][] data = createTableData(Database.getCustomers());
@@ -181,7 +172,7 @@ public class CustomerTable extends BaseTable {
 
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                add();
+                AddEntityHelper.addCustomerPanel();
             }
         });
         return addButton;
@@ -192,7 +183,7 @@ public class CustomerTable extends BaseTable {
 
         editBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                edit(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 9)));
+                EditEntityHelper.editCustomerPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 9)));
             }
         });
         return editBox;
@@ -203,7 +194,7 @@ public class CustomerTable extends BaseTable {
 
         deleteBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                delete(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9)),
+                DeleteEntityHelper.deleteCustomer(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9)),
                         ((String) deleteBox.getSelectedItem()).substring(11, ((String) deleteBox.getSelectedItem()).length() - 1));
             }
         });
@@ -215,348 +206,6 @@ public class CustomerTable extends BaseTable {
         GuiCreator.frame.setTitle("Rocket Retail Inc - " + ShopDriver.getCurrentTableState().toString());
         GuiCreator.frame.repaint();
         GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
-    }
-
-    /**
-     * This method builds a form for adding a <code>Customer</code>. It also has
-     * the logic to add a <code>Customer</code> to an <code>ArrayList</code> of
-     * customers.
-     */
-    public static void add() {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
-
-        JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-
-        GridBagConstraints g = new GridBagConstraints();
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Customer Name:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Phone Number:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Address:"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("VAT Number:"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("Last Purchase:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Date Added:"), g);
-
-        g.insets = new Insets(1, 10, 0, 5);
-
-        g.gridx = 1;
-        g.gridy = 0;
-        g.gridwidth = 3;
-        final JTextField custNameField = new JTextField(null, 20);
-        innerPanel.add(custNameField, g);
-        g.gridy = 1;
-        final JTextField phoneNoField = new JTextField(null, 20);
-        innerPanel.add(phoneNoField, g);
-        g.gridy = 2;
-        final JTextField addressField = new JTextField(null, 20);
-        innerPanel.add(addressField, g);
-        g.gridy = 3;
-        final JTextField vatNoField = new JTextField(null, 20);
-        innerPanel.add(vatNoField, g);
-
-        g.gridy = 4;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseDay, g);
-        g.gridx = 2;
-        final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseMonth, g);
-        g.gridx = 3;
-        final JComboBox<String> lastPurchaseYear = new JComboBox<String>(YEARS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseYear, g);
-
-        g.gridy = 5;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
-        innerPanel.add(dateAddedDay, g);
-        g.gridx = 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
-        innerPanel.add(dateAddedMonth, g);
-        g.gridx = 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
-        innerPanel.add(dateAddedYear, g);
-
-        dateAddedDay.setSelectedIndex(Integer.parseInt(DAY_FORMATTER.format(new Date())));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(MONTH_FORMATTER.format(new Date())));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
-
-        g.gridx = 0;
-        g.gridy = 6;
-        innerPanel.add(new JLabel(" "), g);
-        g.gridx = 1;
-        innerPanel.add(new JLabel(" "), g);
-
-        JButton save = new JButton("Save");
-        save.setLayout(new GridBagLayout());
-        g = new GridBagConstraints();
-        g.insets = new Insets(1, 0, 0, 0);
-        g.gridx = 1;
-        g.gridy = 7;
-        innerPanel.add(save, g);
-        JButton cancel = new JButton("Cancel");
-        g.gridx = 3;
-        innerPanel.add(cancel, g);
-
-        save.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                ArrayList<JTextField> textFields = new ArrayList<JTextField>();
-                textFields.add(custNameField);
-                textFields.add(phoneNoField);
-                textFields.add(addressField);
-                textFields.add(vatNoField);
-                ArrayList<JComboBox<String>> addedBoxes = new ArrayList<JComboBox<String>>();
-                addedBoxes.add(dateAddedDay);
-                addedBoxes.add(dateAddedMonth);
-                addedBoxes.add(dateAddedYear);
-                ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<JComboBox<String>>();
-                lastPurchaseBoxes.add(lastPurchaseDay);
-                lastPurchaseBoxes.add(lastPurchaseMonth);
-                lastPurchaseBoxes.add(lastPurchaseYear);
-
-                if (checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    Database.addCustomer(new Customer(custNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField.getText(),
-                            lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/" + lastPurchaseYear.getSelectedItem(),
-                            dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
-
-                    GuiCreator.setConfirmationMessage("Customer " + custNameField.getText() + " added");
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.repaint();
-                    GuiCreator.frame.validate();
-
-                    descendingOrderSort = false;
-                    sortItems();
-                    createTable();
-                }
-            }
-        });
-
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.repaint();
-                GuiCreator.frame.validate();
-            }
-        });
-
-        GuiCreator.leftPanel.add(innerPanel);
-
-        GuiCreator.setFrame(true, false, false);
-    }
-
-    /**
-     * This method builds a form for updating a <code>Customer</code>'s details.
-     * It also has the logic to update a <code>Customer</code>'s details in the
-     * <code>ArrayList</code> of customers.
-     */
-    public static void edit(final int customerId) {
-
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
-
-        final Customer customer = (Customer) Database.getCustomerById(customerId);
-        final int index = Database.getIndexOfCustomer(customer);
-
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-        GridBagConstraints g = new GridBagConstraints();
-
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Customer ID:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Customer Name:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Phone Number:"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("Address:"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("VAT Number:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Last Purchase:"), g);
-        g.gridy = 6;
-        innerPanel.add(new JLabel("Date Added:"), g);
-
-        g.insets = new Insets(1, 10, 0, 5);
-
-        g.gridx = 1;
-        g.gridy = 0;
-        g.gridwidth = 3;
-        final JTextField custIdField = new JTextField(null, 20);
-        custIdField.setEditable(false);
-        innerPanel.add(custIdField, g);
-        g.gridy = 1;
-        g.gridwidth = 3;
-        final JTextField custNameField = new JTextField(null, 20);
-        innerPanel.add(custNameField, g);
-        g.gridy = 2;
-        g.gridwidth = 3;
-        final JTextField phoneNoField = new JTextField(null, 20);
-        innerPanel.add(phoneNoField, g);
-        g.gridy = 3;
-        g.gridwidth = 3;
-        final JTextField addressField = new JTextField(null, 20);
-        innerPanel.add(addressField, g);
-        g.gridy = 4;
-        g.gridwidth = 3;
-        final JTextField vatNoField = new JTextField(null, 20);
-        innerPanel.add(vatNoField, g);
-
-        g.gridy = 5;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseDay, g);
-
-        g.gridy = 5;
-        g.gridx = 2;
-        g.gridwidth = 1 - 2;
-        final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseMonth, g);
-
-        g.gridy = 5;
-        g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
-        final JComboBox<String> lastPurchaseYear = new JComboBox<String>(YEARS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseYear, g);
-
-        g.gridy = 6;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
-        innerPanel.add(dateAddedDay, g);
-
-        g.gridy = 6;
-        g.gridx = 2;
-        g.gridwidth = 1 - 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
-        innerPanel.add(dateAddedMonth, g);
-
-        g.gridy = 6;
-        g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
-        final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
-        innerPanel.add(dateAddedYear, g);
-
-        custIdField.setText("" + customer.getId());
-        custNameField.setText(customer.getCustomerName());
-        phoneNoField.setText(customer.getPhoneNumber());
-        addressField.setText(customer.getAddress());
-        vatNoField.setText(customer.getVatNumber());
-        lastPurchaseDay.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(0, 2)));
-        lastPurchaseMonth.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(3, 5)));
-        lastPurchaseYear.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(6, 10)) - (YEAR_START - 1));
-        dateAddedDay.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(0, 2)));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(3, 5)));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(6, 10)) - (YEAR_START - 1));
-
-        g.gridx = 0;
-        g.gridy = 8;
-        innerPanel.add(new JLabel(" "), g);
-        g.gridx = 1;
-        g.gridy = 8;
-        innerPanel.add(new JLabel(" "), g);
-
-        final JButton save = new JButton("Save");
-        save.setLayout(new GridBagLayout());
-        g = new GridBagConstraints();
-        g.insets = new Insets(1, 0, 0, 0);
-        g.gridx = 1;
-        g.gridy = 9;
-        innerPanel.add(save, g);
-        final JButton cancel = new JButton("Cancel");
-        g.gridx = 3;
-        g.gridy = 9;
-        innerPanel.add(cancel, g);
-
-        save.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-
-                final ArrayList<JTextField> textFields = new ArrayList<JTextField>();
-                textFields.add(custNameField);
-                textFields.add(phoneNoField);
-                textFields.add(addressField);
-                textFields.add(vatNoField);
-                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<JComboBox<String>>();
-                addedBoxes.add(dateAddedDay);
-                addedBoxes.add(dateAddedMonth);
-                addedBoxes.add(dateAddedYear);
-                final ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<JComboBox<String>>();
-                lastPurchaseBoxes.add(lastPurchaseDay);
-                lastPurchaseBoxes.add(lastPurchaseMonth);
-                lastPurchaseBoxes.add(lastPurchaseYear);
-
-                if (checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    final Customer editedCustomer = new Customer(custNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField
-                            .getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
-                            + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
-                            + dateAddedYear.getSelectedItem());
-                    editedCustomer.setId(index + IdManager.CUSTOMER_ID_START);
-                    Database.addCustomerByIndex(index, editedCustomer);
-
-                    GuiCreator.setConfirmationMessage("Customer " + custNameField.getText() + "'s details editted");
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.repaint();
-                    GuiCreator.frame.validate();
-                    Database.removeCustomerByIndex(index + 1);
-                    createTable();
-                }
-            }
-        });
-
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.repaint();
-                GuiCreator.frame.validate();
-            }
-        });
-
-        GuiCreator.leftPanel.add(innerPanel);
-
-        GuiCreator.setFrame(true, false, false);
-    }
-
-    /**
-     * This method shows a dialog box asking a user if they want to delete a
-     * <code>Customer</code>. This method also has logic to remove the
-     * <code>Customer</code> from system records.
-     */
-    public static void delete(final int customerId, final String customerName) {
-        final JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Do you want to delete " + customerName + "?"));
-
-        int indexToRemove = -1;
-
-        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
-            GuiCreator.frame.remove(GuiCreator.leftPanel);
-            GuiCreator.frame.repaint();
-            GuiCreator.leftPanel = new JPanel();
-
-            final Entity customer = Database.getCustomerById(customerId);
-            indexToRemove = Database.getIndexOfCustomer(customer);
-        }
-
-        if (indexToRemove != -1) {
-            GuiCreator.setConfirmationMessage(customerName + " deleted");
-            Database.removeCustomerByIndex(indexToRemove);
-        }
-
-        createTable();
-        GuiCreator.frame.validate();
     }
 
     /**
@@ -690,7 +339,7 @@ public class CustomerTable extends BaseTable {
         GuiCreator.setFrame(false, false, true);
     }
 
-    private static void sortItems() {
+    public static void sortItems() {
         Comparator<Entity> comparator = Customer.getComparator(sortType);
 
         if (descendingOrderSort) {

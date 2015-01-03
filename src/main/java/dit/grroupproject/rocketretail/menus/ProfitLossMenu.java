@@ -1,4 +1,4 @@
-package dit.groupproject.rocketretail.gui;
+package dit.grroupproject.rocketretail.menus;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,7 +14,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
+import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.gui.HomeScreen;
 import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.utilities.ProfitLoss;
 
 /**

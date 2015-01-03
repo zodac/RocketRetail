@@ -36,11 +36,12 @@ import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
+import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.Graphs;
 import dit.groupproject.rocketretail.gui.GuiCreator;
-import dit.groupproject.rocketretail.gui.MenuGUI;
-import dit.groupproject.rocketretail.gui.TableState;
 import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.main.TableState;
+import dit.grroupproject.rocketretail.menus.MenuGUI;
 
 /**
  * ProductTable adds the "Product" menu-item to the menu-bar (within
@@ -389,7 +390,7 @@ public class ProductTable extends BaseTable {
                 ArrayList<JComboBox<String>> comboBoxes = new ArrayList<JComboBox<String>>();
                 comboBoxes.add(suppIDBox);
 
-                boolean valid = checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null);
+                boolean valid = FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null);
 
                 if (valid) {
 
@@ -552,7 +553,7 @@ public class ProductTable extends BaseTable {
                         ArrayList<JComboBox<String>> comboBoxes = new ArrayList<JComboBox<String>>();
                         comboBoxes.add(suppIDBox);
 
-                        boolean valid = checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null);
+                        boolean valid = FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null);
 
                         if (valid) {
                             // Add the staff at this index
