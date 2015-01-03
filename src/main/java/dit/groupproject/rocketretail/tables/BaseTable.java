@@ -13,7 +13,10 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.gui.TableState;
+import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.utilities.DateHandler;
 
 public abstract class BaseTable {
@@ -26,8 +29,24 @@ public abstract class BaseTable {
     protected final static DecimalFormat SUPPLIER_ID_FORMATTER = new DecimalFormat("0000");
 
     protected static int showDialog(final String title, final JPanel myPanel) {
-        return JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE, null);
+        return JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+    }
+
+    protected static Object[][] createTableData(final ArrayList<Entity> items) {
+        final Object[][] data = new Object[items.size()][items.get(0).getNumberOfFields()];
+        int dataIndex = 0;
+
+        for (final Entity item : items) {
+            data[dataIndex++] = item.getData();
+        }
+        return data;
+    }
+
+    protected static void setTableState(final TableState newState) {
+        if (ShopDriver.getCurrentTableState() != newState) {
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
+        }
+        ShopDriver.setCurrentTable(newState);
     }
 
     /**
@@ -65,9 +84,8 @@ public abstract class BaseTable {
      * 
      * @return a boolean set to true if no invalid entries, or else false
      */
-    protected static boolean checkFields(final ArrayList<JTextField> textFields, ArrayList<JTextField> intFields,
-            ArrayList<JTextField> doubleFields, ArrayList<JPasswordField> pinFields,
-            ArrayList<JComboBox<String>> comboBoxes, ArrayList<JComboBox<String>> addedBoxes,
+    protected static boolean checkFields(final ArrayList<JTextField> textFields, ArrayList<JTextField> intFields, ArrayList<JTextField> doubleFields,
+            ArrayList<JPasswordField> pinFields, ArrayList<JComboBox<String>> comboBoxes, ArrayList<JComboBox<String>> addedBoxes,
             ArrayList<JComboBox<String>> lastPurchaseBoxes) {
 
         boolean valid = true;
@@ -86,8 +104,7 @@ public abstract class BaseTable {
         return valid;
     }
 
-    private static boolean validatePinField(ArrayList<JPasswordField> pinFields, boolean valid,
-            final Border errorBorder, final Border validBorder) {
+    private static boolean validatePinField(ArrayList<JPasswordField> pinFields, boolean valid, final Border errorBorder, final Border validBorder) {
         if (pinFields != null) {
             for (JPasswordField password : pinFields) {
                 String input = String.valueOf(password.getPassword());
@@ -101,9 +118,8 @@ public abstract class BaseTable {
         return valid;
     }
 
-    private static boolean validateDateBoxes(ArrayList<JComboBox<String>> addedBoxes,
-            ArrayList<JComboBox<String>> lastPurchaseBoxes, boolean valid, final Border errorBorder,
-            final Border validBorder) {
+    private static boolean validateDateBoxes(ArrayList<JComboBox<String>> addedBoxes, ArrayList<JComboBox<String>> lastPurchaseBoxes, boolean valid,
+            final Border errorBorder, final Border validBorder) {
         if (addedBoxes != null) {
 
             for (final JComboBox<String> addedBox : addedBoxes) {
@@ -156,8 +172,8 @@ public abstract class BaseTable {
         return valid;
     }
 
-    private static boolean validateComboBoxes(ArrayList<JComboBox<String>> comboBoxes, boolean valid,
-            final Border errorBorder, final Border validBorder) {
+    private static boolean validateComboBoxes(ArrayList<JComboBox<String>> comboBoxes, boolean valid, final Border errorBorder,
+            final Border validBorder) {
         if (comboBoxes != null) {
             for (final JComboBox<String> stringBox : comboBoxes) {
                 if (((String) stringBox.getSelectedItem()).length() == 0) {
@@ -211,7 +227,7 @@ public abstract class BaseTable {
     }
 
     private static boolean isInvalidDate(int day, int month, int year) {
-        return (day == 31 && (month == 2 || month == 4 || month == 6 || month == 9 || month == 11))
-                || (day == 30 && month == 2) || (day == 29 && month == 2 && year % 4 != 0);
+        return (day == 31 && (month == 2 || month == 4 || month == 6 || month == 9 || month == 11)) || (day == 30 && month == 2)
+                || (day == 29 && month == 2 && year % 4 != 0);
     }
 }

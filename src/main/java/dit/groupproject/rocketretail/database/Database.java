@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
@@ -15,11 +16,11 @@ public class Database {
 
     private final static Random RANDOM = new Random();
 
-    private static ArrayList<Staff> staffMembers = new ArrayList<Staff>();
-    private static ArrayList<Product> products = new ArrayList<Product>();
-    private static ArrayList<Supplier> suppliers = new ArrayList<Supplier>();
-    private static ArrayList<Customer> customers = new ArrayList<Customer>();
-    private static ArrayList<Order> orders = new ArrayList<Order>();
+    private static ArrayList<Staff> staffMembers = new ArrayList<>();
+    private static ArrayList<Product> products = new ArrayList<>();
+    private static ArrayList<Supplier> suppliers = new ArrayList<>();
+    private static ArrayList<Entity> customers = new ArrayList<>();
+    private static ArrayList<Order> orders = new ArrayList<>();
 
     public static Staff getStaffMemberByIndex(final int index) {
         return staffMembers.get(index);
@@ -43,8 +44,8 @@ public class Database {
         throw new IllegalArgumentException("No product with that ID found!");
     }
 
-    public static Customer getCustomerById(final int customerId) {
-        for (final Customer customer : customers) {
+    public static Entity getCustomerById(final int customerId) {
+        for (final Entity customer : customers) {
             if (customer.getId() == customerId) {
                 return customer;
             }
@@ -56,7 +57,7 @@ public class Database {
         return products.get(index);
     }
 
-    public static Customer getCustomerByIndex(final int index) {
+    public static Entity getCustomerByIndex(final int index) {
         return customers.get(index);
     }
 
@@ -88,7 +89,7 @@ public class Database {
         return suppliers.get(index);
     }
 
-    public static Customer getRandomCustomer() {
+    public static Entity getRandomCustomer() {
         final int index = RANDOM.nextInt(customers.size());
         return customers.get(index);
     }
@@ -132,7 +133,7 @@ public class Database {
         return suppliers;
     }
 
-    public static ArrayList<Customer> getCustomers() {
+    public static ArrayList<Entity> getCustomers() {
         return customers;
     }
 
@@ -172,7 +173,7 @@ public class Database {
         customers.remove(index);
     }
 
-    public static int getIndexOfCustomer(final Customer customer) {
+    public static int getIndexOfCustomer(final Entity customer) {
         return customers.indexOf(customer);
     }
 }

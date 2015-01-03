@@ -29,7 +29,7 @@ public class MenuGUI {
         databaseMenu.add(StaffTable.createMenu(manager));
         databaseMenu.add(ProductTable.createMenu(manager));
         databaseMenu.add(SupplierTable.createMenu(manager));
-        databaseMenu.add(CustomerTable.createMenu(manager));
+        databaseMenu.add(CustomerTable.createMenu(TableState.CUSTOMER, manager));
         databaseMenu.add(OrderTable.createMenu());
 
         // Add "Database" menu to menuBar

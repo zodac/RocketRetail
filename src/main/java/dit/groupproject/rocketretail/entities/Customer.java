@@ -65,7 +65,7 @@ public class Customer implements Entity {
         return dateAdded;
     }
 
-    public static Comparator<Customer> getComparator(final String sortType) {
+    public static Comparator<Entity> getComparator(final String sortType) {
         if (sortType.equals("Name")) {
             return compareByName;
         } else if (sortType.equals("Address")) {
@@ -81,44 +81,44 @@ public class Customer implements Entity {
         }
     }
 
-    private static Comparator<Customer> compareById = new Comparator<Customer>() {
-        public int compare(final Customer s1, final Customer s2) {
+    private static Comparator<Entity> compareById = new Comparator<Entity>() {
+        public int compare(final Entity s1, final Entity s2) {
             return s1.getId() - s2.getId();
         }
     };
 
-    private static Comparator<Customer> compareByName = new Comparator<Customer>() {
-        public int compare(final Customer s1, final Customer s2) {
-            return s1.getCustomerName().compareToIgnoreCase(s2.getCustomerName());
+    private static Comparator<Entity> compareByName = new Comparator<Entity>() {
+        public int compare(final Entity s1, final Entity s2) {
+            return ((Customer) s1).getCustomerName().compareToIgnoreCase(((Customer) s2).getCustomerName());
         }
     };
 
-    private static Comparator<Customer> compareByAddress = new Comparator<Customer>() {
-        public int compare(final Customer s1, final Customer s2) {
-            return s1.getAddress().compareToIgnoreCase(s2.getAddress());
+    private static Comparator<Entity> compareByAddress = new Comparator<Entity>() {
+        public int compare(final Entity s1, final Entity s2) {
+            return ((Customer) s1).getAddress().compareToIgnoreCase(((Customer) s2).getAddress());
         }
     };
 
-    private static Comparator<Customer> compareByVatNumber = new Comparator<Customer>() {
-        public int compare(final Customer s1, final Customer s2) {
-            return s1.getVatNumber().compareToIgnoreCase(s2.getVatNumber());
+    private static Comparator<Entity> compareByVatNumber = new Comparator<Entity>() {
+        public int compare(final Entity s1, final Entity s2) {
+            return ((Customer) s1).getVatNumber().compareToIgnoreCase(((Customer) s2).getVatNumber());
         }
     };
 
-    private static Comparator<Customer> compareByLastPurchaseDate = new Comparator<Customer>() {
-        public int compare(final Customer s1, final Customer s2) {
+    private static Comparator<Entity> compareByLastPurchaseDate = new Comparator<Entity>() {
+        public int compare(final Entity s1, final Entity s2) {
             try {
-                return DATE_FORMATTER.parse(s1.getLastPurchase()).compareTo(DATE_FORMATTER.parse(s2.getLastPurchase()));
+                return DATE_FORMATTER.parse(((Customer) s1).getLastPurchase()).compareTo(DATE_FORMATTER.parse(((Customer) s2).getLastPurchase()));
             } catch (ParseException e) {
                 return 0;
             }
         }
     };
 
-    private static Comparator<Customer> compareByDateAdded = new Comparator<Customer>() {
-        public int compare(final Customer s1, final Customer s2) {
+    private static Comparator<Entity> compareByDateAdded = new Comparator<Entity>() {
+        public int compare(final Entity s1, final Entity s2) {
             try {
-                return DATE_FORMATTER.parse(s1.getDateAdded()).compareTo(DATE_FORMATTER.parse(s2.getDateAdded()));
+                return DATE_FORMATTER.parse(((Customer) s1).getDateAdded()).compareTo(DATE_FORMATTER.parse(((Customer) s2).getDateAdded()));
             } catch (ParseException e) {
                 return 0;
             }

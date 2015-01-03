@@ -22,8 +22,7 @@ public class Order {
     private boolean isSupplier;
     private boolean isActive = true;
 
-    public Order(final int traderId, final String orderDate, final ArrayList<OrderedItem> orderedItems,
-            final boolean isActive) {
+    public Order(final int traderId, final String orderDate, final ArrayList<OrderedItem> orderedItems, final boolean isActive) {
 
         this.orderId = IdManager.getOrderIdAndIncrement();
         this.staffId = ShopDriver.getCurrentStaff().getStaffId();
@@ -36,8 +35,7 @@ public class Order {
         for (final OrderedItem orderedItem : orderedItems) {
             if (!isSupplier) {
                 if (orderedItem.getProduct().getStockLevel() >= orderedItem.getQuantity()) {
-                    orderedItem.getProduct().setStockLevel(
-                            orderedItem.getProduct().getStockLevel() - orderedItem.getQuantity());
+                    orderedItem.getProduct().setStockLevel(orderedItem.getProduct().getStockLevel() - orderedItem.getQuantity());
                 }
             }
         }
@@ -63,7 +61,7 @@ public class Order {
                 e.printStackTrace();
             }
         } else {
-            final Customer customer = Database.getCustomerById(traderId);
+            final Customer customer = (Customer) Database.getCustomerById(traderId);
             try {
                 if (DATE_FORMATTER.parse(customer.getLastPurchase()).compareTo(DATE_FORMATTER.parse(orderDate)) < 0)
                     customer.setLastPurchase(orderDate);
@@ -77,8 +75,8 @@ public class Order {
     public String printDetails() {
         final String suppOrCustLabel = isSupplier ? "Supplier" : "Customer";
 
-        String output = "Order ID:\t" + orderId + "\nStaff ID:\t" + staffId + "\n" + suppOrCustLabel + " ID:\t"
-                + traderId + "\nOrder Date:\t" + orderDate;
+        String output = "Order ID:\t" + orderId + "\nStaff ID:\t" + staffId + "\n" + suppOrCustLabel + " ID:\t" + traderId + "\nOrder Date:\t"
+                + orderDate;
 
         for (final OrderedItem oi : orderedItems) {
             output += "\nProduct ID:\t" + oi.getProduct().getProductId() + "\nQuantity:\t" + oi.getQuantity();
@@ -124,8 +122,7 @@ public class Order {
 
         for (final OrderedItem orderedItem : orderedItems) {
             if (isSupplier()) {
-                orderedItem.getProduct().setStockLevel(
-                        orderedItem.getProduct().getStockLevel() + orderedItem.getQuantity());
+                orderedItem.getProduct().setStockLevel(orderedItem.getProduct().getStockLevel() + orderedItem.getQuantity());
             }
         }
 

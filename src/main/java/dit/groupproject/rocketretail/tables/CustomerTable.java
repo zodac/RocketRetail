@@ -35,6 +35,7 @@ import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.gui.GuiCreator;
@@ -50,7 +51,6 @@ public class CustomerTable extends BaseTable {
 
     public static boolean first = true;
 
-    private final static String[] CUSTOMER_COLUMN_NAMES = { "ID", "Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
     private final static String[] ORDER_COLUMN_NAMES = { "Order ID", "Order Date", "Delivery Date", "Total Cost" };
     private final static String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
 
@@ -63,17 +63,17 @@ public class CustomerTable extends BaseTable {
      * 
      * @return A <code>JMenuItem</code> to be added to a <code>JMenu</code>.
      */
-    public static JMenuItem createMenu(boolean manager) {
-        final JMenuItem customerItem = new JMenuItem("Customer");
+    public static JMenuItem createMenu(final TableState newState, final boolean manager) {
+        final JMenuItem menuItem = new JMenuItem(newState.toString());
 
-        customerItem.addActionListener(new ActionListener() {
+        menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createTable();
             }
         });
 
-        customerItem.setEnabled(manager);
-        return customerItem;
+        menuItem.setEnabled(manager);
+        return menuItem;
     }
 
     /**
@@ -86,7 +86,7 @@ public class CustomerTable extends BaseTable {
      * the <code>JTable</code> and multiple <code>JComboBox</code>.
      */
     public static void createTable() {
-        setTableState();
+        setTableState(TableState.CUSTOMER);
         resetGui();
 
         if (first) {
@@ -94,8 +94,11 @@ public class CustomerTable extends BaseTable {
             first = false;
         }
 
-        final Object[][] data = createTableData();
-        final JTable table = createTable(data);
+        // TODO Specific item
+        final String[] customerColumnNames = { "ID", "Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
+
+        final Object[][] data = createTableData(Database.getCustomers());
+        final JTable table = createTable(data, customerColumnNames);
         final JPanel buttonPanel = createButtonPanel();
 
         final JScrollPane scrollPane = new JScrollPane(table);
@@ -106,28 +109,17 @@ public class CustomerTable extends BaseTable {
         GuiCreator.setFrame(false, false, true);
     }
 
-    private static Object[][] createTableData() {
-        final ArrayList<Customer> customers = Database.getCustomers();
-        final Object[][] data = new Object[customers.size()][customers.get(0).getNumberOfFields()];
-        int dataIndex = 0;
-
-        for (final Customer customer : customers) {
-            data[dataIndex++] = customer.getData();
-        }
-        return data;
-    }
-
-    private static JTable createTable(final Object[][] data) {
-        final JTable table = new JTable(data, CUSTOMER_COLUMN_NAMES);
+    private static JTable createTable(final Object[][] data, final String[] columnNames) {
+        final JTable table = new JTable(data, columnNames);
         table.setColumnSelectionAllowed(false);
         table.setFillsViewportHeight(true);
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (table.getSelectedRow() >= 0) {
-                    final int selectedCustomerId = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0));
+                    final int selectedId = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0));
 
-                    final Customer customer = Database.getCustomerById(selectedCustomerId);
+                    final Customer customer = (Customer) Database.getCustomerById(selectedId);
                     showCustomerInfo(customer);
                 }
             }
@@ -139,7 +131,7 @@ public class CustomerTable extends BaseTable {
         final JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        final ArrayList<Customer> customers = Database.getCustomers();
+        final ArrayList<Entity> customers = Database.getCustomers();
 
         final String[] itemsToEdit = new String[customers.size() + 1];
         final String[] itemsToDelete = new String[itemsToEdit.length];
@@ -147,8 +139,9 @@ public class CustomerTable extends BaseTable {
         itemsToDelete[0] = "Delete Customer";
 
         int editAndDeleteIndex = 1;
-        for (final Customer customer : customers) {
-            itemsToEdit[editAndDeleteIndex] = "ID: " + CUSTOMER_ID_FORMATTER.format(customer.getId()) + " (" + customer.getCustomerName() + ")";
+        for (final Entity customer : customers) {
+            itemsToEdit[editAndDeleteIndex] = "ID: " + CUSTOMER_ID_FORMATTER.format(customer.getId()) + " ("
+                    + ((Customer) customer).getCustomerName() + ")";
             itemsToDelete[editAndDeleteIndex] = itemsToDelete[editAndDeleteIndex++];
         }
         final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
@@ -219,16 +212,9 @@ public class CustomerTable extends BaseTable {
 
     private static void resetGui() {
         GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Customers");
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + ShopDriver.getCurrentTableState().toString());
         GuiCreator.frame.repaint();
         GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
-    }
-
-    private static void setTableState() {
-        if (ShopDriver.getCurrentTableState() != TableState.CUSTOMER) {
-            GuiCreator.frame.remove(GuiCreator.leftPanel);
-        }
-        ShopDriver.setCurrentTable(TableState.CUSTOMER);
     }
 
     /**
@@ -379,7 +365,7 @@ public class CustomerTable extends BaseTable {
         GuiCreator.frame.repaint();
         GuiCreator.leftPanel = new JPanel();
 
-        final Customer customer = Database.getCustomerById(customerId);
+        final Customer customer = (Customer) Database.getCustomerById(customerId);
         final int index = Database.getIndexOfCustomer(customer);
 
         final JPanel innerPanel = new JPanel(new GridBagLayout());
@@ -407,9 +393,9 @@ public class CustomerTable extends BaseTable {
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
-        final JTextField custIDField = new JTextField(null, 20);
-        custIDField.setEditable(false);
-        innerPanel.add(custIDField, g);
+        final JTextField custIdField = new JTextField(null, 20);
+        custIdField.setEditable(false);
+        innerPanel.add(custIdField, g);
         g.gridy = 1;
         g.gridwidth = 3;
         final JTextField custNameField = new JTextField(null, 20);
@@ -465,7 +451,7 @@ public class CustomerTable extends BaseTable {
         final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
-        custIDField.setText("" + customer.getId());
+        custIdField.setText("" + customer.getId());
         custNameField.setText(customer.getCustomerName());
         phoneNoField.setText(customer.getPhoneNumber());
         addressField.setText(customer.getAddress());
@@ -560,7 +546,7 @@ public class CustomerTable extends BaseTable {
             GuiCreator.frame.repaint();
             GuiCreator.leftPanel = new JPanel();
 
-            final Customer customer = Database.getCustomerById(customerId);
+            final Entity customer = Database.getCustomerById(customerId);
             indexToRemove = Database.getIndexOfCustomer(customer);
         }
 
@@ -705,7 +691,7 @@ public class CustomerTable extends BaseTable {
     }
 
     private static void sortItems() {
-        Comparator<Customer> comparator = Customer.getComparator(sortType);
+        Comparator<Entity> comparator = Customer.getComparator(sortType);
 
         if (descendingOrderSort) {
             comparator = Collections.reverseOrder(comparator);

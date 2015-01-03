@@ -35,6 +35,7 @@ import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
@@ -156,8 +157,7 @@ public class StaffTable extends BaseTable {
         staffMemberArrayEdit[0] = "Edit Staff";
         for (int i = 0; i < Database.getStaffMembers().size() + 1; i++) {
             if (i < Database.getStaffMembers().size())
-                staffMemberArrayEdit[i + 1] = "ID: "
-                        + STAFF_ID_FORMATTER.format(Database.getStaffMembers().get(i).getStaffId()) + " ("
+                staffMemberArrayEdit[i + 1] = "ID: " + STAFF_ID_FORMATTER.format(Database.getStaffMembers().get(i).getStaffId()) + " ("
                         + Database.getStaffMembers().get(i).getStaffName() + ")";
         }
 
@@ -165,8 +165,7 @@ public class StaffTable extends BaseTable {
         staffMemberArrayDelete[0] = "Delete Staff";
         for (int i = 0; i < Database.getStaffMembers().size() + 1; i++) {
             if (i < Database.getStaffMembers().size())
-                staffMemberArrayDelete[i + 1] = "ID: "
-                        + STAFF_ID_FORMATTER.format(Database.getStaffMembers().get(i).getStaffId()) + " ("
+                staffMemberArrayDelete[i + 1] = "ID: " + STAFF_ID_FORMATTER.format(Database.getStaffMembers().get(i).getStaffId()) + " ("
                         + Database.getStaffMembers().get(i).getStaffName() + ")";
         }
 
@@ -209,8 +208,7 @@ public class StaffTable extends BaseTable {
         deleteBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 delete(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 7)),
-                        ((String) deleteBox.getSelectedItem()).substring(9,
-                                ((String) deleteBox.getSelectedItem()).length() - 1));
+                        ((String) deleteBox.getSelectedItem()).substring(9, ((String) deleteBox.getSelectedItem()).length() - 1));
             }
         });
 
@@ -346,12 +344,9 @@ public class StaffTable extends BaseTable {
         final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
-        dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(
-                0, 2)));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
-                .substring(3, 5)));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date())
-                .substring(6, 10)) - (YEAR_START - 1));
+        dateAddedDay.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(0, 2)));
+        dateAddedMonth.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(3, 5)));
+        dateAddedYear.setSelectedIndex(Integer.parseInt(new SimpleDateFormat("dd/MM/yyyy").format(new Date()).substring(6, 10)) - (YEAR_START - 1));
 
         // Spacer
         g.gridx = 0;
@@ -396,10 +391,9 @@ public class StaffTable extends BaseTable {
 
                 if (valid) {
                     Database.getStaffMembers().add(
-                            new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField.getText(),
-                                    genderField.getSelectedIndex(), phoneNoField.getText(), addressField.getText(),
-                                    Double.parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(),
-                                    dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
+                            new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField.getText(), genderField.getSelectedIndex(),
+                                    phoneNoField.getText(), addressField.getText(), Double.parseDouble(wageField.getText()), staffLevelField
+                                            .getSelectedIndex(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
                                             + dateAddedYear.getSelectedItem()));
 
                     GuiCreator.setConfirmMessage("Staff member " + nameField.getText() + " added");
@@ -580,19 +574,16 @@ public class StaffTable extends BaseTable {
                         addedBoxes.add(dateAddedMonth);
                         addedBoxes.add(dateAddedYear);
 
-                        boolean valid = checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes,
-                                null);
+                        boolean valid = checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null);
 
                         if (valid) {
                             // Add the staff at this index
                             Database.getStaffMembers().add(
                                     index,
-                                    new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField
-                                            .getText(), genderField.getSelectedIndex(), phoneNoField.getText(),
-                                            addressField.getText(), Double.parseDouble(wageField.getText()),
-                                            staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/"
-                                                    + dateAddedMonth.getSelectedItem() + "/"
-                                                    + dateAddedYear.getSelectedItem()));
+                                    new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField.getText(), genderField
+                                            .getSelectedIndex(), phoneNoField.getText(), addressField.getText(), Double.parseDouble(wageField
+                                            .getText()), staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/"
+                                            + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
                             GuiCreator.setConfirmMessage("Staff member " + nameField.getText() + "'s details editted");
                             GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -633,8 +624,7 @@ public class StaffTable extends BaseTable {
      * */
     public static void delete(final int staffId, final String staffName) {
         if (staffId == ShopDriver.getCurrentStaff().getStaffId()) {
-            JOptionPane.showMessageDialog(null, "You can't delete yourself!", "Deletion Error",
-                    JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "You can't delete yourself!", "Deletion Error", JOptionPane.PLAIN_MESSAGE);
         } else {
             final JPanel myPanel = new JPanel();
             myPanel.add(new JLabel("Do you want to delete " + staffName + "?"));
@@ -703,18 +693,14 @@ public class StaffTable extends BaseTable {
         staffLabel.setFont(new Font(staffLabel.getFont().getFontName(), Font.BOLD, staffLabel.getFont().getSize()));
         levelLabel.setFont(new Font(levelLabel.getFont().getFontName(), Font.BOLD, levelLabel.getFont().getSize()));
         wageLabel.setFont(new Font(wageLabel.getFont().getFontName(), Font.BOLD, wageLabel.getFont().getSize()));
-        phoneNoLabel
-                .setFont(new Font(phoneNoLabel.getFont().getFontName(), Font.BOLD, phoneNoLabel.getFont().getSize()));
-        addressLabel
-                .setFont(new Font(addressLabel.getFont().getFontName(), Font.BOLD, addressLabel.getFont().getSize()));
-        dateAddedLabel.setFont(new Font(dateAddedLabel.getFont().getFontName(), Font.BOLD, dateAddedLabel.getFont()
-                .getSize()));
+        phoneNoLabel.setFont(new Font(phoneNoLabel.getFont().getFontName(), Font.BOLD, phoneNoLabel.getFont().getSize()));
+        addressLabel.setFont(new Font(addressLabel.getFont().getFontName(), Font.BOLD, addressLabel.getFont().getSize()));
+        dateAddedLabel.setFont(new Font(dateAddedLabel.getFont().getFontName(), Font.BOLD, dateAddedLabel.getFont().getSize()));
         titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), Font.BOLD, titleLabel.getFont().getSize()));
 
         int textFieldSize = 15;
 
-        JTextField staffField = new JTextField(s.getStaffName() + " (" + STAFF_ID_FORMATTER.format(s.getStaffId())
-                + ")", textFieldSize);
+        JTextField staffField = new JTextField(s.getStaffName() + " (" + STAFF_ID_FORMATTER.format(s.getStaffId()) + ")", textFieldSize);
         staffField.setEditable(false);
         JTextField levelField = new JTextField(level, textFieldSize);
         levelField.setEditable(false);
@@ -790,9 +776,9 @@ public class StaffTable extends BaseTable {
 
                 String name = "";
 
-                for (Customer c : Database.getCustomers()) {
+                for (Entity c : Database.getCustomers()) {
                     if (Database.getOrders().get(i).getTraderId() == c.getId()) {
-                        name = c.getCustomerName();
+                        name = ((Customer) c).getCustomerName();
                     }
                 }
 
