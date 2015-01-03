@@ -396,7 +396,7 @@ public class StaffTable extends BaseTable {
                                             .getSelectedIndex(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
                                             + dateAddedYear.getSelectedItem()));
 
-                    GuiCreator.setConfirmMessage("Staff member " + nameField.getText() + " added");
+                    GuiCreator.setConfirmationMessage("Staff member " + nameField.getText() + " added");
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.validate();
                     createTable();
@@ -585,7 +585,7 @@ public class StaffTable extends BaseTable {
                                             .getText()), staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/"
                                             + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
-                            GuiCreator.setConfirmMessage("Staff member " + nameField.getText() + "'s details editted");
+                            GuiCreator.setConfirmationMessage("Staff member " + nameField.getText() + "'s details editted");
                             GuiCreator.frame.remove(GuiCreator.leftPanel);
                             GuiCreator.frame.validate();
 
@@ -645,7 +645,7 @@ public class StaffTable extends BaseTable {
 
             if (i != -1) { // If an object has been found, we can now remove it
                            // from the ArrayList
-                GuiCreator.setConfirmMessage(staffName + " deleted");
+                GuiCreator.setConfirmationMessage(staffName + " deleted");
                 Database.getStaffMembers().remove(i);
             }
 

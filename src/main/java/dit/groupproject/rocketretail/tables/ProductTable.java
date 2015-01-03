@@ -145,8 +145,7 @@ public class ProductTable extends BaseTable {
             first = false;
         }
 
-        String[] columnNames = { "ID", "Description", "Stock Level", "Max Level", "Supplier ID", "Cost Price",
-                "Sale Price" };
+        String[] columnNames = { "ID", "Description", "Stock Level", "Max Level", "Supplier ID", "Cost Price", "Sale Price" };
         Object[][] data = new Object[Database.getProducts().size()][7];
 
         for (int i = 0; i < Database.getProducts().size(); i++) {
@@ -157,7 +156,6 @@ public class ProductTable extends BaseTable {
             data[i][4] = Database.getProducts().get(i).getSupplierId();
             data[i][5] = "€" + CURRENCY_FORMATTER.format(Database.getProducts().get(i).getCostPrice());
             data[i][6] = "€" + CURRENCY_FORMATTER.format(Database.getProducts().get(i).getSalePrice());
-            ;
         }
 
         final JTable table = new JTable(data, columnNames);
@@ -185,8 +183,7 @@ public class ProductTable extends BaseTable {
         productMemberArrayEdit[0] = "Edit Product";
         for (int i = 0; i < Database.getProducts().size() + 1; i++) {
             if (i < Database.getProducts().size())
-                productMemberArrayEdit[i + 1] = "ID: "
-                        + PRODUCT_ID_FORMATTER.format(Database.getProducts().get(i).getProductId()) + " ("
+                productMemberArrayEdit[i + 1] = "ID: " + PRODUCT_ID_FORMATTER.format(Database.getProducts().get(i).getProductId()) + " ("
                         + Database.getProducts().get(i).getProductDescription() + ")";
         }
 
@@ -194,8 +191,7 @@ public class ProductTable extends BaseTable {
         productMemberArrayDelete[0] = "Delete Product";
         for (int i = 0; i < Database.getProducts().size() + 1; i++) {
             if (i < Database.getProducts().size())
-                productMemberArrayDelete[i + 1] = "ID: "
-                        + PRODUCT_ID_FORMATTER.format(Database.getProducts().get(i).getProductId()) + " ("
+                productMemberArrayDelete[i + 1] = "ID: " + PRODUCT_ID_FORMATTER.format(Database.getProducts().get(i).getProductId()) + " ("
                         + Database.getProducts().get(i).getProductDescription() + ")";
         }
 
@@ -203,8 +199,7 @@ public class ProductTable extends BaseTable {
         final JComboBox<String> editBox = new JComboBox<String>(productMemberArrayEdit);
         final JComboBox<String> deleteBox = new JComboBox<String>(productMemberArrayDelete);
 
-        String[] options = { "Sort by...", "ID", "Description", "Stock Level", "Supplier ID", "Cost Price",
-                "Sale Price" };
+        String[] options = { "Sort by...", "ID", "Description", "Stock Level", "Supplier ID", "Cost Price", "Sale Price" };
         final JComboBox<String> sortOptions = new JComboBox<String>(options);
         int index = 0;
 
@@ -239,8 +234,7 @@ public class ProductTable extends BaseTable {
         deleteBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 delete(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9)),
-                        ((String) deleteBox.getSelectedItem()).substring(11,
-                                ((String) deleteBox.getSelectedItem()).length() - 1));
+                        ((String) deleteBox.getSelectedItem()).substring(11, ((String) deleteBox.getSelectedItem()).length() - 1));
             }
         });
 
@@ -346,8 +340,8 @@ public class ProductTable extends BaseTable {
 
         supplierOptions[0] = "";
         for (int i = 1; i < supplierOptions.length; i++) {
-            supplierOptions[i] = Database.getSuppliers().get(i - 1).getSupplierName() + " ("
-                    + Database.getSuppliers().get(i - 1).getSupplierId() + ")";
+            supplierOptions[i] = Database.getSuppliers().get(i - 1).getSupplierName() + " (" + Database.getSuppliers().get(i - 1).getSupplierId()
+                    + ")";
         }
 
         final JComboBox<String> suppIDBox = new JComboBox<String>(supplierOptions);
@@ -400,14 +394,12 @@ public class ProductTable extends BaseTable {
                 if (valid) {
 
                     Database.getProducts().add(
-                            new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
-                                    .parseInt(maxLevelField.getText()), Integer.parseInt(((String) suppIDBox
-                                    .getSelectedItem()).substring(((String) suppIDBox.getSelectedItem()).length() - 5,
-                                    ((String) suppIDBox.getSelectedItem()).length() - 1)), Double
-                                    .parseDouble(costPriceField.getText()),
-                                    Double.parseDouble(salePriceField.getText())));
+                            new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer.parseInt(maxLevelField
+                                    .getText()), Integer.parseInt(((String) suppIDBox.getSelectedItem()).substring(
+                                    ((String) suppIDBox.getSelectedItem()).length() - 5, ((String) suppIDBox.getSelectedItem()).length() - 1)),
+                                    Double.parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField.getText())));
 
-                    GuiCreator.setConfirmMessage("Product " + prodDescField.getText() + " added");
+                    GuiCreator.setConfirmationMessage("Product " + prodDescField.getText() + " added");
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
@@ -566,15 +558,14 @@ public class ProductTable extends BaseTable {
                             // Add the staff at this index
                             Database.getProducts().add(
                                     index,
-                                    new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()),
-                                            Integer.parseInt(maxLevelField.getText()), Integer
-                                                    .parseInt(((String) suppIDBox.getSelectedItem()).substring(
-                                                            ((String) suppIDBox.getSelectedItem()).length() - 5,
-                                                            ((String) suppIDBox.getSelectedItem()).length() - 1)),
-                                            Double.parseDouble(costPriceField.getText()), Double
-                                                    .parseDouble(salePriceField.getText())));
+                                    new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer.parseInt(maxLevelField
+                                            .getText()),
+                                            Integer.parseInt(((String) suppIDBox.getSelectedItem()).substring(
+                                                    ((String) suppIDBox.getSelectedItem()).length() - 5,
+                                                    ((String) suppIDBox.getSelectedItem()).length() - 1)), Double.parseDouble(costPriceField
+                                                    .getText()), Double.parseDouble(salePriceField.getText())));
 
-                            GuiCreator.setConfirmMessage("Product " + prodDescField.getText() + "'s details editted");
+                            GuiCreator.setConfirmationMessage("Product " + prodDescField.getText() + "'s details editted");
                             GuiCreator.frame.remove(GuiCreator.leftPanel);
                             GuiCreator.frame.repaint();
                             GuiCreator.frame.validate();
@@ -640,7 +631,7 @@ public class ProductTable extends BaseTable {
 
         if (i != -1) { // If an object has been found, we can now remove it from
                        // the ArrayList
-            GuiCreator.setConfirmMessage(productName + " deleted");
+            GuiCreator.setConfirmationMessage(productName + " deleted");
             Database.getProducts().remove(i);
         }
 
@@ -690,11 +681,9 @@ public class ProductTable extends BaseTable {
         JLabel saleLabel = new JLabel("Sale Price");
         JLabel profitLabel = new JLabel("Profit Per Unit");
 
-        productLabel
-                .setFont(new Font(productLabel.getFont().getFontName(), Font.BOLD, productLabel.getFont().getSize()));
+        productLabel.setFont(new Font(productLabel.getFont().getFontName(), Font.BOLD, productLabel.getFont().getSize()));
         stockLabel.setFont(new Font(stockLabel.getFont().getFontName(), Font.BOLD, stockLabel.getFont().getSize()));
-        supplierLabel.setFont(new Font(supplierLabel.getFont().getFontName(), Font.BOLD, supplierLabel.getFont()
-                .getSize()));
+        supplierLabel.setFont(new Font(supplierLabel.getFont().getFontName(), Font.BOLD, supplierLabel.getFont().getSize()));
         costLabel.setFont(new Font(costLabel.getFont().getFontName(), Font.BOLD, costLabel.getFont().getSize()));
         saleLabel.setFont(new Font(saleLabel.getFont().getFontName(), Font.BOLD, saleLabel.getFont().getSize()));
         profitLabel.setFont(new Font(profitLabel.getFont().getFontName(), Font.BOLD, profitLabel.getFont().getSize()));
@@ -707,8 +696,7 @@ public class ProductTable extends BaseTable {
                 supplier = s.getSupplierName() + " (" + s.getSupplierId() + ")";
         }
 
-        JTextField productField = new JTextField(p.getProductDescription() + " (" + p.getProductId() + ")",
-                textFieldSize);
+        JTextField productField = new JTextField(p.getProductDescription() + " (" + p.getProductId() + ")", textFieldSize);
         productField.setEditable(false);
         JTextField stockField = new JTextField(p.getStockLevel() + "/" + p.getMaxLevel(), textFieldSize);
         stockField.setEditable(false);
@@ -719,8 +707,7 @@ public class ProductTable extends BaseTable {
         costField.setEditable(false);
         JTextField saleField = new JTextField("€" + CURRENCY_FORMATTER.format(p.getSalePrice()), textFieldSize);
         saleField.setEditable(false);
-        JTextField profitField = new JTextField("€" + CURRENCY_FORMATTER.format(p.getSalePrice() - p.getCostPrice()),
-                textFieldSize);
+        JTextField profitField = new JTextField("€" + CURRENCY_FORMATTER.format(p.getSalePrice() - p.getCostPrice()), textFieldSize);
         profitField.setEditable(false);
 
         GridBagConstraints g = new GridBagConstraints();
@@ -782,11 +769,9 @@ public class ProductTable extends BaseTable {
                 }
                 data[i + 1][0] = (i + YEAR_START);
                 if ((int) data[i + 1][1] - (int) data[i + 1][2] > 0)
-                    data[i + 1][3] = "<html><b><font color=\"blue\">" + ((int) data[i + 1][1] - (int) data[i + 1][2])
-                            + "</font></b></html>";
+                    data[i + 1][3] = "<html><b><font color=\"blue\">" + ((int) data[i + 1][1] - (int) data[i + 1][2]) + "</font></b></html>";
                 else if ((int) data[i + 1][1] - (int) data[i + 1][2] < 0)
-                    data[i + 1][3] = "<html><b><font color=\"red\">" + ((int) data[i + 1][1] - (int) data[i + 1][2])
-                            + "</font></b></html>";
+                    data[i + 1][3] = "<html><b><font color=\"red\">" + ((int) data[i + 1][1] - (int) data[i + 1][2]) + "</font></b></html>";
             }
         }
 

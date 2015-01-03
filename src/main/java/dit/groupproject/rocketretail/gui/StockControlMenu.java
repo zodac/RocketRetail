@@ -110,7 +110,7 @@ public class StockControlMenu {
                     if (replenishBox.getSelectedIndex() == 4)
                         StockControlUtilities.replenishStocks(new Double(100.00), productsToReplenish);
 
-                    GuiCreator.setConfirmMessage("Products replensihed to " + (replenishBox.getSelectedIndex() * 25)
+                    GuiCreator.setConfirmationMessage("Products replensihed to " + (replenishBox.getSelectedIndex() * 25)
                             + "%");
                     replenishBox.setSelectedIndex(0);
                     replenishBox.setEnabled(false);

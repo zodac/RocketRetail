@@ -98,7 +98,7 @@ public abstract class BaseTable {
         valid = validateDateBoxes(addedBoxes, lastPurchaseBoxes, valid, errorBorder, validBorder);
 
         if (!valid) {
-            GuiCreator.setConfirmMessage("Invalid entry!");
+            GuiCreator.setConfirmationMessage("Invalid entry!");
         }
 
         return valid;

@@ -23,125 +23,15 @@ public class MainMenu {
      * to menuBar
      */
     public static JMenu createMenu() {
-        JMenuItem logout = new JMenuItem("Logout");
-        logout.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.setTitle("Rocket Retail Inc");
-                LoginHandler.logout();
-            }
-        });
-        JMenuItem resetArrays = new JMenuItem("Reset Arrays");
-        resetArrays.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Database.initialiseDatabase();
-                GuiCreator.frame.setTitle("Rocket Retail Inc");
-                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
-                    StaffTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
-                    ProductTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
-                    CustomerTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
-                    SupplierTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
-                    OrderTable.createTable();
-                }
-            }
-        });
-        JMenuItem generateOrdersOne = new JMenuItem("1 Order");
-        generateOrdersOne.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                InitialiseArray.generateOrders(1, true, true);
-                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
-                    StaffTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
-                    ProductTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
-                    CustomerTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
-                    SupplierTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
-                    OrderTable.first = true;
-                    OrderTable.createTable();
-                }
+        final JMenu clearMenu = createClearMenu();
+        final JMenu generateOrderMenu = createGenerateOrdersMenu();
+        final JMenu mainMenu = createMainMenu(clearMenu, generateOrderMenu);
 
-                if (GuiCreator.rightPanel.getComponentCount() > 0) {
-                    GuiCreator.rightPanel.validate();
-                    GuiCreator.frame.validate();
-                }
-            }
-        });
-        JMenuItem generateOrdersFive = new JMenuItem("5 Orders");
-        generateOrdersFive.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                InitialiseArray.generateOrders(5, true, true);
-                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
-                    StaffTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
-                    ProductTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
-                    CustomerTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
-                    SupplierTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
-                    OrderTable.first = true;
-                    OrderTable.createTable();
-                }
+        return mainMenu;
+    }
 
-                if (GuiCreator.rightPanel.getComponentCount() > 0) {
-                    GuiCreator.rightPanel.validate();
-                    GuiCreator.frame.validate();
-                }
-            }
-        });
-        JMenuItem generateOrdersTen = new JMenuItem("10 Orders");
-        generateOrdersTen.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                InitialiseArray.generateOrders(10, true, true);
-                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
-                    StaffTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
-                    ProductTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
-                    CustomerTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
-                    SupplierTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
-                    OrderTable.first = true;
-                    OrderTable.createTable();
-                }
-
-                if (GuiCreator.rightPanel.getComponentCount() > 0) {
-                    GuiCreator.rightPanel.validate();
-                    GuiCreator.frame.validate();
-                }
-            }
-        });
-        JMenuItem generateOrdersRandom = new JMenuItem("Random Orders");
-        generateOrdersRandom.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                InitialiseArray.generateOrders(0, true, true);
-                if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
-                    StaffTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
-                    ProductTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
-                    CustomerTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
-                    SupplierTable.createTable();
-                } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
-                    OrderTable.first = true;
-                    OrderTable.createTable();
-                }
-
-                if (GuiCreator.rightPanel.getComponentCount() > 0) {
-                    GuiCreator.rightPanel.validate();
-                    GuiCreator.frame.validate();
-                }
-            }
-        });
-
-        JMenuItem clearAll = new JMenuItem("Clear All");
+    private static JMenu createClearMenu() {
+        final JMenuItem clearAll = new JMenuItem("Clear All");
         clearAll.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -155,26 +45,26 @@ public class MainMenu {
                 CustomerTable.first = true;
                 SupplierTable.first = true;
 
-                HomeScreen.setScreen();
+                HomeScreen.setHomeScreen();
                 GuiCreator.frame.setTitle("Rocket Retail Inc");
                 GuiCreator.frame.validate();
             }
         });
-        JMenuItem clearLeft = new JMenuItem("Clear Left Panel");
+        final JMenuItem clearLeft = new JMenuItem("Clear Left Panel");
         clearLeft.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 GuiCreator.frame.remove(GuiCreator.leftPanel);
                 GuiCreator.frame.validate();
             }
         });
-        JMenuItem clearRight = new JMenuItem("Clear Right Panel");
+        final JMenuItem clearRight = new JMenuItem("Clear Right Panel");
         clearRight.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 GuiCreator.frame.remove(GuiCreator.rightPanel);
                 GuiCreator.frame.validate();
             }
         });
-        JMenuItem clearCenter = new JMenuItem("Clear Center Panel");
+        final JMenuItem clearCenter = new JMenuItem("Clear Center Panel");
         clearCenter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 GuiCreator.frame.remove(GuiCreator.mainPanel);
@@ -184,30 +74,86 @@ public class MainMenu {
                 CustomerTable.first = true;
                 GuiCreator.frame.setTitle("Rocket Retail Inc");
 
-                HomeScreen.setScreen();
+                HomeScreen.setHomeScreen();
             }
         });
-        JMenuItem closeProgram = new JMenuItem("Close Program");
+
+        final JMenu clearMenu = new JMenu("Clear Screen");
+        clearMenu.add(clearAll);
+        clearMenu.add(clearLeft);
+        clearMenu.add(clearRight);
+        clearMenu.add(clearCenter);
+
+        return clearMenu;
+    }
+
+    private static JMenu createGenerateOrdersMenu() {
+        final JMenuItem generateOrdersOne = new JMenuItem("1 Order");
+        generateOrdersOne.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                InitialiseArray.generateOrders(1, true, true);
+                createCurrentTable();
+                clearRightPanel();
+            }
+        });
+        final JMenuItem generateOrdersFive = new JMenuItem("5 Orders");
+        generateOrdersFive.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                InitialiseArray.generateOrders(5, true, true);
+                createCurrentTable();
+                clearRightPanel();
+            }
+        });
+        final JMenuItem generateOrdersTen = new JMenuItem("10 Orders");
+        generateOrdersTen.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                InitialiseArray.generateOrders(10, true, true);
+                createCurrentTable();
+                clearRightPanel();
+            }
+        });
+        final JMenuItem generateOrdersRandom = new JMenuItem("Random Orders");
+        generateOrdersRandom.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                InitialiseArray.generateOrders(0, true, true);
+                createCurrentTable();
+                clearRightPanel();
+            }
+        });
+
+        final JMenu generateOrderMenu = new JMenu("Generate Orders");
+        generateOrderMenu.add(generateOrdersOne);
+        generateOrderMenu.add(generateOrdersFive);
+        generateOrderMenu.add(generateOrdersTen);
+        generateOrderMenu.add(generateOrdersRandom);
+
+        return generateOrderMenu;
+    }
+
+    private static JMenu createMainMenu(final JMenu clearMenu, final JMenu generateOrderMenu) {
+        final JMenuItem resetArrays = new JMenuItem("Reset Arrays");
+        resetArrays.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Database.initialiseDatabase();
+                GuiCreator.frame.setTitle("Rocket Retail Inc");
+                createCurrentTable();
+            }
+        });
+        final JMenuItem logout = new JMenuItem("Logout");
+        logout.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiCreator.frame.setTitle("Rocket Retail Inc");
+                LoginHandler.logout();
+            }
+        });
+        final JMenuItem closeProgram = new JMenuItem("Close Program");
         closeProgram.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
 
-        // Add JMenuItems to JMenu, then add to menuBar
-        JMenu clearMenu = new JMenu("Clear Screen");
-        clearMenu.add(clearAll);
-        clearMenu.add(clearLeft);
-        clearMenu.add(clearRight);
-        clearMenu.add(clearCenter);
-
-        JMenu generateOrderMenu = new JMenu("Generate Orders");
-        generateOrderMenu.add(generateOrdersOne);
-        generateOrderMenu.add(generateOrdersFive);
-        generateOrderMenu.add(generateOrdersTen);
-        generateOrderMenu.add(generateOrdersRandom);
-
-        JMenu mainMenu = new JMenu("Main Menu");
+        final JMenu mainMenu = new JMenu("Main Menu");
         mainMenu.add(clearMenu);
         mainMenu.add(generateOrderMenu);
         mainMenu.add(resetArrays);
@@ -215,5 +161,27 @@ public class MainMenu {
         mainMenu.add(closeProgram);
 
         return mainMenu;
+    }
+
+    private static void clearRightPanel() {
+        if (GuiCreator.rightPanel.getComponentCount() > 0) {
+            GuiCreator.rightPanel.validate();
+            GuiCreator.frame.validate();
+        }
+    }
+
+    private static void createCurrentTable() {
+        if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
+            StaffTable.createTable();
+        } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
+            ProductTable.createTable();
+        } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
+            CustomerTable.createTable();
+        } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
+            SupplierTable.createTable();
+        } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
+            OrderTable.first = true;
+            OrderTable.createTable();
+        }
     }
 }

@@ -329,7 +329,7 @@ public class CustomerTable extends BaseTable {
                             lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/" + lastPurchaseYear.getSelectedItem(),
                             dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
-                    GuiCreator.setConfirmMessage("Customer " + custNameField.getText() + " added");
+                    GuiCreator.setConfirmationMessage("Customer " + custNameField.getText() + " added");
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
@@ -507,7 +507,7 @@ public class CustomerTable extends BaseTable {
                     editedCustomer.setId(index + IdManager.CUSTOMER_ID_START);
                     Database.addCustomerByIndex(index, editedCustomer);
 
-                    GuiCreator.setConfirmMessage("Customer " + custNameField.getText() + "'s details editted");
+                    GuiCreator.setConfirmationMessage("Customer " + custNameField.getText() + "'s details editted");
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
@@ -551,7 +551,7 @@ public class CustomerTable extends BaseTable {
         }
 
         if (indexToRemove != -1) {
-            GuiCreator.setConfirmMessage(customerName + " deleted");
+            GuiCreator.setConfirmationMessage(customerName + " deleted");
             Database.removeCustomerByIndex(indexToRemove);
         }
 

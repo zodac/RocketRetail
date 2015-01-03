@@ -50,9 +50,8 @@ public class GuiCreator {
     public static void createGui() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-                | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            System.out.println("Error loading Windows theme!");
         }
 
         frame.setSize(1150, 700);
@@ -62,19 +61,17 @@ public class GuiCreator {
         headerPanel.setPreferredSize(new Dimension(750, 60));
 
         try {
-            JLabel headerLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader
-                    .getSystemResource("images/rocketRetail.png"))));
+            final JLabel headerLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/rocketRetail.png"))));
             headerPanel.add(headerLabel, BorderLayout.CENTER);
         } catch (IOException e) {
-            System.out.println("Error loading heading banner.");
+            System.out.println("Error loading heading banner!");
         }
 
         bottomPanel = new JPanel();
         bottomPanel.setPreferredSize(new Dimension(750, 30));
         bottomPanel.setBackground(BACKGROUND_COLOUR);
         confirmationLabel = new JLabel();
-        confirmationLabel.setFont(new Font(confirmationLabel.getFont().getFontName(), Font.BOLD, confirmationLabel
-                .getFont().getSize()));
+        confirmationLabel.setFont(new Font(confirmationLabel.getFont().getFontName(), Font.BOLD, confirmationLabel.getFont().getSize()));
         bottomPanel.add(confirmationLabel);
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -92,13 +89,13 @@ public class GuiCreator {
                 GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDefaultConfiguration());
         int maxWidth = (frame.getToolkit().getScreenSize().width - i.left - i.right);
         int maxHeight = (frame.getToolkit().getScreenSize().height - i.top - i.bottom);
-        frame.setLocation((int) ((maxWidth - frame.getWidth()) / 2), (int) ((maxHeight - frame.getHeight()) / 2));
+        frame.setLocation(((maxWidth - frame.getWidth()) / 2), ((maxHeight - frame.getHeight()) / 2));
     }
 
     public static void showGui(JMenuBar menuBar) {
-        frame.setJMenuBar(menuBar); // Add menuBar to frame
+        frame.setJMenuBar(menuBar);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true); // Show frame
+        frame.setVisible(true);
     }
 
     /**
@@ -109,16 +106,16 @@ public class GuiCreator {
      * @param title
      *            a String holding the message to display on-screen
      */
-    public static void setConfirmMessage(String title) {
+    public static void setConfirmationMessage(final String title) {
         confirmationLabel.setText(title);
-        Timer t = new Timer(4000, new ActionListener() {
+        Timer confirmationTimer = new Timer(4000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 confirmationLabel.setText("");
             }
         });
-        t.setRepeats(false);
-        t.start();
+        confirmationTimer.setRepeats(false);
+        confirmationTimer.start();
     }
 
     /**

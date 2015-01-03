@@ -55,7 +55,7 @@ public class LoginHandler {
                         found = true;
                     }
                 } catch (IllegalArgumentException e) {
-
+                    System.out.println("Invalid staff ID!");
                 }
             } else {
                 System.exit(0);
@@ -64,8 +64,7 @@ public class LoginHandler {
         }
 
         if (!found) {
-            JOptionPane.showMessageDialog(null, "Too many incorrect logon attempts!", "Logon Fail",
-                    JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Too many incorrect logon attempts!", "Logon Fail", JOptionPane.PLAIN_MESSAGE);
             System.exit(0);
         }
 
@@ -73,8 +72,7 @@ public class LoginHandler {
     }
 
     private static int showDialog(final String title, final JPanel myPanel) {
-        return JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE, null);
+        return JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
     }
 
     private static boolean hasValidLogonCredentials(final Staff staff, final int inputPin) {
@@ -99,7 +97,7 @@ public class LoginHandler {
      * 
      * @see #logon()
      * @see MenuGUI#createMenuBar(JMenuBar, boolean)
-     * @see HomeScreen#setScreen()
+     * @see HomeScreen#setHomeScreen()
      * @see #showGui(JMenuBar)
      */
     public static void launchGui() {
@@ -108,7 +106,7 @@ public class LoginHandler {
 
         JMenuBar menuBar = new JMenuBar();
         MenuGUI.createMenuBar(menuBar, manager);
-        HomeScreen.setScreen();
+        HomeScreen.setHomeScreen();
         GuiCreator.showGui(menuBar);
     }
 }

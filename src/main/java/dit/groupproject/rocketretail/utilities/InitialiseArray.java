@@ -266,7 +266,7 @@ public class InitialiseArray {
         output.append((loops == 50) ? " - stock levels getting low" : "");
 
         if (confirm) {
-            GuiCreator.setConfirmMessage(output.toString());
+            GuiCreator.setConfirmationMessage(output.toString());
         }
     }
 }

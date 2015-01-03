@@ -480,7 +480,7 @@ public class OrderTable extends BaseTable {
                                 count++;
                             }
                         }
-                        GuiCreator.setConfirmMessage(count + " orders completed");
+                        GuiCreator.setConfirmationMessage(count + " orders completed");
                         createTable();
                     }
                 } else if (completeOptions.getSelectedItem().equals("Complete All Customer Orders")) {
@@ -496,7 +496,7 @@ public class OrderTable extends BaseTable {
                                 count++;
                             }
                         }
-                        GuiCreator.setConfirmMessage(count + " orders completed");
+                        GuiCreator.setConfirmationMessage(count + " orders completed");
                         createTable();
                     }
 
@@ -513,7 +513,7 @@ public class OrderTable extends BaseTable {
                                 count++;
                             }
                         }
-                        GuiCreator.setConfirmMessage(count + " orders completed");
+                        GuiCreator.setConfirmationMessage(count + " orders completed");
                         createTable();
                     }
                 } else
@@ -711,7 +711,7 @@ public class OrderTable extends BaseTable {
                                         }
                                     }
                                 }
-                                GuiCreator.setConfirmMessage("Order #"
+                                GuiCreator.setConfirmationMessage("Order #"
                                         + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getOrderId())
                                         + " created for customer \"" + activeCustomer.getCustomerName() + "\"");
 
@@ -942,7 +942,7 @@ public class OrderTable extends BaseTable {
 
                                 }
 
-                                GuiCreator.setConfirmMessage("Order #"
+                                GuiCreator.setConfirmationMessage("Order #"
                                         + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getOrderId())
                                         + " created for supplier \"" + activeSupp.getSupplierName() + "\"");
 
@@ -1038,7 +1038,7 @@ public class OrderTable extends BaseTable {
                 }
 
             }
-            GuiCreator.setConfirmMessage("Order #" + orderId + " completed");
+            GuiCreator.setConfirmationMessage("Order #" + orderId + " completed");
         }
 
         GuiCreator.frame.remove(GuiCreator.leftPanel);

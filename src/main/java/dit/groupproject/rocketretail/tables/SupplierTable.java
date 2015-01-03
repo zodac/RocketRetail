@@ -424,7 +424,7 @@ public class SupplierTable extends BaseTable {
                                             + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/"
                                             + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
-                    GuiCreator.setConfirmMessage("New Supplier \"" + suppNameField.getText() + "\" added");
+                    GuiCreator.setConfirmationMessage("New Supplier \"" + suppNameField.getText() + "\" added");
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
@@ -623,7 +623,7 @@ public class SupplierTable extends BaseTable {
                                                     + "/"
                                                     + dateAddedYear.getSelectedItem()));
 
-                            GuiCreator.setConfirmMessage("Supplier \"" + suppNameField.getText() + "'s details editted");
+                            GuiCreator.setConfirmationMessage("Supplier \"" + suppNameField.getText() + "'s details editted");
                             GuiCreator.frame.remove(GuiCreator.leftPanel);
                             GuiCreator.frame.validate();
                             Database.getSuppliers().remove(index + 1);
@@ -684,7 +684,7 @@ public class SupplierTable extends BaseTable {
         if (i != -1) { // If an object has been found, we can now remove it from
                        // the ArrayList
             Database.getSuppliers().remove(i);
-            GuiCreator.setConfirmMessage(supplierName + " deleted");
+            GuiCreator.setConfirmationMessage(supplierName + " deleted");
         }
 
         // Update GuiCreator.frame
