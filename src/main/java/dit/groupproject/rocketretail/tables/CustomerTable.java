@@ -3,8 +3,6 @@ package dit.groupproject.rocketretail.tables;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,10 +18,6 @@ import javax.swing.JTable;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Entity;
-import dit.groupproject.rocketretail.entityhelpers.AddEntityHelper;
-import dit.groupproject.rocketretail.entityhelpers.DeleteEntityHelper;
-import dit.groupproject.rocketretail.entityhelpers.EditEntityHelper;
-import dit.groupproject.rocketretail.entityhelpers.ViewEntityHelper;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
@@ -79,7 +73,6 @@ public class CustomerTable extends BaseTable {
         }
 
         final String[] customerColumnNames = { "ID", "Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
-
         final Object[][] data = createTableData(Database.getCustomers());
         final JTable table = createTable(data, customerColumnNames);
         final JPanel buttonPanel = createButtonPanel();
@@ -90,24 +83,6 @@ public class CustomerTable extends BaseTable {
         GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
         GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
         GuiCreator.setFrame(false, false, true);
-    }
-
-    private static JTable createTable(final Object[][] data, final String[] columnNames) {
-        final JTable table = new JTable(data, columnNames);
-        table.setColumnSelectionAllowed(false);
-        table.setFillsViewportHeight(true);
-
-        table.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                if (table.getSelectedRow() >= 0) {
-                    final int selectedId = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0));
-
-                    final Customer customer = (Customer) Database.getCustomerById(selectedId);
-                    ViewEntityHelper.viewCustomerInfo(customer);
-                }
-            }
-        });
-        return table;
     }
 
     private static JPanel createButtonPanel() {
@@ -157,40 +132,6 @@ public class CustomerTable extends BaseTable {
         buttonPanel.add(deleteSelection);
         buttonPanel.add(sortOptions);
         return buttonPanel;
-    }
-
-    private static JButton createAddButton(final String addButtonTitle) {
-        final JButton addButton = new JButton(addButtonTitle);
-
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                AddEntityHelper.addCustomerPanel();
-            }
-        });
-        return addButton;
-    }
-
-    private static JComboBox<String> createEditBox(final String[] itemsToEdit) {
-        final JComboBox<String> editBox = new JComboBox<String>(itemsToEdit);
-
-        editBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                EditEntityHelper.editCustomerPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 9)));
-            }
-        });
-        return editBox;
-    }
-
-    private static JComboBox<String> createDeleteBox(final String[] itemsToDelete) {
-        final JComboBox<String> deleteBox = new JComboBox<String>(itemsToDelete);
-
-        deleteBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                DeleteEntityHelper.deleteCustomer(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9)),
-                        ((String) deleteBox.getSelectedItem()).substring(11, ((String) deleteBox.getSelectedItem()).length() - 1));
-            }
-        });
-        return deleteBox;
     }
 
     private static void resetGui() {

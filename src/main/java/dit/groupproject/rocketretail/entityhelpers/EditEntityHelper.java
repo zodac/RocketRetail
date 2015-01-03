@@ -23,9 +23,39 @@ import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
 
 public class EditEntityHelper extends EntityHelper {
+
+    /**
+     * Returns an ActionListener which adds an Entity edit panel to the left
+     * side of the GUI screen.
+     * <p>
+     * Checks the current table state of the system to determine which Entity
+     * table to use.
+     */
+    public static ActionListener editEntityPanel(final JComboBox<String> editBox) {
+        final TableState currentState = ShopDriver.getCurrentTableState();
+
+        if (currentState == TableState.CUSTOMER) {
+            return new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    EditEntityHelper.editCustomerPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 9)));
+                }
+            };
+        } else if (currentState == TableState.ORDER) {
+
+        } else if (currentState == TableState.PRODUCT) {
+
+        } else if (currentState == TableState.STAFF) {
+
+        } else if (currentState == TableState.SUPPLIER) {
+
+        }
+        throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
+    }
 
     /**
      * This method builds a form for updating a <code>Customer</code>'s details.

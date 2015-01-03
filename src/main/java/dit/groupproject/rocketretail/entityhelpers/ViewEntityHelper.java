@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -20,6 +22,8 @@ import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
 
 public class ViewEntityHelper extends EntityHelper {
@@ -27,14 +31,39 @@ public class ViewEntityHelper extends EntityHelper {
     private final static String[] ORDER_COLUMN_NAMES_FROM_CUSTOMER_TABLE = { "Order ID", "Order Date", "Delivery Date", "Total Cost" };
 
     /**
-     * When a user clicks on a <code>Customer</code> in the customer table, the
-     * <code>Customer</code>'s details are brought up and a table is built
-     * showing the orders that they have made.
-     * 
-     * @param customer
-     *            Takes in a <code>Customer</code>'s details.
+     * Returns a MouseAdapter which opens a subtable with additonal Entity
+     * information.
+     * <p>
+     * Checks the current table state of the system to determine which Entity
+     * table to use.
      */
-    public static void viewCustomerInfo(Customer customer) {
+    public static MouseAdapter viewEntityTable(final JTable entitySubTable) {
+        final TableState currentState = ShopDriver.getCurrentTableState();
+
+        if (currentState == TableState.CUSTOMER) {
+            return new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (entitySubTable.getSelectedRow() >= 0) {
+                        final int selectedId = Integer.parseInt((String) entitySubTable.getValueAt(entitySubTable.getSelectedRow(), 0));
+
+                        final Customer customer = (Customer) Database.getCustomerById(selectedId);
+                        ViewEntityHelper.viewCustomerInfo(customer);
+                    }
+                }
+            };
+        } else if (currentState == TableState.ORDER) {
+
+        } else if (currentState == TableState.PRODUCT) {
+
+        } else if (currentState == TableState.STAFF) {
+
+        } else if (currentState == TableState.SUPPLIER) {
+
+        }
+        throw new IllegalArgumentException("No sub-table available for current table state [" + currentState.toString() + "]!");
+    }
+
+    private static void viewCustomerInfo(Customer customer) {
         final String customerName = customer.getCustomerName();
 
         GuiCreator.frame.remove(GuiCreator.mainPanel);
