@@ -1,10 +1,6 @@
 package dit.groupproject.rocketretail.tables;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -16,20 +12,18 @@ import java.util.Comparator;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Entity;
-import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entityhelpers.AddEntityHelper;
 import dit.groupproject.rocketretail.entityhelpers.DeleteEntityHelper;
 import dit.groupproject.rocketretail.entityhelpers.EditEntityHelper;
+import dit.groupproject.rocketretail.entityhelpers.ViewEntityHelper;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
@@ -42,8 +36,6 @@ import dit.groupproject.rocketretail.main.TableState;
 public class CustomerTable extends BaseTable {
 
     public static boolean first = true;
-
-    private final static String[] ORDER_COLUMN_NAMES = { "Order ID", "Order Date", "Delivery Date", "Total Cost" };
     private final static String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
 
     private static String sortType = "Sort by...";
@@ -111,7 +103,7 @@ public class CustomerTable extends BaseTable {
                     final int selectedId = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0));
 
                     final Customer customer = (Customer) Database.getCustomerById(selectedId);
-                    showCustomerInfo(customer);
+                    ViewEntityHelper.viewCustomerInfo(customer);
                 }
             }
         });
@@ -206,137 +198,6 @@ public class CustomerTable extends BaseTable {
         GuiCreator.frame.setTitle("Rocket Retail Inc - " + ShopDriver.getCurrentTableState().toString());
         GuiCreator.frame.repaint();
         GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
-    }
-
-    /**
-     * When a user clicks on a <code>Customer</code> in the customer table, the
-     * <code>Customer</code>'s details are brought up and a table is built
-     * showing the orders that they have made.
-     * 
-     * @param customer
-     *            Takes in a <code>Customer</code>'s details.
-     */
-    public static void showCustomerInfo(Customer customer) {
-
-        final String customerName = customer.getCustomerName();
-
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - " + customerName);
-        GuiCreator.frame.repaint();
-        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
-
-        final JPanel titlePanel = new JPanel(new GridBagLayout());
-        final JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
-        final JPanel buttonPanel = new JPanel();
-        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-
-        final JLabel customerLabel = new JLabel("Customer");
-        final JLabel vatNumberLabel = new JLabel("VAT Number");
-        final JLabel phoneNoLabel = new JLabel("Phone Number");
-        final JLabel addressLabel = new JLabel("Address");
-        final JLabel dateAddedLabel = new JLabel("Date Added");
-        final JLabel titleLabel = new JLabel("Sales to " + customerName);
-
-        final Font currentFont = new JLabel().getFont();
-        final Font labelFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
-
-        customerLabel.setFont(labelFont);
-        vatNumberLabel.setFont(labelFont);
-        phoneNoLabel.setFont(labelFont);
-        addressLabel.setFont(labelFont);
-        dateAddedLabel.setFont(labelFont);
-        titleLabel.setFont(labelFont);
-
-        final int textFieldSize = 20;
-
-        final JTextField customerField = new JTextField(customerName + " (" + CUSTOMER_ID_FORMATTER.format(customer.getId()) + ")", textFieldSize);
-        customerField.setEditable(false);
-        JTextField vatNumberField = new JTextField(customer.getVatNumber(), textFieldSize);
-        vatNumberField.setEditable(false);
-
-        JTextField phoneNoField = new JTextField(customer.getPhoneNumber(), textFieldSize);
-        phoneNoField.setEditable(false);
-        JTextField addressField = new JTextField(customer.getAddress(), textFieldSize);
-        addressField.setEditable(false);
-        JTextField dateAddedField = new JTextField(customer.getDateAdded(), textFieldSize);
-        dateAddedField.setEditable(false);
-
-        GridBagConstraints g = new GridBagConstraints();
-        g.insets = new Insets(1, 10, 0, 5);
-        titlePanel.add(customerLabel, g);
-        g.gridx = 1;
-        titlePanel.add(customerField, g);
-        g.gridx = 4;
-        titlePanel.add(vatNumberLabel, g);
-        g.gridx = 5;
-        titlePanel.add(vatNumberField, g);
-
-        g.gridy = 1;
-        g.gridx = 0;
-        titlePanel.add(phoneNoLabel, g);
-        g.gridx = 1;
-        titlePanel.add(phoneNoField, g);
-        g.gridx = 2;
-        titlePanel.add(addressLabel, g);
-        g.gridx = 3;
-        titlePanel.add(addressField, g);
-        g.gridx = 4;
-        titlePanel.add(dateAddedLabel, g);
-        g.gridx = 5;
-        titlePanel.add(dateAddedField, g);
-
-        g.gridy = 2;
-        g.gridx = 2;
-        g.gridwidth = 2;
-        titlePanel.add(titleLabel, g);
-
-        ArrayList<Order> customerOrders = new ArrayList<>();
-
-        for (final Order order : Database.getOrders()) {
-            if (order.getTraderId() == customer.getId()) {
-                customerOrders.add(order);
-            }
-        }
-        final int numberOfCustomerOrders = customerOrders.size();
-
-        final Object[][] data = new Object[numberOfCustomerOrders + 1][4];
-        int indexArray = 0;
-        double total = 0;
-
-        for (final Order customerOrder : customerOrders) {
-            data[indexArray][0] = ORDER_ID_FORMATTER.format(customerOrder.getOrderId());
-            data[indexArray][1] = customerOrder.getOrderDate();
-            data[indexArray][2] = customerOrder.getDeliveryDate();
-            data[indexArray++][3] = "€" + CURRENCY_FORMATTER.format(customerOrder.getTotalSale());
-            total += customerOrder.getTotalSale();
-        }
-
-        data[numberOfCustomerOrders][2] = "<html><b>Total Sales</b></html>";
-        data[numberOfCustomerOrders][3] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
-
-        final JTable table = new JTable(data, ORDER_COLUMN_NAMES);
-        table.setFillsViewportHeight(true);
-        table.setEnabled(false);
-
-        final JScrollPane scrollPane = new JScrollPane(table);
-        innerPanel.add(scrollPane, BorderLayout.CENTER);
-
-        final JButton backButton = new JButton("Back to Customers");
-        backButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                createTable();
-            }
-        });
-
-        buttonPanel.add(backButton);
-        innerPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
-        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
-
-        GuiCreator.setFrame(false, false, true);
     }
 
     public static void sortItems() {
