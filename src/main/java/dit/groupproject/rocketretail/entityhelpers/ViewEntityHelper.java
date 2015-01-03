@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -23,13 +22,9 @@ import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.tables.CustomerTable;
 
-public class ViewEntityHelper {
+public class ViewEntityHelper extends EntityHelper {
 
     private final static String[] ORDER_COLUMN_NAMES_FROM_CUSTOMER_TABLE = { "Order ID", "Order Date", "Delivery Date", "Total Cost" };
-
-    private final static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("#,###,#00.00");
-    private final static DecimalFormat CUSTOMER_ID_FORMATTER = new DecimalFormat("00000");
-    private final static DecimalFormat ORDER_ID_FORMATTER = new DecimalFormat("0000");
 
     /**
      * When a user clicks on a <code>Customer</code> in the customer table, the

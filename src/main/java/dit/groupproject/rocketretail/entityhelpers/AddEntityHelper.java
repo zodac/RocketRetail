@@ -28,7 +28,7 @@ import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.tables.CustomerTable;
 
-public class AddEntityHelper {
+public class AddEntityHelper extends EntityHelper {
 
     /**
      * This method builds a form for adding a <code>Customer</code>. It also has

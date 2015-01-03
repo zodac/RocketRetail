@@ -9,7 +9,7 @@ import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.tables.CustomerTable;
 
-public class DeleteEntityHelper {
+public class DeleteEntityHelper extends EntityHelper {
     /**
      * This method shows a dialog box asking a user if they want to delete a
      * <code>Customer</code>. This method also has logic to remove the
