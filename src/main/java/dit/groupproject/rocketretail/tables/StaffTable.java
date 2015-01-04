@@ -813,9 +813,9 @@ public class StaffTable extends BaseTable {
 
                 String name = "";
 
-                for (Supplier supp : Database.getSuppliers()) {
-                    if (Database.getOrders().get(i).getTraderId() == supp.getSupplierId())
-                        name = supp.getSupplierName();
+                for (Entity supp : Database.getSuppliers()) {
+                    if (Database.getOrders().get(i).getTraderId() == supp.getId())
+                        name = ((Supplier) supp).getSupplierName();
                 }
 
                 data2[arrayIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());

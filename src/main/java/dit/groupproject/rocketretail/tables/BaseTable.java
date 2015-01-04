@@ -1,5 +1,6 @@
 package dit.groupproject.rocketretail.tables;
 
+import java.awt.BorderLayout;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -46,6 +47,13 @@ public abstract class BaseTable {
             GuiCreator.frame.remove(GuiCreator.leftPanel);
         }
         ShopDriver.setCurrentTable(newState);
+    }
+
+    protected static void resetGui() {
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + ShopDriver.getCurrentTableState().toString());
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
     }
 
     protected static JButton createAddButton(final String addButtonTitle) {

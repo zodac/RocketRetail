@@ -31,6 +31,7 @@ import javax.swing.JTextField;
 import org.jfree.chart.ChartPanel;
 
 import dit.groupproject.rocketretail.database.Database;
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
@@ -341,8 +342,8 @@ public class ProductTable extends BaseTable {
 
         supplierOptions[0] = "";
         for (int i = 1; i < supplierOptions.length; i++) {
-            supplierOptions[i] = Database.getSuppliers().get(i - 1).getSupplierName() + " (" + Database.getSuppliers().get(i - 1).getSupplierId()
-                    + ")";
+            supplierOptions[i] = ((Supplier) Database.getSuppliers().get(i - 1)).getSupplierName() + " ("
+                    + Database.getSuppliers().get(i - 1).getId() + ")";
         }
 
         final JComboBox<String> suppIDBox = new JComboBox<String>(supplierOptions);
@@ -496,8 +497,8 @@ public class ProductTable extends BaseTable {
 
                 supplierOptions[0] = "";
                 for (int i = 1; i < supplierOptions.length; i++) {
-                    supplierOptions[i] = Database.getSuppliers().get(i - 1).getSupplierName() + " ("
-                            + Database.getSuppliers().get(i - 1).getSupplierId() + ")";
+                    supplierOptions[i] = ((Supplier) Database.getSuppliers().get(i - 1)).getSupplierName() + " ("
+                            + Database.getSuppliers().get(i - 1).getId() + ")";
                 }
                 final JComboBox<String> suppIDBox = new JComboBox<String>(supplierOptions);
                 innerPanel.add(suppIDBox, g);
@@ -690,12 +691,9 @@ public class ProductTable extends BaseTable {
         profitLabel.setFont(new Font(profitLabel.getFont().getFontName(), Font.BOLD, profitLabel.getFont().getSize()));
 
         int textFieldSize = 20;
-        String supplier = "";
 
-        for (Supplier s : Database.getSuppliers()) {
-            if (s.getSupplierId() == p.getSupplierId())
-                supplier = s.getSupplierName() + " (" + s.getSupplierId() + ")";
-        }
+        final Entity productSupplier = Database.getSupplierById(p.getSupplierId());
+        final String supplier = ((Supplier) productSupplier).getSupplierName() + " (" + productSupplier.getId() + ")";
 
         JTextField productField = new JTextField(p.getProductDescription() + " (" + p.getProductId() + ")", textFieldSize);
         productField.setEditable(false);

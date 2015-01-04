@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import dit.groupproject.rocketretail.database.Database;
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
@@ -48,15 +49,15 @@ public class StockControlUtilities {
 
         orderToSupplier = new ArrayList<OrderedItem>();
 
-        for (final Supplier supplier : Database.getSuppliers()) {
+        for (final Entity supplier : Database.getSuppliers()) {
             for (final Product p : productsToReplenish) {
-                if (p.getSupplierId() == supplier.getSupplierId()) {
+                if (p.getSupplierId() == supplier.getId()) {
                     createOrderedItem(percentagetoOrder, p);
                 }
             }
 
             if (!orderToSupplier.isEmpty()) {
-                createAndCompleteSupplierOrder(supplier.getSupplierId());
+                createAndCompleteSupplierOrder(supplier.getId());
             }
         }
     }
@@ -99,7 +100,7 @@ public class StockControlUtilities {
     }
 
     private static void setSupplierLastPurchaseDate(final int idOfSupplierToUpdate, final String currentDate) {
-        final Supplier supplierToUpdate = Database.getSupplierById(idOfSupplierToUpdate);
+        final Supplier supplierToUpdate = (Supplier) Database.getSupplierById(idOfSupplierToUpdate);
         supplierToUpdate.setLastPurchase(currentDate);
     }
 

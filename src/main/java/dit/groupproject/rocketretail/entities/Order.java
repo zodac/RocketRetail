@@ -52,7 +52,7 @@ public class Order {
         }
 
         if (isSupplier) {
-            final Supplier supplier = Database.getSupplierById(traderId);
+            final Supplier supplier = (Supplier) Database.getSupplierById(traderId);
             try {
                 if (DATE_FORMATTER.parse(supplier.getLastPurchase()).compareTo(DATE_FORMATTER.parse(orderDate)) < 0) {
                     supplier.setLastPurchase(orderDate);

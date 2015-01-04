@@ -19,7 +19,6 @@ import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.gui.GuiCreator;
-import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 
 /**
@@ -47,7 +46,7 @@ public class CustomerTable extends BaseTable {
 
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                createTable();
+                createTableGui();
             }
         });
 
@@ -64,7 +63,7 @@ public class CustomerTable extends BaseTable {
      * This method adds <code>ActionListener</code>s to GUI components such as
      * the <code>JTable</code> and multiple <code>JComboBox</code>.
      */
-    public static void createTable() {
+    public static void createTableGui() {
         setTableState(TableState.CUSTOMER);
         resetGui();
 
@@ -101,16 +100,16 @@ public class CustomerTable extends BaseTable {
         for (final Entity customer : customers) {
             itemsToEdit[editAndDeleteIndex] = "ID: " + CUSTOMER_ID_FORMATTER.format(customer.getId()) + " ("
                     + ((Customer) customer).getCustomerName() + ")";
-            itemsToDelete[editAndDeleteIndex] = itemsToDelete[editAndDeleteIndex++];
+            itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
         }
-        final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
-        final int index = Arrays.asList(SORT_OPTIONS).indexOf(sortType);
-
-        sortOptions.setSelectedIndex(index);
 
         final JButton addButton = createAddButton("Add Customer");
         final JComboBox<String> editSelection = createEditBox(itemsToEdit);
         final JComboBox<String> deleteSelection = createDeleteBox(itemsToDelete);
+
+        final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
+        final int index = Arrays.asList(SORT_OPTIONS).indexOf(sortType);
+        sortOptions.setSelectedIndex(index);
 
         sortOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -124,7 +123,7 @@ public class CustomerTable extends BaseTable {
                     }
                     sortItems();
                 }
-                createTable();
+                createTableGui();
             }
         });
 
@@ -133,13 +132,6 @@ public class CustomerTable extends BaseTable {
         buttonPanel.add(deleteSelection);
         buttonPanel.add(sortOptions);
         return buttonPanel;
-    }
-
-    private static void resetGui() {
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - " + ShopDriver.getCurrentTableState().toString());
-        GuiCreator.frame.repaint();
-        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
     }
 
     public static void sortItems() {

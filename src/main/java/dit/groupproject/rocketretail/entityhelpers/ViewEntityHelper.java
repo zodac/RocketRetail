@@ -21,10 +21,13 @@ import javax.swing.JTextField;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Order;
+import dit.groupproject.rocketretail.entities.Product;
+import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class ViewEntityHelper extends EntityHelper {
 
@@ -45,9 +48,9 @@ public class ViewEntityHelper extends EntityHelper {
                 public void mouseClicked(MouseEvent e) {
                     if (entitySubTable.getSelectedRow() >= 0) {
                         final int selectedId = Integer.parseInt((String) entitySubTable.getValueAt(entitySubTable.getSelectedRow(), 0));
-
                         final Customer customer = (Customer) Database.getCustomerById(selectedId);
-                        ViewEntityHelper.viewCustomerInfo(customer);
+
+                        viewCustomerInfo(customer);
                     }
                 }
             };
@@ -58,12 +61,21 @@ public class ViewEntityHelper extends EntityHelper {
         } else if (currentState == TableState.STAFF) {
 
         } else if (currentState == TableState.SUPPLIER) {
+            return new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (entitySubTable.getSelectedRow() >= 0) {
+                        final int selectedId = Integer.parseInt((String) entitySubTable.getValueAt(entitySubTable.getSelectedRow(), 0));
+                        final Supplier supplier = (Supplier) Database.getSupplierById(selectedId);
 
+                        viewSupplierInfo(supplier);
+                    }
+                }
+            };
         }
         throw new IllegalArgumentException("No sub-table available for current table state [" + currentState.toString() + "]!");
     }
 
-    private static void viewCustomerInfo(Customer customer) {
+    private static void viewCustomerInfo(final Customer customer) {
         final String customerName = customer.getCustomerName();
 
         GuiCreator.frame.remove(GuiCreator.mainPanel);
@@ -172,7 +184,7 @@ public class ViewEntityHelper extends EntityHelper {
         final JButton backButton = new JButton("Back to Customers");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                CustomerTable.createTable();
+                CustomerTable.createTableGui();
             }
         });
 
@@ -182,6 +194,123 @@ public class ViewEntityHelper extends EntityHelper {
         GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
         GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
 
+        GuiCreator.setFrame(false, false, true);
+    }
+
+    private static void viewSupplierInfo(final Supplier supplier) {
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + supplier.getSupplierName());
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
+
+        JPanel titlePanel = new JPanel(new GridBagLayout());
+        JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
+        JPanel buttonPanel = new JPanel();
+        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+
+        JLabel supplierLabel = new JLabel("Supplier");
+        JLabel vatNumberLabel = new JLabel("VAT Number");
+        JLabel phoneNoLabel = new JLabel("Phone Number");
+        JLabel addressLabel = new JLabel("Address");
+        JLabel dateAddedLabel = new JLabel("Date Added");
+        JLabel titleLabel = new JLabel("Products supplied by " + supplier.getSupplierName());
+
+        supplierLabel.setFont(new Font(supplierLabel.getFont().getFontName(), Font.BOLD, supplierLabel.getFont().getSize()));
+        vatNumberLabel.setFont(new Font(vatNumberLabel.getFont().getFontName(), Font.BOLD, vatNumberLabel.getFont().getSize()));
+        phoneNoLabel.setFont(new Font(phoneNoLabel.getFont().getFontName(), Font.BOLD, phoneNoLabel.getFont().getSize()));
+        addressLabel.setFont(new Font(addressLabel.getFont().getFontName(), Font.BOLD, addressLabel.getFont().getSize()));
+        dateAddedLabel.setFont(new Font(dateAddedLabel.getFont().getFontName(), Font.BOLD, dateAddedLabel.getFont().getSize()));
+        titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), Font.BOLD, titleLabel.getFont().getSize()));
+
+        int textFieldSize = 20;
+
+        JTextField supplierField = new JTextField(supplier.getSupplierName() + " (" + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + ")",
+                textFieldSize);
+        supplierField.setEditable(false);
+        JTextField vatNumberField = new JTextField(supplier.getVatNumber(), textFieldSize);
+        vatNumberField.setEditable(false);
+
+        JTextField phoneNoField = new JTextField(supplier.getPhoneNumber(), textFieldSize);
+        phoneNoField.setEditable(false);
+        JTextField addressField = new JTextField(supplier.getAddress(), textFieldSize);
+        addressField.setEditable(false);
+        JTextField dateAddedField = new JTextField(supplier.getDateAdded(), textFieldSize);
+        dateAddedField.setEditable(false);
+
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(1, 10, 0, 5);
+        titlePanel.add(supplierLabel, g);
+        g.gridx = 1;
+        titlePanel.add(supplierField, g);
+        g.gridx = 4;
+        titlePanel.add(vatNumberLabel, g);
+        g.gridx = 5;
+        titlePanel.add(vatNumberField, g);
+
+        g.gridy = 1;
+        g.gridx = 0;
+        titlePanel.add(phoneNoLabel, g);
+        g.gridx = 1;
+        titlePanel.add(phoneNoField, g);
+        g.gridx = 2;
+        titlePanel.add(addressLabel, g);
+        g.gridx = 3;
+        titlePanel.add(addressField, g);
+        g.gridx = 4;
+        titlePanel.add(dateAddedLabel, g);
+        g.gridx = 5;
+        titlePanel.add(dateAddedField, g);
+
+        g.gridy = 2;
+        g.gridx = 2;
+        g.gridwidth = 2;
+        titlePanel.add(titleLabel, g);
+
+        int count = 0;
+
+        for (final Product p : Database.getProducts()) {
+            if (supplier.getId() == p.getSupplierId()) {
+                count++;
+            }
+        }
+
+        final String[] columnNames = { "Product Description", "Product ID", "Unit Cost Price", "Current Stock" };
+        final Object[][] data = new Object[count][4];
+        int indexArray = 0;
+
+        for (int i = 0; i < Database.getProducts().size(); i++) {
+            if (supplier.getId() == Database.getProducts().get(i).getSupplierId()) {
+                data[indexArray][0] = Database.getProducts().get(i).getProductDescription();
+                data[indexArray][1] = Database.getProducts().get(i).getProductId();
+                data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(Database.getProducts().get(i).getCostPrice());
+                data[indexArray][3] = Database.getProducts().get(i).getStockLevel() + "/" + Database.getProducts().get(i).getMaxLevel();
+                indexArray++;
+            }
+        }
+
+        final JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        table.setEnabled(false);
+
+        final JScrollPane scrollPane = new JScrollPane(table);
+        innerPanel.add(scrollPane, BorderLayout.CENTER);
+
+        final JButton backButton = new JButton("Back to Suppliers");
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SupplierTable.createTableGui();
+            }
+        });
+
+        buttonPanel.add(backButton);
+        innerPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
+
+        // Update frame
         GuiCreator.setFrame(false, false, true);
     }
 }

@@ -12,6 +12,7 @@ import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class MenuGUI {
+
     /**
      * Creates a menubar and adds databaseMenus including staff, product,
      * supplier, customer, order, stock control, profitloss and graphs
@@ -21,16 +22,16 @@ public class MenuGUI {
      * @param manager
      *            (boolean)
      * */
-    public static void createMenuBar(JMenuBar menuBar, boolean manager) {
+    public static void createMenuBar(final JMenuBar menuBar, final boolean manager) {
 
         // Add "Main Menu" menu to menuBar
         menuBar.add(MainMenu.createMenu());
 
         // Add database options to "Database" menu
-        JMenu databaseMenu = new JMenu("Database");
+        final JMenu databaseMenu = new JMenu("Database");
         databaseMenu.add(StaffTable.createMenu(manager));
         databaseMenu.add(ProductTable.createMenu(manager));
-        databaseMenu.add(SupplierTable.createMenu(manager));
+        databaseMenu.add(SupplierTable.createMenu(TableState.SUPPLIER, manager));
         databaseMenu.add(CustomerTable.createMenu(TableState.CUSTOMER, manager));
         databaseMenu.add(OrderTable.createMenu());
 

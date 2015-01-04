@@ -179,9 +179,9 @@ public class MainMenu {
         } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
             ProductTable.createTable();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
-            CustomerTable.createTable();
+            CustomerTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
-            SupplierTable.createTable();
+            SupplierTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
             OrderTable.first = true;
             OrderTable.createTable();

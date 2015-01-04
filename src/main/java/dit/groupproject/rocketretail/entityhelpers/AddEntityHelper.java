@@ -24,11 +24,13 @@ import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class AddEntityHelper extends EntityHelper {
 
@@ -45,7 +47,7 @@ public class AddEntityHelper extends EntityHelper {
         if (currentState == TableState.CUSTOMER) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    AddEntityHelper.addCustomerPanel();
+                    addCustomerPanel();
                 }
             };
         } else if (currentState == TableState.ORDER) {
@@ -55,22 +57,21 @@ public class AddEntityHelper extends EntityHelper {
         } else if (currentState == TableState.STAFF) {
 
         } else if (currentState == TableState.SUPPLIER) {
-
+            return new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    addSupplierPanel();
+                }
+            };
         }
         throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
     }
 
-    /**
-     * This method builds a form for adding a <code>Customer</code>. It also has
-     * the logic to add a <code>Customer</code> to an <code>ArrayList</code> of
-     * customers.
-     */
-    public static void addCustomerPanel() {
+    private static void addCustomerPanel() {
         GuiCreator.frame.remove(GuiCreator.leftPanel);
         GuiCreator.frame.repaint();
         GuiCreator.leftPanel = new JPanel();
 
-        JPanel innerPanel = new JPanel(new GridBagLayout());
+        final JPanel innerPanel = new JPanel(new GridBagLayout());
         innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         GridBagConstraints g = new GridBagConstraints();
@@ -108,25 +109,25 @@ public class AddEntityHelper extends EntityHelper {
         g.gridy = 4;
         g.gridx = 1;
         g.gridwidth = 1;
-        final JComboBox<String> lastPurchaseDay = new JComboBox<String>(DAYS_AS_NUMBERS);
+        final JComboBox<String> lastPurchaseDay = new JComboBox<>(DAYS_AS_NUMBERS);
         innerPanel.add(lastPurchaseDay, g);
         g.gridx = 2;
-        final JComboBox<String> lastPurchaseMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
+        final JComboBox<String> lastPurchaseMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(lastPurchaseMonth, g);
         g.gridx = 3;
-        final JComboBox<String> lastPurchaseYear = new JComboBox<String>(YEARS_AS_NUMBERS);
+        final JComboBox<String> lastPurchaseYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
         g.gridy = 5;
         g.gridx = 1;
         g.gridwidth = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
+        final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
         g.gridx = 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
+        final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
         g.gridx = 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
+        final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
         dateAddedDay.setSelectedIndex(Integer.parseInt(DAY_FORMATTER.format(new Date())));
@@ -139,30 +140,29 @@ public class AddEntityHelper extends EntityHelper {
         g.gridx = 1;
         innerPanel.add(new JLabel(" "), g);
 
-        JButton save = new JButton("Save");
+        final JButton save = new JButton("Save");
         save.setLayout(new GridBagLayout());
         g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
         g.gridy = 7;
         innerPanel.add(save, g);
-        JButton cancel = new JButton("Cancel");
+        final JButton cancel = new JButton("Cancel");
         g.gridx = 3;
         innerPanel.add(cancel, g);
 
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                ArrayList<JTextField> textFields = new ArrayList<JTextField>();
+                final ArrayList<JTextField> textFields = new ArrayList<>();
                 textFields.add(custNameField);
                 textFields.add(phoneNoField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
-                ArrayList<JComboBox<String>> addedBoxes = new ArrayList<JComboBox<String>>();
+                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
                 addedBoxes.add(dateAddedDay);
                 addedBoxes.add(dateAddedMonth);
                 addedBoxes.add(dateAddedYear);
-                ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<JComboBox<String>>();
+                final ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<>();
                 lastPurchaseBoxes.add(lastPurchaseDay);
                 lastPurchaseBoxes.add(lastPurchaseMonth);
                 lastPurchaseBoxes.add(lastPurchaseYear);
@@ -179,7 +179,163 @@ public class AddEntityHelper extends EntityHelper {
 
                     CustomerTable.descendingOrderSort = false;
                     CustomerTable.sortItems();
-                    CustomerTable.createTable();
+                    CustomerTable.createTableGui();
+                }
+            }
+        });
+
+        cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.repaint();
+                GuiCreator.frame.validate();
+            }
+        });
+
+        GuiCreator.leftPanel.add(innerPanel);
+        GuiCreator.setFrame(true, false, false);
+    }
+
+    private static void addSupplierPanel() {
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
+
+        final JPanel innerPanel = new JPanel(new GridBagLayout());
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+
+        GridBagConstraints g = new GridBagConstraints();
+        g.gridx = 0;
+        g.gridy = 0;
+        innerPanel.add(new JLabel("Supplier ID:"), g);
+        g.gridy = 1;
+        innerPanel.add(new JLabel("Supplier Name:"), g);
+        g.gridy = 2;
+        innerPanel.add(new JLabel("Phone Number:"), g);
+        g.gridy = 3;
+        innerPanel.add(new JLabel("Address:"), g);
+        g.gridy = 4;
+        innerPanel.add(new JLabel("VAT Number:"), g);
+        g.gridy = 5;
+        innerPanel.add(new JLabel("Last Purchase:"), g);
+        g.gridy = 6;
+        innerPanel.add(new JLabel("Date Added:"), g);
+
+        g.insets = new Insets(1, 10, 0, 5);
+
+        g.gridx = 1;
+        g.gridy = 0;
+        g.gridwidth = 3;
+        final JTextField suppIdField = new JTextField(null, 20);
+        suppIdField.setText("");
+        suppIdField.setEditable(false);
+        innerPanel.add(suppIdField, g);
+        g.gridy = 1;
+        g.gridwidth = 3;
+        final JTextField suppNameField = new JTextField(null, 20);
+        innerPanel.add(suppNameField, g);
+        g.gridy = 2;
+        g.gridwidth = 3;
+        final JTextField phoneNoField = new JTextField(null, 20);
+        innerPanel.add(phoneNoField, g);
+        g.gridy = 3;
+        g.gridwidth = 3;
+        final JTextField addressField = new JTextField(null, 20);
+        innerPanel.add(addressField, g);
+        g.gridy = 4;
+        g.gridwidth = 3;
+        final JTextField vatNoField = new JTextField(null, 20);
+        innerPanel.add(vatNoField, g);
+        g.gridy = 5;
+        g.gridy = 5;
+        g.gridx = 1;
+        g.gridwidth = 1;
+        final JComboBox<String> lastPurchaseDay = new JComboBox<>(DAYS_AS_NUMBERS);
+        innerPanel.add(lastPurchaseDay, g);
+
+        g.gridy = 5;
+        g.gridx = 2;
+        g.gridwidth = 1 - 2;
+        final JComboBox<String> lastPurchaseMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
+        innerPanel.add(lastPurchaseMonth, g);
+
+        g.gridy = 5;
+        g.gridx = 3;
+        g.gridwidth = 2 - 3;
+
+        final JComboBox<String> lastPurchaseYear = new JComboBox<>(YEARS_AS_NUMBERS);
+        innerPanel.add(lastPurchaseYear, g);
+
+        g.gridy = 6;
+        g.gridx = 1;
+        g.gridwidth = 1;
+        final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
+        innerPanel.add(dateAddedDay, g);
+
+        g.gridy = 6;
+        g.gridx = 2;
+        g.gridwidth = 1 - 2;
+        final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
+        innerPanel.add(dateAddedMonth, g);
+
+        g.gridy = 6;
+        g.gridx = 3;
+        g.gridwidth = 2 - 3;
+
+        final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
+        innerPanel.add(dateAddedYear, g);
+
+        dateAddedDay.setSelectedIndex(Integer.parseInt(DAY_FORMATTER.format(new Date())));
+        dateAddedMonth.setSelectedIndex(Integer.parseInt(MONTH_FORMATTER.format(new Date())));
+        dateAddedYear.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
+
+        // Spacer
+        g.gridx = 0;
+        g.gridy = 8;
+        innerPanel.add(new JLabel(" "), g);
+        g.gridx = 1;
+        g.gridy = 8;
+        innerPanel.add(new JLabel(" "), g);
+
+        final JButton save = new JButton("Save");
+        save.setLayout(new GridBagLayout());
+        g = new GridBagConstraints();
+        g.insets = new Insets(1, 0, 0, 0);
+        g.gridx = 1;
+        g.gridy = 9;
+        innerPanel.add(save, g);
+        final JButton cancel = new JButton("Cancel");
+        g.gridx = 3;
+        g.gridy = 9;
+        innerPanel.add(cancel, g);
+
+        save.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final ArrayList<JTextField> textFields = new ArrayList<>();
+                textFields.add(suppNameField);
+                textFields.add(phoneNoField);
+                textFields.add(addressField);
+                textFields.add(vatNoField);
+                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
+                addedBoxes.add(dateAddedDay);
+                addedBoxes.add(dateAddedMonth);
+                addedBoxes.add(dateAddedYear);
+                final ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<>();
+                lastPurchaseBoxes.add(lastPurchaseDay);
+                lastPurchaseBoxes.add(lastPurchaseMonth);
+                lastPurchaseBoxes.add(lastPurchaseYear);
+
+                if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
+                    Database.addSupplier(new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField.getText(),
+                            lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/" + lastPurchaseYear.getSelectedItem(),
+                            dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
+
+                    GuiCreator.setConfirmationMessage("New Supplier \"" + suppNameField.getText() + "\" added");
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.frame.validate();
+                    SupplierTable.sortItems();
+                    SupplierTable.createTableGui();
                 }
             }
         });

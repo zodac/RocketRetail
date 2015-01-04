@@ -18,7 +18,7 @@ public class Database {
 
     private static ArrayList<Staff> staffMembers = new ArrayList<>();
     private static ArrayList<Product> products = new ArrayList<>();
-    private static ArrayList<Supplier> suppliers = new ArrayList<>();
+    private static ArrayList<Entity> suppliers = new ArrayList<>();
     private static ArrayList<Entity> customers = new ArrayList<>();
     private static ArrayList<Order> orders = new ArrayList<>();
 
@@ -44,6 +44,15 @@ public class Database {
         throw new IllegalArgumentException("No product with that ID found!");
     }
 
+    public static Entity getSupplierByName(final Object supplierName) {
+        for (final Entity supplier : suppliers) {
+            if (((Supplier) supplier).getSupplierName().equals(supplierName)) {
+                return supplier;
+            }
+        }
+        throw new IllegalArgumentException("No supplier with that name found!");
+    }
+
     public static Entity getCustomerById(final int customerId) {
         for (final Entity customer : customers) {
             if (customer.getId() == customerId) {
@@ -61,9 +70,9 @@ public class Database {
         return customers.get(index);
     }
 
-    public static Supplier getSupplierById(final int supplierId) {
-        for (final Supplier supplier : suppliers) {
-            if (supplier.getSupplierId() == supplierId) {
+    public static Entity getSupplierById(final int supplierId) {
+        for (final Entity supplier : suppliers) {
+            if (supplier.getId() == supplierId) {
                 return supplier;
             }
         }
@@ -84,7 +93,7 @@ public class Database {
         return staffMembers.get(index);
     }
 
-    public static Supplier getRandomSupplier() {
+    public static Entity getRandomSupplier() {
         final int index = RANDOM.nextInt(suppliers.size());
         return suppliers.get(index);
     }
@@ -129,7 +138,7 @@ public class Database {
         return products;
     }
 
-    public static ArrayList<Supplier> getSuppliers() {
+    public static ArrayList<Entity> getSuppliers() {
         return suppliers;
     }
 
@@ -175,5 +184,17 @@ public class Database {
 
     public static int getIndexOfCustomer(final Entity customer) {
         return customers.indexOf(customer);
+    }
+
+    public static int getIndexOfSupplier(final Entity supplier) {
+        return suppliers.indexOf(supplier);
+    }
+
+    public static void addSupplierByIndex(final int index, final Supplier supplier) {
+        suppliers.add(index, supplier);
+    }
+
+    public static void removeSupplierByIndex(final int index) {
+        suppliers.remove(index);
     }
 }

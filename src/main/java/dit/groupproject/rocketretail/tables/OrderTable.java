@@ -597,7 +597,9 @@ public class OrderTable extends BaseTable {
         customerOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (customerOptions.getSelectedItem().equals("New Customer")) {
-                    AddEntityHelper.addCustomerPanel();
+                    ShopDriver.setCurrentTable(TableState.CUSTOMER);
+                    AddEntityHelper.addEntityPanel();
+                    ShopDriver.setCurrentTable(TableState.ORDER);
                 } else {
                     // Reset ShopDriver.frame
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -806,7 +808,7 @@ public class OrderTable extends BaseTable {
         String[] supplierArray = new String[Database.getSuppliers().size() + 2];
         supplierArray[0] = "";
         for (int i = 1; i < Database.getSuppliers().size() + 1; i++) {
-            supplierArray[i] = Database.getSuppliers().get(i - 1).getSupplierName();
+            supplierArray[i] = ((Supplier) Database.getSuppliers().get(i - 1)).getSupplierName();
         }
 
         // Add a string to the end of the array
@@ -820,9 +822,11 @@ public class OrderTable extends BaseTable {
 
         supplierOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (supplierOptions.getSelectedItem().equals("New Supplier"))
-                    SupplierTable.add();
-                else {
+                if (supplierOptions.getSelectedItem().equals("New Supplier")) {
+                    ShopDriver.setCurrentTable(TableState.SUPPLIER);
+                    AddEntityHelper.addEntityPanel();
+                    ShopDriver.setCurrentTable(TableState.ORDER);
+                } else {
                     // Reset ShopDriver.frame
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
@@ -851,10 +855,8 @@ public class OrderTable extends BaseTable {
                     // Add products and quantity text fields
                     ArrayList<Product> supplierProducts = new ArrayList<Product>();
 
-                    for (Supplier s : Database.getSuppliers()) {
-                        if (s.getSupplierName().equals(supplierOptions.getSelectedItem()))
-                            traderId = s.getSupplierId();
-                    }
+                    final Entity supplier = Database.getSupplierByName(supplierOptions.getSelectedItem());
+                    traderId = supplier.getId();
 
                     for (Product p : Database.getProducts()) {
                         if (p.getSupplierId() == traderId)
@@ -929,14 +931,14 @@ public class OrderTable extends BaseTable {
                                     }
                                 }
 
-                                Supplier activeSupp = null;
+                                Entity activeSupp = null;
 
                                 if (items.size() > 0) {
                                     Database.addOrder(new Order(traderId, DATE_FORMATTER.format(new Date()), items, true));
 
-                                    for (Supplier s : Database.getSuppliers()) {
-                                        if (s.getSupplierId() == traderId) {
-                                            s.setLastPurchase(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+                                    for (Entity s : Database.getSuppliers()) {
+                                        if (s.getId() == traderId) {
+                                            ((Supplier) s).setLastPurchase(DATE_FORMATTER.format(new Date()));
                                             activeSupp = s;
                                         }
                                     }
@@ -945,7 +947,7 @@ public class OrderTable extends BaseTable {
 
                                 GuiCreator.setConfirmationMessage("Order #"
                                         + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getOrderId())
-                                        + " created for supplier \"" + activeSupp.getSupplierName() + "\"");
+                                        + " created for supplier \"" + ((Supplier) activeSupp).getSupplierName() + "\"");
 
                                 // Reset ShopDriver.frame
                                 GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -1091,23 +1093,15 @@ public class OrderTable extends BaseTable {
             traderTitle = "Supplier";
             isSupplier = true;
 
-            for (Supplier s : Database.getSuppliers()) {
-                if (s.getSupplierId() == o.getTraderId()) {
-                    traderName = s.getSupplierName();
-                    break;
-                }
-            }
+            final Entity supplier = Database.getSupplierById(o.getTraderId());
+            traderName = ((Supplier) supplier).getSupplierName();
         } else if (!o.isSupplier()) {
 
-            isSupplier = false;
             traderTitle = "Customer";
+            isSupplier = false;
 
-            for (Entity c : Database.getCustomers()) {
-                if (c.getId() == o.getTraderId()) {
-                    traderName = ((Customer) c).getCustomerName();
-                    break;
-                }
-            }
+            final Entity customer = Database.getCustomerById(o.getTraderId());
+            traderName = ((Customer) customer).getCustomerName();
         }
 
         // JLabels

@@ -120,7 +120,7 @@ public class InitialiseArray {
             final double costPrice = (RANDOM.nextInt(100) + 1) * 0.25;
             final double salePrice = (RANDOM.nextInt(50) + (Math.ceil(costPrice) / 0.25)) * 0.25;
 
-            Database.addProduct(new Product(productName, stockLevel, maxLevel, Database.getRandomSupplier().getSupplierId(), costPrice, salePrice));
+            Database.addProduct(new Product(productName, stockLevel, maxLevel, Database.getRandomSupplier().getId(), costPrice, salePrice));
         }
     }
 
@@ -201,7 +201,7 @@ public class InitialiseArray {
             }
 
             if (check == 1) {
-                traderId = Database.getRandomSupplier().getSupplierId();
+                traderId = Database.getRandomSupplier().getId();
             } else if (check == 2) {
                 traderId = Database.getRandomCustomer().getId();
             }

@@ -14,6 +14,7 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class DeleteEntityHelper extends EntityHelper {
 
@@ -30,7 +31,7 @@ public class DeleteEntityHelper extends EntityHelper {
         if (currentState == TableState.CUSTOMER) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    DeleteEntityHelper.deleteCustomer(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9)),
+                    deleteCustomer(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9)),
                             ((String) deleteBox.getSelectedItem()).substring(11, ((String) deleteBox.getSelectedItem()).length() - 1));
                 }
             };
@@ -41,17 +42,17 @@ public class DeleteEntityHelper extends EntityHelper {
         } else if (currentState == TableState.STAFF) {
 
         } else if (currentState == TableState.SUPPLIER) {
-
+            return new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    deleteSupplier(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 8)),
+                            ((String) deleteBox.getSelectedItem()).substring(10, ((String) deleteBox.getSelectedItem()).length() - 1));
+                }
+            };
         }
         throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
     }
 
-    /**
-     * This method shows a dialog box asking a user if they want to delete a
-     * <code>Customer</code>. This method also has logic to remove the
-     * <code>Customer</code> from system records.
-     */
-    public static void deleteCustomer(final int customerId, final String customerName) {
+    private static void deleteCustomer(final int customerId, final String customerName) {
         final JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("Do you want to delete " + customerName + "?"));
 
@@ -67,11 +68,36 @@ public class DeleteEntityHelper extends EntityHelper {
         }
 
         if (indexToRemove != -1) {
-            GuiCreator.setConfirmationMessage(customerName + " deleted");
             Database.removeCustomerByIndex(indexToRemove);
+            GuiCreator.setConfirmationMessage(customerName + " deleted");
         }
 
-        CustomerTable.createTable();
+        CustomerTable.createTableGui();
+        GuiCreator.frame.validate();
+    }
+
+    private static void deleteSupplier(final int supplierId, final String supplierName) {
+        final JPanel myPanel = new JPanel();
+        myPanel.add(new JLabel("Do you want to delete " + supplierName + "?"));
+
+        int indexToRemove = -1;
+
+        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
+            GuiCreator.frame.repaint();
+            GuiCreator.leftPanel = new JPanel();
+
+            final Entity supplier = Database.getSupplierById(supplierId);
+            indexToRemove = Database.getIndexOfSupplier(supplier);
+        }
+
+        if (indexToRemove != -1) {
+            Database.removeSupplierByIndex(indexToRemove);
+            GuiCreator.setConfirmationMessage(supplierName + " deleted");
+
+        }
+
+        SupplierTable.createTableGui();
         GuiCreator.frame.validate();
     }
 

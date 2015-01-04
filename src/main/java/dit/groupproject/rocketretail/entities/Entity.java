@@ -8,6 +8,8 @@ import java.util.Comparator;
 public interface Entity {
 
     final static DecimalFormat CUSTOMER_ID_FORMATTER = new DecimalFormat("00000");
+    final static DecimalFormat SUPPLIER_ID_FORMATTER = new DecimalFormat("0000");
+
     final static DateFormat DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
     public Object[] getData();
