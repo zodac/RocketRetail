@@ -136,11 +136,11 @@ public class InitialiseArray {
             items.add(new OrderedItem(Database.getProductByIndex(1), 10));
             items.add(new OrderedItem(Database.getProductByIndex(2), 15));
 
-            ShopDriver.setCurrentStaff(Database.getStaffMemberByIndex(0));
+            ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
             Database.addOrder(new Order(1000, "10/03/2004", items, false));
-            ShopDriver.setCurrentStaff(Database.getRandomStaffMember());
+            ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
             Database.addOrder(new Order(10001, "04/10/2008", items, false));
-            ShopDriver.setCurrentStaff(Database.getRandomStaffMember());
+            ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
             Database.addOrder(new Order(10002, "19/12/2009", items, false));
         }
 
@@ -148,11 +148,11 @@ public class InitialiseArray {
             items.add(new OrderedItem(Database.getProductByIndex(3), 10));
             items.add(new OrderedItem(Database.getProductByIndex(4), 5));
 
-            ShopDriver.setCurrentStaff(Database.getStaffMemberByIndex(0));
+            ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
             Database.addOrder(new Order(10003, "20/05/2011", items, false));
-            ShopDriver.setCurrentStaff(Database.getRandomStaffMember());
+            ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
             Database.addOrder(new Order(10001, "11/02/2013", items, false));
-            ShopDriver.setCurrentStaff(Database.getRandomStaffMember());
+            ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
             Database.addOrder(new Order(10004, "01/07/2013", items, false));
         }
     }
@@ -168,19 +168,13 @@ public class InitialiseArray {
      *            A boolean to decide if randDate should be set to the current
      *            year.
      */
-    public static void generateOrders(int amount, boolean confirm, boolean orderInCurrentYear) {
-        ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
-        int ordersToCreate = 0;
+    public static void generateOrders(final int amount, final boolean confirm, final boolean orderInCurrentYear) {
+        final int ordersToCreate = (amount == 0) ? RANDOM.nextInt(16) + 5 : amount;
+        int i = 0;
+        int loops = 0;
 
-        if (amount == 0) {
-            ordersToCreate = RANDOM.nextInt(16) + 5;
-        } else {
-            ordersToCreate = amount;
-        }
-
-        int i = 0, loops = 0;
         while (i < ordersToCreate && loops < 50) {
-            items = new ArrayList<OrderedItem>();
+            final ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
             int itemsToCreate = RANDOM.nextInt(Database.getProducts().size()) + 1;
             final Staff currentStaff = ShopDriver.getCurrentStaff();
 

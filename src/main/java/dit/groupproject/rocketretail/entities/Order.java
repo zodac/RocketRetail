@@ -25,7 +25,7 @@ public class Order {
     public Order(final int traderId, final String orderDate, final ArrayList<OrderedItem> orderedItems, final boolean isActive) {
 
         this.orderId = IdManager.getOrderIdAndIncrement();
-        this.staffId = ShopDriver.getCurrentStaff().getStaffId();
+        this.staffId = ShopDriver.getCurrentStaff().getId();
         this.traderId = traderId;
         this.orderDate = orderDate;
         this.orderedItems = orderedItems;

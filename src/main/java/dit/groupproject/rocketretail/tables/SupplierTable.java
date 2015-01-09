@@ -22,7 +22,7 @@ import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.groupproject.rocketretail.menus.MenuGUI;
+import dit.groupproject.rocketretail.menus.MenuGui;
 
 public class SupplierTable extends BaseTable {
 
@@ -39,10 +39,10 @@ public class SupplierTable extends BaseTable {
      * The ActionListener calls the {@link #createTableGui()} method.
      * 
      * @return the JMenuItem for the "Database" JMenuItem in
-     *         {@link MenuGUI#createMenuBar(JMenuBar, boolean)}
+     *         {@link MenuGui#createMenuBar(JMenuBar, boolean)}
      * 
      * @see #createTableGui()
-     * @see MenuGUI#createMenuBar(JMenuBar, boolean)
+     * @see MenuGui#createMenuBar(JMenuBar, boolean)
      */
     public static JMenuItem createMenu(final TableState newState, final boolean manager) {
         final JMenuItem menuItem = new JMenuItem(newState.toString());
@@ -143,7 +143,7 @@ public class SupplierTable extends BaseTable {
             comparator = Collections.reverseOrder(comparator);
         }
 
-        Collections.sort(Database.getCustomers(), comparator);
+        Collections.sort(Database.getSuppliers(), comparator);
     }
 
 }

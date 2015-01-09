@@ -20,17 +20,21 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
+import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 public class AddEntityHelper extends EntityHelper {
 
@@ -55,7 +59,11 @@ public class AddEntityHelper extends EntityHelper {
         } else if (currentState == TableState.PRODUCT) {
 
         } else if (currentState == TableState.STAFF) {
-
+            return new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    addStaffPanel();
+                }
+            };
         } else if (currentState == TableState.SUPPLIER) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -334,8 +342,154 @@ public class AddEntityHelper extends EntityHelper {
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
+
+                    SupplierTable.descendingOrderSort = false;
                     SupplierTable.sortItems();
                     SupplierTable.createTableGui();
+                }
+            }
+        });
+
+        cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.repaint();
+                GuiCreator.frame.validate();
+            }
+        });
+
+        GuiCreator.leftPanel.add(innerPanel);
+        GuiCreator.setFrame(true, false, false);
+    }
+
+    private static void addStaffPanel() {
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
+
+        final JPanel innerPanel = new JPanel(new GridBagLayout());
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+
+        GridBagConstraints g = new GridBagConstraints();
+        g.gridx = 0;
+        g.gridy = 0;
+        innerPanel.add(new JLabel("Staff PIN:"), g);
+        g.gridy = 1;
+        innerPanel.add(new JLabel("Name:"), g);
+        g.gridy = 2;
+        innerPanel.add(new JLabel("Gender:"), g);
+        g.gridy = 3;
+        innerPanel.add(new JLabel("Phone Number:"), g);
+        g.gridy = 4;
+        innerPanel.add(new JLabel("Address:"), g);
+        g.gridy = 5;
+        innerPanel.add(new JLabel("Wage:"), g);
+        g.gridy = 6;
+        innerPanel.add(new JLabel("Staff Level:"), g);
+        g.gridy = 7;
+        innerPanel.add(new JLabel("Date Added:"), g);
+
+        g.insets = new Insets(1, 10, 0, 5);
+
+        final String[] genderOptions = { "", "Male", "Female" };
+        final String[] staffLevelOptions = { "", "Manager", "Employee" };
+        g.fill = GridBagConstraints.HORIZONTAL;
+        // JTextFields with GridBagLayout
+        g.gridx = 1;
+        g.gridy = 0;
+        g.gridwidth = 3;
+        final JPasswordField pinField = new JPasswordField(null, 20);
+        pinField.setDocument(new JTextFieldLimit(4));
+        innerPanel.add(pinField, g);
+        g.gridy = 1;
+        final JTextField nameField = new JTextField(null, 20);
+        innerPanel.add(nameField, g);
+        g.gridy = 2;
+
+        final JComboBox<String> genderField = new JComboBox<String>(genderOptions);
+        innerPanel.add(genderField, g);
+        g.gridy = 3;
+        final JTextField phoneNoField = new JTextField(null, 20);
+        innerPanel.add(phoneNoField, g);
+        g.gridy = 4;
+        final JTextField addressField = new JTextField(null, 20);
+        innerPanel.add(addressField, g);
+        g.gridy = 5;
+        final JTextField wageField = new JTextField(null, 20);
+        innerPanel.add(wageField, g);
+        g.gridy = 6;
+        final JComboBox<String> staffLevelField = new JComboBox<String>(staffLevelOptions);
+        innerPanel.add(staffLevelField, g);
+
+        g.gridy = 7;
+        g.gridx = 1;
+        g.gridwidth = 1;
+        final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
+        innerPanel.add(dateAddedDay, g);
+        g.gridx = 2;
+        g.gridwidth = 1 - 2;
+        final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
+        innerPanel.add(dateAddedMonth, g);
+        g.gridx = 3;
+        g.gridwidth = 2 - 3;
+        final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
+        innerPanel.add(dateAddedYear, g);
+
+        dateAddedDay.setSelectedIndex(Integer.parseInt(DAY_FORMATTER.format(new Date())));
+        dateAddedMonth.setSelectedIndex(Integer.parseInt(MONTH_FORMATTER.format(new Date())));
+        dateAddedYear.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
+
+        // Spacer
+        g.gridx = 0;
+        g.gridy = 8;
+        innerPanel.add(new JLabel(" "), g);
+        g.gridx = 1;
+        innerPanel.add(new JLabel(" "), g);
+
+        final JButton save = new JButton("Save");
+        save.setLayout(new GridBagLayout());
+        g = new GridBagConstraints();
+        g.insets = new Insets(1, 0, 0, 0);
+        g.gridx = 1;
+        g.gridy = 9;
+        innerPanel.add(save, g);
+        final JButton cancel = new JButton("Cancel");
+        g.gridx = 3;
+        innerPanel.add(cancel, g);
+
+        save.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                final ArrayList<JTextField> textFields = new ArrayList<>();
+                textFields.add(nameField);
+                textFields.add(phoneNoField);
+                textFields.add(addressField);
+                final ArrayList<JTextField> doubleFields = new ArrayList<>();
+                doubleFields.add(wageField);
+                final ArrayList<JPasswordField> pinFields = new ArrayList<>();
+                pinFields.add(pinField);
+                final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
+                comboBoxes.add(genderField);
+                comboBoxes.add(staffLevelField);
+                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
+                addedBoxes.add(dateAddedDay);
+                addedBoxes.add(dateAddedMonth);
+                addedBoxes.add(dateAddedYear);
+
+                if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null)) {
+                    Database.addStaffMember(new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField.getText(), genderField
+                            .getSelectedIndex(), phoneNoField.getText(), addressField.getText(), Double.parseDouble(wageField.getText()),
+                            staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
+                                    + dateAddedYear.getSelectedItem()));
+
+                    GuiCreator.setConfirmationMessage("Staff member " + nameField.getText() + " added");
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.frame.validate();
+
+                    StaffTable.descendingOrderSort = false;
+                    StaffTable.sortItems();
+                    StaffTable.createTableGui();
                 }
             }
         });

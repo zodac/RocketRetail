@@ -16,19 +16,19 @@ public class Database {
 
     private final static Random RANDOM = new Random();
 
-    private static ArrayList<Staff> staffMembers = new ArrayList<>();
+    private static ArrayList<Entity> staffMembers = new ArrayList<>();
     private static ArrayList<Product> products = new ArrayList<>();
     private static ArrayList<Entity> suppliers = new ArrayList<>();
     private static ArrayList<Entity> customers = new ArrayList<>();
     private static ArrayList<Order> orders = new ArrayList<>();
 
-    public static Staff getStaffMemberByIndex(final int index) {
+    public static Entity getStaffMemberByIndex(final int index) {
         return staffMembers.get(index);
     }
 
-    public static Staff getStaffMemberById(final int staffId) {
-        for (final Staff staff : staffMembers) {
-            if (staff.getStaffId() == staffId) {
+    public static Entity getStaffMemberById(final int staffId) {
+        for (final Entity staff : staffMembers) {
+            if (staff.getId() == staffId) {
                 return staff;
             }
         }
@@ -88,7 +88,7 @@ public class Database {
         throw new IllegalArgumentException("No order with that ID found!");
     }
 
-    public static Staff getRandomStaffMember() {
+    public static Entity getRandomStaffMember() {
         final int index = RANDOM.nextInt(staffMembers.size());
         return staffMembers.get(index);
     }
@@ -131,7 +131,7 @@ public class Database {
         InitialiseArray.addOrders(false);
         InitialiseArray.addOrders(true);
 
-        ShopDriver.setCurrentStaff(Database.getStaffMemberByIndex(0));
+        ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
     }
 
     public static ArrayList<Product> getProducts() {
@@ -150,7 +150,7 @@ public class Database {
         return orders;
     }
 
-    public static ArrayList<Staff> getStaffMembers() {
+    public static ArrayList<Entity> getStaffMembers() {
         return staffMembers;
     }
 
@@ -170,7 +170,7 @@ public class Database {
         orders.add(order);
     }
 
-    public static void addStaffMember(final Staff staff) {
+    public static void addStaffMember(final Entity staff) {
         staffMembers.add(staff);
     }
 
@@ -196,5 +196,17 @@ public class Database {
 
     public static void removeSupplierByIndex(final int index) {
         suppliers.remove(index);
+    }
+
+    public static int getIndexOfStaff(final Entity staff) {
+        return staffMembers.indexOf(staff);
+    }
+
+    public static void addStaffMemberByIndex(final int index, final Staff staff) {
+        staffMembers.add(index, staff);
+    }
+
+    public static void removeStaffByIndex(final int index) {
+        staffMembers.remove(index);
     }
 }

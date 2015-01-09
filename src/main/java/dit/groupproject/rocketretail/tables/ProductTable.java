@@ -42,7 +42,7 @@ import dit.groupproject.rocketretail.gui.Graphs;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.groupproject.rocketretail.menus.MenuGUI;
+import dit.groupproject.rocketretail.menus.MenuGui;
 
 /**
  * ProductTable adds the "Product" menu-item to the menu-bar (within
@@ -96,10 +96,10 @@ public class ProductTable extends BaseTable {
      * The ActionListener calls the {@link #createTable()} method.
      * 
      * @return the JMenuItem for the "Database" JMenuItem in
-     *         {@link MenuGUI#createMenuBar(JMenuBar, boolean)}
+     *         {@link MenuGui#createMenuBar(JMenuBar, boolean)}
      * 
      * @see #createTable()
-     * @see MenuGUI#createMenuBar(JMenuBar, boolean)
+     * @see MenuGui#createMenuBar(JMenuBar, boolean)
      */
     public static JMenuItem createMenu(boolean manager) {
         JMenuItem productItem = new JMenuItem("Product");

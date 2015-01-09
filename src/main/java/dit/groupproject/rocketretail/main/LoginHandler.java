@@ -11,7 +11,7 @@ import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.HomeScreen;
-import dit.groupproject.rocketretail.menus.MenuGUI;
+import dit.groupproject.rocketretail.menus.MenuGui;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 public class LoginHandler {
@@ -49,7 +49,7 @@ public class LoginHandler {
 
             if (showDialog("Please enter your staff ID and PIN", myPanel) == JOptionPane.OK_OPTION) {
                 try {
-                    final Staff staff = Database.getStaffMemberById(Integer.parseInt(idField.getText()));
+                    final Staff staff = (Staff) Database.getStaffMemberById(Integer.parseInt(idField.getText()));
                     if (hasValidLogonCredentials(staff, Integer.parseInt(String.valueOf(pinField.getPassword())))) {
                         ShopDriver.setCurrentStaff(staff);
                         found = true;
@@ -96,7 +96,7 @@ public class LoginHandler {
      * Then shows the GUI on-screen.
      * 
      * @see #logon()
-     * @see MenuGUI#createMenuBar(JMenuBar, boolean)
+     * @see MenuGui#createMenuBar(JMenuBar, boolean)
      * @see HomeScreen#setHomeScreen()
      * @see #showGui(JMenuBar)
      */
@@ -105,7 +105,7 @@ public class LoginHandler {
         final boolean manager = true;
 
         JMenuBar menuBar = new JMenuBar();
-        MenuGUI.createMenuBar(menuBar, manager);
+        MenuGui.createMenuBar(menuBar, manager);
         HomeScreen.setHomeScreen();
         GuiCreator.showGui(menuBar);
     }

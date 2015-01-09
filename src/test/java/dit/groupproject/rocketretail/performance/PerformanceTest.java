@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import dit.groupproject.rocketretail.database.Database;
+import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.tables.CustomerTable;
@@ -32,7 +33,7 @@ public class PerformanceTest {
         GuiCreator.mainPanel = new JPanel();
         GuiCreator.leftPanel = new JPanel();
         Database.initialiseDatabase();
-        ShopDriver.setCurrentStaff(Database.getStaffMembers().get(0));
+        ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
     }
 
     /**
@@ -59,7 +60,7 @@ public class PerformanceTest {
      */
     @Test(timeout = LONG_TIMEOUT_IN_MS)
     public void staffTest() {
-        StaffTable.createTable();
+        StaffTable.createTableGui();
     }
 
     /**

@@ -11,7 +11,7 @@ import dit.groupproject.rocketretail.tables.ProductTable;
 import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 
-public class MenuGUI {
+public class MenuGui {
 
     /**
      * Creates a menubar and adds databaseMenus including staff, product,
@@ -21,30 +21,23 @@ public class MenuGUI {
      *            (JMenuBar)
      * @param manager
      *            (boolean)
-     * */
+     */
     public static void createMenuBar(final JMenuBar menuBar, final boolean manager) {
-
-        // Add "Main Menu" menu to menuBar
         menuBar.add(MainMenu.createMenu());
+        menuBar.add(createDatabaseMenu(manager));
+        menuBar.add(StockControlMenu.createMenu());
+        menuBar.add(ProfitLossMenu.createMenu(manager));
+        menuBar.add(Graphs.createMenu());
+    }
 
-        // Add database options to "Database" menu
+    private static JMenu createDatabaseMenu(final boolean manager) {
         final JMenu databaseMenu = new JMenu("Database");
-        databaseMenu.add(StaffTable.createMenu(manager));
+        databaseMenu.add(StaffTable.createMenu(TableState.STAFF, manager));
         databaseMenu.add(ProductTable.createMenu(manager));
         databaseMenu.add(SupplierTable.createMenu(TableState.SUPPLIER, manager));
         databaseMenu.add(CustomerTable.createMenu(TableState.CUSTOMER, manager));
         databaseMenu.add(OrderTable.createMenu());
 
-        // Add "Database" menu to menuBar
-        menuBar.add(databaseMenu);
-
-        // Add "Stock Control" menu to menuBar
-        menuBar.add(StockControlMenu.createMenu());
-
-        // Add "Profit & Loss" menu to menuBar
-        menuBar.add(ProfitLossMenu.createMenu(manager));
-
-        // Add "Graphs" menu to menuBar
-        menuBar.add(Graphs.createMenu());
+        return databaseMenu;
     }
 }

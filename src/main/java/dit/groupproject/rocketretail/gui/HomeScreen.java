@@ -96,7 +96,7 @@ public class HomeScreen {
         double otherStaffTotal = 0;
 
         for (final Order order : Database.getOrders()) {
-            final boolean currentStaffOrder = order.getStaffId() == currentStaff.getStaffId();
+            final boolean currentStaffOrder = order.getStaffId() == currentStaff.getId();
 
             if (!order.isSupplier()) {
                 double orderTotal = 0;

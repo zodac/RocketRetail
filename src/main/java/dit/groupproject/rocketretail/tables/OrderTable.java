@@ -47,7 +47,7 @@ import dit.groupproject.rocketretail.entityhelpers.AddEntityHelper;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.groupproject.rocketretail.menus.MenuGUI;
+import dit.groupproject.rocketretail.menus.MenuGui;
 
 /**
  * OrderTable adds the "Order" menu-item to the menu-bar (within "Database"),
@@ -137,10 +137,10 @@ public class OrderTable extends BaseTable {
      * The ActionListener calls the {@link #createTable()} method.
      * 
      * @return the JMenuItem for the "Database" JMenuItem in
-     *         {@link MenuGUI#createMenuBar(JMenuBar, boolean)}
+     *         {@link MenuGui#createMenuBar(JMenuBar, boolean)}
      * 
      * @see #createTable()
-     * @see MenuGUI#createMenuBar(JMenuBar, boolean)
+     * @see MenuGui#createMenuBar(JMenuBar, boolean)
      */
     public static JMenuItem createMenu() {
         JMenuItem orderItem = new JMenuItem("Orders");
@@ -1077,29 +1077,18 @@ public class OrderTable extends BaseTable {
         innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        boolean isSupplier = false;
+        final boolean isSupplier = o.isSupplier();
 
-        String staffName = "", traderName = "", traderTitle = "";
+        String traderName = "";
+        final String traderTitle = isSupplier ? "Supplier" : "Customer";
 
-        for (Staff s : Database.getStaffMembers()) {
-            if (s.getStaffId() == o.getStaffId()) {
-                staffName = s.getStaffName();
-                break;
-            }
-        }
+        final Staff staff = (Staff) Database.getStaffMemberById(o.getStaffId());
+        final String staffName = staff.getStaffName();
 
-        if (o.isSupplier()) {
-
-            traderTitle = "Supplier";
-            isSupplier = true;
-
+        if (isSupplier) {
             final Entity supplier = Database.getSupplierById(o.getTraderId());
             traderName = ((Supplier) supplier).getSupplierName();
-        } else if (!o.isSupplier()) {
-
-            traderTitle = "Customer";
-            isSupplier = false;
-
+        } else {
             final Entity customer = Database.getCustomerById(o.getTraderId());
             traderName = ((Customer) customer).getCustomerName();
         }

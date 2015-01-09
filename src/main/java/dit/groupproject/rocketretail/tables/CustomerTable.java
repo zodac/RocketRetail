@@ -22,9 +22,9 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.TableState;
 
 /**
- * A class that is used to display a table with multiple <code>Customer</code>
+ * A class that is used to display a table with multiple {@link Customer}
  * entries. It offers sorting options and options to add, edit and delete
- * customers
+ * customers.
  */
 public class CustomerTable extends BaseTable {
 

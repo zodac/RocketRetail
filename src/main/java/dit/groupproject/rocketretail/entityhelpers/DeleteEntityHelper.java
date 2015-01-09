@@ -14,6 +14,7 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class DeleteEntityHelper extends EntityHelper {
@@ -31,8 +32,11 @@ public class DeleteEntityHelper extends EntityHelper {
         if (currentState == TableState.CUSTOMER) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    deleteCustomer(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9)),
-                            ((String) deleteBox.getSelectedItem()).substring(11, ((String) deleteBox.getSelectedItem()).length() - 1));
+                    final int customerId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9));
+                    final String customerName = ((String) deleteBox.getSelectedItem()).substring(11,
+                            ((String) deleteBox.getSelectedItem()).length() - 1);
+
+                    deleteCustomer(customerId, customerName);
                 }
             };
         } else if (currentState == TableState.ORDER) {
@@ -40,12 +44,26 @@ public class DeleteEntityHelper extends EntityHelper {
         } else if (currentState == TableState.PRODUCT) {
 
         } else if (currentState == TableState.STAFF) {
+            return new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    final int staffId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 7));
+                    final String staffName = ((String) deleteBox.getSelectedItem()).substring(9, ((String) deleteBox.getSelectedItem()).length() - 1);
 
+                    if (staffId == ShopDriver.getCurrentStaff().getId()) {
+                        JOptionPane.showMessageDialog(null, "You can't delete yourself!", "Deletion Error", JOptionPane.PLAIN_MESSAGE);
+                    } else {
+                        deleteStaff(staffId, staffName);
+                    }
+                }
+            };
         } else if (currentState == TableState.SUPPLIER) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    deleteSupplier(Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 8)),
-                            ((String) deleteBox.getSelectedItem()).substring(10, ((String) deleteBox.getSelectedItem()).length() - 1));
+                    final int supplierId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 8));
+                    final String supplierName = ((String) deleteBox.getSelectedItem()).substring(10,
+                            ((String) deleteBox.getSelectedItem()).length() - 1);
+
+                    deleteSupplier(supplierId, supplierName);
                 }
             };
         }
@@ -98,6 +116,30 @@ public class DeleteEntityHelper extends EntityHelper {
         }
 
         SupplierTable.createTableGui();
+        GuiCreator.frame.validate();
+    }
+
+    private static void deleteStaff(final int staffId, final String staffName) {
+        final JPanel myPanel = new JPanel();
+        myPanel.add(new JLabel("Do you want to delete " + staffName + "?"));
+
+        int indexToRemove = -1;
+
+        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
+            GuiCreator.frame.repaint();
+            GuiCreator.leftPanel = new JPanel();
+
+            final Entity staff = Database.getStaffMemberById(staffId);
+            indexToRemove = Database.getIndexOfStaff(staff);
+        }
+
+        if (indexToRemove != -1) {
+            Database.removeStaffByIndex(indexToRemove);
+            GuiCreator.setConfirmationMessage(staffName + " deleted");
+        }
+
+        StaffTable.createTableGui();
         GuiCreator.frame.validate();
     }
 

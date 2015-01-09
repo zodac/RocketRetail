@@ -50,7 +50,7 @@ public class ProfitLossMenu {
      * 
      * @see #simpleReport()
      * @see #advancedReport()
-     * @see MenuGUI#createMenuBar(JMenuBar, boolean)
+     * @see MenuGui#createMenuBar(JMenuBar, boolean)
      */
     public static JMenu createMenu(boolean manager) {
         JMenuItem simpleReport = new JMenuItem("Create Simple P/L Report");
