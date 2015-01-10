@@ -635,17 +635,18 @@ public class OrderTable extends BaseTable {
                     productQuantPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
                     int i = 0;
-                    for (Product p : Database.getProducts()) {
+                    for (final Entity p : Database.getProducts()) {
+                        final Product product = (Product) p;
 
-                        JLabel pl = new JLabel("" + p.getProductDescription());
+                        JLabel pl = new JLabel("" + product.getProductDescription());
                         pl.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
                         productLabels.add(pl);
 
-                        JTextField tF = new JTextField("" + p.getStockLevel() + "/" + p.getMaxLevel(), 5);
+                        JTextField tF = new JTextField("" + product.getStockLevel() + "/" + product.getMaxLevel(), 5);
                         tF.setEnabled(false);
                         currentStockFields.add(tF);
                         JTextField orderField = new JTextField("0", 5);
-                        if (p.getStockLevel() == 0)
+                        if (product.getStockLevel() == 0)
                             orderField.setEnabled(false);
                         orderAmountFields.add(orderField);
 
@@ -667,8 +668,8 @@ public class OrderTable extends BaseTable {
 
                             for (JLabel label : productLabels) {
                                 if (orderAmountFields.get(productLabels.indexOf(label)).getText().length() == 0
-                                        || Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > Database.getProducts()
-                                                .get(productLabels.indexOf(label)).getStockLevel()) {
+                                        || Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > ((Product) Database
+                                                .getProducts().get(productLabels.indexOf(label))).getStockLevel()) {
                                     valid = false;
                                     orderAmountFields.get(productLabels.indexOf(label)).setBorder(
                                             BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
@@ -689,13 +690,15 @@ public class OrderTable extends BaseTable {
                             if (valid) {
                                 ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
 
-                                for (Product p : Database.getProducts()) {
+                                for (final Entity p : Database.getProducts()) {
+                                    final Product product = (Product) p;
                                     for (JLabel label : productLabels) {
-                                        if (label.getText().equals(p.getProductDescription())
+                                        if (label.getText().equals(product.getProductDescription())
                                                 && Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > 0) {
-                                            if (p.getStockLevel() >= Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()))
-                                                items.add(new OrderedItem(p, Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
-                                                        .getText())));
+                                            if (product.getStockLevel() >= Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
+                                                    .getText()))
+                                                items.add(new OrderedItem(product, Integer.parseInt(orderAmountFields.get(
+                                                        productLabels.indexOf(label)).getText())));
                                         }
                                     }
                                 }
@@ -794,7 +797,7 @@ public class OrderTable extends BaseTable {
      * 
      * @param supplierIndex
      *            an Integer specifying the supplier's index in the JComboBox
-     *            from {@link ProductTable#showProductInfo(Product)}
+     *            from {@link ProductTable#viewProductInfo(Product)}
      */
     public static void createSupplierOrder(int supplierIndex) {
         // Reset ShopDriver.frame
@@ -858,9 +861,10 @@ public class OrderTable extends BaseTable {
                     final Entity supplier = Database.getSupplierByName(supplierOptions.getSelectedItem());
                     traderId = supplier.getId();
 
-                    for (Product p : Database.getProducts()) {
-                        if (p.getSupplierId() == traderId)
-                            supplierProducts.add(p);
+                    for (final Entity p : Database.getProducts()) {
+                        final Product product = (Product) p;
+                        if (product.getSupplierId() == traderId)
+                            supplierProducts.add(product);
                     }
 
                     JPanel productQuantityPanel = new JPanel(new GridLayout(0, 3));
@@ -898,9 +902,9 @@ public class OrderTable extends BaseTable {
 
                             for (JLabel label : productLabels) {
                                 if (orderAmountFields.get(productLabels.indexOf(label)).getText().length() == 0
-                                        || (Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) + Database.getProducts()
-                                                .get(productLabels.indexOf(label)).getStockLevel()) > Database.getProducts()
-                                                .get(productLabels.indexOf(label)).getMaxLevel()) {
+                                        || (Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) + ((Product) Database
+                                                .getProducts().get(productLabels.indexOf(label))).getStockLevel()) > ((Product) Database
+                                                .getProducts().get(productLabels.indexOf(label))).getMaxLevel()) {
                                     valid = false;
                                     orderAmountFields.get(productLabels.indexOf(label)).setBorder(
                                             BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
@@ -921,12 +925,14 @@ public class OrderTable extends BaseTable {
                             if (valid) {
                                 ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
 
-                                for (Product p : Database.getProducts()) {
-                                    for (JLabel label : productLabels) {
-                                        if (label.getText().equals(p.getProductDescription())) {
+                                for (final Entity p : Database.getProducts()) {
+                                    final Product product = (Product) p;
+
+                                    for (final JLabel label : productLabels) {
+                                        if (label.getText().equals(product.getProductDescription())) {
                                             if (Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > 0)
-                                                items.add(new OrderedItem(p, Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
-                                                        .getText())));
+                                                items.add(new OrderedItem(product, Integer.parseInt(orderAmountFields.get(
+                                                        productLabels.indexOf(label)).getText())));
                                         }
                                     }
                                 }
@@ -1169,8 +1175,8 @@ public class OrderTable extends BaseTable {
             else
                 unitPrice = o.getOrderedItems().get(i).getProduct().getSalePrice();
 
-            data[i][0] = o.getOrderedItems().get(i).getProduct().getProductDescription() + " ("
-                    + o.getOrderedItems().get(i).getProduct().getProductId() + ")";
+            data[i][0] = o.getOrderedItems().get(i).getProduct().getProductDescription() + " (" + o.getOrderedItems().get(i).getProduct().getId()
+                    + ")";
             data[i][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
             data[i][2] = o.getOrderedItems().get(i).getQuantity();
             data[i][3] = "€" + CURRENCY_FORMATTER.format(unitPrice * (int) data[i][2]);

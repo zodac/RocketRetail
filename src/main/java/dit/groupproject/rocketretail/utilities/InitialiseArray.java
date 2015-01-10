@@ -132,9 +132,9 @@ public class InitialiseArray {
         final ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
 
         if (!extra) {
-            items.add(new OrderedItem(Database.getProductByIndex(0), 20));
-            items.add(new OrderedItem(Database.getProductByIndex(1), 10));
-            items.add(new OrderedItem(Database.getProductByIndex(2), 15));
+            items.add(new OrderedItem((Product) Database.getProductByIndex(0), 20));
+            items.add(new OrderedItem((Product) Database.getProductByIndex(1), 10));
+            items.add(new OrderedItem((Product) Database.getProductByIndex(2), 15));
 
             ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
             Database.addOrder(new Order(1000, "10/03/2004", items, false));
@@ -145,8 +145,8 @@ public class InitialiseArray {
         }
 
         if (extra) {
-            items.add(new OrderedItem(Database.getProductByIndex(3), 10));
-            items.add(new OrderedItem(Database.getProductByIndex(4), 5));
+            items.add(new OrderedItem((Product) Database.getProductByIndex(3), 10));
+            items.add(new OrderedItem((Product) Database.getProductByIndex(4), 5));
 
             ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
             Database.addOrder(new Order(10003, "20/05/2011", items, false));
@@ -201,7 +201,7 @@ public class InitialiseArray {
             }
 
             ArrayList<Integer> productsCreated = new ArrayList<Integer>();
-            int productId = Database.getRandomProduct().getProductId();
+            int productId = Database.getRandomProduct().getId();
             boolean unique = false;
             productsCreated.add(productId);
 
@@ -210,7 +210,7 @@ public class InitialiseArray {
                 int whileLoop = 0;
 
                 while (!unique && whileLoop < 40) {
-                    productId = Database.getRandomProduct().getProductId();
+                    productId = Database.getRandomProduct().getId();
                     unique = true;
 
                     for (int x : productsCreated) {
@@ -224,7 +224,7 @@ public class InitialiseArray {
 
                 unique = false;
 
-                final Product product = Database.getProductById(productId);
+                final Product product = (Product) Database.getProductById(productId);
                 if (product.getStockLevel() > 1) {
                     items.add(new OrderedItem(product, RANDOM.nextInt(product.getStockLevel() / 2) + 1));
                 }

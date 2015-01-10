@@ -14,6 +14,7 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.ProductTable;
 import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 
@@ -42,7 +43,15 @@ public class DeleteEntityHelper extends EntityHelper {
         } else if (currentState == TableState.ORDER) {
 
         } else if (currentState == TableState.PRODUCT) {
+            return new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    final int productId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9));
+                    final String productName = ((String) deleteBox.getSelectedItem()).substring(11,
+                            ((String) deleteBox.getSelectedItem()).length() - 1);
 
+                    deleteProduct(productId, productName);
+                }
+            };
         } else if (currentState == TableState.STAFF) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -140,6 +149,30 @@ public class DeleteEntityHelper extends EntityHelper {
         }
 
         StaffTable.createTableGui();
+        GuiCreator.frame.validate();
+    }
+
+    private static void deleteProduct(final int productId, final String productName) {
+        final JPanel myPanel = new JPanel();
+        myPanel.add(new JLabel("Do you want to delete " + productName + "?"));
+
+        int indexToRemove = -1;
+
+        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
+            GuiCreator.frame.repaint();
+            GuiCreator.leftPanel = new JPanel();
+
+            final Entity product = Database.getProductById(productId);
+            indexToRemove = Database.getIndexOfProduct(product);
+        }
+
+        if (indexToRemove != -1) {
+            Database.removeProductByIndex(indexToRemove);
+            GuiCreator.setConfirmationMessage(productName + " deleted");
+        }
+
+        ProductTable.createTableGui();
         GuiCreator.frame.validate();
     }
 

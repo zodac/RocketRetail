@@ -17,7 +17,7 @@ public class Database {
     private final static Random RANDOM = new Random();
 
     private static ArrayList<Entity> staffMembers = new ArrayList<>();
-    private static ArrayList<Product> products = new ArrayList<>();
+    private static ArrayList<Entity> products = new ArrayList<>();
     private static ArrayList<Entity> suppliers = new ArrayList<>();
     private static ArrayList<Entity> customers = new ArrayList<>();
     private static ArrayList<Order> orders = new ArrayList<>();
@@ -35,9 +35,9 @@ public class Database {
         throw new IllegalArgumentException("No staff member with that ID found!");
     }
 
-    public static Product getProductById(final int productId) {
-        for (final Product product : products) {
-            if (product.getProductId() == productId) {
+    public static Entity getProductById(final int productId) {
+        for (final Entity product : products) {
+            if (product.getId() == productId) {
                 return product;
             }
         }
@@ -62,7 +62,7 @@ public class Database {
         throw new IllegalArgumentException("No customer with that ID found!");
     }
 
-    public static Product getProductByIndex(final int index) {
+    public static Entity getProductByIndex(final int index) {
         return products.get(index);
     }
 
@@ -103,7 +103,7 @@ public class Database {
         return customers.get(index);
     }
 
-    public static Product getRandomProduct() {
+    public static Entity getRandomProduct() {
         final int index = RANDOM.nextInt(products.size());
         return products.get(index);
     }
@@ -134,7 +134,7 @@ public class Database {
         ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
     }
 
-    public static ArrayList<Product> getProducts() {
+    public static ArrayList<Entity> getProducts() {
         return products;
     }
 
@@ -208,5 +208,21 @@ public class Database {
 
     public static void removeStaffByIndex(final int index) {
         staffMembers.remove(index);
+    }
+
+    public static Entity getSupplierByIndex(final int index) {
+        return suppliers.get(index);
+    }
+
+    public static void addProductByIndex(final int index, final Product product) {
+        products.add(index, product);
+    }
+
+    public static void removeProductByIndex(final int index) {
+        products.remove(index);
+    }
+
+    public static int getIndexOfProduct(final Entity product) {
+        return products.indexOf(product);
     }
 }

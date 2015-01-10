@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.IdManager;
+import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
@@ -29,6 +30,7 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.ProductTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
@@ -53,7 +55,11 @@ public class EditEntityHelper extends EntityHelper {
         } else if (currentState == TableState.ORDER) {
 
         } else if (currentState == TableState.PRODUCT) {
-
+            return new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    editProductPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 9)));
+                }
+            };
         } else if (currentState == TableState.STAFF) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -575,6 +581,139 @@ public class EditEntityHelper extends EntityHelper {
             }
         });
 
+        GuiCreator.leftPanel.add(innerPanel);
+        GuiCreator.setFrame(true, false, false);
+    }
+
+    private static void editProductPanel(int productId) {
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
+
+        final Product product = (Product) Database.getProductById(productId);
+        final int index = Database.getProducts().indexOf(product);
+
+        final JPanel innerPanel = new JPanel(new GridBagLayout());
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(1, 10, 0, 5);
+        g.gridx = 0;
+        g.gridy = 0;
+        innerPanel.add(new JLabel("Product ID:"), g);
+        g.gridy = 1;
+        innerPanel.add(new JLabel("Product Description:"), g);
+        g.gridy = 2;
+        innerPanel.add(new JLabel("Stock Level:"), g);
+        g.gridy = 3;
+        innerPanel.add(new JLabel("Maximum Level"), g);
+        g.gridy = 4;
+        innerPanel.add(new JLabel("Supplier ID:"), g);
+        g.gridy = 5;
+        innerPanel.add(new JLabel("Cost Price:"), g);
+        g.gridy = 6;
+        innerPanel.add(new JLabel("Sale Price:"), g);
+
+        g.gridx = 1;
+        g.gridy = 0;
+        g.gridwidth = 3;
+        final JTextField prodIDField = new JTextField(null, 20);
+        prodIDField.setEditable(false);
+        innerPanel.add(prodIDField, g);
+        g.gridy = 1;
+        final JTextField prodDescField = new JTextField(null, 20);
+        innerPanel.add(prodDescField, g);
+        g.gridy = 2;
+        final JTextField stockLevelField = new JTextField(null, 20);
+        innerPanel.add(stockLevelField, g);
+        g.gridy = 3;
+        final JTextField maxLevelField = new JTextField(null, 20);
+        innerPanel.add(maxLevelField, g);
+        g.gridy = 4;
+
+        final String[] supplierOptions = new String[Database.getSuppliers().size() + 1];
+        supplierOptions[0] = "";
+
+        for (int i = 1; i < supplierOptions.length; i++) {
+            supplierOptions[i] = ((Supplier) Database.getSupplierById(i - 1)).getSupplierName() + " (" + Database.getSupplierById(i - 1).getId()
+                    + ")";
+        }
+        final JComboBox<String> suppIdBox = new JComboBox<String>(supplierOptions);
+        innerPanel.add(suppIdBox, g);
+        g.gridy = 5;
+        final JTextField costPriceField = new JTextField(null, 20);
+        innerPanel.add(costPriceField, g);
+        g.gridy = 6;
+        final JTextField salePriceField = new JTextField(null, 20);
+        innerPanel.add(salePriceField, g);
+
+        // Set JTextFields with current data
+        prodIDField.setText("" + product.getId());
+        prodDescField.setText(product.getProductDescription());
+        stockLevelField.setText("" + product.getStockLevel());
+        maxLevelField.setText("" + product.getMaxLevel());
+        suppIdBox.setSelectedIndex(product.getSupplierId() - IdManager.SUPPLIER_ID_START + 1);
+        costPriceField.setText("" + product.getCostPrice());
+        salePriceField.setText("" + product.getSalePrice());
+
+        g.gridx = 0;
+        g.gridy = 7;
+        innerPanel.add(new JLabel(" "), g);
+        g.gridx = 1;
+        g.gridy = 7;
+        innerPanel.add(new JLabel(" "), g);
+
+        final JButton save = new JButton("Save");
+        save.setLayout(new GridBagLayout());
+        g = new GridBagConstraints();
+        g.insets = new Insets(1, 0, 0, 0);
+        g.gridx = 1;
+        g.gridy = 8;
+        innerPanel.add(save, g);
+        final JButton cancel = new JButton("Cancel");
+        g.gridx = 3;
+        g.gridy = 8;
+        innerPanel.add(cancel, g);
+
+        save.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                final ArrayList<JTextField> textFields = new ArrayList<>();
+                textFields.add(prodDescField);
+                final ArrayList<JTextField> intFields = new ArrayList<>();
+                intFields.add(stockLevelField);
+                intFields.add(maxLevelField);
+                final ArrayList<JTextField> doubleFields = new ArrayList<>();
+                doubleFields.add(costPriceField);
+                doubleFields.add(salePriceField);
+                final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
+                comboBoxes.add(suppIdBox);
+
+                if (FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null)) {
+                    final Product editedProduct = new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
+                            .parseInt(maxLevelField.getText()), Integer.parseInt(((String) suppIdBox.getSelectedItem()).substring(
+                            ((String) suppIdBox.getSelectedItem()).length() - 5, ((String) suppIdBox.getSelectedItem()).length() - 1)), Double
+                            .parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField.getText()));
+                    editedProduct.setId(index + IdManager.PRODUCT_ID_START);
+                    Database.addProductByIndex(index, editedProduct);
+
+                    GuiCreator.setConfirmationMessage("Product " + prodDescField.getText() + "'s details editted");
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.frame.validate();
+                    Database.removeProductByIndex(index + 1);
+                    ProductTable.createTableGui();
+                }
+            }
+        });
+
+        cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.repaint();
+                GuiCreator.frame.validate();
+            }
+        });
         GuiCreator.leftPanel.add(innerPanel);
         GuiCreator.setFrame(true, false, false);
     }

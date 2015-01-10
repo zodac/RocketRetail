@@ -45,7 +45,7 @@ public class Order {
 
             if (isSupplier) {
                 for (final OrderedItem orderedItem : orderedItems) {
-                    final Product product = Database.getProductById(orderedItem.getProduct().getProductId());
+                    final Product product = (Product) Database.getProductById(orderedItem.getProduct().getId());
                     product.setStockLevel(product.getStockLevel() + orderedItem.getQuantity());
                 }
             }
@@ -79,7 +79,7 @@ public class Order {
                 + orderDate;
 
         for (final OrderedItem oi : orderedItems) {
-            output += "\nProduct ID:\t" + oi.getProduct().getProductId() + "\nQuantity:\t" + oi.getQuantity();
+            output += "\nProduct ID:\t" + oi.getProduct().getId() + "\nQuantity:\t" + oi.getQuantity();
         }
 
         return output + "\n\n";
@@ -107,8 +107,8 @@ public class Order {
 
     public boolean includesProduct(final Product product) {
 
-        for (OrderedItem oi : this.orderedItems) {
-            if (oi.getProduct().getProductId() == product.getProductId()) {
+        for (final OrderedItem oi : this.orderedItems) {
+            if (oi.getProduct().getId() == product.getId()) {
                 return true;
             }
         }

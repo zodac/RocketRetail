@@ -1,6 +1,10 @@
 package dit.groupproject.rocketretail.entityhelpers;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
+import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,17 +22,23 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import org.jfree.chart.ChartPanel;
+
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
 import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Order;
+import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
+import dit.groupproject.rocketretail.gui.Graphs;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.OrderTable;
+import dit.groupproject.rocketretail.tables.ProductTable;
 import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 
@@ -60,7 +70,16 @@ public class ViewEntityHelper extends EntityHelper {
         } else if (currentState == TableState.ORDER) {
 
         } else if (currentState == TableState.PRODUCT) {
+            return new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (entitySubTable.getSelectedRow() >= 0) {
+                        final int selectedId = Integer.parseInt((String) entitySubTable.getValueAt(entitySubTable.getSelectedRow(), 0));
+                        final Product product = (Product) Database.getProductById(selectedId);
 
+                        viewProductInfo(product);
+                    }
+                }
+            };
         } else if (currentState == TableState.STAFF) {
             return new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
@@ -280,24 +299,26 @@ public class ViewEntityHelper extends EntityHelper {
         g.gridwidth = 2;
         titlePanel.add(titleLabel, g);
 
-        int count = 0;
+        int numberOfSupplierOrders = 0;
 
-        for (final Product p : Database.getProducts()) {
-            if (supplier.getId() == p.getSupplierId()) {
-                count++;
+        for (final Entity p : Database.getProducts()) {
+            if (supplier.getId() == ((Product) p).getSupplierId()) {
+                numberOfSupplierOrders++;
             }
         }
 
         final String[] columnNames = { "Product Description", "Product ID", "Unit Cost Price", "Current Stock" };
-        final Object[][] data = new Object[count][4];
+        final Object[][] data = new Object[numberOfSupplierOrders][4];
         int indexArray = 0;
 
-        for (int i = 0; i < Database.getProducts().size(); i++) {
-            if (supplier.getId() == Database.getProducts().get(i).getSupplierId()) {
-                data[indexArray][0] = Database.getProducts().get(i).getProductDescription();
-                data[indexArray][1] = Database.getProducts().get(i).getProductId();
-                data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(Database.getProducts().get(i).getCostPrice());
-                data[indexArray][3] = Database.getProducts().get(i).getStockLevel() + "/" + Database.getProducts().get(i).getMaxLevel();
+        for (final Entity p : Database.getProducts()) {
+            final Product product = (Product) p;
+
+            if (supplier.getId() == product.getSupplierId()) {
+                data[indexArray][0] = product.getProductDescription();
+                data[indexArray][1] = product.getId();
+                data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(product.getCostPrice());
+                data[indexArray][3] = product.getStockLevel() + "/" + product.getMaxLevel();
                 indexArray++;
             }
         }
@@ -507,6 +528,172 @@ public class ViewEntityHelper extends EntityHelper {
 
         buttonPanel.add(backButton);
         innerPanel.add(myPanel, BorderLayout.NORTH);
+        innerPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
+
+        // Update frame
+        GuiCreator.setFrame(false, false, true);
+    }
+
+    public static void viewProductInfo(final Product product) {
+        final String productName = product.getProductDescription();
+
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + productName);
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
+
+        final JPanel titlePanel = new JPanel(new GridBagLayout());
+        final JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
+        final JPanel buttonPanel = new JPanel();
+        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+
+        final JLabel productLabel = new JLabel("Product");
+        final JLabel stockLabel = new JLabel("Stock Level");
+        final JLabel supplierLabel = new JLabel("Supplier");
+        final JLabel costLabel = new JLabel("Cost Price");
+        final JLabel saleLabel = new JLabel("Sale Price");
+        final JLabel profitLabel = new JLabel("Profit Per Unit");
+
+        final Font currentFont = new JLabel().getFont();
+        final Font labelFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
+
+        productLabel.setFont(labelFont);
+        stockLabel.setFont(labelFont);
+        supplierLabel.setFont(labelFont);
+        costLabel.setFont(labelFont);
+        saleLabel.setFont(labelFont);
+        profitLabel.setFont(labelFont);
+
+        final int textFieldSize = 20;
+
+        final Entity productSupplier = Database.getSupplierById(product.getSupplierId());
+        final String supplier = ((Supplier) productSupplier).getSupplierName() + " (" + productSupplier.getId() + ")";
+
+        final JTextField productField = new JTextField(productName + " (" + PRODUCT_ID_FORMATTER.format(product.getId()) + ")", textFieldSize);
+        productField.setEditable(false);
+        final JTextField stockField = new JTextField(product.getStockLevel() + "/" + product.getMaxLevel(), textFieldSize);
+        stockField.setEditable(false);
+        final JTextField supplierField = new JTextField(supplier, textFieldSize);
+        supplierField.setEditable(false);
+
+        final JTextField costField = new JTextField("€" + CURRENCY_FORMATTER.format(product.getCostPrice()), textFieldSize);
+        costField.setEditable(false);
+        final JTextField saleField = new JTextField("€" + CURRENCY_FORMATTER.format(product.getSalePrice()), textFieldSize);
+        saleField.setEditable(false);
+        final JTextField profitField = new JTextField("€" + CURRENCY_FORMATTER.format(product.getSalePrice() - product.getCostPrice()), textFieldSize);
+        profitField.setEditable(false);
+
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(1, 10, 0, 5);
+        titlePanel.add(productLabel, g);
+        g.gridx = 1;
+        titlePanel.add(productField, g);
+        g.gridx = 2;
+        titlePanel.add(stockLabel, g);
+        g.gridx = 3;
+        titlePanel.add(stockField, g);
+        g.gridx = 4;
+        titlePanel.add(supplierLabel, g);
+        g.gridx = 5;
+        titlePanel.add(supplierField, g);
+
+        g.gridy = 1;
+        g.gridx = 0;
+        titlePanel.add(costLabel, g);
+        g.gridx = 1;
+        titlePanel.add(costField, g);
+        g.gridx = 2;
+        titlePanel.add(saleLabel, g);
+        g.gridx = 3;
+        titlePanel.add(saleField, g);
+        g.gridx = 4;
+        titlePanel.add(profitLabel, g);
+        g.gridx = 5;
+        titlePanel.add(profitField, g);
+
+        final JPanel myPanel = new JPanel(new BorderLayout());
+
+        double[] yearData = new double[YEAR_CURRENT - YEAR_START + 1];
+        double[] productData = new double[YEAR_CURRENT - YEAR_START + 1];
+
+        String[] columnNames = { "Year", "Total Qty Bought", "Total Qty Sold", "Year Change" };
+        Object[][] data = new Object[YEAR_CURRENT - YEAR_START + 1 + 1][4];
+
+        for (int i = 0; i < YEAR_CURRENT - YEAR_START + 2; i++) {
+            for (int j = 0; j < 4; j++) {
+                data[i][j] = 0;
+            }
+        }
+
+        data[0][2] = "<html><b>Start Level</b></html>";
+        data[0][3] = "<html><b>" + product.getStartLevel() + "</html></b>";
+
+        for (int i = 0; i < YEAR_CURRENT - YEAR_START + 1; i++) {
+            for (Order o : Database.getOrders()) {
+                if (Integer.parseInt(o.getOrderDate().substring(6, 10)) == i + YEAR_START) {
+
+                    for (OrderedItem oi : o.getOrderedItems()) {
+                        if (oi.getProduct().getId() == product.getId() && o.isSupplier() && !o.isActive()) {
+                            data[i + 1][1] = (int) data[i + 1][1] + oi.getQuantity();
+                        } else if (oi.getProduct().getId() == product.getId() && !o.isSupplier()) {
+                            data[i + 1][2] = (int) data[i + 1][2] + oi.getQuantity();
+                        }
+                    }
+
+                }
+                data[i + 1][0] = (i + YEAR_START);
+                if ((int) data[i + 1][1] - (int) data[i + 1][2] > 0) {
+                    data[i + 1][3] = "<html><b><font color=\"blue\">" + ((int) data[i + 1][1] - (int) data[i + 1][2]) + "</font></b></html>";
+                } else if ((int) data[i + 1][1] - (int) data[i + 1][2] < 0) {
+                    data[i + 1][3] = "<html><b><font color=\"red\">" + ((int) data[i + 1][1] - (int) data[i + 1][2]) + "</font></b></html>";
+                }
+            }
+        }
+
+        final JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        table.setEnabled(false);
+
+        final JScrollPane scrollPane = new JScrollPane(table);
+        myPanel.add(scrollPane, BorderLayout.WEST);
+        int runningTotal = product.getStartLevel();
+
+        for (int j = 0; j < YEAR_CURRENT - YEAR_START + 1; j++) {
+            yearData[j] = j + YEAR_START;
+            runningTotal += (int) data[j + 1][1] - (int) data[j + 1][2];
+            productData[j] = runningTotal;
+        }
+
+        double[][] inputdata = { yearData, productData };
+        ChartPanel chartPanel = Graphs.createLineChart("Past Stock levels", productName, inputdata);
+        chartPanel.setPreferredSize(new Dimension(500, 750));
+
+        myPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        myPanel.add(chartPanel, BorderLayout.CENTER);
+
+        innerPanel.add(myPanel, BorderLayout.CENTER);
+
+        final JButton orderButton = new JButton("Order " + productName);
+        orderButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                OrderTable.createSupplierOrder(product.getSupplierId());
+            }
+        });
+
+        final JButton backButton = new JButton("Back to Products");
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ProductTable.createTableGui();
+            }
+        });
+
+        buttonPanel.add(orderButton);
+        buttonPanel.add(backButton);
         innerPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);

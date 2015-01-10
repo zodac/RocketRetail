@@ -33,7 +33,7 @@ public class MenuGui {
     private static JMenu createDatabaseMenu(final boolean manager) {
         final JMenu databaseMenu = new JMenu("Database");
         databaseMenu.add(StaffTable.createMenu(TableState.STAFF, manager));
-        databaseMenu.add(ProductTable.createMenu(manager));
+        databaseMenu.add(ProductTable.createMenu(TableState.PRODUCT, manager));
         databaseMenu.add(SupplierTable.createMenu(TableState.SUPPLIER, manager));
         databaseMenu.add(CustomerTable.createMenu(TableState.CUSTOMER, manager));
         databaseMenu.add(OrderTable.createMenu());

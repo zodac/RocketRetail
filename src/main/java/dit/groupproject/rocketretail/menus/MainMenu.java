@@ -177,7 +177,7 @@ public class MainMenu {
         if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
             StaffTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
-            ProductTable.createTable();
+            ProductTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
             CustomerTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {

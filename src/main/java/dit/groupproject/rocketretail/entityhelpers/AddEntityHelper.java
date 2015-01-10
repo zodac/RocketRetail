@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
@@ -32,6 +33,7 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.ProductTable;
 import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
@@ -57,7 +59,11 @@ public class AddEntityHelper extends EntityHelper {
         } else if (currentState == TableState.ORDER) {
 
         } else if (currentState == TableState.PRODUCT) {
-
+            return new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    addProductPanel();
+                }
+            };
         } else if (currentState == TableState.STAFF) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -490,6 +496,124 @@ public class AddEntityHelper extends EntityHelper {
                     StaffTable.descendingOrderSort = false;
                     StaffTable.sortItems();
                     StaffTable.createTableGui();
+                }
+            }
+        });
+
+        cancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GuiCreator.frame.remove(GuiCreator.leftPanel);
+                GuiCreator.frame.repaint();
+                GuiCreator.frame.validate();
+            }
+        });
+
+        GuiCreator.leftPanel.add(innerPanel);
+        GuiCreator.setFrame(true, false, false);
+    }
+
+    private static void addProductPanel() {
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
+
+        final JPanel innerPanel = new JPanel(new GridBagLayout());
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+
+        GridBagConstraints g = new GridBagConstraints();
+        g.gridx = 0;
+        g.gridy = 0;
+        innerPanel.add(new JLabel("Product Description:"), g);
+        g.gridy = 1;
+        innerPanel.add(new JLabel("Stock Level:"), g);
+        g.gridy = 2;
+        innerPanel.add(new JLabel("Maximum Level"), g);
+        g.gridy = 3;
+        innerPanel.add(new JLabel("Supplier ID:"), g);
+        g.gridy = 4;
+        innerPanel.add(new JLabel("Cost Price:"), g);
+        g.gridy = 5;
+        innerPanel.add(new JLabel("Sale Price:"), g);
+
+        g.insets = new Insets(1, 10, 0, 5);
+
+        g.gridx = 1;
+        g.gridy = 0;
+        g.gridwidth = 3;
+        final JTextField prodDescField = new JTextField(null, 20);
+        innerPanel.add(prodDescField, g);
+        g.gridy = 1;
+        final JTextField stockLevelField = new JTextField(null, 20);
+        innerPanel.add(stockLevelField, g);
+        g.gridy = 2;
+        final JTextField maxLevelField = new JTextField(null, 20);
+        innerPanel.add(maxLevelField, g);
+        g.gridy = 3;
+
+        final String[] supplierOptions = new String[Database.getSuppliers().size() + 1];
+
+        supplierOptions[0] = "";
+        for (int i = 1; i < supplierOptions.length; i++) {
+            supplierOptions[i] = ((Supplier) Database.getSupplierByIndex(i - 1)).getSupplierName() + " ("
+                    + Database.getSupplierByIndex(i - 1).getId() + ")";
+        }
+
+        final JComboBox<String> suppIdBox = new JComboBox<String>(supplierOptions);
+        innerPanel.add(suppIdBox, g);
+        g.gridy = 4;
+        final JTextField costPriceField = new JTextField(null, 20);
+        innerPanel.add(costPriceField, g);
+        g.gridy = 5;
+        final JTextField salePriceField = new JTextField(null, 20);
+        innerPanel.add(salePriceField, g);
+
+        // Spacer
+        g.gridx = 0;
+        g.gridy = 6;
+        innerPanel.add(new JLabel(" "), g);
+        g.gridx = 1;
+        innerPanel.add(new JLabel(" "), g);
+
+        final JButton save = new JButton("Save");
+        save.setLayout(new GridBagLayout());
+        g = new GridBagConstraints();
+        g.insets = new Insets(1, 0, 0, 0);
+        g.gridx = 1;
+        g.gridy = 7;
+        innerPanel.add(save, g);
+        final JButton cancel = new JButton("Cancel");
+        g.gridx = 3;
+        innerPanel.add(cancel, g);
+
+        save.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final ArrayList<JTextField> textFields = new ArrayList<>();
+                textFields.add(prodDescField);
+                final ArrayList<JTextField> intFields = new ArrayList<>();
+                intFields.add(stockLevelField);
+                intFields.add(maxLevelField);
+                final ArrayList<JTextField> doubleFields = new ArrayList<>();
+                doubleFields.add(costPriceField);
+                doubleFields.add(salePriceField);
+                final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
+                comboBoxes.add(suppIdBox);
+
+                if (FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null)) {
+                    final Product product = new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
+                            .parseInt(maxLevelField.getText()), Integer.parseInt(((String) suppIdBox.getSelectedItem()).substring(
+                            ((String) suppIdBox.getSelectedItem()).length() - 5, ((String) suppIdBox.getSelectedItem()).length() - 1)), Double
+                            .parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField.getText()));
+
+                    Database.addProduct(product);
+
+                    GuiCreator.setConfirmationMessage("Product " + prodDescField.getText() + " added");
+                    GuiCreator.frame.remove(GuiCreator.leftPanel);
+                    GuiCreator.frame.repaint();
+                    GuiCreator.frame.validate();
+
+                    ProductTable.descendingOrderSort = false;
+                    ProductTable.sortItems();
+                    ProductTable.createTableGui();
                 }
             }
         });

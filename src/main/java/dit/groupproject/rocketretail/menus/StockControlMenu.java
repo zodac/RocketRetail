@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartPanel;
 
 import dit.groupproject.rocketretail.database.Database;
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.gui.Graphs;
 import dit.groupproject.rocketretail.gui.GuiCreator;
@@ -67,22 +68,22 @@ public class StockControlMenu {
         productPercentLevel.clear();
         productsToReplenish.clear();
 
-        for (final Product p : Database.getProducts()) {
-            productDescription.add(p.getProductDescription());
+        for (final Entity p : Database.getProducts()) {
+            final Product product = (Product) p;
+            productDescription.add(product.getProductDescription());
 
-            Double percentage = StockControlUtilities.calculatePercentage(p.getStockLevel(), p.getMaxLevel());
+            final Double percentage = StockControlUtilities.calculatePercentage(product.getStockLevel(), product.getMaxLevel());
 
             productPercentLevel.add(percentage);
 
             if (Double.compare(percentage, new Double(25.00)) == -1) {
-                productsToReplenish.add(p);
+                productsToReplenish.add(product);
             }
         }
         /**
          * creates a bar chart of products VS % of max stock using JFreePanel
          * */
-        ChartPanel p = Graphs.createProductGraph("Product Chart", "Products", "% of Max Stock", productDescription,
-                productPercentLevel);
+        ChartPanel p = Graphs.createProductGraph("Product Chart", "Products", "% of Max Stock", productDescription, productPercentLevel);
 
         String[] replenishOptions = new String[5];
         replenishOptions[0] = "Replenish products to...";
@@ -112,8 +113,7 @@ public class StockControlMenu {
                     if (replenishBox.getSelectedIndex() == 4)
                         StockControlUtilities.replenishStocks(new Double(100.00), productsToReplenish);
 
-                    GuiCreator.setConfirmationMessage("Products replensihed to " + (replenishBox.getSelectedIndex() * 25)
-                            + "%");
+                    GuiCreator.setConfirmationMessage("Products replensihed to " + (replenishBox.getSelectedIndex() * 25) + "%");
                     replenishBox.setSelectedIndex(0);
                     replenishBox.setEnabled(false);
                 }

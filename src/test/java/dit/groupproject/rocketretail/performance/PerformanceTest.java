@@ -69,7 +69,7 @@ public class PerformanceTest {
      */
     @Test(timeout = LONG_TIMEOUT_IN_MS)
     public void productTest() {
-        ProductTable.createTable();
+        ProductTable.createTableGui();
     }
 
     /**
