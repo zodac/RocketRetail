@@ -184,7 +184,7 @@ public class MainMenu {
             SupplierTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
             OrderTable.first = true;
-            OrderTable.createTable();
+            OrderTable.createTableGui();
         }
     }
 }

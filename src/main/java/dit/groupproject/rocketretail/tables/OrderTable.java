@@ -68,7 +68,7 @@ public class OrderTable extends BaseTable {
      * A String used to define how the JTable is sorted. Retains value if JTable
      * re-called.
      * 
-     * @see #createTable()
+     * @see #createTableGui()
      * @see #sortArrayList()
      */
     static String type = "Sort by...";
@@ -77,7 +77,7 @@ public class OrderTable extends BaseTable {
      * A String used to define how the JTable is filtered. Retains value if
      * JTable re-called.
      * 
-     * @see #createTable()
+     * @see #createTableGui()
      */
     static String filter = "Show All Orders";
 
@@ -114,7 +114,7 @@ public class OrderTable extends BaseTable {
      * The JPanel which holds the JTable and JButtons and places them into
      * mainPanel.
      * 
-     * @see #createTable()
+     * @see #createTableGui()
      * @see ShopDriver#mainPanel
      */
     static JPanel innerPanel;
@@ -134,19 +134,19 @@ public class OrderTable extends BaseTable {
     /**
      * Creates the JMenuItem for "Order" and defines the ActionListener for the
      * JMenuItem.<br />
-     * The ActionListener calls the {@link #createTable()} method.
+     * The ActionListener calls the {@link #createTableGui()} method.
      * 
      * @return the JMenuItem for the "Database" JMenuItem in
      *         {@link MenuGui#createMenuBar(JMenuBar, boolean)}
      * 
-     * @see #createTable()
+     * @see #createTableGui()
      * @see MenuGui#createMenuBar(JMenuBar, boolean)
      */
     public static JMenuItem createMenu() {
         JMenuItem orderItem = new JMenuItem("Orders");
         orderItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                createTable();
+                createTableGui();
             }
         });
 
@@ -161,7 +161,7 @@ public class OrderTable extends BaseTable {
      * Calls {@link #showOrderInfo(Order)} when an order is selected from the
      * table.
      */
-    public static void createTable() {
+    public static void createTableGui() {
         if (!(ShopDriver.getCurrentTableState() == TableState.ORDER)) {
             GuiCreator.frame.remove(GuiCreator.leftPanel);
         }
@@ -482,7 +482,7 @@ public class OrderTable extends BaseTable {
                             }
                         }
                         GuiCreator.setConfirmationMessage(count + " orders completed");
-                        createTable();
+                        createTableGui();
                     }
                 } else if (completeOptions.getSelectedItem().equals("Complete All Customer Orders")) {
 
@@ -498,7 +498,7 @@ public class OrderTable extends BaseTable {
                             }
                         }
                         GuiCreator.setConfirmationMessage(count + " orders completed");
-                        createTable();
+                        createTableGui();
                     }
 
                 } else if (completeOptions.getSelectedItem().equals("Complete All Orders")) {
@@ -515,7 +515,7 @@ public class OrderTable extends BaseTable {
                             }
                         }
                         GuiCreator.setConfirmationMessage(count + " orders completed");
-                        createTable();
+                        createTableGui();
                     }
                 } else
                     completeOrder(Integer.parseInt(((String) completeOptions.getSelectedItem()).substring(4, 8)));
@@ -542,14 +542,14 @@ public class OrderTable extends BaseTable {
                     type = (String) sortOptions.getSelectedItem();
                     sortArrayList();
                 }
-                createTable();
+                createTableGui();
             }
         });
 
         showOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 filter = (String) showOptions.getSelectedItem();
-                createTable();
+                createTableGui();
             }
         });
 
@@ -726,7 +726,7 @@ public class OrderTable extends BaseTable {
                                 GuiCreator.mainPanel.validate();
                                 GuiCreator.frame.repaint();
                                 GuiCreator.frame.validate();
-                                createTable();
+                                createTableGui();
                             }
                         }
                     });// submitOrder
@@ -959,7 +959,7 @@ public class OrderTable extends BaseTable {
                                 GuiCreator.frame.remove(GuiCreator.leftPanel);
                                 GuiCreator.frame.repaint();
                                 GuiCreator.frame.validate();
-                                createTable();
+                                createTableGui();
                             }
                         }
                     });// submitOrder
@@ -1052,7 +1052,7 @@ public class OrderTable extends BaseTable {
 
         GuiCreator.frame.remove(GuiCreator.leftPanel);
         GuiCreator.frame.validate();
-        createTable();
+        createTableGui();
     }
 
     /**
@@ -1062,12 +1062,12 @@ public class OrderTable extends BaseTable {
      * Order Date and Delivery Date (if complete).<br />
      * The JTable is updated to include a breakdown of the ordered items, and
      * their unit price, quantity, and total cost.<br />
-     * Also includes a JButton which returns to {@link #createTable()}.
+     * Also includes a JButton which returns to {@link #createTableGui()}.
      * 
      * @param o
      *            the Order whose information is displayed on-screen
      * 
-     * @see OrderTable#createTable()
+     * @see OrderTable#createTableGui()
      */
     public static void showOrderInfo(Order o) {
         // Reset ShopDriver.frame
@@ -1195,7 +1195,7 @@ public class OrderTable extends BaseTable {
         JButton backButton = new JButton("Back to Orders");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                createTable();
+                createTableGui();
             }
         });
 
