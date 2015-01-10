@@ -11,12 +11,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -64,73 +60,17 @@ import dit.groupproject.rocketretail.menus.MenuGui;
  */
 public class OrderTable extends BaseTable {
 
-    /**
-     * A String used to define how the JTable is sorted. Retains value if JTable
-     * re-called.
-     * 
-     * @see #createTableGui()
-     * @see #sortArrayList()
-     */
-    static String type = "Sort by...";
+	public static boolean first = true;
+    public static boolean descendingOrderSort = false;
+    
+    private static String sortType = "Sort by...";
+    private static String orderFilter = "Show All Orders";
 
-    /**
-     * A String used to define how the JTable is filtered. Retains value if
-     * JTable re-called.
-     * 
-     * @see #createTableGui()
-     */
-    static String filter = "Show All Orders";
+    private static int traderId = 0;
+    private static JPanel innerPanel;
+    private static JTable table = new JTable();
+    private static JComboBox<String> createBox;
 
-    /**
-     * A boolean which is set true if table is called for the first time (or
-     * first time since system has been re-logged into.<br />
-     * If true, sorts table by ID.
-     * 
-     * @see #SortByID(boolean)
-     */
-    public static boolean first = true;
-
-    /**
-     * A boolean which causes all sort options to sort in reverse order.<br />
-     * Set to true if chosen sort option (stored in {@link #type}) is already
-     * selected.
-     * 
-     * @see #sortArrayList()
-     * @see #SortByID(boolean)
-     * @see #SortByStaffID(boolean)
-     * @see #SortByTraderID(boolean)
-     * @see #SortByTotalPrice(boolean)
-     * @see #SortByOrderDate(boolean)
-     * @see #SortByActive(boolean)
-     */
-    static boolean reverse = false;
-
-    /**
-     * An Integer which holds the value of the trader ID for the current order.
-     */
-    static int traderId = 0;
-
-    /**
-     * The JPanel which holds the JTable and JButtons and places them into
-     * mainPanel.
-     * 
-     * @see #createTableGui()
-     * @see ShopDriver#mainPanel
-     */
-    static JPanel innerPanel;
-
-    /**
-     * The JTable which displays the information of all orders.
-     */
-    static JTable table = new JTable();
-
-    /**
-     * The JCombobox which specifies the create options available -
-     * Supplier/Customer for Managers, Customer only for Employees.
-     */
-    static JComboBox<String> createBox;
-
-    // Methods
     /**
      * Creates the JMenuItem for "Order" and defines the ActionListener for the
      * JMenuItem.<br />
@@ -142,318 +82,230 @@ public class OrderTable extends BaseTable {
      * @see #createTableGui()
      * @see MenuGui#createMenuBar(JMenuBar, boolean)
      */
-    public static JMenuItem createMenu() {
-        JMenuItem orderItem = new JMenuItem("Orders");
-        orderItem.addActionListener(new ActionListener() {
+    public static JMenuItem createMenu(final TableState newState, final boolean manager) {
+        final JMenuItem menuItem = new JMenuItem(newState.toString());
+        
+        menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 createTableGui();
             }
         });
 
-        // Return menuItem
-        return orderItem;
+        menuItem.setEnabled(manager);
+        return menuItem;
     }
 
     /**
      * Created the JTable for Orders, using data from {@link ShopDriver#orders}.<br />
      * Adds JButtons to create or complete orders, and to sort or filter the
      * table.<br />
-     * Calls {@link #showOrderInfo(Order)} when an order is selected from the
+     * Calls {@link #viewOrderInfo(Order)} when an order is selected from the
      * table.
      */
     public static void createTableGui() {
-        if (!(ShopDriver.getCurrentTableState() == TableState.ORDER)) {
-            GuiCreator.frame.remove(GuiCreator.leftPanel);
-        }
+        setTableState(TableState.ORDER);
+        resetGui();
 
-        ShopDriver.setCurrentTable(TableState.ORDER);
-
-        // Reset ShopDriver.frame
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
-        GuiCreator.frame.repaint();
-        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
-
-        JComboBox<String> tempBox = new JComboBox<String>();
-
-        // When first run, ensure ArrayList (and table) is sorted by ID
         if (first) {
-            SortByID(false);
+            sortItems();
             first = false;
         }
+        
+        final ArrayList<Entity> orders = Database.getOrders();
+        
+        JComboBox<String> tempBox = new JComboBox<String>();
+       
+        final String[] orderColumnNames = { "Order ID", "Staff ID", "Trader ID", "Total Price", "Order Date", "Delivery Date" };
+        
+        int validOrders = 0;
 
-        int activeCount = 0;
+        if (orderFilter.equals("Show All Orders")) {
+            final Object[][] data = new Object[orders.size()][6];
+            
+            int dataIndex = 0;
+            
+            for(final Entity order : orders){
+            	data[dataIndex++] = order.getData();
+            }            
 
-        String[] columnNames = { "Order ID", "Staff ID", "Trader ID", "Total Price", "Order Date", "Delivery Date" };
+            table = new JTable(data, orderColumnNames);
+            int numberOfActiveOrders = 0;
 
-        if (filter.equals("Show All Orders")) {
-            Object[][] data = new Object[Database.getOrders().size()][6];
-            double totalPrice = 0;
-            String delivery = " ";
-
-            for (int i = 0; i < Database.getOrders().size(); i++) {
-
-                totalPrice = 0;
-
-                if (Database.getOrders().get(i).isSupplier())
-                    totalPrice = Database.getOrders().get(i).getTotalCost();
-
-                else
-                    totalPrice = Database.getOrders().get(i).getTotalSale();
-
-                if (Database.getOrders().get(i).getDeliveryDate().length() == 0)
-                    delivery = " ";
-                else
-                    delivery = Database.getOrders().get(i).getDeliveryDate();
-
-                data[i][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                data[i][1] = STAFF_ID_FORMATTER.format(Database.getOrders().get(i).getStaffId());
-                data[i][2] = Database.getOrders().get(i).getTraderId();
-                data[i][3] = "€" + CURRENCY_FORMATTER.format(totalPrice);
-                data[i][4] = Database.getOrders().get(i).getOrderDate();
-                data[i][5] = delivery;
-            }
-            table = new JTable(data, columnNames);
-
-            for (Order o : Database.getOrders()) {
-                if (o.isActive())
-                    activeCount++;
+            for (final Entity order : orders) {
+                if (((Order) order).isActive()){
+                    numberOfActiveOrders++;
+                }
             }
 
             int arrayIndex = 2;
-            String[] orderArrayComplete = new String[activeCount + 2];
+            final String[] orderArrayComplete = new String[numberOfActiveOrders + 2];
             orderArrayComplete[0] = "Complete Order";
             orderArrayComplete[1] = "Complete All Orders";
 
-            for (int i = 0; i < Database.getOrders().size() + 1; i++) {
-                if (i < Database.getOrders().size() && Database.getOrders().get(i).isActive()) {
-                    orderArrayComplete[arrayIndex] = "ID: " + ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                    arrayIndex++;
-                }
+            for (final Entity order : orders){
+            	if(((Order) order).isActive()){
+            		orderArrayComplete[arrayIndex++] = "ID: " + ORDER_ID_FORMATTER.format(order.getId());            		
+            	}
+            	
             }
-
+            validOrders = numberOfActiveOrders;
             tempBox = new JComboBox<String>(orderArrayComplete);
-        }
-
-        else if (filter.equals("Show Supplier Orders")) {
-            int supplierSize = 0;
-            for (Order o : Database.getOrders()) {
-                if (o.isSupplier())
-                    supplierSize++;
-            }
-
-            Object[][] data = new Object[supplierSize][6];
-            String delivery = " ";
-            int supplierIndex = 0;
-            for (int i = 0; i < Database.getOrders().size(); i++) {
-
-                if (Database.getOrders().get(i).isSupplier()) {
-
-                    if (Database.getOrders().get(i).getDeliveryDate().length() == 0)
-                        delivery = " ";
-                    else
-                        delivery = Database.getOrders().get(i).getDeliveryDate();
-
-                    data[supplierIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                    data[supplierIndex][1] = STAFF_ID_FORMATTER.format(Database.getOrders().get(i).getStaffId());
-                    data[supplierIndex][2] = Database.getOrders().get(i).getTraderId();
-                    data[supplierIndex][3] = "€" + CURRENCY_FORMATTER.format(Database.getOrders().get(i).getTotalCost());
-                    data[supplierIndex][4] = Database.getOrders().get(i).getOrderDate();
-                    data[supplierIndex][5] = delivery;
-                    supplierIndex++;
+        } else if (orderFilter.equals("Show Supplier Orders")) {
+            int numberOfSuppliersWithOrders = 0;
+            
+            for (final Entity order : orders) {
+                if (((Order) order).isSupplier()){
+                    numberOfSuppliersWithOrders++;
                 }
             }
-            table = new JTable(data, columnNames);
-            for (Order o : Database.getOrders()) {
-                if (o.isActive() && o.isSupplier())
-                    activeCount++;
+
+            final Object[][] data = new Object[numberOfSuppliersWithOrders][6];
+            int supplierIndex = 0;
+            
+            for(final Entity order : orders){
+            	if(((Order) order).isSupplier()){
+            		data[supplierIndex++] = order.getData();
+            	}
             }
 
-            int arrayIndex = 2;
-            String[] orderArrayComplete = new String[activeCount + 2];
+            
+            
+            table = new JTable(data, orderColumnNames);
+            
+            int numberOfActiveSupplierOrders = 0;
+            for (final Entity order : orders) {
+                if (isActiveSupplierOrder(order)){
+                	numberOfActiveSupplierOrders++;
+                }
+            }
+
+            
+            final String[] orderArrayComplete = new String[numberOfActiveSupplierOrders + 2];
             orderArrayComplete[0] = "Complete Supplier Orders";
             orderArrayComplete[1] = "Complete All Supplier Orders";
+            int arrayIndex = 2;
 
-            for (int i = 0; i < Database.getOrders().size() + 1; i++) {
-                if (i < Database.getOrders().size() && Database.getOrders().get(i).isActive() && Database.getOrders().get(i).isSupplier()) {
-                    orderArrayComplete[arrayIndex] = "ID: " + ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                    arrayIndex++;
-                }
+            for(final Entity order : orders){
+            	if(isActiveSupplierOrder(order)){
+            		orderArrayComplete[arrayIndex++] = "ID: " + ORDER_ID_FORMATTER.format(order.getId());
+            	}
             }
-
+            validOrders = numberOfActiveSupplierOrders;
             tempBox = new JComboBox<String>(orderArrayComplete);
-
-        }
-
-        else if (filter.equals("Show Customer Orders")) {
+        } else if (orderFilter.equals("Show Customer Orders")) {
             int customerSize = 0;
-            for (Order o : Database.getOrders()) {
-                if (!o.isSupplier())
+            for (final Entity order : orders) {
+                if (!((Order) order).isSupplier()){
                     customerSize++;
-            }
-
-            Object[][] data = new Object[customerSize][6];
-            String delivery = " ";
-            int customerIndex = 0;
-            for (int i = 0; i < Database.getOrders().size(); i++) {
-
-                if (!Database.getOrders().get(i).isSupplier()) {
-
-                    if (Database.getOrders().get(i).getDeliveryDate() == null)
-                        delivery = " ";
-                    else
-                        delivery = Database.getOrders().get(i).getDeliveryDate();
-
-                    data[customerIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                    data[customerIndex][1] = STAFF_ID_FORMATTER.format(Database.getOrders().get(i).getStaffId());
-                    data[customerIndex][2] = Database.getOrders().get(i).getTraderId();
-                    data[customerIndex][3] = "€" + CURRENCY_FORMATTER.format(Database.getOrders().get(i).getTotalSale());
-                    data[customerIndex][4] = Database.getOrders().get(i).getOrderDate();
-                    data[customerIndex][5] = delivery;
-                    customerIndex++;
                 }
             }
-            table = new JTable(data, columnNames);
 
-            for (Order o : Database.getOrders()) {
-                if (o.isActive() && !o.isSupplier())
-                    activeCount++;
+            final Object[][] data = new Object[customerSize][6];
+            int customerIndex = 0;
+            
+            for (final Entity order : orders){
+            	if(!((Order) order).isSupplier()){
+            		data[customerIndex++] = order.getData();
+            	}
+            }
+            table = new JTable(data, orderColumnNames);
+
+            int numberOfActiveCustomerOrders = 0;
+            for (final Entity order : orders) {
+                if (isActiveCustomerOrder(order)){
+                	numberOfActiveCustomerOrders++;
+                }
             }
 
             int arrayIndex = 2;
-            String[] orderArrayComplete = new String[activeCount + 2];
+            final String[] orderArrayComplete = new String[numberOfActiveCustomerOrders + 2];
             orderArrayComplete[0] = "Complete Customer Orders";
             orderArrayComplete[1] = "Complete All Customer Orders";
 
-            for (int i = 0; i < Database.getOrders().size() + 1; i++) {
-                if (i < Database.getOrders().size() && Database.getOrders().get(i).isActive() && !Database.getOrders().get(i).isSupplier()) {
-                    orderArrayComplete[arrayIndex] = "ID: " + ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                    arrayIndex++;
+            
+            for(final Entity order : orders){
+            	if (isActiveCustomerOrder(order)){
+            		orderArrayComplete[arrayIndex++] = "ID: " + ORDER_ID_FORMATTER.format(order.getId());
                 }
             }
+            
+            validOrders = numberOfActiveCustomerOrders;
             tempBox = new JComboBox<String>(orderArrayComplete);
         }
 
-        else if (filter.equals("Show Active Orders")) {
-            int activeSize = 0;
-            for (Order o : Database.getOrders()) {
-                if (o.isActive())
-                    activeSize++;
-            }
-
-            Object[][] data = new Object[activeSize][6];
-            String delivery = " ";
-            int customerIndex = 0;
-            for (int i = 0; i < Database.getOrders().size(); i++) {
-
-                if (Database.getOrders().get(i).isActive()) {
-                    if (Database.getOrders().get(i).getDeliveryDate() == null)
-                        delivery = " ";
-                    else
-                        delivery = Database.getOrders().get(i).getDeliveryDate();
-
-                    data[customerIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                    data[customerIndex][1] = STAFF_ID_FORMATTER.format(Database.getOrders().get(i).getStaffId());
-                    data[customerIndex][2] = Database.getOrders().get(i).getTraderId();
-                    data[customerIndex][3] = "€" + CURRENCY_FORMATTER.format(Database.getOrders().get(i).getTotalCost());
-                    data[customerIndex][4] = Database.getOrders().get(i).getOrderDate();
-                    data[customerIndex][5] = delivery;
-                    customerIndex++;
+        else if (orderFilter.equals("Show Active Orders")) {
+            int numberOfActiveOrders = 0;
+            
+            for (final Entity order : Database.getOrders()) {
+                if (((Order) order).isActive()){
+                    numberOfActiveOrders++;
                 }
             }
-            table = new JTable(data, columnNames);
 
-            for (Order o : Database.getOrders()) {
-                if (o.isActive())
-                    activeCount++;
-            }
-
+            Object[][] data = new Object[numberOfActiveOrders][6];
+            int customerIndex = 0;
             int arrayIndex = 2;
-            String[] orderArrayComplete = new String[activeCount + 2];
+            final String[] orderArrayComplete = new String[numberOfActiveOrders + 2];
             orderArrayComplete[0] = "Complete Active Orders";
             orderArrayComplete[1] = "Complete All Orders";
-
-            for (int i = 0; i < Database.getOrders().size() + 1; i++) {
-                if (i < Database.getOrders().size() && Database.getOrders().get(i).isActive()) {
-                    orderArrayComplete[arrayIndex] = "ID: " + ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                    arrayIndex++;
-                }
+            
+            for(final Entity order : orders){
+            	if(((Order) order).isActive()){
+            		data[customerIndex++] = order.getData();
+            		orderArrayComplete[arrayIndex++] = "ID: " + ORDER_ID_FORMATTER.format(order.getId());
+            	}
             }
+            
+            table = new JTable(data, orderColumnNames);
+            validOrders = numberOfActiveOrders;
             tempBox = new JComboBox<String>(orderArrayComplete);
         }
 
         table.setColumnSelectionAllowed(false);
         table.setFillsViewportHeight(true);
 
-        table.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                if (table.getSelectedRow() >= 0) { // Invalid selections return
-                                                   // -1
-                    Order input = null;
-
-                    for (Order o : Database.getOrders()) {
-                        if (o.getOrderId() == Integer.parseInt((String) table.getValueAt(table.getSelectedRow(), 0)))
-                            input = o;
-                    }
-
-                    showOrderInfo(input);
-                }
-            }
-        });
-
-        JScrollPane scrollPane = new JScrollPane(table);
+        final JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        JPanel buttonPanel = new JPanel();
+        final JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        String[] createOptionsManager = { "Create Order", "Customer Order", "Supplier Order" };
-        String[] createOptionsEmployee = { "Create Order", "Customer Order" };
+        final String[] createOptionsManager = { "Create Order", "Customer Order", "Supplier Order" };
+        final String[] createOptionsEmployee = { "Create Order", "Customer Order" };
         final Staff currentStaff = ShopDriver.getCurrentStaff();
 
         if (currentStaff.getStaffLevel() == 1) {
             createBox = new JComboBox<String>(createOptionsManager);
-        } else if (currentStaff.getStaffLevel() == 2) {
+        } else {
             createBox = new JComboBox<String>(createOptionsEmployee);
         }
 
         final JComboBox<String> completeOptions = tempBox;
-        if (activeCount == 0)
-            completeOptions.setEnabled(false);
+        completeOptions.setEnabled(validOrders == 0);
 
         String[] options = { "Sort by...", "Order ID", "Staff ID", "Trader ID", "Total Price", "Order Date", "Active" };
         final JComboBox<String> sortOptions = new JComboBox<String>(options);
         int sortIndex = 0;
 
-        if (type.equals("Sort by..."))
+        if (sortType.equals("Sort by..."))
             sortIndex = 0;
-        if (type.equals("Order ID"))
+        if (sortType.equals("Order ID"))
             sortIndex = 1;
-        if (type.equals("Staff ID"))
+        if (sortType.equals("Staff ID"))
             sortIndex = 2;
-        if (type.equals("Trader ID"))
+        if (sortType.equals("Trader ID"))
             sortIndex = 3;
-        if (type.equals("Total Price"))
+        if (sortType.equals("Total Price"))
             sortIndex = 4;
-        if (type.equals("Order Date"))
+        if (sortType.equals("Order Date"))
             sortIndex = 5;
-        if (type.equals("Active"))
+        if (sortType.equals("Active"))
             sortIndex = 6;
         sortOptions.setSelectedIndex(sortIndex);
 
-        String[] filterOptions = { "Show All Orders", "Show Supplier Orders", "Show Customer Orders", "Show Active Orders" };
-        final JComboBox<String> showOptions = new JComboBox<String>(filterOptions);
-        int filterIndex = 0;
-
-        if (filter.equals("Show All Orders"))
-            filterIndex = 0;
-        if (filter.equals("Show Supplier Orders"))
-            filterIndex = 1;
-        if (filter.equals("Show Customer Orders"))
-            filterIndex = 2;
-        if (filter.equals("Show Active Orders"))
-            filterIndex = 3;
-        showOptions.setSelectedIndex(filterIndex);
+        final String[] orderFilterOptions = { "Show All Orders", "Show Supplier Orders", "Show Customer Orders", "Show Active Orders" };
+        final JComboBox<String> showOptions = new JComboBox<>(orderFilterOptions);
+        showOptions.setSelectedIndex(Arrays.asList(orderFilterOptions).indexOf(orderFilter));
 
         createBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -466,23 +318,27 @@ public class OrderTable extends BaseTable {
         completeOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (completeOptions.getSelectedItem().equals("Complete Order")) {
+                	
                 } else if (completeOptions.getSelectedItem().equals("Complete Customer Order")) {
+                	
                 } else if (completeOptions.getSelectedItem().equals("Complete Supplier Order")) {
+                	
                 } else if (completeOptions.getSelectedItem().equals("Complete All Supplier Orders")) {
 
-                    JPanel myPanel = new JPanel();
+                    final JPanel myPanel = new JPanel();
                     myPanel.add(new JLabel("Do you want to complete ALL supplier orders?"));
 
                     if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
-                        int count = 0;
-                        for (Order o : Database.getOrders()) {
-                            if (o.isActive() && o.isSupplier()) {
-                                o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-                                count++;
+                        int numberOfActiveSupplierOptions = 0;
+                        for (final Entity o : Database.getOrders()) {
+                        	final Order order = (Order) o;
+                            if (isActiveSupplierOrder(order)) {
+                                order.completeOrder(DATE_FORMATTER.format(new Date()));
+                                numberOfActiveSupplierOptions++;
                             }
                         }
-                        GuiCreator.setConfirmationMessage(count + " orders completed");
-                        createTableGui();
+                        GuiCreator.setConfirmationMessage(numberOfActiveSupplierOptions + " orders completed");
+                        OrderTable.createTableGui();
                     }
                 } else if (completeOptions.getSelectedItem().equals("Complete All Customer Orders")) {
 
@@ -490,15 +346,16 @@ public class OrderTable extends BaseTable {
                     myPanel.add(new JLabel("Do you want to complete ALL customer orders?"));
 
                     if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
-                        int count = 0;
-                        for (Order o : Database.getOrders()) {
-                            if (o.isActive() && !o.isSupplier()) {
-                                o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-                                count++;
+                        int numberOfActiveCustomerOrders = 0;
+                        for (final Entity o : Database.getOrders()) {
+                        	final Order order  =(Order) o;
+                            if (isActiveCustomerOrder(order)) {
+                                order.completeOrder(DATE_FORMATTER.format(new Date()));
+                                numberOfActiveCustomerOrders++;
                             }
                         }
-                        GuiCreator.setConfirmationMessage(count + " orders completed");
-                        createTableGui();
+                        GuiCreator.setConfirmationMessage(numberOfActiveCustomerOrders + " orders completed");
+                        OrderTable.createTableGui();
                     }
 
                 } else if (completeOptions.getSelectedItem().equals("Complete All Orders")) {
@@ -507,40 +364,34 @@ public class OrderTable extends BaseTable {
                     myPanel.add(new JLabel("Do you want to complete ALL orders?"));
 
                     if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
-                        int count = 0;
-                        for (Order o : Database.getOrders()) {
-                            if (o.isActive()) {
-                                o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-                                count++;
+                        int numberOfActiveOrders = 0;
+                        for (final Entity o : Database.getOrders()) {
+                        	final Order order = (Order) o;
+                            if (order.isActive()) {
+                            	order.completeOrder(DATE_FORMATTER.format(new Date()));
+                                numberOfActiveOrders++;
                             }
                         }
-                        GuiCreator.setConfirmationMessage(count + " orders completed");
+                        GuiCreator.setConfirmationMessage(numberOfActiveOrders + " orders completed");
                         createTableGui();
                     }
-                } else
+                } else{
                     completeOrder(Integer.parseInt(((String) completeOptions.getSelectedItem()).substring(4, 8)));
-
+                }
             }
         });
 
         sortOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // If already sorted by type, reverse order
                 if (sortOptions.getSelectedItem().equals("Sort by...")) {
-                }
-
-                else if (type.equals((String) sortOptions.getSelectedItem())) {
-                    if (reverse)
-                        reverse = false;
-                    else
-                        reverse = true;
-                    sortArrayList();
-                }
-
-                // Else sort in ascending order
-                else {
-                    type = (String) sortOptions.getSelectedItem();
-                    sortArrayList();
+                    // Do nothing
+                } else {
+                    if (sortType.equals((String) sortOptions.getSelectedItem())) {
+                        descendingOrderSort = !descendingOrderSort;
+                    } else {
+                        sortType = (String) sortOptions.getSelectedItem();
+                    }
+                    sortItems();
                 }
                 createTableGui();
             }
@@ -548,7 +399,7 @@ public class OrderTable extends BaseTable {
 
         showOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                filter = (String) showOptions.getSelectedItem();
+                orderFilter = (String) showOptions.getSelectedItem();
                 createTableGui();
             }
         });
@@ -560,10 +411,18 @@ public class OrderTable extends BaseTable {
 
         GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
         GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
-
-        // Update ShopDriver.frame
         GuiCreator.setFrame(false, false, true);
     }
+    
+    private static boolean isActiveCustomerOrder(final Entity order) {
+    	final Order o = (Order) order;
+		return o.isActive() && !o.isSupplier();
+	}
+
+	private static boolean isActiveSupplierOrder(final Entity order) {
+		final Order o = (Order) order;
+		return o.isActive() && o.isSupplier();
+	}
 
     /**
      * Creates a customer order in {@link ShopDriver#leftPanel}. Shows a
@@ -718,7 +577,7 @@ public class OrderTable extends BaseTable {
                                     }
                                 }
                                 GuiCreator.setConfirmationMessage("Order #"
-                                        + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getOrderId())
+                                        + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
                                         + " created for customer \"" + activeCustomer.getCustomerName() + "\"");
 
                                 // Reset ShopDriver.frame
@@ -952,7 +811,7 @@ public class OrderTable extends BaseTable {
                                 }
 
                                 GuiCreator.setConfirmationMessage("Order #"
-                                        + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getOrderId())
+                                        + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
                                         + " created for supplier \"" + ((Supplier) activeSupp).getSupplierName() + "\"");
 
                                 // Reset ShopDriver.frame
@@ -1038,15 +897,9 @@ public class OrderTable extends BaseTable {
         final JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("Are you sure you want to complete order #" + ORDER_ID_FORMATTER.format(orderId) + "?"));
 
-        final int result = showDialog("Please confirm", myPanel);
-
-        if (result == JOptionPane.OK_OPTION) {
-            for (final Order o : Database.getOrders()) {
-                if (o.getOrderId() == orderId) {
-                    o.completeOrder(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-                }
-
-            }
+        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
+        	final Order order = (Order) Database.getOrderById(orderId);
+        	order.completeOrder(DATE_FORMATTER.format(new Date()));
             GuiCreator.setConfirmationMessage("Order #" + orderId + " completed");
         }
 
@@ -1054,465 +907,14 @@ public class OrderTable extends BaseTable {
         GuiCreator.frame.validate();
         createTableGui();
     }
+    
+    public static void sortItems() {
+        Comparator<Entity> comparator = Order.getComparator(sortType);
 
-    /**
-     * Creates a new page on-screen with a detailed breakdown of an individual
-     * order.<br />
-     * Displays basic information (Order ID, Staff name/ID, Trader name/ID,
-     * Order Date and Delivery Date (if complete).<br />
-     * The JTable is updated to include a breakdown of the ordered items, and
-     * their unit price, quantity, and total cost.<br />
-     * Also includes a JButton which returns to {@link #createTableGui()}.
-     * 
-     * @param o
-     *            the Order whose information is displayed on-screen
-     * 
-     * @see OrderTable#createTableGui()
-     */
-    public static void showOrderInfo(Order o) {
-        // Reset ShopDriver.frame
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Order #" + ORDER_ID_FORMATTER.format(o.getOrderId()));
-        GuiCreator.frame.repaint();
-        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
-
-        JPanel titlePanel = new JPanel(new GridBagLayout());
-        JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
-        JPanel buttonPanel = new JPanel();
-        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-
-        final boolean isSupplier = o.isSupplier();
-
-        String traderName = "";
-        final String traderTitle = isSupplier ? "Supplier" : "Customer";
-
-        final Staff staff = (Staff) Database.getStaffMemberById(o.getStaffId());
-        final String staffName = staff.getStaffName();
-
-        if (isSupplier) {
-            final Entity supplier = Database.getSupplierById(o.getTraderId());
-            traderName = ((Supplier) supplier).getSupplierName();
-        } else {
-            final Entity customer = Database.getCustomerById(o.getTraderId());
-            traderName = ((Customer) customer).getCustomerName();
+        if (descendingOrderSort) {
+            comparator = Collections.reverseOrder(comparator);
         }
 
-        // JLabels
-        JLabel orderLabel = new JLabel("Order ID");
-        JLabel staffLabel = new JLabel("Staff");
-        JLabel traderLabel = new JLabel(traderTitle);
-        JLabel orderDateLabel = new JLabel("Order Date");
-        JLabel deliveryDateLabel = new JLabel("Delivery Date");
-        JLabel titleLabel = new JLabel("Ordered Items");
-        orderLabel.setFont(new Font(orderLabel.getFont().getFontName(), Font.BOLD, orderLabel.getFont().getSize()));
-        staffLabel.setFont(new Font(staffLabel.getFont().getFontName(), Font.BOLD, staffLabel.getFont().getSize()));
-        traderLabel.setFont(new Font(traderLabel.getFont().getFontName(), Font.BOLD, traderLabel.getFont().getSize()));
-        orderDateLabel.setFont(new Font(orderDateLabel.getFont().getFontName(), Font.BOLD, orderDateLabel.getFont().getSize()));
-        deliveryDateLabel.setFont(new Font(deliveryDateLabel.getFont().getFontName(), Font.BOLD, deliveryDateLabel.getFont().getSize()));
-        titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), Font.BOLD, titleLabel.getFont().getSize()));
-
-        int textFieldSize = 20;
-        // JTextFields
-        JTextField orderField = new JTextField(ORDER_ID_FORMATTER.format(o.getOrderId()), textFieldSize);
-        orderField.setEditable(false);
-        JTextField staffField = new JTextField(staffName + " (" + STAFF_ID_FORMATTER.format(o.getStaffId()) + ")", textFieldSize);
-        staffField.setEditable(false);
-        JTextField traderField = new JTextField(traderName + " (" + o.getTraderId() + ")", textFieldSize);
-        traderField.setEditable(false);
-        JTextField orderDateField = new JTextField(o.getOrderDate(), textFieldSize);
-        orderDateField.setEditable(false);
-        JTextField deliveryDateField = new JTextField(o.getDeliveryDate(), textFieldSize);
-        deliveryDateField.setEditable(false);
-
-        GridBagConstraints g = new GridBagConstraints();
-        g.insets = new Insets(1, 10, 0, 5);
-        titlePanel.add(orderLabel, g);
-        g.gridx = 1;
-        titlePanel.add(orderField, g);
-        g.gridx = 2;
-        titlePanel.add(staffLabel, g);
-        g.gridx = 3;
-        titlePanel.add(staffField, g);
-        g.gridx = 4;
-        titlePanel.add(traderLabel, g);
-        g.gridx = 5;
-        titlePanel.add(traderField, g);
-
-        g.gridx = 0;
-        g.gridy = 1;
-        titlePanel.add(orderDateLabel, g);
-
-        g.gridx = 1;
-        titlePanel.add(orderDateField, g);
-
-        if (!o.getDeliveryDate().equals("")) {
-
-            g.gridx = 4;
-            titlePanel.add(deliveryDateLabel, g);
-
-            g.gridx = 5;
-            titlePanel.add(deliveryDateField, g);
-        }
-
-        g = new GridBagConstraints();
-        g.insets = new Insets(1, 10, 0, 5);
-        g.gridy = 2;
-        g.gridx = 2;
-        g.gridwidth = 2;
-        titlePanel.add(titleLabel, g);
-
-        String[] columnNames = { "Ordered Product", "Unit Price", "Order Quantity", "Product Total" };
-        Object[][] data = new Object[o.getOrderedItems().size() + 1][4];
-        double total = 0;
-
-        for (int i = 0; i < o.getOrderedItems().size(); i++) {
-            double unitPrice = 0;
-
-            if (isSupplier)
-                unitPrice = o.getOrderedItems().get(i).getProduct().getCostPrice();
-            else
-                unitPrice = o.getOrderedItems().get(i).getProduct().getSalePrice();
-
-            data[i][0] = o.getOrderedItems().get(i).getProduct().getProductDescription() + " (" + o.getOrderedItems().get(i).getProduct().getId()
-                    + ")";
-            data[i][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
-            data[i][2] = o.getOrderedItems().get(i).getQuantity();
-            data[i][3] = "€" + CURRENCY_FORMATTER.format(unitPrice * (int) data[i][2]);
-            total += (unitPrice * (int) data[i][2]);
-        }
-        data[o.orderedItems.size()][2] = "<html><b>Order Total</b></html>";
-        data[o.orderedItems.size()][3] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
-
-        JTable table = new JTable(data, columnNames);
-        table.setFillsViewportHeight(true);
-        table.setEnabled(false);
-
-        JScrollPane scrollPane = new JScrollPane(table);
-        innerPanel.add(scrollPane, BorderLayout.CENTER);
-
-        JButton backButton = new JButton("Back to Orders");
-        backButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                createTableGui();
-            }
-        });
-
-        buttonPanel.add(backButton);
-        innerPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
-        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
-
-        // Update frame
-        GuiCreator.setFrame(false, false, true);
-    }
-
-    /**
-     * A switch-like method which decides how to sort the JTable.<br />
-     * Uses class variable {@link #type} and calls appropriate sorting method
-     * based on its value.
-     * 
-     * @see #type
-     * @see #SortByID(boolean)
-     * @see #SortByStaffID(boolean)
-     * @see #SortByTraderID(boolean)
-     * @see #SortByTotalPrice(boolean)
-     * @see #SortByOrderDate(boolean)
-     * @see #SortByActive(boolean)
-     */
-    public static void sortArrayList() {
-        if (type.equals("Order ID"))
-            SortByID(reverse);
-        if (type.equals("Staff ID"))
-            SortByStaffID(reverse);
-        if (type.equals("Trader ID"))
-            SortByTraderID(reverse);
-        if (type.equals("Total Price"))
-            SortByTotalPrice(reverse);
-        if (type.equals("Order Date"))
-            SortByOrderDate(reverse);
-        if (type.equals("Active"))
-            SortByActive(reverse);
-    }
-
-    /**
-     * Sorts {@link ShopDriver#orders} by Order ID, in ascending order
-     * 
-     * @param reverse
-     *            a boolean which specifies whether to sort in reverse order or
-     *            not
-     */
-    public static void SortByID(boolean reverse) {
-        ArrayList<Order> tempArrayList = new ArrayList<Order>();
-        int count = 0, offset = 0;
-        boolean found = false;
-
-        for (int i = 0; i < Database.getOrders().size() + offset; i++) {
-            found = false;
-            for (Order o : Database.getOrders()) {
-                if (count == o.getOrderId()) {
-                    tempArrayList.add(o);
-                    found = true;
-                }
-            }
-            if (!found)
-                offset++;
-            count++;
-        }
-
-        Database.getOrders().clear();
-
-        if (!reverse) {
-            for (int i = 0; i < tempArrayList.size(); i++) {
-                Database.getOrders().add(tempArrayList.get(i));
-            }
-        } else if (reverse) {
-            for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                Database.getOrders().add(tempArrayList.get(i));
-            }
-        }
-
-    }
-
-    /**
-     * Sorts {@link ShopDriver#orders} by Staff ID, in ascending order
-     * 
-     * @param reverse
-     *            a boolean which specifies whether to sort in reverse order or
-     *            not
-     */
-    public static void SortByStaffID(boolean reverse) {
-        int lowestID = 999999999;
-        ArrayList<Order> tempArrayList = new ArrayList<Order>();
-        int indexL = 0;
-
-        tempArrayList.clear();
-        boolean found;
-
-        while (Database.getOrders().size() != 0) {
-            // go through the array list and find the lowest wage listed
-            for (Order o : Database.getOrders()) {
-                if (lowestID > o.getStaffId())
-                    lowestID = o.getStaffId();
-            }
-            found = false;
-
-            // find an entry in the arrayList with a wage matching the lowest
-            // wage found
-            for (Order o : Database.getOrders()) {
-                if (lowestID == o.getStaffId() && !found) {
-                    // when a matching entry is found, add to tempArrayList
-                    tempArrayList.add(o);
-
-                    // note the index of this entry
-                    indexL = Database.getOrders().indexOf(o);
-                    found = true;
-                }
-                if (found)
-                    break;
-            }
-            Database.getOrders().remove(indexL);
-            lowestID = 99999999;
-        }
-        Database.getOrders().clear();
-
-        if (!reverse) {
-            for (int i = 0; i < tempArrayList.size(); i++) {
-                Database.getOrders().add(tempArrayList.get(i));
-            }
-        } else if (reverse) {
-            for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                Database.getOrders().add(tempArrayList.get(i));
-            }
-        }
-    }
-
-    /**
-     * Sorts {@link ShopDriver#orders} by trader ID in ascending order.
-     * 
-     * @param reverse
-     *            a boolean which specifies whether to sort in reverse order or
-     *            not
-     */
-    public static void SortByTraderID(boolean reverse) {
-        int lowestID = 999999999;
-        ArrayList<Order> tempArrayList = new ArrayList<Order>();
-        int indexL = 0;
-
-        tempArrayList.clear();
-        boolean found;
-
-        while (Database.getOrders().size() != 0) {
-            // go through the array list and find the lowest wage listed
-            for (Order o : Database.getOrders()) {
-                if (lowestID > o.getTraderId())
-                    lowestID = o.getTraderId();
-            }
-            found = false;
-
-            // find an entry in the arrayList with a wage matching the lowest
-            // wage found
-            for (Order o : Database.getOrders()) {
-                if (lowestID == o.getTraderId() && !found) {
-                    // when a matching entry is found, add to tempArrayList
-                    tempArrayList.add(o);
-
-                    // note the index of this entry
-                    indexL = Database.getOrders().indexOf(o);
-                    found = true;
-                }
-                if (found)
-                    break;
-            }
-            Database.getOrders().remove(indexL);
-            lowestID = 99999999;
-        }
-        Database.getOrders().clear();
-
-        if (!reverse) {
-            for (int i = 0; i < tempArrayList.size(); i++) {
-                Database.getOrders().add(tempArrayList.get(i));
-            }
-        } else if (reverse) {
-            for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                Database.getOrders().add(tempArrayList.get(i));
-            }
-        }
-    }
-
-    /**
-     * Sorts {@link ShopDriver#orders} by total price in ascending order.
-     * 
-     * @param reverse
-     *            a boolean which specifies whether to sort in reverse order or
-     *            not
-     */
-    public static void SortByTotalPrice(boolean reverse) {
-        double lowestTotal = 999999999;
-        ArrayList<Order> tempArrayList = new ArrayList<Order>();
-        int indexL = 0;
-
-        tempArrayList.clear();
-        boolean found;
-
-        while (Database.getOrders().size() != 0) {
-            // go through the array list and find the lowest wage listed
-
-            double totalPrice = 0;
-
-            for (Order o : Database.getOrders()) {
-                if (o.isSupplier())
-                    totalPrice = o.getTotalCost();
-                else
-                    totalPrice = o.getTotalSale();
-
-                if (lowestTotal > totalPrice)
-                    lowestTotal = totalPrice;
-            }
-
-            found = false;
-
-            // find an entry in the arrayList with a wage matching the lowest
-            // wage found
-            for (Order o : Database.getOrders()) {
-
-                if (o.isSupplier())
-                    totalPrice = o.getTotalCost();
-                else
-                    totalPrice = o.getTotalSale();
-
-                if (lowestTotal == totalPrice && !found) {
-                    // when a matching entry is found, add to tempArrayList
-                    tempArrayList.add(o);
-
-                    // note the index of this entry
-                    indexL = Database.getOrders().indexOf(o);
-
-                    found = true;
-                }
-                if (found)
-                    break;
-            }
-            Database.getOrders().remove(indexL);
-
-            lowestTotal = 99999999;
-        }
-
-        Database.getOrders().clear();
-
-        if (!reverse) {
-            for (int i = 0; i < tempArrayList.size(); i++) {
-                Database.getOrders().add(tempArrayList.get(i));
-            }
-        } else if (reverse) {
-            for (int i = tempArrayList.size() - 1; i >= 0; i--) {
-                Database.getOrders().add(tempArrayList.get(i));
-            }
-        }
-    }
-
-    /**
-     * Sorts {@link ShopDriver#orders} by Order Date, using the sub-methods.
-     * 
-     * @param reverse
-     *            a boolean which specifies whether to sort in reverse order or
-     *            not
-     */
-    public static void SortByOrderDate(final boolean reverse) {
-        Collections.sort(Database.getOrders(), new Comparator<Order>() {
-            DateFormat f = new SimpleDateFormat("dd/MM/yyyy");
-
-            @Override
-            public int compare(Order o1, Order o2) {
-                try {
-                    if (!reverse)
-                        return f.parse(o1.getOrderDate()).compareTo(f.parse(o2.getOrderDate()));
-                    else
-                        return f.parse(o2.getOrderDate()).compareTo(f.parse(o1.getOrderDate()));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                return 0;
-            }
-        });
-    }
-
-    /**
-     * Sorts {@link ShopDriver#orders} by active/inactive, with active first
-     * 
-     * @param reverse
-     *            a boolean which specifies whether to sort in reverse order or
-     *            not
-     */
-    public static void SortByActive(boolean reverse) {
-        ArrayList<Order> activeArrayList = new ArrayList<Order>();
-        ArrayList<Order> inactiveArrayList = new ArrayList<Order>();
-
-        for (Order o : Database.getOrders()) {
-            if (o.isActive())
-                activeArrayList.add(o);
-            else if (!o.isActive())
-                inactiveArrayList.add(o);
-        }
-
-        Database.getOrders().clear();
-
-        if (!reverse) {
-            for (int i = 0; i < activeArrayList.size(); i++) {
-                Database.getOrders().add(activeArrayList.get(i));
-            }
-            for (int i = 0; i < inactiveArrayList.size(); i++) {
-                Database.getOrders().add(inactiveArrayList.get(i));
-            }
-        } else if (reverse) {
-            for (int i = 0; i < inactiveArrayList.size(); i++) {
-                Database.getOrders().add(inactiveArrayList.get(i));
-            }
-            for (int i = 0; i < activeArrayList.size(); i++) {
-                Database.getOrders().add(activeArrayList.get(i));
-            }
-        }
+        Collections.sort(Database.getOrders(), comparator);
     }
 }

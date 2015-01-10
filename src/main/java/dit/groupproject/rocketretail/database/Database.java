@@ -20,7 +20,7 @@ public class Database {
     private static ArrayList<Entity> products = new ArrayList<>();
     private static ArrayList<Entity> suppliers = new ArrayList<>();
     private static ArrayList<Entity> customers = new ArrayList<>();
-    private static ArrayList<Order> orders = new ArrayList<>();
+    private static ArrayList<Entity> orders = new ArrayList<>();
 
     public static Entity getStaffMemberByIndex(final int index) {
         return staffMembers.get(index);
@@ -78,10 +78,19 @@ public class Database {
         }
         throw new IllegalArgumentException("No supplier with that ID found!");
     }
+    
+    public static Entity getOrderBySupplierId(final int traderId) {
+		for(final Entity order : orders){
+			if(((Order) order).getTraderId() == traderId){
+				return order;
+			}
+		}
+		throw new IllegalArgumentException("No order with that trader ID found!");
+	}
 
-    public static Order getOrderById(final int orderId) {
-        for (final Order order : orders) {
-            if (order.getOrderId() == orderId) {
+    public static Entity getOrderById(final int orderId) {
+        for (final Entity order : orders) {
+            if (order.getId() == orderId) {
                 return order;
             }
         }
@@ -146,7 +155,7 @@ public class Database {
         return customers;
     }
 
-    public static ArrayList<Order> getOrders() {
+    public static ArrayList<Entity> getOrders() {
         return orders;
     }
 
@@ -174,7 +183,7 @@ public class Database {
         staffMembers.add(staff);
     }
 
-    public static void addCustomerByIndex(final int index, final Customer customer) {
+    public static void addCustomerByIndex(final int index, final Entity customer) {
         customers.add(index, customer);
     }
 
@@ -190,7 +199,7 @@ public class Database {
         return suppliers.indexOf(supplier);
     }
 
-    public static void addSupplierByIndex(final int index, final Supplier supplier) {
+    public static void addSupplierByIndex(final int index, final Entity supplier) {
         suppliers.add(index, supplier);
     }
 
@@ -202,7 +211,7 @@ public class Database {
         return staffMembers.indexOf(staff);
     }
 
-    public static void addStaffMemberByIndex(final int index, final Staff staff) {
+    public static void addStaffMemberByIndex(final int index, final Entity staff) {
         staffMembers.add(index, staff);
     }
 
@@ -214,7 +223,7 @@ public class Database {
         return suppliers.get(index);
     }
 
-    public static void addProductByIndex(final int index, final Product product) {
+    public static void addProductByIndex(final int index, final Entity product) {
         products.add(index, product);
     }
 
@@ -224,5 +233,17 @@ public class Database {
 
     public static int getIndexOfProduct(final Entity product) {
         return products.indexOf(product);
+    }
+    
+    public static void addOrderByIndex(final int index, final Entity order) {
+        orders.add(index, order);
+    }
+
+    public static void removeOrderByIndex(final int index) {
+        orders.remove(index);
+    }
+
+    public static int getIndexOfOrder(final Entity order) {
+        return orders.indexOf(order);
     }
 }

@@ -7,7 +7,9 @@ import java.util.Comparator;
 
 public interface Entity {
 
-    final static DecimalFormat CUSTOMER_ID_FORMATTER = new DecimalFormat("00000");
+	final static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("#,###,#00.00");
+	final static DecimalFormat CUSTOMER_ID_FORMATTER = new DecimalFormat("00000");
+    final static DecimalFormat ORDER_ID_FORMATTER = new DecimalFormat("0000");
     final static DecimalFormat PRODUCT_ID_FORMATTER = new DecimalFormat("00000");
     final static DecimalFormat STAFF_ID_FORMATTER = new DecimalFormat("000");
     final static DecimalFormat SUPPLIER_ID_FORMATTER = new DecimalFormat("0000");

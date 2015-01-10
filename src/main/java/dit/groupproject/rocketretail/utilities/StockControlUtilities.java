@@ -88,14 +88,14 @@ public class StockControlUtilities {
         final String currentDate = DATE_FORMATTER.format(new Date());
 
         Database.addOrder(newOrder);
-        completeOrder(newOrder.getOrderId(), currentDate);
+        completeOrder(newOrder.getId(), currentDate);
         setSupplierLastPurchaseDate(supplierId, currentDate);
 
         orderToSupplier = new ArrayList<OrderedItem>();
     }
 
     private static void completeOrder(final int idOfOrderToComplete, final String currentDate) {
-        final Order orderToComplete = Database.getOrderById(idOfOrderToComplete);
+        final Order orderToComplete = (Order) Database.getOrderById(idOfOrderToComplete);
         orderToComplete.completeOrder(currentDate);
     }
 

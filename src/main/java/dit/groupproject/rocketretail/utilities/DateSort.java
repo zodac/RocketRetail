@@ -6,6 +6,7 @@ import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
 import java.util.ArrayList;
 
 import dit.groupproject.rocketretail.database.Database;
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
@@ -20,7 +21,7 @@ public class DateSort {
     public static double customerOrderDates[][];
     public static double supplierOrderDates[][];
 
-    private static ArrayList<Order> tempOrdersArrayList = new ArrayList<Order>();
+    private static ArrayList<Order> tempOrdersArrayList = new ArrayList<>();
 
     /**
      * Copies orders from {@link ShopDriver#orders} into
@@ -43,8 +44,8 @@ public class DateSort {
     public static void sortDate(int yearStart, int yearEnd) {
         tempOrdersArrayList = new ArrayList<Order>();
 
-        for (final Order order : Database.getOrders()) {
-            tempOrdersArrayList.add(order);
+        for (final Entity order : Database.getOrders()) {
+            tempOrdersArrayList.add((Order) order);
         }
 
         customerOrderDates = new double[YEARS_AS_NUMBERS.length - 1][12];

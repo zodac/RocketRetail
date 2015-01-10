@@ -6,6 +6,7 @@ import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
 import java.text.DecimalFormat;
 
 import dit.groupproject.rocketretail.database.Database;
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.main.ShopDriver;
@@ -32,14 +33,15 @@ public class ProfitLoss {
         double loss = 0;
         double profit = 0;
 
-        for (final Order o : Database.getOrders()) {
+        for (final Entity o : Database.getOrders()) {
+        	final Order order = (Order) o;
 
-            if (o.isSupplier()) {
-                for (final OrderedItem oi : o.getOrderedItems()) {
+            if (order.isSupplier()) {
+                for (final OrderedItem oi : order.getOrderedItems()) {
                     loss += oi.getProduct().getCostPrice() * oi.getQuantity();
                 }
             } else {
-                for (final OrderedItem oi : o.getOrderedItems()) {
+                for (final OrderedItem oi : order.getOrderedItems()) {
                     profit += oi.getProduct().getSalePrice() * oi.getQuantity();
                 }
             }

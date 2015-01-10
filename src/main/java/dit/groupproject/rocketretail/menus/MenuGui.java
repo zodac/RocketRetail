@@ -36,7 +36,7 @@ public class MenuGui {
         databaseMenu.add(ProductTable.createMenu(TableState.PRODUCT, manager));
         databaseMenu.add(SupplierTable.createMenu(TableState.SUPPLIER, manager));
         databaseMenu.add(CustomerTable.createMenu(TableState.CUSTOMER, manager));
-        databaseMenu.add(OrderTable.createMenu());
+        databaseMenu.add(OrderTable.createMenu(TableState.ORDER, manager));
 
         return databaseMenu;
     }

@@ -68,7 +68,16 @@ public class ViewEntityHelper extends EntityHelper {
                 }
             };
         } else if (currentState == TableState.ORDER) {
+return new MouseAdapter() {
+    public void mouseClicked(MouseEvent e) {
+        if (entitySubTable.getSelectedRow() >= 0) {
+            final int selectedId =  Integer.parseInt((String) entitySubTable.getValueAt(entitySubTable.getSelectedRow(), 0));
+        	final Order order = (Order) Database.getOrderById(selectedId);
 
+            viewOrderInfo(order);
+        }
+    }
+};
         } else if (currentState == TableState.PRODUCT) {
             return new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
@@ -181,21 +190,20 @@ public class ViewEntityHelper extends EntityHelper {
         g.gridwidth = 2;
         titlePanel.add(titleLabel, g);
 
-        ArrayList<Order> customerOrders = new ArrayList<>();
+        ArrayList<Entity> customerOrders = new ArrayList<>();
 
-        for (final Order order : Database.getOrders()) {
-            if (order.getTraderId() == customer.getId()) {
-                customerOrders.add(order);
-            }
-        }
+        final Entity order = Database.getOrderBySupplierId(customer.getId());
+        customerOrders.add(order);
         final int numberOfCustomerOrders = customerOrders.size();
 
         final Object[][] data = new Object[numberOfCustomerOrders + 1][4];
         int indexArray = 0;
         double total = 0;
 
-        for (final Order customerOrder : customerOrders) {
-            data[indexArray][0] = ORDER_ID_FORMATTER.format(customerOrder.getOrderId());
+        for (final Entity cOrder : customerOrders) {
+        	final Order customerOrder = (Order) cOrder;
+        	
+            data[indexArray][0] = ORDER_ID_FORMATTER.format(customerOrder.getId());
             data[indexArray][1] = customerOrder.getOrderDate();
             data[indexArray][2] = customerOrder.getDeliveryDate();
             data[indexArray++][3] = "€" + CURRENCY_FORMATTER.format(customerOrder.getTotalSale());
@@ -224,7 +232,6 @@ public class ViewEntityHelper extends EntityHelper {
 
         GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
         GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
-
         GuiCreator.setFrame(false, false, true);
     }
 
@@ -342,13 +349,10 @@ public class ViewEntityHelper extends EntityHelper {
 
         GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
         GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
-
-        // Update frame
         GuiCreator.setFrame(false, false, true);
     }
 
     private static void viewStaffInfo(final Staff staff) {
-        // Reset ShopDriver.frame
         GuiCreator.frame.remove(GuiCreator.mainPanel);
         GuiCreator.frame.setTitle("Rocket Retail Inc - " + staff.getStaffName());
         GuiCreator.frame.repaint();
@@ -380,7 +384,7 @@ public class ViewEntityHelper extends EntityHelper {
         dateAddedLabel.setFont(new Font(dateAddedLabel.getFont().getFontName(), Font.BOLD, dateAddedLabel.getFont().getSize()));
         titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), Font.BOLD, titleLabel.getFont().getSize()));
 
-        int textFieldSize = 15;
+        final int textFieldSize = 15;
 
         JTextField staffField = new JTextField(staff.getStaffName() + " (" + STAFF_ID_FORMATTER.format(staff.getId()) + ")", textFieldSize);
         staffField.setEditable(false);
@@ -432,7 +436,9 @@ public class ViewEntityHelper extends EntityHelper {
         int numberOfCustomerOrders = 0, numberOfSupplierOrders = 0;
         int arrayIndex = 0;
 
-        for (final Order order : Database.getOrders()) {
+        for (final Entity o : Database.getOrders()) {
+        	final Order order = (Order) o;
+        	
             if (order.getStaffId() == staff.getId()) {
                 if (order.isSupplier()) {
                     numberOfSupplierOrders++;
@@ -443,73 +449,67 @@ public class ViewEntityHelper extends EntityHelper {
         }
 
         String[] columnNames = { "Order ID", "Trader", "Total Cost" };
-        Object[][] data = new Object[numberOfCustomerOrders + 1][3];
-        double total = 0;
+        Object[][] customerOrderdata = new Object[numberOfCustomerOrders + 1][3];
+        double totalSaleValue = 0;
+        
+        for(final Entity o : Database.getOrders()){
+        	final Order order = (Order) o;
+        	
+        	if(!order.isSupplier() && order.getStaffId() == staff.getId()){
+        		double totalSalePrice = 0;
+        		
+        		for(final OrderedItem orderedItem : order.getOrderedItems()){
+        			totalSalePrice += orderedItem.getQuantity()*orderedItem.getProduct().getSalePrice();
+        		}
+        		
+        		final int customerId = order.getTraderId();
+        		final Customer customer = (Customer) Database.getCustomerById(customerId);
+        		final String customerName = customer.getCustomerName();
+        		
+        		customerOrderdata[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
+        		customerOrderdata[arrayIndex][1] = customerName + " (" + SUPPLIER_ID_FORMATTER.format(customerId) + ")";
+        		customerOrderdata[arrayIndex++][2] = "€" + CURRENCY_FORMATTER.format(totalSalePrice);
+        		totalSalePrice += totalSalePrice;
+        	}
+        }       
+        
+        customerOrderdata[numberOfCustomerOrders][1] = "<html><b>Customer Total</b></html>";
+        customerOrderdata[numberOfCustomerOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(totalSaleValue) + "</b></html>";
 
-        for (int i = 0; i < Database.getOrders().size(); i++) {
-
-            if (!Database.getOrders().get(i).isSupplier() && Database.getOrders().get(i).getStaffId() == staff.getId()) {
-
-                double totalOrderPrice = 0;
-                for (int j = 0; j < Database.getOrders().get(i).getOrderedItems().size(); j++) {
-                    totalOrderPrice += Database.getOrders().get(i).getOrderedItems().get(j).getQuantity()
-                            * Database.getOrders().get(i).getOrderedItems().get(j).getProduct().getSalePrice();
-                }
-
-                String name = "";
-
-                for (Entity c : Database.getCustomers()) {
-                    if (Database.getOrders().get(i).getTraderId() == c.getId()) {
-                        name = ((Customer) c).getCustomerName();
-                    }
-                }
-
-                data[arrayIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                data[arrayIndex][1] = name + " (" + Database.getOrders().get(i).getTraderId() + ")";
-                data[arrayIndex][2] = "€" + CURRENCY_FORMATTER.format(totalOrderPrice);
-                arrayIndex++;
-                total += totalOrderPrice;
-            }
-        }
-        data[numberOfCustomerOrders][1] = "<html><b>Customer Total</b></html>";
-        data[numberOfCustomerOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
-
-        JTable customerTable = new JTable(data, columnNames);
+        JTable customerTable = new JTable(customerOrderdata, columnNames);
         customerTable.setFillsViewportHeight(true);
         customerTable.setEnabled(false);
 
         String[] columnNames2 = { "Order ID", "Trader", "Total Cost" };
-        Object[][] data2 = new Object[numberOfSupplierOrders + 1][3];
-        total = arrayIndex = 0;
+        Object[][] supplierOrderData = new Object[numberOfSupplierOrders + 1][3];
+        double totalCostValue = 0;
+        arrayIndex = 0;
 
-        for (int i = 0; i < Database.getOrders().size(); i++) {
+        for(final Entity o : Database.getOrders()){
+        	final Order order = (Order) o;
+        	
+        	if(order.isSupplier() && order.getStaffId() == staff.getId()){
+        		double totalCostPrice = 0;
+        		
+        		for(final OrderedItem orderedItem : order.getOrderedItems()){
+        			totalCostPrice += orderedItem.getQuantity()*orderedItem.getProduct().getCostPrice();
+        		}
+        		
+        		final int supplierId = order.getTraderId();
+        		final Supplier supplier = (Supplier) Database.getSupplierById(supplierId);
+        		final String supplierName = supplier.getSupplierName();
+        		
+        		supplierOrderData[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
+                supplierOrderData[arrayIndex][1] = supplierName + " (" + SUPPLIER_ID_FORMATTER.format(supplierId) + ")";
+                supplierOrderData[arrayIndex++][2] = "€" + CURRENCY_FORMATTER.format(totalCostPrice);
+                totalCostValue += totalCostPrice;
+        	}
+        }       
+        
+        supplierOrderData[numberOfSupplierOrders][1] = "<html><b>Supplier Total</b></html>";
+        supplierOrderData[numberOfSupplierOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(totalCostValue) + "</b></html>";
 
-            if (Database.getOrders().get(i).isSupplier() && Database.getOrders().get(i).getStaffId() == staff.getId()) {
-
-                double totalOrderPrice = 0;
-                for (int j = 0; j < Database.getOrders().get(i).getOrderedItems().size(); j++) {
-                    totalOrderPrice += Database.getOrders().get(i).getOrderedItems().get(j).getQuantity()
-                            * Database.getOrders().get(i).getOrderedItems().get(j).getProduct().getCostPrice();
-                }
-
-                String name = "";
-
-                for (Entity supp : Database.getSuppliers()) {
-                    if (Database.getOrders().get(i).getTraderId() == supp.getId())
-                        name = ((Supplier) supp).getSupplierName();
-                }
-
-                data2[arrayIndex][0] = ORDER_ID_FORMATTER.format(Database.getOrders().get(i).getOrderId());
-                data2[arrayIndex][1] = name + " (" + Database.getOrders().get(i).getTraderId() + ")";
-                data2[arrayIndex][2] = "€" + CURRENCY_FORMATTER.format(totalOrderPrice);
-                arrayIndex++;
-                total += totalOrderPrice;
-            }
-        }
-        data2[numberOfSupplierOrders][1] = "<html><b>Supplier Total</b></html>";
-        data2[numberOfSupplierOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
-
-        JTable supplierTable = new JTable(data2, columnNames2);
+        JTable supplierTable = new JTable(supplierOrderData, columnNames2);
         supplierTable.setFillsViewportHeight(true);
         supplierTable.setEnabled(false);
 
@@ -532,8 +532,6 @@ public class ViewEntityHelper extends EntityHelper {
 
         GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
         GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
-
-        // Update frame
         GuiCreator.setFrame(false, false, true);
     }
 
@@ -634,13 +632,14 @@ public class ViewEntityHelper extends EntityHelper {
         data[0][3] = "<html><b>" + product.getStartLevel() + "</html></b>";
 
         for (int i = 0; i < YEAR_CURRENT - YEAR_START + 1; i++) {
-            for (Order o : Database.getOrders()) {
-                if (Integer.parseInt(o.getOrderDate().substring(6, 10)) == i + YEAR_START) {
+            for (Entity o : Database.getOrders()) {
+            	final Order order = (Order) o;
+                if (Integer.parseInt(order.getOrderDate().substring(6, 10)) == i + YEAR_START) {
 
-                    for (OrderedItem oi : o.getOrderedItems()) {
-                        if (oi.getProduct().getId() == product.getId() && o.isSupplier() && !o.isActive()) {
+                    for (OrderedItem oi : order.getOrderedItems()) {
+                        if (oi.getProduct().getId() == product.getId() && order.isSupplier() && !order.isActive()) {
                             data[i + 1][1] = (int) data[i + 1][1] + oi.getQuantity();
-                        } else if (oi.getProduct().getId() == product.getId() && !o.isSupplier()) {
+                        } else if (oi.getProduct().getId() == product.getId() && !order.isSupplier()) {
                             data[i + 1][2] = (int) data[i + 1][2] + oi.getQuantity();
                         }
                     }
@@ -698,8 +697,143 @@ public class ViewEntityHelper extends EntityHelper {
 
         GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
         GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
+        GuiCreator.setFrame(false, false, true);
+    }
+    
+    private static void viewOrderInfo(final Order order) {
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Order #" + ORDER_ID_FORMATTER.format(order.getId()));
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
-        // Update frame
+        final JPanel titlePanel = new JPanel(new GridBagLayout());
+        final JPanel innerPanel = new JPanel(new BorderLayout(0, 1));
+        final JPanel buttonPanel = new JPanel();
+        titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+
+        final boolean isSupplier = order.isSupplier();
+        final String traderTitle = isSupplier ? "Supplier" : "Customer";
+        final Staff staff = (Staff) Database.getStaffMemberById(order.getStaffId());
+        final String staffName = staff.getStaffName();
+        String traderName = "";
+
+        if (isSupplier) {
+            final Entity supplier = Database.getSupplierById(order.getTraderId());
+            traderName = ((Supplier) supplier).getSupplierName();
+        } else {
+            final Entity customer = Database.getCustomerById(order.getTraderId());
+            traderName = ((Customer) customer).getCustomerName();
+        }
+
+        final JLabel orderLabel = new JLabel("Order ID");
+        final JLabel staffLabel = new JLabel("Staff");
+        final JLabel traderLabel = new JLabel(traderTitle);
+        final JLabel orderDateLabel = new JLabel("Order Date");
+        final JLabel deliveryDateLabel = new JLabel("Delivery Date");
+        final JLabel titleLabel = new JLabel("Ordered Items");
+        
+        final Font currentFont = new JLabel().getFont();
+        final Font labelFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
+        
+        orderLabel.setFont(labelFont);
+        staffLabel.setFont(labelFont);
+        traderLabel.setFont(labelFont);
+        orderDateLabel.setFont(labelFont);
+        deliveryDateLabel.setFont(labelFont);
+        titleLabel.setFont(labelFont);
+
+        final int textFieldSize = 20;
+        
+        
+        JTextField orderField = new JTextField(ORDER_ID_FORMATTER.format(order.getId()), textFieldSize);
+        orderField.setEditable(false);
+        JTextField staffField = new JTextField(staffName + " (" + STAFF_ID_FORMATTER.format(order.getStaffId()) + ")", textFieldSize);
+        staffField.setEditable(false);
+        JTextField traderField = new JTextField(traderName + " (" + order.getTraderId() + ")", textFieldSize);
+        traderField.setEditable(false);
+        JTextField orderDateField = new JTextField(order.getOrderDate(), textFieldSize);
+        orderDateField.setEditable(false);
+        JTextField deliveryDateField = new JTextField(order.getDeliveryDate(), textFieldSize);
+        deliveryDateField.setEditable(false);
+
+        GridBagConstraints g = new GridBagConstraints();
+        g.insets = new Insets(1, 10, 0, 5);
+        titlePanel.add(orderLabel, g);
+        g.gridx = 1;
+        titlePanel.add(orderField, g);
+        g.gridx = 2;
+        titlePanel.add(staffLabel, g);
+        g.gridx = 3;
+        titlePanel.add(staffField, g);
+        g.gridx = 4;
+        titlePanel.add(traderLabel, g);
+        g.gridx = 5;
+        titlePanel.add(traderField, g);
+
+        g.gridx = 0;
+        g.gridy = 1;
+        titlePanel.add(orderDateLabel, g);
+        g.gridx = 1;
+        titlePanel.add(orderDateField, g);
+
+        if (!order.getDeliveryDate().equals("")) {
+            g.gridx = 4;
+            titlePanel.add(deliveryDateLabel, g);
+            g.gridx = 5;
+            titlePanel.add(deliveryDateField, g);
+        }
+
+        g = new GridBagConstraints();
+        g.insets = new Insets(1, 10, 0, 5);
+        g.gridy = 2;
+        g.gridx = 2;
+        g.gridwidth = 2;
+        titlePanel.add(titleLabel, g);
+
+        final String[] columnNames = { "Ordered Product", "Unit Price", "Order Quantity", "Product Total" };
+        final Object[][] data = new Object[order.getOrderedItems().size() + 1][4];
+        double total = 0;
+
+        for (int i = 0; i < order.getOrderedItems().size(); i++) {
+            double unitPrice = 0;
+
+            if (isSupplier){
+                unitPrice = order.getOrderedItems().get(i).getProduct().getCostPrice();
+            } else{
+                unitPrice = order.getOrderedItems().get(i).getProduct().getSalePrice();
+            }
+
+            data[i][0] = order.getOrderedItems().get(i).getProduct().getProductDescription() + " (" + order.getOrderedItems().get(i).getProduct().getId()
+                    + ")";
+            data[i][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
+            data[i][2] = order.getOrderedItems().get(i).getQuantity();
+            data[i][3] = "€" + CURRENCY_FORMATTER.format(unitPrice * (int) data[i][2]);
+            total += (unitPrice * (int) data[i][2]);
+        }
+        data[order.orderedItems.size()][2] = "<html><b>Order Total</b></html>";
+        data[order.orderedItems.size()][3] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
+
+        final JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        table.setEnabled(false);
+
+        final JScrollPane scrollPane = new JScrollPane(table);
+        innerPanel.add(scrollPane, BorderLayout.CENTER);
+
+        final JButton backButton = new JButton("Back to Orders");
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                OrderTable.createTableGui();
+            }
+        });
+
+        buttonPanel.add(backButton);
+        innerPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        GuiCreator.mainPanel.add(titlePanel, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
         GuiCreator.setFrame(false, false, true);
     }
 }
