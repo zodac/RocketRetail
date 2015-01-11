@@ -61,7 +61,7 @@ public class HomeScreen {
 
     private static JTextArea loadStaffDetails(final Staff currentStaff) {
         final String level = currentStaff.getStaffLevel() == 1 ? "Manager" : "Employee";
-        final String output = "\t" + currentStaff.getStaffName() + "\n" + "\t" + level + " at \"Rocket Retail Inc\" since "
+        final String output = "\t" + currentStaff.getName() + "\n" + "\t" + level + " at \"Rocket Retail Inc\" since "
                 + currentStaff.getDateAdded() + "\n" + "\t" + "Phone Number is " + currentStaff.getPhoneNumber() + "\n" + "\t" + "Annual wage is €"
                 + CURRENCY_FORMATTER.format(currentStaff.getWage());
 
@@ -120,7 +120,7 @@ public class HomeScreen {
     }
 
     private static ChartPanel createSalesPieGraph(final Staff currentStaff, final double[] salesBreakdown) {
-        final ChartPanel piePanel = Graphs.createPieChart("Staff sales breakdown", currentStaff.getStaffName(), salesBreakdown);
+        final ChartPanel piePanel = Graphs.createPieChart("Staff sales breakdown", currentStaff.getName(), salesBreakdown);
 
         piePanel.setPreferredSize(new Dimension(500, 750));
         piePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);

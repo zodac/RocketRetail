@@ -7,15 +7,18 @@ import java.util.Comparator;
  */
 public class Product implements Entity {
 
-    private int productId, stockLevel, maxLevel, supplierId;
+    private int productId;
+    private int stockLevel;
+    private int maxLevel;
+    private int supplierId;
     private int startLevel;
     private double costPrice, salePrice;
-    private String productDescription;
+    private String productName;
 
-    public Product(final String productDescription, final int stockLevel, final int maxLevel, final int supplierId, final double costPrice,
+    public Product(final String productName, final int stockLevel, final int maxLevel, final int supplierId, final double costPrice,
             final double salePrice) {
         this.productId = IdManager.getProductIdAndIncrement();
-        this.productDescription = productDescription;
+        this.productName = productName;
         this.startLevel = stockLevel;
         this.maxLevel = maxLevel;
         this.supplierId = supplierId;
@@ -37,8 +40,9 @@ public class Product implements Entity {
         return startLevel;
     }
 
-    public String getProductDescription() {
-        return productDescription;
+    @Override
+    public String getName() {
+        return productName;
     }
 
     public int getStockLevel() {
@@ -81,12 +85,6 @@ public class Product implements Entity {
         }
     }
 
-    private static Comparator<Entity> compareByName = new Comparator<Entity>() {
-        public int compare(final Entity s1, final Entity s2) {
-            return ((Product) s1).getProductDescription().compareToIgnoreCase(((Product) s2).getProductDescription());
-        }
-    };
-
     private static Comparator<Entity> compareByStockLevel = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {
             return ((Product) s1).getStockLevel() - ((Product) s2).getStockLevel();
@@ -115,7 +113,7 @@ public class Product implements Entity {
     public Object[] getData() {
         final Object[] data = new Object[getNumberOfFields()];
         data[0] = PRODUCT_ID_FORMATTER.format(productId);
-        data[1] = productDescription;
+        data[1] = productName;
         data[2] = stockLevel;
         data[3] = maxLevel;
         data[4] = supplierId;

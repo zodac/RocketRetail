@@ -46,7 +46,7 @@ public class Database {
 
     public static Entity getSupplierByName(final Object supplierName) {
         for (final Entity supplier : suppliers) {
-            if (((Supplier) supplier).getSupplierName().equals(supplierName)) {
+            if (supplier.getName().equals(supplierName)) {
                 return supplier;
             }
         }

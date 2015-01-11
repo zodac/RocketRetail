@@ -118,13 +118,20 @@ public class Order implements Entity{
         this.isActive = false;
     }
 
+@Override
     public int getId() {
         return orderId;
     }
     
+@Override
     public void setId(final int orderId){
     	this.orderId = orderId;
     }
+
+@Override
+public String getName(){
+	throw new IllegalArgumentException("Should not be asking for an order's name!");
+}
 
     public int getStaffId() {
         return staffId;

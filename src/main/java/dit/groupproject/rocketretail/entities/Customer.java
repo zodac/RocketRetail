@@ -37,7 +37,8 @@ public class Customer implements Entity {
         this.customerId = customerId;
     }
 
-    public String getCustomerName() {
+    @Override
+    public String getName() {
         return customerName;
     }
 
@@ -80,12 +81,6 @@ public class Customer implements Entity {
             return compareById;
         }
     }
-
-    private static Comparator<Entity> compareByName = new Comparator<Entity>() {
-        public int compare(final Entity s1, final Entity s2) {
-            return ((Customer) s1).getCustomerName().compareToIgnoreCase(((Customer) s2).getCustomerName());
-        }
-    };
 
     private static Comparator<Entity> compareByAddress = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {

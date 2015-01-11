@@ -167,7 +167,7 @@ public class EditEntityHelper extends EntityHelper {
         innerPanel.add(dateAddedYear, g);
 
         custIdField.setText("" + customer.getId());
-        custNameField.setText(customer.getCustomerName());
+        custNameField.setText(customer.getName());
         phoneNoField.setText(customer.getPhoneNumber());
         addressField.setText(customer.getAddress());
         vatNoField.setText(customer.getVatNumber());
@@ -334,7 +334,7 @@ public class EditEntityHelper extends EntityHelper {
         innerPanel.add(dateAddedYear, g);
 
         suppIdField.setText("" + supplier.getId());
-        suppNameField.setText(supplier.getSupplierName());
+        suppNameField.setText(supplier.getName());
         phoneNoField.setText(supplier.getPhoneNumber());
         addressField.setText(supplier.getAddress());
         vatNoField.setText(supplier.getVatNumber());
@@ -508,7 +508,7 @@ public class EditEntityHelper extends EntityHelper {
         // Set JTextFields with current data
         idField.setText(STAFF_ID_FORMATTER.format(staffId));
         pinField.setText("" + staff.getStaffPin());
-        nameField.setText(staff.getStaffName());
+        nameField.setText(staff.getName());
         genderField.setSelectedIndex(staff.getGender());
         phoneNoField.setText(staff.getPhoneNumber());
         addressField.setText(staff.getAddress());
@@ -635,7 +635,7 @@ public class EditEntityHelper extends EntityHelper {
         supplierOptions[0] = "";
 
         for (int i = 1; i < supplierOptions.length; i++) {
-            supplierOptions[i] = ((Supplier) Database.getSupplierById(i - 1)).getSupplierName() + " (" + Database.getSupplierById(i - 1).getId()
+            supplierOptions[i] = Database.getSupplierById(i - 1).getName() + " (" + Database.getSupplierById(i - 1).getId()
                     + ")";
         }
         final JComboBox<String> suppIdBox = new JComboBox<String>(supplierOptions);
@@ -649,7 +649,7 @@ public class EditEntityHelper extends EntityHelper {
 
         // Set JTextFields with current data
         prodIDField.setText("" + product.getId());
-        prodDescField.setText(product.getProductDescription());
+        prodDescField.setText(product.getName());
         stockLevelField.setText("" + product.getStockLevel());
         maxLevelField.setText("" + product.getMaxLevel());
         suppIdBox.setSelectedIndex(product.getSupplierId() - IdManager.SUPPLIER_ID_START + 1);

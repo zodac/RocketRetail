@@ -554,7 +554,7 @@ public class AddEntityHelper extends EntityHelper {
 
         supplierOptions[0] = "";
         for (int i = 1; i < supplierOptions.length; i++) {
-            supplierOptions[i] = ((Supplier) Database.getSupplierByIndex(i - 1)).getSupplierName() + " ("
+            supplierOptions[i] = Database.getSupplierByIndex(i - 1).getName() + " ("
                     + Database.getSupplierByIndex(i - 1).getId() + ")";
         }
 

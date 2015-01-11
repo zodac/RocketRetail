@@ -43,6 +43,11 @@ public class Staff implements Entity {
     public void setId(final int staffId) {
         this.staffId = staffId;
     }
+    
+    @Override
+    public String getName() {
+        return staffName;
+    }
 
     public int getStaffPin() {
         return staffPin;
@@ -52,9 +57,7 @@ public class Staff implements Entity {
         return staffLevel;
     }
 
-    public String getStaffName() {
-        return staffName;
-    }
+    
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -91,12 +94,6 @@ public class Staff implements Entity {
             return compareById;
         }
     }
-
-    private static Comparator<Entity> compareByName = new Comparator<Entity>() {
-        public int compare(final Entity s1, final Entity s2) {
-            return ((Staff) s1).getStaffName().compareToIgnoreCase(((Staff) s2).getStaffName());
-        }
-    };
 
     private static Comparator<Entity> compareByAddress = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {

@@ -27,11 +27,6 @@ public class Supplier implements Entity {
         this.dateAdded = dateAdded;
     }
 
-    public String printDetails() {
-        return "Supplier ID:\t" + supplierId + "\nSupplier Name:\t" + supplierName + "\nPhone Number:\t" + phoneNumber + "\nAddress:\t" + address
-                + "\nVAT Number:\t" + vatNumber + "\nLast Purchase:\t" + lastPurchase + "\nDate Added:\t" + dateAdded + "\n\n";
-    }
-
     @Override
     public int getId() {
         return supplierId;
@@ -42,7 +37,8 @@ public class Supplier implements Entity {
         this.supplierId = supplierId;
     }
 
-    public String getSupplierName() {
+    @Override
+    public String getName() {
         return supplierName;
     }
 
@@ -85,12 +81,6 @@ public class Supplier implements Entity {
             return compareById;
         }
     }
-
-    private static Comparator<Entity> compareByName = new Comparator<Entity>() {
-        public int compare(final Entity s1, final Entity s2) {
-            return ((Supplier) s1).getSupplierName().compareToIgnoreCase(((Supplier) s2).getSupplierName());
-        }
-    };
 
     private static Comparator<Entity> compareByAddress = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {

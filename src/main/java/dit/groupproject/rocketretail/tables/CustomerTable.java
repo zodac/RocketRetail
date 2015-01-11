@@ -99,7 +99,7 @@ public class CustomerTable extends BaseTable {
         int editAndDeleteIndex = 1;
         for (final Entity customer : customers) {
             itemsToEdit[editAndDeleteIndex] = "ID: " + CUSTOMER_ID_FORMATTER.format(customer.getId()) + " ("
-                    + ((Customer) customer).getCustomerName() + ")";
+                    + customer.getName() + ")";
             itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
         }
 

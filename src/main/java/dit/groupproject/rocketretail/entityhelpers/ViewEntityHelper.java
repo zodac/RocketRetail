@@ -116,7 +116,7 @@ return new MouseAdapter() {
     }
 
     private static void viewCustomerInfo(final Customer customer) {
-        final String customerName = customer.getCustomerName();
+        final String customerName = customer.getName();
 
         GuiCreator.frame.remove(GuiCreator.mainPanel);
         GuiCreator.frame.setTitle("Rocket Retail Inc - " + customerName);
@@ -237,7 +237,7 @@ return new MouseAdapter() {
 
     private static void viewSupplierInfo(final Supplier supplier) {
         GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - " + supplier.getSupplierName());
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + supplier.getName());
         GuiCreator.frame.repaint();
         GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
@@ -253,7 +253,7 @@ return new MouseAdapter() {
         JLabel phoneNoLabel = new JLabel("Phone Number");
         JLabel addressLabel = new JLabel("Address");
         JLabel dateAddedLabel = new JLabel("Date Added");
-        JLabel titleLabel = new JLabel("Products supplied by " + supplier.getSupplierName());
+        JLabel titleLabel = new JLabel("Products supplied by " + supplier.getName());
 
         supplierLabel.setFont(new Font(supplierLabel.getFont().getFontName(), Font.BOLD, supplierLabel.getFont().getSize()));
         vatNumberLabel.setFont(new Font(vatNumberLabel.getFont().getFontName(), Font.BOLD, vatNumberLabel.getFont().getSize()));
@@ -264,7 +264,7 @@ return new MouseAdapter() {
 
         int textFieldSize = 20;
 
-        JTextField supplierField = new JTextField(supplier.getSupplierName() + " (" + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + ")",
+        JTextField supplierField = new JTextField(supplier.getName() + " (" + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + ")",
                 textFieldSize);
         supplierField.setEditable(false);
         JTextField vatNumberField = new JTextField(supplier.getVatNumber(), textFieldSize);
@@ -322,7 +322,7 @@ return new MouseAdapter() {
             final Product product = (Product) p;
 
             if (supplier.getId() == product.getSupplierId()) {
-                data[indexArray][0] = product.getProductDescription();
+                data[indexArray][0] = product.getName();
                 data[indexArray][1] = product.getId();
                 data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(product.getCostPrice());
                 data[indexArray][3] = product.getStockLevel() + "/" + product.getMaxLevel();
@@ -354,7 +354,7 @@ return new MouseAdapter() {
 
     private static void viewStaffInfo(final Staff staff) {
         GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - " + staff.getStaffName());
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + staff.getName());
         GuiCreator.frame.repaint();
         GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
@@ -375,7 +375,7 @@ return new MouseAdapter() {
         JLabel phoneNoLabel = new JLabel("Phone Number");
         JLabel addressLabel = new JLabel("Address");
         JLabel dateAddedLabel = new JLabel("Date Added");
-        JLabel titleLabel = new JLabel("Orders placed by " + staff.getStaffName());
+        JLabel titleLabel = new JLabel("Orders placed by " + staff.getName());
         staffLabel.setFont(new Font(staffLabel.getFont().getFontName(), Font.BOLD, staffLabel.getFont().getSize()));
         levelLabel.setFont(new Font(levelLabel.getFont().getFontName(), Font.BOLD, levelLabel.getFont().getSize()));
         wageLabel.setFont(new Font(wageLabel.getFont().getFontName(), Font.BOLD, wageLabel.getFont().getSize()));
@@ -386,7 +386,7 @@ return new MouseAdapter() {
 
         final int textFieldSize = 15;
 
-        JTextField staffField = new JTextField(staff.getStaffName() + " (" + STAFF_ID_FORMATTER.format(staff.getId()) + ")", textFieldSize);
+        JTextField staffField = new JTextField(staff.getName() + " (" + STAFF_ID_FORMATTER.format(staff.getId()) + ")", textFieldSize);
         staffField.setEditable(false);
         JTextField levelField = new JTextField(level, textFieldSize);
         levelField.setEditable(false);
@@ -464,7 +464,7 @@ return new MouseAdapter() {
         		
         		final int customerId = order.getTraderId();
         		final Customer customer = (Customer) Database.getCustomerById(customerId);
-        		final String customerName = customer.getCustomerName();
+        		final String customerName = customer.getName();
         		
         		customerOrderdata[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
         		customerOrderdata[arrayIndex][1] = customerName + " (" + SUPPLIER_ID_FORMATTER.format(customerId) + ")";
@@ -497,7 +497,7 @@ return new MouseAdapter() {
         		
         		final int supplierId = order.getTraderId();
         		final Supplier supplier = (Supplier) Database.getSupplierById(supplierId);
-        		final String supplierName = supplier.getSupplierName();
+        		final String supplierName = supplier.getName();
         		
         		supplierOrderData[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
                 supplierOrderData[arrayIndex][1] = supplierName + " (" + SUPPLIER_ID_FORMATTER.format(supplierId) + ")";
@@ -536,7 +536,7 @@ return new MouseAdapter() {
     }
 
     public static void viewProductInfo(final Product product) {
-        final String productName = product.getProductDescription();
+        final String productName = product.getName();
 
         GuiCreator.frame.remove(GuiCreator.mainPanel);
         GuiCreator.frame.setTitle("Rocket Retail Inc - " + productName);
@@ -570,7 +570,7 @@ return new MouseAdapter() {
         final int textFieldSize = 20;
 
         final Entity productSupplier = Database.getSupplierById(product.getSupplierId());
-        final String supplier = ((Supplier) productSupplier).getSupplierName() + " (" + productSupplier.getId() + ")";
+        final String supplier = productSupplier.getName() + " (" + productSupplier.getId() + ")";
 
         final JTextField productField = new JTextField(productName + " (" + PRODUCT_ID_FORMATTER.format(product.getId()) + ")", textFieldSize);
         productField.setEditable(false);
@@ -716,15 +716,15 @@ return new MouseAdapter() {
         final boolean isSupplier = order.isSupplier();
         final String traderTitle = isSupplier ? "Supplier" : "Customer";
         final Staff staff = (Staff) Database.getStaffMemberById(order.getStaffId());
-        final String staffName = staff.getStaffName();
+        final String staffName = staff.getName();
         String traderName = "";
 
         if (isSupplier) {
             final Entity supplier = Database.getSupplierById(order.getTraderId());
-            traderName = ((Supplier) supplier).getSupplierName();
+            traderName = supplier.getName();
         } else {
             final Entity customer = Database.getCustomerById(order.getTraderId());
-            traderName = ((Customer) customer).getCustomerName();
+            traderName = customer.getName();
         }
 
         final JLabel orderLabel = new JLabel("Order ID");
@@ -805,7 +805,7 @@ return new MouseAdapter() {
                 unitPrice = order.getOrderedItems().get(i).getProduct().getSalePrice();
             }
 
-            data[i][0] = order.getOrderedItems().get(i).getProduct().getProductDescription() + " (" + order.getOrderedItems().get(i).getProduct().getId()
+            data[i][0] = order.getOrderedItems().get(i).getProduct().getName() + " (" + order.getOrderedItems().get(i).getProduct().getId()
                     + ")";
             data[i][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
             data[i][2] = order.getOrderedItems().get(i).getQuantity();

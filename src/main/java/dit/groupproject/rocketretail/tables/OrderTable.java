@@ -444,7 +444,7 @@ public class OrderTable extends BaseTable {
         String[] customerArray = new String[Database.getCustomers().size() + 2];
         customerArray[0] = "";
         for (int i = 1; i < Database.getCustomers().size() + 1; i++) {
-            customerArray[i] = ((Customer) Database.getCustomers().get(i - 1)).getCustomerName();
+            customerArray[i] = Database.getCustomers().get(i - 1).getName();
         }
 
         // Add a string to the end of the array
@@ -481,9 +481,9 @@ public class OrderTable extends BaseTable {
                     titlePanel.add(currentStockLevel);
                     titlePanel.add(orderAmount);
 
-                    for (Entity c : Database.getCustomers()) {
-                        if (((Customer) c).getCustomerName().equals(customerOptions.getSelectedItem()))
-                            traderId = c.getId();
+                    for (Entity customer : Database.getCustomers()) {
+                        if (customer.getName().equals(customerOptions.getSelectedItem()))
+                            traderId = customer.getId();
                     }
 
                     final ArrayList<JLabel> productLabels = new ArrayList<JLabel>();
@@ -497,7 +497,7 @@ public class OrderTable extends BaseTable {
                     for (final Entity p : Database.getProducts()) {
                         final Product product = (Product) p;
 
-                        JLabel pl = new JLabel("" + product.getProductDescription());
+                        JLabel pl = new JLabel("" + product.getName());
                         pl.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
                         productLabels.add(pl);
 
@@ -551,8 +551,9 @@ public class OrderTable extends BaseTable {
 
                                 for (final Entity p : Database.getProducts()) {
                                     final Product product = (Product) p;
+                                    
                                     for (JLabel label : productLabels) {
-                                        if (label.getText().equals(product.getProductDescription())
+                                        if (label.getText().equals(product.getName())
                                                 && Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > 0) {
                                             if (product.getStockLevel() >= Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
                                                     .getText()))
@@ -578,7 +579,7 @@ public class OrderTable extends BaseTable {
                                 }
                                 GuiCreator.setConfirmationMessage("Order #"
                                         + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
-                                        + " created for customer \"" + activeCustomer.getCustomerName() + "\"");
+                                        + " created for customer \"" + activeCustomer.getName() + "\"");
 
                                 // Reset ShopDriver.frame
                                 GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -670,7 +671,7 @@ public class OrderTable extends BaseTable {
         String[] supplierArray = new String[Database.getSuppliers().size() + 2];
         supplierArray[0] = "";
         for (int i = 1; i < Database.getSuppliers().size() + 1; i++) {
-            supplierArray[i] = ((Supplier) Database.getSuppliers().get(i - 1)).getSupplierName();
+            supplierArray[i] = Database.getSuppliers().get(i - 1).getName();
         }
 
         // Add a string to the end of the array
@@ -730,16 +731,16 @@ public class OrderTable extends BaseTable {
                     productQuantityPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                     // sp and pl
                     int i = 0;
-                    for (Product sp : supplierProducts) {
-                        JLabel pl = new JLabel("" + sp.getProductDescription());
-                        pl.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
-                        productLabels.add(pl);
+                    for (final Product supplierProduct : supplierProducts) {
+                        final JLabel productLabel = new JLabel("" + supplierProduct.getName());
+                        productLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
+                        productLabels.add(productLabel);
 
-                        JTextField tF = new JTextField("" + sp.getStockLevel() + "/" + sp.getMaxLevel(), 5);
+                        final JTextField tF = new JTextField("" + supplierProduct.getStockLevel() + "/" + supplierProduct.getMaxLevel(), 5);
                         tF.setEnabled(false);
                         currentStockFields.add(tF);
                         JTextField orderField = new JTextField("0", 5);
-                        if (sp.getStockLevel() == sp.getMaxLevel())
+                        if (supplierProduct.getStockLevel() == supplierProduct.getMaxLevel())
                             orderField.setEnabled(false);
                         orderAmountFields.add(orderField);
 
@@ -788,7 +789,7 @@ public class OrderTable extends BaseTable {
                                     final Product product = (Product) p;
 
                                     for (final JLabel label : productLabels) {
-                                        if (label.getText().equals(product.getProductDescription())) {
+                                        if (label.getText().equals(product.getName())) {
                                             if (Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > 0)
                                                 items.add(new OrderedItem(product, Integer.parseInt(orderAmountFields.get(
                                                         productLabels.indexOf(label)).getText())));
@@ -796,7 +797,7 @@ public class OrderTable extends BaseTable {
                                     }
                                 }
 
-                                Entity activeSupp = null;
+                                Entity activeSupplier = null;
 
                                 if (items.size() > 0) {
                                     Database.addOrder(new Order(traderId, DATE_FORMATTER.format(new Date()), items, true));
@@ -804,7 +805,7 @@ public class OrderTable extends BaseTable {
                                     for (Entity s : Database.getSuppliers()) {
                                         if (s.getId() == traderId) {
                                             ((Supplier) s).setLastPurchase(DATE_FORMATTER.format(new Date()));
-                                            activeSupp = s;
+                                            activeSupplier = s;
                                         }
                                     }
 
@@ -812,7 +813,7 @@ public class OrderTable extends BaseTable {
 
                                 GuiCreator.setConfirmationMessage("Order #"
                                         + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
-                                        + " created for supplier \"" + ((Supplier) activeSupp).getSupplierName() + "\"");
+                                        + " created for supplier \"" + activeSupplier.getName() + "\"");
 
                                 // Reset ShopDriver.frame
                                 GuiCreator.frame.remove(GuiCreator.leftPanel);

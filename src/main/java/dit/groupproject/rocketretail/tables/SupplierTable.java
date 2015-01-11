@@ -101,7 +101,7 @@ public class SupplierTable extends BaseTable {
         int editAndDeleteIndex = 1;
         for (final Entity supplier : suppliers) {
             itemsToEdit[editAndDeleteIndex] = "ID: " + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + " ("
-                    + ((Supplier) supplier).getSupplierName() + ")";
+                    + supplier.getName() + ")";
             itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
         }
 

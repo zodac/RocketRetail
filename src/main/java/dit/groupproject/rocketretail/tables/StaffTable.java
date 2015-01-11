@@ -98,7 +98,7 @@ public class StaffTable extends BaseTable {
 
         int editAndDeleteIndex = 1;
         for (final Entity staff : staffMembers) {
-            itemsToEdit[editAndDeleteIndex] = "ID: " + STAFF_ID_FORMATTER.format(staff.getId()) + " (" + ((Staff) staff).getStaffName() + ")";
+            itemsToEdit[editAndDeleteIndex] = "ID: " + STAFF_ID_FORMATTER.format(staff.getId()) + " (" + staff.getName() + ")";
             itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
         }
 

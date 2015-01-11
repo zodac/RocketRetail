@@ -14,10 +14,6 @@ public class OrderedItem {
         this.quantity = quantity;
     }
 
-    public String printDetails() {
-        return "\nProduct Name: " + product.getProductDescription() + "\tQuantity: " + quantity + " items";
-    }
-
     public Product getProduct() {
         return product;
     }
