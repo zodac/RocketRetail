@@ -470,7 +470,7 @@ public class OrderTable extends BaseTable {
                     JLabel currentStockLevel = new JLabel("Current/Max");
                     JLabel orderAmount = new JLabel("Order Amount");
 
-                    // Make font bold
+
                     productName.setFont(new Font(productName.getFont().getFontName(), Font.BOLD, productName.getFont().getSize()));
                     currentStockLevel.setFont(new Font(productName.getFont().getFontName(), Font.BOLD, productName.getFont().getSize()));
                     orderAmount.setFont(new Font(productName.getFont().getFontName(), Font.BOLD, productName.getFont().getSize()));

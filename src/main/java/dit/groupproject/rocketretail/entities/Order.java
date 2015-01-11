@@ -200,7 +200,7 @@ public class Order implements Entity{
     
     private static Comparator<Entity> compareByActive = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {
-        	return (((Order) s1).isActive() == ((Order) s2).isActive() ? 0 : (((Order) s2).isActive() ? 1 : -1));
+        	return (((Order) s1).isActive() == ((Order) s2).isActive() ? 0 : (((Order) s1).isActive() ? 1 : -1));
         }
     };
     
