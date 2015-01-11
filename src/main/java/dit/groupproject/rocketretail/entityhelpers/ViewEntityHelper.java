@@ -68,16 +68,16 @@ public class ViewEntityHelper extends EntityHelper {
                 }
             };
         } else if (currentState == TableState.ORDER) {
-return new MouseAdapter() {
-    public void mouseClicked(MouseEvent e) {
-        if (entitySubTable.getSelectedRow() >= 0) {
-            final int selectedId =  Integer.parseInt((String) entitySubTable.getValueAt(entitySubTable.getSelectedRow(), 0));
-        	final Order order = (Order) Database.getOrderById(selectedId);
+            return new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (entitySubTable.getSelectedRow() >= 0) {
+                        final int selectedId = Integer.parseInt((String) entitySubTable.getValueAt(entitySubTable.getSelectedRow(), 0));
+                        final Order order = (Order) Database.getOrderById(selectedId);
 
-            viewOrderInfo(order);
-        }
-    }
-};
+                        viewOrderInfo(order);
+                    }
+                }
+            };
         } else if (currentState == TableState.PRODUCT) {
             return new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
@@ -201,8 +201,8 @@ return new MouseAdapter() {
         double total = 0;
 
         for (final Entity cOrder : customerOrders) {
-        	final Order customerOrder = (Order) cOrder;
-        	
+            final Order customerOrder = (Order) cOrder;
+
             data[indexArray][0] = ORDER_ID_FORMATTER.format(customerOrder.getId());
             data[indexArray][1] = customerOrder.getOrderDate();
             data[indexArray][2] = customerOrder.getDeliveryDate();
@@ -264,8 +264,7 @@ return new MouseAdapter() {
 
         int textFieldSize = 20;
 
-        JTextField supplierField = new JTextField(supplier.getName() + " (" + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + ")",
-                textFieldSize);
+        JTextField supplierField = new JTextField(supplier.getName() + " (" + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + ")", textFieldSize);
         supplierField.setEditable(false);
         JTextField vatNumberField = new JTextField(supplier.getVatNumber(), textFieldSize);
         vatNumberField.setEditable(false);
@@ -437,8 +436,8 @@ return new MouseAdapter() {
         int arrayIndex = 0;
 
         for (final Entity o : Database.getOrders()) {
-        	final Order order = (Order) o;
-        	
+            final Order order = (Order) o;
+
             if (order.getStaffId() == staff.getId()) {
                 if (order.isSupplier()) {
                     numberOfSupplierOrders++;
@@ -451,28 +450,28 @@ return new MouseAdapter() {
         String[] columnNames = { "Order ID", "Trader", "Total Cost" };
         Object[][] customerOrderdata = new Object[numberOfCustomerOrders + 1][3];
         double totalSaleValue = 0;
-        
-        for(final Entity o : Database.getOrders()){
-        	final Order order = (Order) o;
-        	
-        	if(!order.isSupplier() && order.getStaffId() == staff.getId()){
-        		double totalSalePrice = 0;
-        		
-        		for(final OrderedItem orderedItem : order.getOrderedItems()){
-        			totalSalePrice += orderedItem.getQuantity()*orderedItem.getProduct().getSalePrice();
-        		}
-        		
-        		final int customerId = order.getTraderId();
-        		final Customer customer = (Customer) Database.getCustomerById(customerId);
-        		final String customerName = customer.getName();
-        		
-        		customerOrderdata[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
-        		customerOrderdata[arrayIndex][1] = customerName + " (" + SUPPLIER_ID_FORMATTER.format(customerId) + ")";
-        		customerOrderdata[arrayIndex++][2] = "€" + CURRENCY_FORMATTER.format(totalSalePrice);
-        		totalSalePrice += totalSalePrice;
-        	}
-        }       
-        
+
+        for (final Entity o : Database.getOrders()) {
+            final Order order = (Order) o;
+
+            if (!order.isSupplier() && order.getStaffId() == staff.getId()) {
+                double totalSalePrice = 0;
+
+                for (final OrderedItem orderedItem : order.getOrderedItems()) {
+                    totalSalePrice += orderedItem.getQuantity() * orderedItem.getProduct().getSalePrice();
+                }
+
+                final int customerId = order.getTraderId();
+                final Customer customer = (Customer) Database.getCustomerById(customerId);
+                final String customerName = customer.getName();
+
+                customerOrderdata[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
+                customerOrderdata[arrayIndex][1] = customerName + " (" + SUPPLIER_ID_FORMATTER.format(customerId) + ")";
+                customerOrderdata[arrayIndex++][2] = "€" + CURRENCY_FORMATTER.format(totalSalePrice);
+                totalSalePrice += totalSalePrice;
+            }
+        }
+
         customerOrderdata[numberOfCustomerOrders][1] = "<html><b>Customer Total</b></html>";
         customerOrderdata[numberOfCustomerOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(totalSaleValue) + "</b></html>";
 
@@ -485,27 +484,27 @@ return new MouseAdapter() {
         double totalCostValue = 0;
         arrayIndex = 0;
 
-        for(final Entity o : Database.getOrders()){
-        	final Order order = (Order) o;
-        	
-        	if(order.isSupplier() && order.getStaffId() == staff.getId()){
-        		double totalCostPrice = 0;
-        		
-        		for(final OrderedItem orderedItem : order.getOrderedItems()){
-        			totalCostPrice += orderedItem.getQuantity()*orderedItem.getProduct().getCostPrice();
-        		}
-        		
-        		final int supplierId = order.getTraderId();
-        		final Supplier supplier = (Supplier) Database.getSupplierById(supplierId);
-        		final String supplierName = supplier.getName();
-        		
-        		supplierOrderData[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
+        for (final Entity o : Database.getOrders()) {
+            final Order order = (Order) o;
+
+            if (order.isSupplier() && order.getStaffId() == staff.getId()) {
+                double totalCostPrice = 0;
+
+                for (final OrderedItem orderedItem : order.getOrderedItems()) {
+                    totalCostPrice += orderedItem.getQuantity() * orderedItem.getProduct().getCostPrice();
+                }
+
+                final int supplierId = order.getTraderId();
+                final Supplier supplier = (Supplier) Database.getSupplierById(supplierId);
+                final String supplierName = supplier.getName();
+
+                supplierOrderData[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
                 supplierOrderData[arrayIndex][1] = supplierName + " (" + SUPPLIER_ID_FORMATTER.format(supplierId) + ")";
                 supplierOrderData[arrayIndex++][2] = "€" + CURRENCY_FORMATTER.format(totalCostPrice);
                 totalCostValue += totalCostPrice;
-        	}
-        }       
-        
+            }
+        }
+
         supplierOrderData[numberOfSupplierOrders][1] = "<html><b>Supplier Total</b></html>";
         supplierOrderData[numberOfSupplierOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(totalCostValue) + "</b></html>";
 
@@ -633,7 +632,7 @@ return new MouseAdapter() {
 
         for (int i = 0; i < YEAR_CURRENT - YEAR_START + 1; i++) {
             for (Entity o : Database.getOrders()) {
-            	final Order order = (Order) o;
+                final Order order = (Order) o;
                 if (Integer.parseInt(order.getOrderDate().substring(6, 10)) == i + YEAR_START) {
 
                     for (OrderedItem oi : order.getOrderedItems()) {
@@ -699,7 +698,7 @@ return new MouseAdapter() {
         GuiCreator.mainPanel.add(innerPanel, BorderLayout.CENTER);
         GuiCreator.setFrame(false, false, true);
     }
-    
+
     private static void viewOrderInfo(final Order order) {
         GuiCreator.frame.remove(GuiCreator.mainPanel);
         GuiCreator.frame.setTitle("Rocket Retail Inc - Order #" + ORDER_ID_FORMATTER.format(order.getId()));
@@ -733,10 +732,10 @@ return new MouseAdapter() {
         final JLabel orderDateLabel = new JLabel("Order Date");
         final JLabel deliveryDateLabel = new JLabel("Delivery Date");
         final JLabel titleLabel = new JLabel("Ordered Items");
-        
+
         final Font currentFont = new JLabel().getFont();
         final Font labelFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
-        
+
         orderLabel.setFont(labelFont);
         staffLabel.setFont(labelFont);
         traderLabel.setFont(labelFont);
@@ -745,8 +744,7 @@ return new MouseAdapter() {
         titleLabel.setFont(labelFont);
 
         final int textFieldSize = 20;
-        
-        
+
         JTextField orderField = new JTextField(ORDER_ID_FORMATTER.format(order.getId()), textFieldSize);
         orderField.setEditable(false);
         JTextField staffField = new JTextField(staffName + " (" + STAFF_ID_FORMATTER.format(order.getStaffId()) + ")", textFieldSize);
@@ -799,14 +797,13 @@ return new MouseAdapter() {
         for (int i = 0; i < order.getOrderedItems().size(); i++) {
             double unitPrice = 0;
 
-            if (isSupplier){
+            if (isSupplier) {
                 unitPrice = order.getOrderedItems().get(i).getProduct().getCostPrice();
-            } else{
+            } else {
                 unitPrice = order.getOrderedItems().get(i).getProduct().getSalePrice();
             }
 
-            data[i][0] = order.getOrderedItems().get(i).getProduct().getName() + " (" + order.getOrderedItems().get(i).getProduct().getId()
-                    + ")";
+            data[i][0] = order.getOrderedItems().get(i).getProduct().getName() + " (" + order.getOrderedItems().get(i).getProduct().getId() + ")";
             data[i][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
             data[i][2] = order.getOrderedItems().get(i).getQuantity();
             data[i][3] = "€" + CURRENCY_FORMATTER.format(unitPrice * (int) data[i][2]);

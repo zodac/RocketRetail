@@ -78,15 +78,15 @@ public class Database {
         }
         throw new IllegalArgumentException("No supplier with that ID found!");
     }
-    
+
     public static Entity getOrderBySupplierId(final int traderId) {
-		for(final Entity order : orders){
-			if(((Order) order).getTraderId() == traderId){
-				return order;
-			}
-		}
-		throw new IllegalArgumentException("No order with that trader ID found!");
-	}
+        for (final Entity order : orders) {
+            if (((Order) order).getTraderId() == traderId) {
+                return order;
+            }
+        }
+        throw new IllegalArgumentException("No order with that trader ID found!");
+    }
 
     public static Entity getOrderById(final int orderId) {
         for (final Entity order : orders) {
@@ -234,7 +234,7 @@ public class Database {
     public static int getIndexOfProduct(final Entity product) {
         return products.indexOf(product);
     }
-    
+
     public static void addOrderByIndex(final int index, final Entity order) {
         orders.add(index, order);
     }

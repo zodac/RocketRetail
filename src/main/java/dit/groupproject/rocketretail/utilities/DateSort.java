@@ -12,8 +12,8 @@ import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
  * The DateSort class fills two 2D arrays ({@link #customerOrderDates} and
- * {@link #supplierOrderDates}) with sales and purchases by year and month. These two
- * arrays can be used by other classes for graphing or printing out
+ * {@link #supplierOrderDates}) with sales and purchases by year and month.
+ * These two arrays can be used by other classes for graphing or printing out
  * sales/purchases over a period of time.
  */
 public class DateSort {
@@ -143,11 +143,9 @@ public class DateSort {
                 for (final Order o : monthList) {
                     for (int k = 0; k < o.getOrderedItems().size(); k++) {
                         if (o.isSupplier())
-                            suppTotal += o.getOrderedItems().get(k).getProduct().getCostPrice()
-                                    * o.getOrderedItems().get(k).getQuantity();
+                            suppTotal += o.getOrderedItems().get(k).getProduct().getCostPrice() * o.getOrderedItems().get(k).getQuantity();
                         else
-                            custTotal += o.getOrderedItems().get(k).getProduct().getSalePrice()
-                                    * o.getOrderedItems().get(k).getQuantity();
+                            custTotal += o.getOrderedItems().get(k).getProduct().getSalePrice() * o.getOrderedItems().get(k).getQuantity();
                     }
                 }
 

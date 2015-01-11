@@ -635,8 +635,7 @@ public class EditEntityHelper extends EntityHelper {
         supplierOptions[0] = "";
 
         for (int i = 1; i < supplierOptions.length; i++) {
-            supplierOptions[i] = Database.getSupplierById(i - 1).getName() + " (" + Database.getSupplierById(i - 1).getId()
-                    + ")";
+            supplierOptions[i] = Database.getSupplierById(i - 1).getName() + " (" + Database.getSupplierById(i - 1).getId() + ")";
         }
         final JComboBox<String> suppIdBox = new JComboBox<String>(supplierOptions);
         innerPanel.add(suppIdBox, g);

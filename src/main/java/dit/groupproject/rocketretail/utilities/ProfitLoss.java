@@ -34,7 +34,7 @@ public class ProfitLoss {
         double profit = 0;
 
         for (final Entity o : Database.getOrders()) {
-        	final Order order = (Order) o;
+            final Order order = (Order) o;
 
             if (order.isSupplier()) {
                 for (final OrderedItem oi : order.getOrderedItems()) {

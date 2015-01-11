@@ -7,7 +7,7 @@ import java.util.Comparator;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
-public class Order implements Entity{
+public class Order implements Entity {
 
     public ArrayList<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
 
@@ -68,13 +68,13 @@ public class Order implements Entity{
         }
 
     }
-    
-    public double getTotalPrice(){
-    	if(isSupplier){
-    		return getTotalCost();
-    	} else{
-    		return getTotalSale();
-    	}
+
+    public double getTotalPrice() {
+        if (isSupplier) {
+            return getTotalCost();
+        } else {
+            return getTotalSale();
+        }
     }
 
     public double getTotalCost() {
@@ -118,20 +118,20 @@ public class Order implements Entity{
         this.isActive = false;
     }
 
-@Override
+    @Override
     public int getId() {
         return orderId;
     }
-    
-@Override
-    public void setId(final int orderId){
-    	this.orderId = orderId;
+
+    @Override
+    public void setId(final int orderId) {
+        this.orderId = orderId;
     }
 
-@Override
-public String getName(){
-	throw new IllegalArgumentException("Should not be asking for an order's name!");
-}
+    @Override
+    public String getName() {
+        throw new IllegalArgumentException("Should not be asking for an order's name!");
+    }
 
     public int getStaffId() {
         return staffId;
@@ -160,7 +160,7 @@ public String getName(){
     public boolean isSupplier() {
         return isSupplier;
     }
-    
+
     public static Comparator<Entity> getComparator(final String sortType) {
         if (sortType.equals("Staff ID")) {
             return compareByStaffId;
@@ -176,25 +176,25 @@ public String getName(){
             return compareById;
         }
     }
-    
+
     private static Comparator<Entity> compareByStaffId = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {
             return ((Order) s1).getStaffId() - ((Order) s2).getStaffId();
         }
     };
-    
+
     private static Comparator<Entity> compareByTraderId = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {
             return ((Order) s1).getTraderId() - ((Order) s2).getTraderId();
         }
     };
-    
+
     private static Comparator<Entity> compareByTotalPrice = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {
             return (int) (((Order) s1).getTotalPrice() - ((Order) s2).getTotalPrice());
         }
     };
-    
+
     private static Comparator<Entity> compareByOrderDate = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {
             try {
@@ -204,13 +204,13 @@ public String getName(){
             }
         }
     };
-    
+
     private static Comparator<Entity> compareByActive = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {
-        	return (((Order) s1).isActive() == ((Order) s2).isActive() ? 0 : (((Order) s1).isActive() ? 1 : -1));
+            return (((Order) s1).isActive() == ((Order) s2).isActive() ? 0 : (((Order) s1).isActive() ? 1 : -1));
         }
     };
-    
+
     @Override
     public Object[] getData() {
         final Object[] data = new Object[getNumberOfFields()];

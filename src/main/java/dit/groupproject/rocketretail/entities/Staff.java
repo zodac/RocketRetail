@@ -43,7 +43,7 @@ public class Staff implements Entity {
     public void setId(final int staffId) {
         this.staffId = staffId;
     }
-    
+
     @Override
     public String getName() {
         return staffName;
@@ -56,8 +56,6 @@ public class Staff implements Entity {
     public int getStaffLevel() {
         return staffLevel;
     }
-
-    
 
     public String getPhoneNumber() {
         return phoneNumber;

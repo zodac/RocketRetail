@@ -115,8 +115,7 @@ public class ProductTable extends BaseTable {
 
         int editAndDeleteIndex = 1;
         for (final Entity product : products) {
-            itemsToEdit[editAndDeleteIndex] = "ID: " + PRODUCT_ID_FORMATTER.format(product.getId()) + " ("
-                    + product.getName() + ")";
+            itemsToEdit[editAndDeleteIndex] = "ID: " + PRODUCT_ID_FORMATTER.format(product.getId()) + " (" + product.getName() + ")";
             itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
         }
 

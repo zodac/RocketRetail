@@ -63,7 +63,7 @@ public class SupplierTable extends BaseTable {
      * Adds JButtons to add, edit or delete a product, and implements the
      * ActionListeners for each.<br />
      * Calls {@link #viewSupplierInfo(Supplier)} when a supplier is selected
-     * from the table. *
+     * from the table.
      */
     public static void createTableGui() {
         setTableState(TableState.SUPPLIER);
@@ -100,8 +100,7 @@ public class SupplierTable extends BaseTable {
 
         int editAndDeleteIndex = 1;
         for (final Entity supplier : suppliers) {
-            itemsToEdit[editAndDeleteIndex] = "ID: " + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + " ("
-                    + supplier.getName() + ")";
+            itemsToEdit[editAndDeleteIndex] = "ID: " + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + " (" + supplier.getName() + ")";
             itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
         }
 
