@@ -40,6 +40,7 @@ import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.entityhelpers.AddEntityHelper;
+import dit.groupproject.rocketretail.entityhelpers.ViewEntityHelper;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
@@ -263,6 +264,7 @@ public class OrderTable extends BaseTable {
 
         table.setColumnSelectionAllowed(false);
         table.setFillsViewportHeight(true);
+        table.addMouseListener(ViewEntityHelper.viewEntityTable(table));
 
         final JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
