@@ -44,13 +44,22 @@ public class Database {
         throw new IllegalArgumentException("No product with that ID found!");
     }
 
-    public static Entity getSupplierByName(final Object supplierName) {
+    public static Entity getSupplierByName(final String supplierName) {
         for (final Entity supplier : suppliers) {
             if (supplier.getName().equals(supplierName)) {
                 return supplier;
             }
         }
         throw new IllegalArgumentException("No supplier with that name found!");
+    }
+
+    public static Entity getCustomerByName(final String customerName) {
+        for (final Entity customer : customers) {
+            if (customer.getName().equals(customerName)) {
+                return customer;
+            }
+        }
+        throw new IllegalArgumentException("No customer with that name found!");
     }
 
     public static Entity getCustomerById(final int customerId) {

@@ -36,6 +36,23 @@ import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 public class EditEntityHelper extends EntityHelper {
 
+    private final static String[] CUSTOMER_LABELS = { "Customer ID:", "Customer Name:", "Phone Number:", "Address:", "VAT Number:", "Last Purchase:",
+            "Date Added:" };
+    private final static String[] PRODUCT_LABELS = { "Product ID:", "Product Name:", "Stock Level:", "Maximum Level:", "Supplier ID:", "Cost Price:",
+            "Sale Price:" };
+    private final static String[] STAFF_LABELS = { "Staff ID:", "Staff PIN:", "Name:", "Gender:", "Phone Number:", "Address:", "Wage:",
+            "Staff Level:", "Date Added:" };
+    private final static String[] SUPPLIER_LABELS = { "Supplier ID:", "Supplier Name:", "Phone Number:", "Address:", "VAT Number:", "Last Purchase:",
+            "Date Added:" };
+
+    private final static ActionListener cancelListener = new ActionListener() {
+        public void actionPerformed(final ActionEvent e) {
+            GuiCreator.frame.remove(GuiCreator.leftPanel);
+            GuiCreator.frame.repaint();
+            GuiCreator.frame.validate();
+        }
+    };
+
     /**
      * Returns an ActionListener which adds an Entity edit panel to the left
      * side of the GUI screen.
@@ -77,34 +94,14 @@ public class EditEntityHelper extends EntityHelper {
     }
 
     private static void editCustomerPanel(final int customerId) {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
+        resetPanel();
 
         final Customer customer = (Customer) Database.getCustomerById(customerId);
         final int index = Database.getIndexOfCustomer(customer);
-
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        final JPanel innerPanel = addLabelsToPanel(CUSTOMER_LABELS);
 
         GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Customer ID:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Customer Name:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Phone Number:"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("Address:"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("VAT Number:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Last Purchase:"), g);
-        g.gridy = 6;
-        innerPanel.add(new JLabel("Date Added:"), g);
-
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
@@ -231,47 +228,19 @@ public class EditEntityHelper extends EntityHelper {
             }
         });
 
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.repaint();
-                GuiCreator.frame.validate();
-            }
-        });
-
-        GuiCreator.leftPanel.add(innerPanel);
-        GuiCreator.setFrame(true, false, false);
+        cancel.addActionListener(cancelListener);
+        updateScreen(innerPanel);
     }
 
     private static void editSupplierPanel(final int supplierId) {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
+        resetPanel();
 
         final Supplier supplier = (Supplier) Database.getSupplierById(supplierId);
         final int index = Database.getIndexOfSupplier(supplier);
-
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        final JPanel innerPanel = addLabelsToPanel(SUPPLIER_LABELS);
 
         GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Supplier ID:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Supplier Name:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Phone Number:"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("Address:"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("VAT Number:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Last Purchase:"), g);
-        g.gridy = 6;
-        innerPanel.add(new JLabel("Date Added:"), g);
-
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
@@ -402,49 +371,19 @@ public class EditEntityHelper extends EntityHelper {
             }
         });
 
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.validate();
-            }
-        });
-
-        GuiCreator.leftPanel.add(innerPanel);
-        GuiCreator.setFrame(true, false, false);
+        cancel.addActionListener(cancelListener);
+        updateScreen(innerPanel);
     }
 
     private static void editStaffPanel(int staffId) {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
+        resetPanel();
 
         final Staff staff = (Staff) Database.getStaffMemberById(staffId);
         final int index = Database.getIndexOfStaff(staff);
-
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        final JPanel innerPanel = addLabelsToPanel(STAFF_LABELS);
 
         GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Staff ID:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Staff PIN:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Name:"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("Gender:"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("Phone Number:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Address:"), g);
-        g.gridy = 6;
-        innerPanel.add(new JLabel("Wage:"), g);
-        g.gridy = 7;
-        innerPanel.add(new JLabel("Staff Level:"), g);
-        g.gridy = 8;
-        innerPanel.add(new JLabel("Date Added:"), g);
 
         final String[] genderOptions = { "", "Male", "Female" };
         final String[] staffLevelOptions = { "", "Manager", "Employee" };
@@ -573,53 +512,26 @@ public class EditEntityHelper extends EntityHelper {
             }
         });
 
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.repaint();
-                GuiCreator.frame.validate();
-            }
-        });
-
-        GuiCreator.leftPanel.add(innerPanel);
-        GuiCreator.setFrame(true, false, false);
+        cancel.addActionListener(cancelListener);
+        updateScreen(innerPanel);
     }
 
     private static void editProductPanel(int productId) {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
+        resetPanel();
 
         final Product product = (Product) Database.getProductById(productId);
-        final int index = Database.getProducts().indexOf(product);
-
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        final int index = Database.getIndexOfProduct(product);
+        final JPanel innerPanel = addLabelsToPanel(PRODUCT_LABELS);
 
         GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Product ID:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Product Description:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Stock Level:"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("Maximum Level"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("Supplier ID:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Cost Price:"), g);
-        g.gridy = 6;
-        innerPanel.add(new JLabel("Sale Price:"), g);
 
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
-        final JTextField prodIDField = new JTextField(null, 20);
-        prodIDField.setEditable(false);
-        innerPanel.add(prodIDField, g);
+        final JTextField prodIdField = new JTextField(null, 20);
+        prodIdField.setEditable(false);
+        innerPanel.add(prodIdField, g);
         g.gridy = 1;
         final JTextField prodDescField = new JTextField(null, 20);
         innerPanel.add(prodDescField, g);
@@ -647,7 +559,7 @@ public class EditEntityHelper extends EntityHelper {
         innerPanel.add(salePriceField, g);
 
         // Set JTextFields with current data
-        prodIDField.setText("" + product.getId());
+        prodIdField.setText("" + product.getId());
         prodDescField.setText(product.getName());
         stockLevelField.setText("" + product.getStockLevel());
         maxLevelField.setText("" + product.getMaxLevel());
@@ -706,13 +618,34 @@ public class EditEntityHelper extends EntityHelper {
             }
         });
 
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.repaint();
-                GuiCreator.frame.validate();
-            }
-        });
+        cancel.addActionListener(cancelListener);
+        updateScreen(innerPanel);
+    }
+
+    private static JPanel addLabelsToPanel(final String[] labels) {
+        final JPanel innerPanel = new JPanel(new GridBagLayout());
+        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        int labelIndex = 0;
+
+        final GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.insets = new Insets(1, 10, 0, 5);
+        gridBagConstraints.gridx = 0;
+
+        for (final String label : labels) {
+            gridBagConstraints.gridy = labelIndex++;
+            innerPanel.add(new JLabel(label), gridBagConstraints);
+        }
+
+        return innerPanel;
+    }
+
+    private static void resetPanel() {
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.leftPanel = new JPanel();
+    }
+
+    private static void updateScreen(final JPanel innerPanel) {
         GuiCreator.leftPanel.add(innerPanel);
         GuiCreator.setFrame(true, false, false);
     }

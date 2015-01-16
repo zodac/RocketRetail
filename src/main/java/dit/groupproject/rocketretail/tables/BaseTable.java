@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import dit.groupproject.rocketretail.entities.Entity;
@@ -56,6 +57,12 @@ public abstract class BaseTable {
         GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
     }
 
+    protected static void updateGui(final JScrollPane scrollPane, final JPanel buttonPanel) {
+        GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
+        GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        GuiCreator.setFrame(false, false, true);
+    }
+
     protected static JButton createAddButton(final String addButtonTitle) {
         final JButton addButton = new JButton(addButtonTitle);
         addButton.addActionListener(AddEntityHelper.addEntityPanel());
@@ -74,11 +81,14 @@ public abstract class BaseTable {
         return deleteBox;
     }
 
-    protected static JTable createTable(final Object[][] data, final String[] columnNames) {
+    protected static JScrollPane createScrollableTable(final Object[][] data, final String[] columnNames) {
         final JTable table = new JTable(data, columnNames);
         table.setColumnSelectionAllowed(false);
         table.setFillsViewportHeight(true);
         table.addMouseListener(ViewEntityHelper.viewEntityTable(table));
-        return table;
+
+        final JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        return scrollPane;
     }
 }

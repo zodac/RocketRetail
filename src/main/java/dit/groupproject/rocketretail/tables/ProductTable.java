@@ -1,6 +1,5 @@
 package dit.groupproject.rocketretail.tables;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Entity;
@@ -91,15 +89,10 @@ public class ProductTable extends BaseTable {
 
         final String[] productColumnNames = { "ID", "Description", "Stock Level", "Max Level", "Supplier ID", "Cost Price", "Sale Price" };
         final Object[][] data = createTableData(Database.getProducts());
-        final JTable table = createTable(data, productColumnNames);
+        final JScrollPane scrollPane = createScrollableTable(data, productColumnNames);
         final JPanel buttonPanel = createButtonPanel();
 
-        final JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
-
-        GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
-        GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
-        GuiCreator.setFrame(false, false, true);
+        updateGui(scrollPane, buttonPanel);
     }
 
     private static JPanel createButtonPanel() {

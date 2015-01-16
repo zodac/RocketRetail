@@ -1,6 +1,5 @@
 package dit.groupproject.rocketretail.tables;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Entity;
@@ -74,15 +72,10 @@ public class StaffTable extends BaseTable {
 
         final String[] staffColumnNames = { "ID", "Name", "Gender", "Phone Number", "Address", "Wage", "Level", "Date Added" };
         final Object[][] data = createTableData(Database.getStaffMembers());
-        final JTable table = createTable(data, staffColumnNames);
+        final JScrollPane scrollPane = createScrollableTable(data, staffColumnNames);
         final JPanel buttonPanel = createButtonPanel();
 
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
-
-        GuiCreator.mainPanel.add(scrollPane, BorderLayout.NORTH);
-        GuiCreator.mainPanel.add(buttonPanel, BorderLayout.CENTER);
-        GuiCreator.setFrame(false, false, true);
+        updateGui(scrollPane, buttonPanel);
     }
 
     private static JPanel createButtonPanel() {
