@@ -1,10 +1,9 @@
 package dit.groupproject.rocketretail.utilities;
 
+import static dit.groupproject.rocketretail.utilities.DateHandler.MONTHS;
 import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
 import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
-
-import java.text.DecimalFormat;
-
+import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Order;
@@ -16,9 +15,6 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  * Return strings to be displayed on-screen in JTextAreas.
  */
 public class ProfitLoss {
-
-    private final static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("#,###,##0.00");
-    private final static String[] MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
     /**
      * Cycles through {@link ShopDriver#orders} and adds the total values for

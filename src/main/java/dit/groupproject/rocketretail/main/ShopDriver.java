@@ -13,7 +13,7 @@ public class ShopDriver {
     private static Staff currentStaff;
     private static TableState currentTable = TableState.NONE;
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Database.initialiseDatabase();
         InitialiseArray.generateOrders(10, false, false);
         GuiCreator.createGui();

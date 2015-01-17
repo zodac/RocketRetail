@@ -1,6 +1,7 @@
 package dit.groupproject.rocketretail.tables;
 
-import static dit.groupproject.rocketretail.utilities.DateHandler.DATE_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.DATE_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -284,7 +285,7 @@ public class OrderTable extends BaseTable {
 
             for (final Entity order : orders) {
                 if (((Order) order).isActive()) {
-                    orderArrayComplete[arrayIndex++] = "ID: " + ORDER_ID_FORMATTER.format(order.getId());
+                    orderArrayComplete[arrayIndex++] = "ID: " + ID_FORMATTER.format(order.getId());
                 }
 
             }
@@ -322,7 +323,7 @@ public class OrderTable extends BaseTable {
 
             for (final Entity order : orders) {
                 if (isActiveSupplierOrder(order)) {
-                    orderArrayComplete[arrayIndex++] = "ID: " + ORDER_ID_FORMATTER.format(order.getId());
+                    orderArrayComplete[arrayIndex++] = "ID: " + ID_FORMATTER.format(order.getId());
                 }
             }
             validOrders = numberOfActiveSupplierOrders;
@@ -358,7 +359,7 @@ public class OrderTable extends BaseTable {
 
             for (final Entity order : orders) {
                 if (isActiveCustomerOrder(order)) {
-                    orderArrayComplete[arrayIndex++] = "ID: " + ORDER_ID_FORMATTER.format(order.getId());
+                    orderArrayComplete[arrayIndex++] = "ID: " + ID_FORMATTER.format(order.getId());
                 }
             }
 
@@ -383,7 +384,7 @@ public class OrderTable extends BaseTable {
             for (final Entity order : orders) {
                 if (((Order) order).isActive()) {
                     data[customerIndex++] = order.getData();
-                    orderArrayComplete[arrayIndex++] = "ID: " + ORDER_ID_FORMATTER.format(order.getId());
+                    orderArrayComplete[arrayIndex++] = "ID: " + ID_FORMATTER.format(order.getId());
                 }
             }
 
@@ -553,7 +554,7 @@ public class OrderTable extends BaseTable {
                                     }
                                 }
                                 GuiCreator.setConfirmationMessage("Order #"
-                                        + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
+                                        + ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
                                         + " created for customer \"" + activeCustomer.getName() + "\"");
 
                                 GuiCreator.frame.remove(GuiCreator.leftPanel);
@@ -785,7 +786,7 @@ public class OrderTable extends BaseTable {
                                 }
 
                                 GuiCreator.setConfirmationMessage("Order #"
-                                        + ORDER_ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
+                                        + ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
                                         + " created for supplier \"" + activeSupplier.getName() + "\"");
 
                                 // Reset ShopDriver.frame
@@ -860,7 +861,7 @@ public class OrderTable extends BaseTable {
 
     private static void completeOrder(int orderId) {
         final JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Are you sure you want to complete order #" + ORDER_ID_FORMATTER.format(orderId) + "?"));
+        myPanel.add(new JLabel("Are you sure you want to complete order #" + ID_FORMATTER.format(orderId) + "?"));
 
         if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
             final Order order = (Order) Database.getOrderById(orderId);

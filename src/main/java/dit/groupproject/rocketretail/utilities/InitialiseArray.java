@@ -8,7 +8,6 @@ import java.util.Random;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
-import dit.groupproject.rocketretail.entities.IdManager;
 import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
@@ -18,17 +17,16 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
- * This class is a utility class which is used to generate <code>Staff</code>,
- * <code>Supplier</code>s, <code>Product</code>s, <code>Customer</code>s and
- * <code>Order</code>s for the application.
+ * This class is a utility class which is used to generate {@link Staff}>,
+ * {@link Supplier}s, {@link Product}s, {@link Customer}s and {@link Order}s for
+ * the application.
  */
 public class InitialiseArray {
 
     private final static Random RANDOM = new Random();
 
     /**
-     * This method adds a number of <code>Staff</code> to an
-     * <code>ArrayList</code>.
+     * This method adds a number of {@link Staff} to the {@link Database}.
      */
     public static void addStaff() {
         Database.addStaffMember(new Staff(1001, "James Richards", 1, "0181244862", "Islandsville", 60000, 1, "16/10/2001"));
@@ -49,8 +47,7 @@ public class InitialiseArray {
     }
 
     /**
-     * This method adds a number of <code>Supplier</code>s to an
-     * <code>ArrayList</code>.
+     * This method adds a number of {@link Supplier}s to the {@link Database}.
      */
     public static void addSuppliers() {
         Database.addSupplier(new Supplier("Hurstons", "018214485", "Shelby Town", "R1223456", "16/09/2013", "16/10/2001"));
@@ -76,8 +73,7 @@ public class InitialiseArray {
     }
 
     /**
-     * This method adds a number of <code>Customer</code>s to an
-     * <code>ArrayList</code>.
+     * This method adds a number of {@link Customer}s to the {@link Database}.
      */
     public static void addCustomers() {
         Database.addCustomer(new Customer("James Adams", "0185664246", "Islandsville", "D5345446", "16/11/2012", "01/10/2000"));
@@ -106,8 +102,7 @@ public class InitialiseArray {
     }
 
     /**
-     * This method adds a number of <code>Product</code>s to an
-     * <code>ArrayList</code>.
+     * This method adds a number of {@link Product}s to the {@link Database}.
      */
     public static void addProducts() {
         final String[] productNames = { "Paint Stripper", "Indian Beer", "Milk", "Hose Pipe", "Bottled Water", "A4 Pad", "Stapler", "Toothbrush",
@@ -125,60 +120,57 @@ public class InitialiseArray {
     }
 
     /**
-     * This method adds a number of <code>Order</code>s to an
-     * <code>ArrayList</code>.
+     * This method adds a number of {@link Order}s to the {@link Database}.
      */
     public static void addOrders(boolean extra) {
         final ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
-
-        if (!extra) {
-            items.add(new OrderedItem((Product) Database.getProductByIndex(0), 20));
-            items.add(new OrderedItem((Product) Database.getProductByIndex(1), 10));
-            items.add(new OrderedItem((Product) Database.getProductByIndex(2), 15));
-
-            ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
-            Database.addOrder(new Order(1000, "10/03/2004", items, false));
-            ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
-            Database.addOrder(new Order(10001, "04/10/2008", items, false));
-            ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
-            Database.addOrder(new Order(10002, "19/12/2009", items, false));
-        }
 
         if (extra) {
             items.add(new OrderedItem((Product) Database.getProductByIndex(3), 10));
             items.add(new OrderedItem((Product) Database.getProductByIndex(4), 5));
 
             ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
-            Database.addOrder(new Order(10003, "20/05/2011", items, false));
+            Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "20/05/2011", items, false));
             ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
-            Database.addOrder(new Order(10001, "11/02/2013", items, false));
+            Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "11/02/2013", items, false));
             ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
-            Database.addOrder(new Order(10004, "01/07/2013", items, false));
+            Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "01/07/2013", items, false));
+        } else {
+            items.add(new OrderedItem((Product) Database.getProductByIndex(0), 20));
+            items.add(new OrderedItem((Product) Database.getProductByIndex(1), 10));
+            items.add(new OrderedItem((Product) Database.getProductByIndex(2), 15));
+
+            ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
+            Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "10/03/2004", items, false));
+            ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
+            Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "04/10/2008", items, false));
+            ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
+            Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "19/12/2009", items, false));
         }
     }
 
     /**
-     * This method generates a set of random <code>Order</code>s.
+     * This method generates a set of random {@link Order}s.
      * 
-     * @param amount
+     * @param numberOfOrders
      *            An integer defining the number of orders to generate.
-     * @param confirm
+     * @param displayConfirmationMessage
      *            A boolean to decide if a confirmation message is needed.
      * @param orderInCurrentYear
      *            A boolean to decide if randDate should be set to the current
      *            year.
      */
-    public static void generateOrders(final int amount, final boolean confirm, final boolean orderInCurrentYear) {
-        final int ordersToCreate = (amount == 0) ? RANDOM.nextInt(16) + 5 : amount;
-        int i = 0;
+    public static void generateOrders(final int numberOfOrders, final boolean displayConfirmationMessage, final boolean orderInCurrentYear) {
+        final int ordersToCreate = (numberOfOrders == 0) ? RANDOM.nextInt(16) + 5 : numberOfOrders;
+        int index = 0;
         int loops = 0;
 
-        while (i < ordersToCreate && loops < 50) {
+        while (index < ordersToCreate && loops < 50) {
             final ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
             int itemsToCreate = RANDOM.nextInt(Database.getProducts().size()) + 1;
             final Staff currentStaff = ShopDriver.getCurrentStaff();
 
-            int traderId = 0, check = 0;
+            int traderId = 0;
 
             final int randomDay = RANDOM.nextInt(31 - 1) + 1;
             final int randomMonth = RANDOM.nextInt(12 - 1) + 1;
@@ -188,15 +180,14 @@ public class InitialiseArray {
             date += (randomMonth < 10) ? "0" + randomMonth + "/" : randomMonth + "/";
             date += orderInCurrentYear ? YEAR_CURRENT : randomYear;
 
-            check = RANDOM.nextInt(2) + 1;
-
+            boolean isSupplier = Math.random() < 0.5;
             if (orderInCurrentYear && currentStaff.getStaffLevel() == 2) {
-                check = 2;
+                isSupplier = false;
             }
 
-            if (check == 1) {
+            if (isSupplier) {
                 traderId = Database.getRandomSupplier().getId();
-            } else if (check == 2) {
+            } else {
                 traderId = Database.getRandomCustomer().getId();
             }
 
@@ -235,31 +226,32 @@ public class InitialiseArray {
             }
 
             if (!items.isEmpty()) {
-
                 boolean valid = true;
 
-                if (traderId > IdManager.SUPPLIER_ID_START && traderId <= IdManager.CUSTOMER_ID_START)
-                    for (OrderedItem oi : items) {
-                        if (oi.getProduct().getStockLevel() + oi.getQuantity() > oi.getProduct().getMaxLevel()) {
+                if (isSupplier) {
+                    for (final OrderedItem oi : items) {
+                        final Product orderedProduct = oi.getProduct();
+                        if (orderedProduct.getStockLevel() + oi.getQuantity() > orderedProduct.getMaxLevel()) {
                             valid = false;
                         }
                     }
+                }
 
                 boolean activeOrder = orderInCurrentYear && (RANDOM.nextInt(2) + 1) == 1;
 
                 if (valid) {
                     Database.addOrder(new Order(traderId, date, items, activeOrder));
-                    i++;
+                    index++;
                 }
             }
             loops++;
         }
 
         final StringBuilder output = new StringBuilder();
-        output.append((i == 1) ? "1 order created" : i + " orders created");
+        output.append((index == 1) ? "1 order created" : index + " orders created");
         output.append((loops == 50) ? " - stock levels getting low" : "");
 
-        if (confirm) {
+        if (displayConfirmationMessage) {
             GuiCreator.setConfirmationMessage(output.toString());
         }
     }

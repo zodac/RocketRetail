@@ -1,5 +1,9 @@
 package dit.groupproject.rocketretail.entities;
 
+import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.DATE_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,12 +31,16 @@ public class Order implements Entity {
         this.orderDate = orderDate;
         this.orderedItems = orderedItems;
         this.isActive = isActive;
-        this.isSupplier = traderId >= IdManager.SUPPLIER_ID_START && traderId < IdManager.CUSTOMER_ID_START;
+        this.isSupplier = traderId >= IdManager.SUPPLIER_ID_START && traderId < IdManager.SUPPLIER_ID_START + IdManager.MAX_ID_RANGE;
 
         for (final OrderedItem orderedItem : orderedItems) {
             if (!isSupplier) {
-                if (orderedItem.getProduct().getStockLevel() >= orderedItem.getQuantity()) {
-                    orderedItem.getProduct().setStockLevel(orderedItem.getProduct().getStockLevel() - orderedItem.getQuantity());
+                final Product orderedProduct = orderedItem.getProduct();
+                final int stockLevel = orderedProduct.getStockLevel();
+                final int quantity = orderedItem.getQuantity();
+
+                if (stockLevel >= quantity) {
+                    orderedProduct.setStockLevel(stockLevel - quantity);
                 }
             }
         }
@@ -70,31 +78,19 @@ public class Order implements Entity {
     }
 
     public double getTotalPrice() {
+        double totalValue = 0;
+
         if (isSupplier) {
-            return getTotalCost();
+            for (final OrderedItem oi : this.orderedItems) {
+                totalValue += oi.getQuantity() * oi.getProduct().getCostPrice();
+            }
         } else {
-            return getTotalSale();
-        }
-    }
-
-    public double getTotalCost() {
-        double totalCost = 0;
-
-        for (final OrderedItem oi : this.orderedItems) {
-            totalCost += oi.getQuantity() * oi.getProduct().getCostPrice();
+            for (final OrderedItem oi : this.orderedItems) {
+                totalValue += oi.getQuantity() * oi.getProduct().getSalePrice();
+            }
         }
 
-        return totalCost;
-    }
-
-    public double getTotalSale() {
-        double totalSale = 0;
-
-        for (final OrderedItem oi : this.orderedItems) {
-            totalSale += oi.getQuantity() * oi.getProduct().getSalePrice();
-        }
-
-        return totalSale;
+        return totalValue;
     }
 
     public boolean includesProduct(final Product product) {
@@ -214,10 +210,10 @@ public class Order implements Entity {
     @Override
     public Object[] getData() {
         final Object[] data = new Object[getNumberOfFields()];
-        data[0] = ORDER_ID_FORMATTER.format(orderId);
-        data[1] = STAFF_ID_FORMATTER.format(staffId);
+        data[0] = ID_FORMATTER.format(orderId);
+        data[1] = ID_FORMATTER.format(staffId);
         data[2] = traderId;
-        data[3] = "€" + CURRENCY_FORMATTER.format(isSupplier ? getTotalCost() : getTotalSale());
+        data[3] = "€" + CURRENCY_FORMATTER.format(getTotalPrice());
         data[4] = orderDate;
         data[5] = deliveryDate.isEmpty() ? " " : deliveryDate;
 

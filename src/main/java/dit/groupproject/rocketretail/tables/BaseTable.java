@@ -1,7 +1,8 @@
 package dit.groupproject.rocketretail.tables;
 
+import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
+
 import java.awt.BorderLayout;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -11,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entityhelpers.AddEntityHelper;
 import dit.groupproject.rocketretail.entityhelpers.DeleteEntityHelper;
@@ -21,13 +23,6 @@ import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 
 public abstract class BaseTable {
-
-    protected final static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("#,###,#00.00");
-    protected final static DecimalFormat CUSTOMER_ID_FORMATTER = new DecimalFormat("00000");
-    protected final static DecimalFormat ORDER_ID_FORMATTER = new DecimalFormat("0000");
-    protected final static DecimalFormat PRODUCT_ID_FORMATTER = new DecimalFormat("00000");
-    protected final static DecimalFormat STAFF_ID_FORMATTER = new DecimalFormat("000");
-    protected final static DecimalFormat SUPPLIER_ID_FORMATTER = new DecimalFormat("0000");
 
     protected static int showDialog(final String title, final JPanel myPanel) {
         return JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
@@ -90,5 +85,33 @@ public abstract class BaseTable {
         final JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);
         return scrollPane;
+    }
+
+    protected static JPanel createButtonPanel(final String tableStateName, final JComboBox<String> sortOptions) {
+        final JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+
+        final ArrayList<Entity> items = Database.getCurrentTableItems();
+
+        final String[] itemsToEdit = new String[items.size() + 1];
+        final String[] itemsToDelete = new String[itemsToEdit.length];
+        itemsToEdit[0] = "Edit " + tableStateName;
+        itemsToDelete[0] = "Delete " + tableStateName;
+
+        int editAndDeleteIndex = 1;
+        for (final Entity item : items) {
+            itemsToEdit[editAndDeleteIndex] = "ID: " + ID_FORMATTER.format(item.getId()) + " (" + item.getName() + ")";
+            itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
+        }
+
+        final JButton addButton = createAddButton("Add " + tableStateName);
+        final JComboBox<String> editSelection = createEditBox(itemsToEdit);
+        final JComboBox<String> deleteSelection = createDeleteBox(itemsToDelete);
+
+        buttonPanel.add(addButton);
+        buttonPanel.add(editSelection);
+        buttonPanel.add(deleteSelection);
+        buttonPanel.add(sortOptions);
+        return buttonPanel;
     }
 }

@@ -1,5 +1,7 @@
 package dit.groupproject.rocketretail.entities;
 
+import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
+
 import java.util.Comparator;
 
 /**
@@ -112,7 +114,7 @@ public class Product implements Entity {
     @Override
     public Object[] getData() {
         final Object[] data = new Object[getNumberOfFields()];
-        data[0] = PRODUCT_ID_FORMATTER.format(productId);
+        data[0] = ID_FORMATTER.format(productId);
         data[1] = productName;
         data[2] = stockLevel;
         data[3] = maxLevel;

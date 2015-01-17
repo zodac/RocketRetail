@@ -2,6 +2,8 @@ package dit.groupproject.rocketretail.entityhelpers;
 
 import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
 import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -42,7 +44,7 @@ import dit.groupproject.rocketretail.tables.ProductTable;
 import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 
-public class ViewEntityHelper extends EntityHelper {
+public class ViewEntityHelper {
 
     private final static String[] ORDER_COLUMN_NAMES_FROM_CUSTOMER_TABLE = { "Order ID", "Order Date", "Delivery Date", "Total Cost" };
 
@@ -149,7 +151,7 @@ public class ViewEntityHelper extends EntityHelper {
 
         final int textFieldSize = 20;
 
-        final JTextField customerField = new JTextField(customerName + " (" + CUSTOMER_ID_FORMATTER.format(customer.getId()) + ")", textFieldSize);
+        final JTextField customerField = new JTextField(customerName + " (" + ID_FORMATTER.format(customer.getId()) + ")", textFieldSize);
         customerField.setEditable(false);
         JTextField vatNumberField = new JTextField(customer.getVatNumber(), textFieldSize);
         vatNumberField.setEditable(false);
@@ -202,12 +204,13 @@ public class ViewEntityHelper extends EntityHelper {
 
         for (final Entity cOrder : customerOrders) {
             final Order customerOrder = (Order) cOrder;
+            final double totalSale = customerOrder.getTotalPrice();
 
-            data[indexArray][0] = ORDER_ID_FORMATTER.format(customerOrder.getId());
+            data[indexArray][0] = ID_FORMATTER.format(customerOrder.getId());
             data[indexArray][1] = customerOrder.getOrderDate();
             data[indexArray][2] = customerOrder.getDeliveryDate();
-            data[indexArray++][3] = "€" + CURRENCY_FORMATTER.format(customerOrder.getTotalSale());
-            total += customerOrder.getTotalSale();
+            data[indexArray++][3] = "€" + CURRENCY_FORMATTER.format(totalSale);
+            total += totalSale;
         }
 
         data[numberOfCustomerOrders][2] = "<html><b>Total Sales</b></html>";
@@ -264,7 +267,7 @@ public class ViewEntityHelper extends EntityHelper {
 
         int textFieldSize = 20;
 
-        JTextField supplierField = new JTextField(supplier.getName() + " (" + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + ")", textFieldSize);
+        JTextField supplierField = new JTextField(supplier.getName() + " (" + ID_FORMATTER.format(supplier.getId()) + ")", textFieldSize);
         supplierField.setEditable(false);
         JTextField vatNumberField = new JTextField(supplier.getVatNumber(), textFieldSize);
         vatNumberField.setEditable(false);
@@ -385,7 +388,7 @@ public class ViewEntityHelper extends EntityHelper {
 
         final int textFieldSize = 15;
 
-        JTextField staffField = new JTextField(staff.getName() + " (" + STAFF_ID_FORMATTER.format(staff.getId()) + ")", textFieldSize);
+        JTextField staffField = new JTextField(staff.getName() + " (" + ID_FORMATTER.format(staff.getId()) + ")", textFieldSize);
         staffField.setEditable(false);
         JTextField levelField = new JTextField(level, textFieldSize);
         levelField.setEditable(false);
@@ -465,8 +468,8 @@ public class ViewEntityHelper extends EntityHelper {
                 final Customer customer = (Customer) Database.getCustomerById(customerId);
                 final String customerName = customer.getName();
 
-                customerOrderdata[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
-                customerOrderdata[arrayIndex][1] = customerName + " (" + SUPPLIER_ID_FORMATTER.format(customerId) + ")";
+                customerOrderdata[arrayIndex][0] = ID_FORMATTER.format(order.getId());
+                customerOrderdata[arrayIndex][1] = customerName + " (" + ID_FORMATTER.format(customerId) + ")";
                 customerOrderdata[arrayIndex++][2] = "€" + CURRENCY_FORMATTER.format(totalSalePrice);
                 totalSalePrice += totalSalePrice;
             }
@@ -498,8 +501,8 @@ public class ViewEntityHelper extends EntityHelper {
                 final Supplier supplier = (Supplier) Database.getSupplierById(supplierId);
                 final String supplierName = supplier.getName();
 
-                supplierOrderData[arrayIndex][0] = ORDER_ID_FORMATTER.format(order.getId());
-                supplierOrderData[arrayIndex][1] = supplierName + " (" + SUPPLIER_ID_FORMATTER.format(supplierId) + ")";
+                supplierOrderData[arrayIndex][0] = ID_FORMATTER.format(order.getId());
+                supplierOrderData[arrayIndex][1] = supplierName + " (" + ID_FORMATTER.format(supplierId) + ")";
                 supplierOrderData[arrayIndex++][2] = "€" + CURRENCY_FORMATTER.format(totalCostPrice);
                 totalCostValue += totalCostPrice;
             }
@@ -571,7 +574,7 @@ public class ViewEntityHelper extends EntityHelper {
         final Entity productSupplier = Database.getSupplierById(product.getSupplierId());
         final String supplier = productSupplier.getName() + " (" + productSupplier.getId() + ")";
 
-        final JTextField productField = new JTextField(productName + " (" + PRODUCT_ID_FORMATTER.format(product.getId()) + ")", textFieldSize);
+        final JTextField productField = new JTextField(productName + " (" + ID_FORMATTER.format(product.getId()) + ")", textFieldSize);
         productField.setEditable(false);
         final JTextField stockField = new JTextField(product.getStockLevel() + "/" + product.getMaxLevel(), textFieldSize);
         stockField.setEditable(false);
@@ -701,7 +704,7 @@ public class ViewEntityHelper extends EntityHelper {
 
     private static void viewOrderInfo(final Order order) {
         GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Order #" + ORDER_ID_FORMATTER.format(order.getId()));
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Order #" + ID_FORMATTER.format(order.getId()));
         GuiCreator.frame.repaint();
         GuiCreator.mainPanel = new JPanel(new BorderLayout(0, 1));
 
@@ -745,9 +748,9 @@ public class ViewEntityHelper extends EntityHelper {
 
         final int textFieldSize = 20;
 
-        JTextField orderField = new JTextField(ORDER_ID_FORMATTER.format(order.getId()), textFieldSize);
+        JTextField orderField = new JTextField(ID_FORMATTER.format(order.getId()), textFieldSize);
         orderField.setEditable(false);
-        JTextField staffField = new JTextField(staffName + " (" + STAFF_ID_FORMATTER.format(order.getStaffId()) + ")", textFieldSize);
+        JTextField staffField = new JTextField(staffName + " (" + ID_FORMATTER.format(order.getStaffId()) + ")", textFieldSize);
         staffField.setEditable(false);
         JTextField traderField = new JTextField(traderName + " (" + order.getTraderId() + ")", textFieldSize);
         traderField.setEditable(false);

@@ -4,6 +4,7 @@ import static dit.groupproject.rocketretail.utilities.DateHandler.DAYS_AS_NUMBER
 import static dit.groupproject.rocketretail.utilities.DateHandler.MONTHS_AS_NUMBERS;
 import static dit.groupproject.rocketretail.utilities.DateHandler.YEARS_AS_NUMBERS;
 import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -31,10 +32,11 @@ import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
 import dit.groupproject.rocketretail.tables.ProductTable;
+import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
-public class EditEntityHelper extends EntityHelper {
+public class EditEntityHelper {
 
     private final static String[] CUSTOMER_LABELS = { "Customer ID:", "Customer Name:", "Phone Number:", "Address:", "VAT Number:", "Last Purchase:",
             "Date Added:" };
@@ -66,7 +68,7 @@ public class EditEntityHelper extends EntityHelper {
         if (currentState == TableState.CUSTOMER) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    editCustomerPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 9)));
+                    editCustomerPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10)));
                 }
             };
         } else if (currentState == TableState.ORDER) {
@@ -74,19 +76,19 @@ public class EditEntityHelper extends EntityHelper {
         } else if (currentState == TableState.PRODUCT) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    editProductPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 9)));
+                    editProductPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10)));
                 }
             };
         } else if (currentState == TableState.STAFF) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    editStaffPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 7)));
+                    editStaffPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10)));
                 }
             };
         } else if (currentState == TableState.SUPPLIER) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    editSupplierPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 8)));
+                    editSupplierPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10)));
                 }
             };
         }
@@ -445,7 +447,7 @@ public class EditEntityHelper extends EntityHelper {
         innerPanel.add(dateAddedYear, g);
 
         // Set JTextFields with current data
-        idField.setText(STAFF_ID_FORMATTER.format(staffId));
+        idField.setText(ID_FORMATTER.format(staffId));
         pinField.setText("" + staff.getStaffPin());
         nameField.setText(staff.getName());
         genderField.setSelectedIndex(staff.getGender());
@@ -507,7 +509,7 @@ public class EditEntityHelper extends EntityHelper {
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.validate();
                     Database.removeStaffByIndex(index + 1);
-                    SupplierTable.createTableGui();
+                    StaffTable.createTableGui();
                 }
             }
         });
@@ -547,7 +549,7 @@ public class EditEntityHelper extends EntityHelper {
         supplierOptions[0] = "";
 
         for (int i = 1; i < supplierOptions.length; i++) {
-            supplierOptions[i] = Database.getSupplierById(i - 1).getName() + " (" + Database.getSupplierById(i - 1).getId() + ")";
+            supplierOptions[i] = Database.getSupplierByIndex(i - 1).getName() + " (" + Database.getSupplierByIndex(i - 1).getId() + ")";
         }
         final JComboBox<String> suppIdBox = new JComboBox<String>(supplierOptions);
         innerPanel.add(suppIdBox, g);
@@ -602,9 +604,9 @@ public class EditEntityHelper extends EntityHelper {
 
                 if (FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null)) {
                     final Product editedProduct = new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
-                            .parseInt(maxLevelField.getText()), Integer.parseInt(((String) suppIdBox.getSelectedItem()).substring(
-                            ((String) suppIdBox.getSelectedItem()).length() - 5, ((String) suppIdBox.getSelectedItem()).length() - 1)), Double
-                            .parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField.getText()));
+                            .parseInt(maxLevelField.getText()),
+                            Integer.parseInt(((String) suppIdBox.getSelectedItem()).split("\\(")[1].split("\\)")[0]), Double
+                                    .parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField.getText()));
                     editedProduct.setId(index + IdManager.PRODUCT_ID_START);
                     Database.addProductByIndex(index, editedProduct);
 

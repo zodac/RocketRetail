@@ -2,12 +2,10 @@ package dit.groupproject.rocketretail.tables;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -17,7 +15,6 @@ import javax.swing.JScrollPane;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Supplier;
-import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.menus.MenuGui;
@@ -75,32 +72,13 @@ public class SupplierTable extends BaseTable {
         final String[] supplierColumnNames = { "ID", "Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
         final Object[][] data = createTableData(Database.getSuppliers());
         final JScrollPane scrollPane = createScrollableTable(data, supplierColumnNames);
-        final JPanel buttonPanel = createButtonPanel();
+        final JComboBox<String> sortOptions = createSortOptions();
+        final JPanel buttonPanel = createButtonPanel(TableState.SUPPLIER.toString(), sortOptions);
 
         updateGui(scrollPane, buttonPanel);
     }
 
-    private static JPanel createButtonPanel() {
-        final JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-
-        final ArrayList<Entity> suppliers = Database.getSuppliers();
-
-        final String[] itemsToEdit = new String[suppliers.size() + 1];
-        final String[] itemsToDelete = new String[itemsToEdit.length];
-        itemsToEdit[0] = "Edit Supplier";
-        itemsToDelete[0] = "Delete Supplier";
-
-        int editAndDeleteIndex = 1;
-        for (final Entity supplier : suppliers) {
-            itemsToEdit[editAndDeleteIndex] = "ID: " + SUPPLIER_ID_FORMATTER.format(supplier.getId()) + " (" + supplier.getName() + ")";
-            itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
-        }
-
-        final JButton addButton = createAddButton("Add Supplier");
-        final JComboBox<String> editSelection = createEditBox(itemsToEdit);
-        final JComboBox<String> deleteSelection = createDeleteBox(itemsToDelete);
-
+    private static JComboBox<String> createSortOptions() {
         final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
         final int index = Arrays.asList(SORT_OPTIONS).indexOf(sortType);
         sortOptions.setSelectedIndex(index);
@@ -120,12 +98,7 @@ public class SupplierTable extends BaseTable {
                 createTableGui();
             }
         });
-
-        buttonPanel.add(addButton);
-        buttonPanel.add(editSelection);
-        buttonPanel.add(deleteSelection);
-        buttonPanel.add(sortOptions);
-        return buttonPanel;
+        return sortOptions;
     }
 
     public static void sortItems() {

@@ -18,7 +18,7 @@ import dit.groupproject.rocketretail.tables.ProductTable;
 import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 
-public class DeleteEntityHelper extends EntityHelper {
+public class DeleteEntityHelper {
 
     /**
      * Returns an ActionListener which adds an Entity delete panel to the left
@@ -33,8 +33,8 @@ public class DeleteEntityHelper extends EntityHelper {
         if (currentState == TableState.CUSTOMER) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    final int customerId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9));
-                    final String customerName = ((String) deleteBox.getSelectedItem()).substring(11,
+                    final int customerId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 10));
+                    final String customerName = ((String) deleteBox.getSelectedItem()).substring(12,
                             ((String) deleteBox.getSelectedItem()).length() - 1);
 
                     deleteCustomer(customerId, customerName);
@@ -45,8 +45,8 @@ public class DeleteEntityHelper extends EntityHelper {
         } else if (currentState == TableState.PRODUCT) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    final int productId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 9));
-                    final String productName = ((String) deleteBox.getSelectedItem()).substring(11,
+                    final int productId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 10));
+                    final String productName = ((String) deleteBox.getSelectedItem()).substring(12,
                             ((String) deleteBox.getSelectedItem()).length() - 1);
 
                     deleteProduct(productId, productName);
@@ -55,8 +55,9 @@ public class DeleteEntityHelper extends EntityHelper {
         } else if (currentState == TableState.STAFF) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    final int staffId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 7));
-                    final String staffName = ((String) deleteBox.getSelectedItem()).substring(9, ((String) deleteBox.getSelectedItem()).length() - 1);
+                    final int staffId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 10));
+                    final String staffName = ((String) deleteBox.getSelectedItem())
+                            .substring(12, ((String) deleteBox.getSelectedItem()).length() - 1);
 
                     if (staffId == ShopDriver.getCurrentStaff().getId()) {
                         JOptionPane.showMessageDialog(null, "You can't delete yourself!", "Deletion Error", JOptionPane.PLAIN_MESSAGE);
@@ -68,8 +69,8 @@ public class DeleteEntityHelper extends EntityHelper {
         } else if (currentState == TableState.SUPPLIER) {
             return new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    final int supplierId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 8));
-                    final String supplierName = ((String) deleteBox.getSelectedItem()).substring(10,
+                    final int supplierId = Integer.parseInt(((String) deleteBox.getSelectedItem()).substring(4, 10));
+                    final String supplierName = ((String) deleteBox.getSelectedItem()).substring(12,
                             ((String) deleteBox.getSelectedItem()).length() - 1);
 
                     deleteSupplier(supplierId, supplierName);

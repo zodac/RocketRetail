@@ -1,9 +1,10 @@
 package dit.groupproject.rocketretail.gui;
 
+import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.IOException;
-import java.text.DecimalFormat;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -26,8 +27,6 @@ import dit.groupproject.rocketretail.main.TableState;
  * This class creates the Home screen for the application.
  */
 public class HomeScreen {
-
-    private final static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("#,###,##0.00");
 
     /**
      * This method displays the details of the staff member who is currently

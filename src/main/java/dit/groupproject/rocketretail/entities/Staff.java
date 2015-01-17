@@ -1,6 +1,9 @@
 package dit.groupproject.rocketretail.entities;
 
-import java.text.DecimalFormat;
+import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.DATE_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
+
 import java.text.ParseException;
 import java.util.Comparator;
 
@@ -8,8 +11,6 @@ import java.util.Comparator;
  * A class that is used to model a <code>Staff</code> member.
  */
 public class Staff implements Entity {
-
-    private final static DecimalFormat CURRENCY_FORMATTER = new DecimalFormat("#,###,##0.00");
 
     private int staffId;
     private int staffPin;
@@ -124,7 +125,7 @@ public class Staff implements Entity {
     @Override
     public Object[] getData() {
         final Object[] data = new Object[getNumberOfFields()];
-        data[0] = STAFF_ID_FORMATTER.format(staffId);
+        data[0] = ID_FORMATTER.format(staffId);
         data[1] = staffName;
         data[2] = gender == 1 ? "Male" : "Female";
         data[3] = phoneNumber;

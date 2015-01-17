@@ -2,12 +2,10 @@ package dit.groupproject.rocketretail.tables;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -16,7 +14,6 @@ import javax.swing.JScrollPane;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Staff;
-import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.TableState;
 
 /**
@@ -73,32 +70,13 @@ public class StaffTable extends BaseTable {
         final String[] staffColumnNames = { "ID", "Name", "Gender", "Phone Number", "Address", "Wage", "Level", "Date Added" };
         final Object[][] data = createTableData(Database.getStaffMembers());
         final JScrollPane scrollPane = createScrollableTable(data, staffColumnNames);
-        final JPanel buttonPanel = createButtonPanel();
+        final JComboBox<String> sortOptions = createSortOptions();
+        final JPanel buttonPanel = createButtonPanel(TableState.STAFF.toString(), sortOptions);
 
         updateGui(scrollPane, buttonPanel);
     }
 
-    private static JPanel createButtonPanel() {
-        final JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-
-        final ArrayList<Entity> staffMembers = Database.getStaffMembers();
-
-        final String[] itemsToEdit = new String[staffMembers.size() + 1];
-        final String[] itemsToDelete = new String[itemsToEdit.length];
-        itemsToEdit[0] = "Edit Staff";
-        itemsToDelete[0] = "Delete Staff";
-
-        int editAndDeleteIndex = 1;
-        for (final Entity staff : staffMembers) {
-            itemsToEdit[editAndDeleteIndex] = "ID: " + STAFF_ID_FORMATTER.format(staff.getId()) + " (" + staff.getName() + ")";
-            itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
-        }
-
-        final JButton addButton = createAddButton("Add Staff");
-        final JComboBox<String> editSelection = createEditBox(itemsToEdit);
-        final JComboBox<String> deleteSelection = createDeleteBox(itemsToDelete);
-
+    private static JComboBox<String> createSortOptions() {
         final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
         final int index = Arrays.asList(SORT_OPTIONS).indexOf(sortType);
         sortOptions.setSelectedIndex(index);
@@ -118,12 +96,7 @@ public class StaffTable extends BaseTable {
                 createTableGui();
             }
         });
-
-        buttonPanel.add(addButton);
-        buttonPanel.add(editSelection);
-        buttonPanel.add(deleteSelection);
-        buttonPanel.add(sortOptions);
-        return buttonPanel;
+        return sortOptions;
     }
 
     public static void sortItems() {

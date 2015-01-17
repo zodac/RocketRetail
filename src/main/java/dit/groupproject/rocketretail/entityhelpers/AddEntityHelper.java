@@ -1,12 +1,12 @@
 package dit.groupproject.rocketretail.entityhelpers;
 
 import static dit.groupproject.rocketretail.utilities.DateHandler.DAYS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.DAY_FORMATTER;
 import static dit.groupproject.rocketretail.utilities.DateHandler.MONTHS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.MONTH_FORMATTER;
 import static dit.groupproject.rocketretail.utilities.DateHandler.YEARS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_FORMATTER;
 import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Formatters.DAY_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.MONTH_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.YEAR_FORMATTER;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -38,7 +38,7 @@ import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
-public class AddEntityHelper extends EntityHelper {
+public class AddEntityHelper {
 
     /**
      * Returns an ActionListener which adds an Entity addition panel to the left

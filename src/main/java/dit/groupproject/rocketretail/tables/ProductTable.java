@@ -2,12 +2,10 @@ package dit.groupproject.rocketretail.tables;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -17,7 +15,6 @@ import javax.swing.JScrollPane;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Product;
-import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.menus.MenuGui;
@@ -90,32 +87,13 @@ public class ProductTable extends BaseTable {
         final String[] productColumnNames = { "ID", "Description", "Stock Level", "Max Level", "Supplier ID", "Cost Price", "Sale Price" };
         final Object[][] data = createTableData(Database.getProducts());
         final JScrollPane scrollPane = createScrollableTable(data, productColumnNames);
-        final JPanel buttonPanel = createButtonPanel();
+        final JComboBox<String> sortOptions = createSortOptions();
+        final JPanel buttonPanel = createButtonPanel(TableState.PRODUCT.toString(), sortOptions);
 
         updateGui(scrollPane, buttonPanel);
     }
 
-    private static JPanel createButtonPanel() {
-        final JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-
-        final ArrayList<Entity> products = Database.getProducts();
-
-        final String[] itemsToEdit = new String[products.size() + 1];
-        final String[] itemsToDelete = new String[itemsToEdit.length];
-        itemsToEdit[0] = "Edit Product";
-        itemsToDelete[0] = "Delete Product";
-
-        int editAndDeleteIndex = 1;
-        for (final Entity product : products) {
-            itemsToEdit[editAndDeleteIndex] = "ID: " + PRODUCT_ID_FORMATTER.format(product.getId()) + " (" + product.getName() + ")";
-            itemsToDelete[editAndDeleteIndex] = itemsToEdit[editAndDeleteIndex++];
-        }
-
-        JButton addButton = createAddButton("Add Product");
-        final JComboBox<String> editSelection = createEditBox(itemsToEdit);
-        final JComboBox<String> deleteSelection = createDeleteBox(itemsToDelete);
-
+    private static JComboBox<String> createSortOptions() {
         final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
         final int index = Arrays.asList(SORT_OPTIONS).indexOf(sortType);
         sortOptions.setSelectedIndex(index);
@@ -135,12 +113,7 @@ public class ProductTable extends BaseTable {
                 ProductTable.createTableGui();
             }
         });
-
-        buttonPanel.add(addButton);
-        buttonPanel.add(editSelection);
-        buttonPanel.add(deleteSelection);
-        buttonPanel.add(sortOptions);
-        return buttonPanel;
+        return sortOptions;
     }
 
     public static void sortItems() {

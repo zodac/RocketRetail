@@ -1,6 +1,7 @@
 package dit.groupproject.rocketretail.utilities;
 
-import java.text.SimpleDateFormat;
+import static dit.groupproject.rocketretail.utilities.Formatters.DATE_FORMATTER;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -15,8 +16,6 @@ import dit.groupproject.rocketretail.entities.Supplier;
  * A class that is used to model <code>StockControlUtilities</code>
  */
 public class StockControlUtilities {
-
-    private final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
 
     private static ArrayList<OrderedItem> orderToSupplier;
 

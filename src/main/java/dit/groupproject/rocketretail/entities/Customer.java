@@ -1,5 +1,8 @@
 package dit.groupproject.rocketretail.entities;
 
+import static dit.groupproject.rocketretail.utilities.Formatters.DATE_FORMATTER;
+import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
+
 import java.text.ParseException;
 import java.util.Comparator;
 
@@ -117,7 +120,7 @@ public class Customer implements Entity {
     @Override
     public Object[] getData() {
         final Object[] data = new Object[getNumberOfFields()];
-        data[0] = CUSTOMER_ID_FORMATTER.format(customerId);
+        data[0] = ID_FORMATTER.format(customerId);
         data[1] = customerName;
         data[2] = phoneNumber;
         data[3] = address;

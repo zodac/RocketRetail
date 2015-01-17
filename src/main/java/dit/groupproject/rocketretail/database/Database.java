@@ -10,6 +10,7 @@ import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.main.ShopDriver;
+import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.utilities.InitialiseArray;
 
 public class Database {
@@ -32,7 +33,7 @@ public class Database {
                 return staff;
             }
         }
-        throw new IllegalArgumentException("No staff member with that ID found!");
+        throw new IllegalArgumentException("No staff member found with ID: " + staffId);
     }
 
     public static Entity getProductById(final int productId) {
@@ -41,7 +42,7 @@ public class Database {
                 return product;
             }
         }
-        throw new IllegalArgumentException("No product with that ID found!");
+        throw new IllegalArgumentException("No product found with ID: " + productId);
     }
 
     public static Entity getSupplierByName(final String supplierName) {
@@ -50,7 +51,7 @@ public class Database {
                 return supplier;
             }
         }
-        throw new IllegalArgumentException("No supplier with that name found!");
+        throw new IllegalArgumentException("No customer found with name: " + supplierName);
     }
 
     public static Entity getCustomerByName(final String customerName) {
@@ -59,7 +60,7 @@ public class Database {
                 return customer;
             }
         }
-        throw new IllegalArgumentException("No customer with that name found!");
+        throw new IllegalArgumentException("No customer found with name: " + customerName);
     }
 
     public static Entity getCustomerById(final int customerId) {
@@ -68,7 +69,11 @@ public class Database {
                 return customer;
             }
         }
-        throw new IllegalArgumentException("No customer with that ID found!");
+        throw new IllegalArgumentException("No customer found with ID: " + customerId);
+    }
+
+    public static int getRandomCustomerOrSupplierId() {
+        return (Math.random() < 0.5) ? getRandomSupplier().getId() : getRandomCustomer().getId();
     }
 
     public static Entity getProductByIndex(final int index) {
@@ -85,16 +90,16 @@ public class Database {
                 return supplier;
             }
         }
-        throw new IllegalArgumentException("No supplier with that ID found!");
+        throw new IllegalArgumentException("No supplier found with ID: " + supplierId);
     }
 
-    public static Entity getOrderBySupplierId(final int traderId) {
+    public static Entity getOrderBySupplierId(final int supplierId) {
         for (final Entity order : orders) {
-            if (((Order) order).getTraderId() == traderId) {
+            if (((Order) order).getTraderId() == supplierId) {
                 return order;
             }
         }
-        throw new IllegalArgumentException("No order with that trader ID found!");
+        throw new IllegalArgumentException("No order found with supplier ID: " + supplierId);
     }
 
     public static Entity getOrderById(final int orderId) {
@@ -103,7 +108,7 @@ public class Database {
                 return order;
             }
         }
-        throw new IllegalArgumentException("No order with that ID found!");
+        throw new IllegalArgumentException("No order found with ID: " + orderId);
     }
 
     public static Entity getRandomStaffMember() {
@@ -254,5 +259,22 @@ public class Database {
 
     public static int getIndexOfOrder(final Entity order) {
         return orders.indexOf(order);
+    }
+
+    public static ArrayList<Entity> getCurrentTableItems() {
+        final TableState currentState = ShopDriver.getCurrentTableState();
+
+        if (currentState == TableState.CUSTOMER) {
+            return customers;
+        } else if (currentState == TableState.ORDER) {
+            return orders;
+        } else if (currentState == TableState.PRODUCT) {
+            return products;
+        } else if (currentState == TableState.STAFF) {
+            return staffMembers;
+        } else if (currentState == TableState.SUPPLIER) {
+            return suppliers;
+        }
+        throw new IllegalArgumentException("Looking for database items from invalid table state: " + currentState.toString());
     }
 }
