@@ -92,7 +92,7 @@ public class PerformanceTest {
     }
 
     @AfterClass
-    public static void teardown() {
+    public static void tearDown() {
         Database.clearDatabase();
     }
 }

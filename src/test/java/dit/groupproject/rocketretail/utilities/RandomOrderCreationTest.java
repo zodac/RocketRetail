@@ -1,8 +1,8 @@
 package dit.groupproject.rocketretail.utilities;
 
-import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.fail;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Test;
 
 import dit.groupproject.rocketretail.database.Database;
@@ -30,13 +30,13 @@ public class RandomOrderCreationTest {
                 Database.initialiseDatabase();
                 InitialiseArray.generateOrders(25, false, false);
             }
-        } catch (final Throwable t) {
-            assertNotSame(IllegalArgumentException.class, t.getClass());
+        } catch (final IllegalArgumentException e) {
+            fail(e.getMessage());
         }
     }
 
-    @AfterClass
-    public static void teardown() {
+    @After
+    public void tearDown() {
         Database.clearDatabase();
     }
 }

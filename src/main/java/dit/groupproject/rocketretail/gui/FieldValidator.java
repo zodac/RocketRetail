@@ -72,12 +72,14 @@ public class FieldValidator {
     private static boolean validatePinField(ArrayList<JPasswordField> pinFields, boolean valid, final Border errorBorder, final Border validBorder) {
         if (pinFields != null) {
             for (JPasswordField password : pinFields) {
-                String input = String.valueOf(password.getPassword());
-                if (!input.matches("^\\d*$") || input.length() != 4) {
+                final String input = String.valueOf(password.getPassword());
+
+                if (input.matches("^\\d*$") && input.length() == 4) {
+                    password.setBorder(validBorder);
+                } else {
                     password.setBorder(errorBorder);
                     valid = false;
-                } else
-                    password.setBorder(validBorder);
+                }
             }
         }
         return valid;

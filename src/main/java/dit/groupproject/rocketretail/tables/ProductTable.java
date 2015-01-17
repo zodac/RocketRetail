@@ -30,7 +30,7 @@ import dit.groupproject.rocketretail.menus.MenuGui;
  * which is also displayed on a graph.<br />
  * Users may also place an order for the product on this page.
  */
-public class ProductTable extends BaseTable {
+public class ProductTable extends AbstractTable {
 
     public static boolean first = true;
     public static boolean descendingOrderSort = false;
@@ -104,7 +104,7 @@ public class ProductTable extends BaseTable {
                     // Do nothing
                 } else {
                     if (sortType.equals((String) sortOptions.getSelectedItem())) {
-                        descendingOrderSort = !descendingOrderSort;
+                        descendingOrderSort ^= descendingOrderSort;
                     } else {
                         sortType = (String) sortOptions.getSelectedItem();
                     }

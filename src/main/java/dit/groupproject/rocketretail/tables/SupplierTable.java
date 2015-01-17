@@ -19,7 +19,7 @@ import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.menus.MenuGui;
 
-public class SupplierTable extends BaseTable {
+public class SupplierTable extends AbstractTable {
 
     public static boolean first = true;
     public static boolean descendingOrderSort = false;
@@ -89,7 +89,7 @@ public class SupplierTable extends BaseTable {
 
                 } else {
                     if (sortType.equals((String) sortOptions.getSelectedItem())) {
-                        descendingOrderSort = !descendingOrderSort;
+                        descendingOrderSort ^= descendingOrderSort;
                     } else {
                         sortType = (String) sortOptions.getSelectedItem();
                     }

@@ -19,8 +19,8 @@ public class OrderTest {
 
     private final static String TEST_DATE = "21/08/2013";
 
-    private ArrayList<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
-    private ArrayList<Order> orders = new ArrayList<Order>();
+    private final ArrayList<OrderedItem> orderedItems = new ArrayList<OrderedItem>();
+    private final ArrayList<Order> orders = new ArrayList<Order>();
 
     /**
      * Adds orders to the orders arrayList so that the tests can be run.
@@ -57,7 +57,7 @@ public class OrderTest {
     }
 
     @AfterClass
-    public static void teardown() {
+    public static void tearDown() {
         Database.clearDatabase();
     }
 }

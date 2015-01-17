@@ -21,7 +21,7 @@ import dit.groupproject.rocketretail.main.TableState;
  * entries. It offers sorting options and options to add, edit and delete
  * customers.
  */
-public class CustomerTable extends BaseTable {
+public class CustomerTable extends AbstractTable {
 
     public static boolean first = true;
     public static boolean descendingOrderSort = false;
@@ -87,7 +87,7 @@ public class CustomerTable extends BaseTable {
                     // Do nothing
                 } else {
                     if (sortType.equals((String) sortOptions.getSelectedItem())) {
-                        descendingOrderSort = !descendingOrderSort;
+                        descendingOrderSort ^= descendingOrderSort;
                     } else {
                         sortType = (String) sortOptions.getSelectedItem();
                     }

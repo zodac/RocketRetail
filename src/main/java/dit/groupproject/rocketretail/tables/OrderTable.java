@@ -57,7 +57,7 @@ import dit.groupproject.rocketretail.menus.MenuGui;
  * Clicking on a row in the table gives more information on the order, including
  * a breakdown of the ordered items, their cost and the quantity.<br />
  */
-public class OrderTable extends BaseTable {
+public class OrderTable extends AbstractTable {
 
     public static boolean first = true;
     public static boolean descendingOrderSort = false;
@@ -233,7 +233,7 @@ public class OrderTable extends BaseTable {
                     // Do nothing
                 } else {
                     if (sortType.equals((String) sortOptions.getSelectedItem())) {
-                        descendingOrderSort = !descendingOrderSort;
+                        descendingOrderSort ^= descendingOrderSort;
                     } else {
                         sortType = (String) sortOptions.getSelectedItem();
                     }

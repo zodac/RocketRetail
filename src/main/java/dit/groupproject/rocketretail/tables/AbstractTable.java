@@ -22,7 +22,7 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 
-public abstract class BaseTable {
+public abstract class AbstractTable {
 
     protected static int showDialog(final String title, final JPanel myPanel) {
         return JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);

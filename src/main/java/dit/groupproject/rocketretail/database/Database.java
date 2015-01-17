@@ -73,7 +73,7 @@ public class Database {
     }
 
     public static int getRandomCustomerOrSupplierId() {
-        return (Math.random() < 0.5) ? getRandomSupplier().getId() : getRandomCustomer().getId();
+        return (Math.random() < 0.5) ? getRandomSupplierId() : getRandomCustomerId();
     }
 
     public static Entity getProductByIndex(final int index) {
@@ -116,14 +116,14 @@ public class Database {
         return staffMembers.get(index);
     }
 
-    public static Entity getRandomSupplier() {
+    public static int getRandomSupplierId() {
         final int index = RANDOM.nextInt(suppliers.size());
-        return suppliers.get(index);
+        return suppliers.get(index).getId();
     }
 
-    public static Entity getRandomCustomer() {
+    public static int getRandomCustomerId() {
         final int index = RANDOM.nextInt(customers.size());
-        return customers.get(index);
+        return customers.get(index).getId();
     }
 
     public static Entity getRandomProduct() {

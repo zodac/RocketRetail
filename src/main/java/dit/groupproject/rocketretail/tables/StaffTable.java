@@ -20,7 +20,7 @@ import dit.groupproject.rocketretail.main.TableState;
  * A class that is used to display a table with multiple {@link Staff} entries.
  * It offers sorting options and options to add, edit and delete staff members.
  */
-public class StaffTable extends BaseTable {
+public class StaffTable extends AbstractTable {
 
     public static boolean first = true;
     public static boolean descendingOrderSort = false;
@@ -39,7 +39,7 @@ public class StaffTable extends BaseTable {
         final JMenuItem menuItem = new JMenuItem(newState.toString());
 
         menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 createTableGui();
             }
         });
@@ -52,12 +52,7 @@ public class StaffTable extends BaseTable {
      * Shows the table of staff members and their details. Sorts the table by ID
      * on first run. Options to sort table by ID, Name, Address, Wage, Level and
      * Date Added. Options to Add, Edit and Delete Staff Members.
-     * 
-     * @see StaffTable#addStaffPanel()
-     * @see StaffTable#editStaffPanel(int)
-     * @see StaffTable#deleteStaff(int, String)
-     * @see StaffTable#sortArrayList()
-     * */
+     */
     public static void createTableGui() {
         setTableState(TableState.STAFF);
         resetGui();
@@ -82,12 +77,12 @@ public class StaffTable extends BaseTable {
         sortOptions.setSelectedIndex(index);
 
         sortOptions.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 if (sortOptions.getSelectedItem().equals("Sort by...")) {
                     // Do nothing
                 } else {
                     if (sortType.equals((String) sortOptions.getSelectedItem())) {
-                        descendingOrderSort = !descendingOrderSort;
+                        descendingOrderSort ^= descendingOrderSort;
                     } else {
                         sortType = (String) sortOptions.getSelectedItem();
                     }

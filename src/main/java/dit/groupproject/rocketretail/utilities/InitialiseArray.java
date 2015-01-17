@@ -40,9 +40,9 @@ public class InitialiseArray {
         Database.addStaffMember(new Staff(1004, "Ricky Dunse", 1, "0134667898", "Kasey's Point", 30000, 2, "16/01/2003"));
         Database.addStaffMember(new Staff(1003, "Kayley Murtaugh", 2, "0132134456", "Dumbcreek", 40000, 2, "16/12/2002"));
         Database.addStaffMember(new Staff(1004, "Ricky Dunse", 1, "0134667894", "Hobtown", 30000, 2, "16/01/2003"));
-        Database.addStaffMember(new Staff(1005, "Marcus Porter", 1, "0124566891", "Seedyville", 41000, 2, "16/09/2004"));
+        Database.addStaffMember(new Staff(1005, "Marcus Porter", 1, "0124566891", "Seedyville", 41000, 2, "16/10/2004"));
         Database.addStaffMember(new Staff(1005, "Marc Johns", 1, "0124565891", "Dirtbagtown", 42000, 2, "16/09/2004"));
-        Database.addStaffMember(new Staff(1005, "Marcus Porter", 1, "0124566891", "Nowhereville", 41000, 2, "16/09/2004"));
+        Database.addStaffMember(new Staff(1005, "Marcus Porter", 1, "0124566891", "Nowheretown", 41000, 2, "16/09/2004"));
         Database.addStaffMember(new Staff(1005, "Marc Johns", 1, "0124565891", "Nowhereville", 42000, 2, "16/09/2004"));
     }
 
@@ -56,9 +56,9 @@ public class InitialiseArray {
         Database.addSupplier(new Supplier("McGlones", "013214485", "Shimmy Point", "G1223456", "16/10/2013", "16/10/2004"));
         Database.addSupplier(new Supplier("Smestones", "014214485", "Shayders Point", "B1223456", "16/10/2013", "15/10/2001"));
         Database.addSupplier(new Supplier("Seegers", "016214485", "Donetsk", "C1223456", "16/10/2013", "13/10/2001"));
-        Database.addSupplier(new Supplier("Thurstone Products", "017214485", "Durker Point", "F1223456", "17/10/2013", "16/10/2001"));
+        Database.addSupplier(new Supplier("Thurstone Products", "017214485", "Durker Heights", "F1223456", "17/10/2013", "16/10/2001"));
         Database.addSupplier(new Supplier("Rocket Men", "016214485", "Shelby Town", "N1223456", "19/10/2013", "16/09/2001"));
-        Database.addSupplier(new Supplier("Devil's", "018244485", "Nurtenville", "D5223456", "20/10/2013", "14/10/2001"));
+        Database.addSupplier(new Supplier("Devil's", "0182378485", "Nurtenville", "D5223456", "20/10/2013", "14/10/2001"));
         Database.addSupplier(new Supplier("Radier Co-op", "018215485", "Durker Point", "S1223456", "16/10/2013", "16/10/2001"));
         Database.addSupplier(new Supplier("Dulby's Ltd", "017621445", "Shelby Town", "T1223356", "16/09/2013", "16/10/2001"));
         Database.addSupplier(new Supplier("Holkers", "016514485", "Durker Point", "R1223456", "16/10/2013", "16/10/2001"));
@@ -115,7 +115,7 @@ public class InitialiseArray {
             final double costPrice = (RANDOM.nextInt(100) + 1) * 0.25;
             final double salePrice = (RANDOM.nextInt(50) + (Math.ceil(costPrice) / 0.25)) * 0.25;
 
-            Database.addProduct(new Product(productName, stockLevel, maxLevel, Database.getRandomSupplier().getId(), costPrice, salePrice));
+            Database.addProduct(new Product(productName, stockLevel, maxLevel, Database.getRandomSupplierId(), costPrice, salePrice));
         }
     }
 
@@ -153,20 +153,23 @@ public class InitialiseArray {
      * This method generates a set of random {@link Order}s.
      * 
      * @param numberOfOrders
-     *            An integer defining the number of orders to generate.
+     *            the number of orders to generate
      * @param displayConfirmationMessage
-     *            A boolean to decide if a confirmation message is needed.
+     *            boolean to decide if a confirmation message is needed
      * @param orderInCurrentYear
-     *            A boolean to decide if randDate should be set to the current
-     *            year.
+     *            boolean to decide if order is in to the current year
      */
     public static void generateOrders(final int numberOfOrders, final boolean displayConfirmationMessage, final boolean orderInCurrentYear) {
         final int ordersToCreate = (numberOfOrders == 0) ? RANDOM.nextInt(16) + 5 : numberOfOrders;
+        final int maxLoop = 50;
+        final int maxWhile = 40;
+
         int index = 0;
         int loops = 0;
+        ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
 
-        while (index < ordersToCreate && loops < 50) {
-            final ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
+        while (index < ordersToCreate && loops < maxLoop) {
+            items = new ArrayList<OrderedItem>();
             int itemsToCreate = RANDOM.nextInt(Database.getProducts().size()) + 1;
             final Staff currentStaff = ShopDriver.getCurrentStaff();
 
@@ -176,8 +179,8 @@ public class InitialiseArray {
             final int randomMonth = RANDOM.nextInt(12 - 1) + 1;
             final int randomYear = RANDOM.nextInt(YEAR_CURRENT - YEAR_START) + YEAR_START;
 
-            String date = (randomDay < 10) ? "0" + randomDay + "/" : randomDay + "/";
-            date += (randomMonth < 10) ? "0" + randomMonth + "/" : randomMonth + "/";
+            String date = randomDay < 10 ? "0" + randomDay + "/" : randomDay + "/";
+            date += randomMonth < 10 ? "0" + randomMonth + "/" : randomMonth + "/";
             date += orderInCurrentYear ? YEAR_CURRENT : randomYear;
 
             boolean isSupplier = Math.random() < 0.5;
@@ -186,12 +189,12 @@ public class InitialiseArray {
             }
 
             if (isSupplier) {
-                traderId = Database.getRandomSupplier().getId();
+                traderId = Database.getRandomSupplierId();
             } else {
-                traderId = Database.getRandomCustomer().getId();
+                traderId = Database.getRandomCustomerId();
             }
 
-            ArrayList<Integer> productsCreated = new ArrayList<Integer>();
+            final ArrayList<Integer> productsCreated = new ArrayList<Integer>();
             int productId = Database.getRandomProduct().getId();
             boolean unique = false;
             productsCreated.add(productId);
@@ -200,12 +203,12 @@ public class InitialiseArray {
 
                 int whileLoop = 0;
 
-                while (!unique && whileLoop < 40) {
+                while (!unique && whileLoop < maxWhile) {
                     productId = Database.getRandomProduct().getId();
                     unique = true;
 
-                    for (int x : productsCreated) {
-                        if (x == productId) {
+                    for (final int product : productsCreated) {
+                        if (product == productId) {
                             unique = false;
                         }
                     }
@@ -237,7 +240,7 @@ public class InitialiseArray {
                     }
                 }
 
-                boolean activeOrder = orderInCurrentYear && (RANDOM.nextInt(2) + 1) == 1;
+                final boolean activeOrder = orderInCurrentYear && Math.random() < 0.5;
 
                 if (valid) {
                     Database.addOrder(new Order(traderId, date, items, activeOrder));

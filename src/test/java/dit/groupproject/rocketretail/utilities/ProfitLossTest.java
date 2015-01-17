@@ -23,6 +23,9 @@ import dit.groupproject.rocketretail.main.ShopDriver;
  */
 public class ProfitLossTest {
 
+    private final static String TEST_ENTITY_DATE = "01/01/1970";
+    private final static String TEST_ORDER_DATE = "20/08/2013";
+
     /**
      * Adds ordered items to the orderedItems arrayList and adds orders to the
      * orders arrayList so that the tests can be run
@@ -45,15 +48,15 @@ public class ProfitLossTest {
         Database.addProduct(bananas);
         Database.addProduct(grapes);
 
-        Database.addStaffMember(new Staff(1001, "TestStaff", 1, "012345678", "Fake Street", 100, 1, "01/01/1970"));
+        Database.addStaffMember(new Staff(1001, "TestStaff", 1, "012345678", "Fake Street", 100, 1, TEST_ENTITY_DATE));
         ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
-        Database.addSupplier(new Supplier("TestSupplier", "012345678", "Fake Street", "VATNUMBER", "01/01/1970", "01/01/1970"));
-        Database.addCustomer(new Customer("TestCustomer", "012345678", "Fake Street", "VATNUMBER", "01/01/1970", "01/01/1970"));
+        Database.addSupplier(new Supplier("TestSupplier", "012345678", "Fake Street", "VATNUMBER", TEST_ENTITY_DATE, TEST_ENTITY_DATE));
+        Database.addCustomer(new Customer("TestCustomer", "012345678", "Fake Street", "VATNUMBER", TEST_ENTITY_DATE, TEST_ENTITY_DATE));
 
-        Database.addOrder(new Order(Database.getRandomCustomer().getId(), "20/08/2013", orderedItems, false));
-        Database.addOrder(new Order(Database.getRandomCustomer().getId(), "20/08/2013", orderedItems, false));
-        Database.addOrder(new Order(Database.getRandomSupplier().getId(), "20/08/2013", orderedItems, false));
-        Database.addOrder(new Order(Database.getRandomSupplier().getId(), "20/08/2013", orderedItems, false));
+        Database.addOrder(new Order(Database.getRandomCustomerId(), TEST_ORDER_DATE, orderedItems, false));
+        Database.addOrder(new Order(Database.getRandomCustomerId(), TEST_ORDER_DATE, orderedItems, false));
+        Database.addOrder(new Order(Database.getRandomSupplierId(), TEST_ORDER_DATE, orderedItems, false));
+        Database.addOrder(new Order(Database.getRandomSupplierId(), TEST_ORDER_DATE, orderedItems, false));
     }
 
     /**
@@ -79,7 +82,7 @@ public class ProfitLossTest {
     }
 
     @AfterClass
-    public static void teardown() {
+    public static void tearDown() {
         Database.clearDatabase();
     }
 }
