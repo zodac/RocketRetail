@@ -8,6 +8,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
+import dit.groupproject.rocketretail.database.DatabaseException;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.HomeScreen;
@@ -54,7 +55,7 @@ public class LoginHandler {
                         ShopDriver.setCurrentStaff(staff);
                         found = true;
                     }
-                } catch (IllegalArgumentException e) {
+                } catch (final DatabaseException e) {
                     System.out.println("Invalid staff ID!");
                 }
             } else {

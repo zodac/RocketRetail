@@ -5,9 +5,11 @@ import static org.junit.Assert.assertNotSame;
 
 import java.util.ArrayList;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.main.ShopDriver;
 
 /**
@@ -22,18 +24,20 @@ public class OrderTest {
 
     /**
      * Adds orders to the orders arrayList so that the tests can be run.
-     * */
+     */
     @Before
     public void setUp() {
         ShopDriver.setCurrentStaff(new Staff(0, "Test", 1, "012345678", "Fake Street", 500, 1, "01/01/1970"));
-        orders.add(new Order(562, "15/08/2013", orderedItems, false));
-        orders.add(new Order(594, "20/08/2013", orderedItems, false));
+        Database.addSupplier(new Supplier("Test", "012345678", "Fake Street", "VATNUMBER", "01/01/1970", "01/01/1970"));
+
+        orders.add(new Order(IdManager.SUPPLIER_ID_START, "15/08/2013", orderedItems, false));
+        orders.add(new Order(IdManager.SUPPLIER_ID_START, "20/08/2013", orderedItems, false));
     }
 
     /**
      * Tests that the orders being completed by the completeOrder method, that
      * the expected delivery date is set to the correct value.
-     * */
+     */
     @Test
     public void testCompleteOrder() {
         final Order order = orders.get(0);
@@ -44,11 +48,16 @@ public class OrderTest {
     /**
      * Tests that the orders being completed by the completeOrder method, that
      * the expected delivery date is not set to an incorrect value.
-     * */
+     */
     @Test
     public void testCompleteOrderFail() {
         final Order order = orders.get(1);
         order.completeOrder(TEST_DATE);
         assertNotSame("", order.getDeliveryDate());
+    }
+
+    @AfterClass
+    public static void teardown() {
+        Database.clearDatabase();
     }
 }

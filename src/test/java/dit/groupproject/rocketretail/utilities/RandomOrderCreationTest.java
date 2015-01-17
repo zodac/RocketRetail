@@ -2,6 +2,7 @@ package dit.groupproject.rocketretail.utilities;
 
 import static org.junit.Assert.assertNotSame;
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import dit.groupproject.rocketretail.database.Database;
@@ -14,6 +15,8 @@ import dit.groupproject.rocketretail.database.Database;
  */
 public class RandomOrderCreationTest {
 
+    private final static int NUMBER_OF_RUNS = 100000;
+
     /**
      * Tests 100,000 instances of InitialiseArray.generateOrders(int, boolean,
      * boolean) method to catch IllegalArgumentException errors.
@@ -22,18 +25,18 @@ public class RandomOrderCreationTest {
      */
     @Test
     public void generateOrders() {
-        Throwable caught = null;
         try {
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < NUMBER_OF_RUNS; i++) {
                 Database.initialiseDatabase();
                 InitialiseArray.generateOrders(25, false, false);
             }
-        } catch (Throwable t) {
-            caught = t;
+        } catch (final Throwable t) {
+            assertNotSame(IllegalArgumentException.class, t.getClass());
         }
+    }
 
-        if (caught != null) {
-            assertNotSame(IllegalArgumentException.class, caught.getClass());
-        }
+    @AfterClass
+    public static void teardown() {
+        Database.clearDatabase();
     }
 }

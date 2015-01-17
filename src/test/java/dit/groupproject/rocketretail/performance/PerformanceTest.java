@@ -2,6 +2,7 @@ package dit.groupproject.rocketretail.performance;
 
 import javax.swing.JPanel;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -88,5 +89,10 @@ public class PerformanceTest {
     @Test(timeout = LONG_TIMEOUT_IN_MS)
     public void customerTest() {
         CustomerTable.createTableGui();
+    }
+
+    @AfterClass
+    public static void teardown() {
+        Database.clearDatabase();
     }
 }

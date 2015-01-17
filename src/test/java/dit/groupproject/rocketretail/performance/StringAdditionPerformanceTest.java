@@ -33,7 +33,7 @@ public class StringAdditionPerformanceTest {
         for (int i = 0; i < N; i++) {
             sbuff.append("");
         }
-        // System.out.println(System.currentTimeMillis() - time + "ms");
+
         long sbuffTime = System.currentTimeMillis() - time;
 
         StringBuilder sbuild = new StringBuilder();
@@ -41,7 +41,6 @@ public class StringAdditionPerformanceTest {
         for (int i = 0; i < N; i++) {
             sbuild.append("");
         }
-        // System.out.println(System.currentTimeMillis() - time + "ms");
         long sbuildTime = System.currentTimeMillis() - time;
 
         @SuppressWarnings("unused")
@@ -50,13 +49,14 @@ public class StringAdditionPerformanceTest {
         for (int i = 0; i < N; i++) {
             s += "";
         }
-        // System.out.println(System.currentTimeMillis() - time + "ms");
+
         long sTime = System.currentTimeMillis() - time;
 
         boolean result = true;
 
-        if (sTime < sbuildTime || sbuffTime < sbuildTime)
+        if (sTime < sbuildTime || sbuffTime < sbuildTime) {
             result = false;
+        }
 
         assertEquals(result, true);
     }

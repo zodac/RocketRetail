@@ -33,7 +33,7 @@ public class Database {
                 return staff;
             }
         }
-        throw new IllegalArgumentException("No staff member found with ID: " + staffId);
+        throw new DatabaseException("No staff member found with ID: " + staffId);
     }
 
     public static Entity getProductById(final int productId) {
@@ -42,7 +42,7 @@ public class Database {
                 return product;
             }
         }
-        throw new IllegalArgumentException("No product found with ID: " + productId);
+        throw new DatabaseException("No product found with ID: " + productId);
     }
 
     public static Entity getSupplierByName(final String supplierName) {
@@ -51,7 +51,7 @@ public class Database {
                 return supplier;
             }
         }
-        throw new IllegalArgumentException("No customer found with name: " + supplierName);
+        throw new DatabaseException("No customer found with name: " + supplierName);
     }
 
     public static Entity getCustomerByName(final String customerName) {
@@ -60,7 +60,7 @@ public class Database {
                 return customer;
             }
         }
-        throw new IllegalArgumentException("No customer found with name: " + customerName);
+        throw new DatabaseException("No customer found with name: " + customerName);
     }
 
     public static Entity getCustomerById(final int customerId) {
@@ -69,7 +69,7 @@ public class Database {
                 return customer;
             }
         }
-        throw new IllegalArgumentException("No customer found with ID: " + customerId);
+        throw new DatabaseException("No customer found with ID: " + customerId);
     }
 
     public static int getRandomCustomerOrSupplierId() {
@@ -90,7 +90,7 @@ public class Database {
                 return supplier;
             }
         }
-        throw new IllegalArgumentException("No supplier found with ID: " + supplierId);
+        throw new DatabaseException("No supplier found with ID: " + supplierId);
     }
 
     public static Entity getOrderBySupplierId(final int supplierId) {
@@ -99,7 +99,7 @@ public class Database {
                 return order;
             }
         }
-        throw new IllegalArgumentException("No order found with supplier ID: " + supplierId);
+        throw new DatabaseException("No order found with supplier ID: " + supplierId);
     }
 
     public static Entity getOrderById(final int orderId) {
@@ -108,7 +108,7 @@ public class Database {
                 return order;
             }
         }
-        throw new IllegalArgumentException("No order found with ID: " + orderId);
+        throw new DatabaseException("No order found with ID: " + orderId);
     }
 
     public static Entity getRandomStaffMember() {
@@ -155,6 +155,17 @@ public class Database {
         InitialiseArray.addOrders(true);
 
         ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
+    }
+
+    /**
+     * Clears all ArrayLists which comprise the {@link Database}.
+     */
+    public static void clearDatabase() {
+        staffMembers.clear();
+        suppliers.clear();
+        products.clear();
+        customers.clear();
+        orders.clear();
     }
 
     public static ArrayList<Entity> getProducts() {
@@ -275,6 +286,6 @@ public class Database {
         } else if (currentState == TableState.SUPPLIER) {
             return suppliers;
         }
-        throw new IllegalArgumentException("Looking for database items from invalid table state: " + currentState.toString());
+        throw new DatabaseException("Looking for database items from invalid table state: " + currentState.toString());
     }
 }
