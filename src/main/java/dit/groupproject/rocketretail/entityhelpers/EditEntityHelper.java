@@ -103,19 +103,15 @@ public class EditEntityHelper extends AbstractEntityHelper {
         custIdField.setEditable(false);
         innerPanel.add(custIdField, g);
         g.gridy = 1;
-        g.gridwidth = 3;
         final JTextField custNameField = new JTextField(null, 20);
         innerPanel.add(custNameField, g);
         g.gridy = 2;
-        g.gridwidth = 3;
         final JTextField phoneNoField = new JTextField(null, 20);
         innerPanel.add(phoneNoField, g);
         g.gridy = 3;
-        g.gridwidth = 3;
         final JTextField addressField = new JTextField(null, 20);
         innerPanel.add(addressField, g);
         g.gridy = 4;
-        g.gridwidth = 3;
         final JTextField vatNoField = new JTextField(null, 20);
         innerPanel.add(vatNoField, g);
 
@@ -127,33 +123,26 @@ public class EditEntityHelper extends AbstractEntityHelper {
 
         g.gridy = 5;
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> lastPurchaseMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(lastPurchaseMonth, g);
 
         g.gridy = 5;
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
         final JComboBox<String> lastPurchaseYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
         g.gridy = 6;
         g.gridx = 1;
-        g.gridwidth = 1;
         final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
 
         g.gridy = 6;
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
 
         g.gridy = 6;
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
         final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
@@ -173,7 +162,6 @@ public class EditEntityHelper extends AbstractEntityHelper {
         g.gridy = 8;
         innerPanel.add(new JLabel(" "), g);
         g.gridx = 1;
-        g.gridy = 8;
         innerPanel.add(new JLabel(" "), g);
 
         final JButton save = new JButton("Save");
@@ -185,7 +173,6 @@ public class EditEntityHelper extends AbstractEntityHelper {
         innerPanel.add(save, g);
         final JButton cancel = new JButton("Cancel");
         g.gridx = 3;
-        g.gridy = 9;
         innerPanel.add(cancel, g);
 
         save.addActionListener(new ActionListener() {
@@ -242,19 +229,15 @@ public class EditEntityHelper extends AbstractEntityHelper {
         suppIdField.setEditable(false);
         innerPanel.add(suppIdField, g);
         g.gridy = 1;
-        g.gridwidth = 3;
         final JTextField suppNameField = new JTextField(null, 20);
         innerPanel.add(suppNameField, g);
         g.gridy = 2;
-        g.gridwidth = 3;
         final JTextField phoneNoField = new JTextField(null, 20);
         innerPanel.add(phoneNoField, g);
         g.gridy = 3;
-        g.gridwidth = 3;
         final JTextField addressField = new JTextField(null, 20);
         innerPanel.add(addressField, g);
         g.gridy = 4;
-        g.gridwidth = 3;
         final JTextField vatNoField = new JTextField(null, 20);
         innerPanel.add(vatNoField, g);
 
@@ -266,33 +249,26 @@ public class EditEntityHelper extends AbstractEntityHelper {
 
         g.gridy = 5;
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> lastPurchaseMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(lastPurchaseMonth, g);
 
         g.gridy = 5;
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
         final JComboBox<String> lastPurchaseYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
         g.gridy = 6;
         g.gridx = 1;
-        g.gridwidth = 1;
         final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
 
         g.gridy = 6;
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
 
         g.gridy = 6;
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
         final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
@@ -308,25 +284,20 @@ public class EditEntityHelper extends AbstractEntityHelper {
         dateAddedMonth.setSelectedIndex(Integer.parseInt(supplier.getDateAdded().substring(3, 5)));
         dateAddedYear.setSelectedIndex(Integer.parseInt(supplier.getDateAdded().substring(6, 10)) - (YEAR_START - 1));
 
-        JLabel spaceLabel1 = new JLabel();
-        spaceLabel1.setText(" ");
         g.gridx = 0;
         g.gridy = 8;
-        innerPanel.add(spaceLabel1, g);
-        JLabel spaceLabel2 = new JLabel();
-        spaceLabel2.setText(" ");
+        innerPanel.add(new JLabel(" "), g);
         g.gridx = 1;
-        g.gridy = 8;
-        innerPanel.add(spaceLabel2, g);
+        innerPanel.add(new JLabel(" "), g);
 
-        JButton save = new JButton("Save");
+        final JButton save = new JButton("Save");
         save.setLayout(new GridBagLayout());
         g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
         g.gridy = 9;
         innerPanel.add(save, g);
-        JButton cancel = new JButton("Cancel");
+        final JButton cancel = new JButton("Cancel");
         g.gridx = 3;
         g.gridy = 9;
         innerPanel.add(cancel, g);
@@ -383,7 +354,6 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final String[] staffLevelOptions = { "", "Manager", "Employee" };
         g.fill = GridBagConstraints.HORIZONTAL;
 
-        // JTextFields with GridBagLayout
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
@@ -391,32 +361,25 @@ public class EditEntityHelper extends AbstractEntityHelper {
         idField.setEditable(false);
         innerPanel.add(idField, g);
         g.gridy = 1;
-        g.gridwidth = 3;
         final JPasswordField pinField = new JPasswordField(null, 20);
         pinField.setDocument(new JTextFieldLimit(4));
         innerPanel.add(pinField, g);
         g.gridy = 2;
-        g.gridwidth = 3;
         final JTextField nameField = new JTextField(null, 20);
         innerPanel.add(nameField, g);
         g.gridy = 3;
-        g.gridwidth = 3;
         final JComboBox<String> genderField = new JComboBox<>(genderOptions);
         innerPanel.add(genderField, g);
         g.gridy = 4;
-        g.gridwidth = 3;
         final JTextField phoneNoField = new JTextField(null, 20);
         innerPanel.add(phoneNoField, g);
         g.gridy = 5;
-        g.gridwidth = 3;
         final JTextField addressField = new JTextField(null, 20);
         innerPanel.add(addressField, g);
         g.gridy = 6;
-        g.gridwidth = 3;
         final JTextField wageField = new JTextField(null, 20);
         innerPanel.add(wageField, g);
         g.gridy = 7;
-        g.gridwidth = 3;
         final JComboBox<String> staffLevelField = new JComboBox<>(staffLevelOptions);
         innerPanel.add(staffLevelField, g);
 
@@ -428,17 +391,14 @@ public class EditEntityHelper extends AbstractEntityHelper {
 
         g.gridy = 8;
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
 
         g.gridy = 8;
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
         final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
-        // Set JTextFields with current data
         idField.setText(ID_FORMATTER.format(staffId));
         pinField.setText("" + staff.getStaffPin());
         nameField.setText(staff.getName());
@@ -455,7 +415,6 @@ public class EditEntityHelper extends AbstractEntityHelper {
         g.gridy = 9;
         innerPanel.add(new JLabel(" "), g);
         g.gridx = 1;
-        g.gridy = 9;
         innerPanel.add(new JLabel(" "), g);
 
         final JButton save = new JButton("Save");
@@ -467,7 +426,6 @@ public class EditEntityHelper extends AbstractEntityHelper {
         innerPanel.add(save, g);
         final JButton cancel = new JButton("Cancel");
         g.gridx = 3;
-        g.gridy = 10;
         innerPanel.add(cancel, g);
 
         save.addActionListener(new ActionListener() {
@@ -565,7 +523,6 @@ public class EditEntityHelper extends AbstractEntityHelper {
         g.gridy = 7;
         innerPanel.add(new JLabel(" "), g);
         g.gridx = 1;
-        g.gridy = 7;
         innerPanel.add(new JLabel(" "), g);
 
         final JButton save = new JButton("Save");
@@ -577,7 +534,6 @@ public class EditEntityHelper extends AbstractEntityHelper {
         innerPanel.add(save, g);
         final JButton cancel = new JButton("Cancel");
         g.gridx = 3;
-        g.gridy = 8;
         innerPanel.add(cancel, g);
 
         save.addActionListener(new ActionListener() {

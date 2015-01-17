@@ -219,33 +219,26 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
         g.gridy = 4;
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> lastPurchaseMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(lastPurchaseMonth, g);
 
         g.gridy = 4;
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
         final JComboBox<String> lastPurchaseYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
         g.gridy = 5;
         g.gridx = 1;
-        g.gridwidth = 1;
         final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
 
         g.gridy = 5;
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
 
         g.gridy = 5;
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
-
         final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
@@ -253,7 +246,6 @@ public class AddEntityHelper extends AbstractEntityHelper {
         dateAddedMonth.setSelectedIndex(Integer.parseInt(MONTH_FORMATTER.format(new Date())));
         dateAddedYear.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
 
-        // Spacer
         g.gridx = 0;
         g.gridy = 6;
         innerPanel.add(new JLabel(" "), g);
@@ -351,11 +343,9 @@ public class AddEntityHelper extends AbstractEntityHelper {
         final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
         g.gridx = 2;
-        g.gridwidth = 1 - 2;
         final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
         g.gridx = 3;
-        g.gridwidth = 2 - 3;
         final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
         innerPanel.add(dateAddedYear, g);
 
@@ -363,7 +353,6 @@ public class AddEntityHelper extends AbstractEntityHelper {
         dateAddedMonth.setSelectedIndex(Integer.parseInt(MONTH_FORMATTER.format(new Date())));
         dateAddedYear.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
 
-        // Spacer
         g.gridx = 0;
         g.gridy = 8;
         innerPanel.add(new JLabel(" "), g);

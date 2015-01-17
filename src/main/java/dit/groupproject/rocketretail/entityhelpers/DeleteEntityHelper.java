@@ -4,9 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Entity;
@@ -81,16 +79,10 @@ public class DeleteEntityHelper extends AbstractEntityHelper {
     }
 
     private static void deleteCustomer(final int customerId, final String customerName) {
-        final JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Do you want to delete " + customerName + "?"));
-
         int indexToRemove = -1;
 
-        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
-            GuiCreator.frame.remove(GuiCreator.leftPanel);
-            GuiCreator.frame.repaint();
-            GuiCreator.leftPanel = new JPanel();
-
+        if (GuiCreator.getConfirmationResponse("Do you want to delete " + customerName + "?")) {
+            resetLeftPanel();
             final Entity customer = Database.getCustomerById(customerId);
             indexToRemove = Database.getIndexOfCustomer(customer);
         }
@@ -99,22 +91,14 @@ public class DeleteEntityHelper extends AbstractEntityHelper {
             Database.removeCustomerByIndex(indexToRemove);
             GuiCreator.setConfirmationMessage(customerName + " deleted");
         }
-
         CustomerTable.createTableGui();
-        GuiCreator.frame.validate();
     }
 
     private static void deleteSupplier(final int supplierId, final String supplierName) {
-        final JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Do you want to delete " + supplierName + "?"));
-
         int indexToRemove = -1;
 
-        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
-            GuiCreator.frame.remove(GuiCreator.leftPanel);
-            GuiCreator.frame.repaint();
-            GuiCreator.leftPanel = new JPanel();
-
+        if (GuiCreator.getConfirmationResponse("Do you want to delete " + supplierName + "?")) {
+            resetLeftPanel();
             final Entity supplier = Database.getSupplierById(supplierId);
             indexToRemove = Database.getIndexOfSupplier(supplier);
         }
@@ -122,48 +106,31 @@ public class DeleteEntityHelper extends AbstractEntityHelper {
         if (indexToRemove != -1) {
             Database.removeSupplierByIndex(indexToRemove);
             GuiCreator.setConfirmationMessage(supplierName + " deleted");
-
         }
-
         SupplierTable.createTableGui();
-        GuiCreator.frame.validate();
     }
 
     private static void deleteStaff(final int staffId, final String staffName) {
-        final JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Do you want to delete " + staffName + "?"));
-
         int indexToRemove = -1;
 
-        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
-            GuiCreator.frame.remove(GuiCreator.leftPanel);
-            GuiCreator.frame.repaint();
-            GuiCreator.leftPanel = new JPanel();
-
+        if (GuiCreator.getConfirmationResponse("Do you want to delete " + staffName + "?")) {
+            resetLeftPanel();
             final Entity staff = Database.getStaffMemberById(staffId);
             indexToRemove = Database.getIndexOfStaff(staff);
         }
-
         if (indexToRemove != -1) {
             Database.removeStaffByIndex(indexToRemove);
             GuiCreator.setConfirmationMessage(staffName + " deleted");
         }
 
         StaffTable.createTableGui();
-        GuiCreator.frame.validate();
     }
 
     private static void deleteProduct(final int productId, final String productName) {
-        final JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Do you want to delete " + productName + "?"));
-
         int indexToRemove = -1;
 
-        if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
-            GuiCreator.frame.remove(GuiCreator.leftPanel);
-            GuiCreator.frame.repaint();
-            GuiCreator.leftPanel = new JPanel();
-
+        if (GuiCreator.getConfirmationResponse("Do you want to delete " + productName + "?")) {
+            resetLeftPanel();
             final Entity product = Database.getProductById(productId);
             indexToRemove = Database.getIndexOfProduct(product);
         }
@@ -172,12 +139,6 @@ public class DeleteEntityHelper extends AbstractEntityHelper {
             Database.removeProductByIndex(indexToRemove);
             GuiCreator.setConfirmationMessage(productName + " deleted");
         }
-
         ProductTable.createTableGui();
-        GuiCreator.frame.validate();
-    }
-
-    private static int showDialog(final String title, final JPanel myPanel) {
-        return JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
     }
 }

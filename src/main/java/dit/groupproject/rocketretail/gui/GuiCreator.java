@@ -1,5 +1,10 @@
 package dit.groupproject.rocketretail.gui;
 
+import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
+import static javax.swing.JOptionPane.OK_OPTION;
+import static javax.swing.JOptionPane.PLAIN_MESSAGE;
+import static javax.swing.JOptionPane.showConfirmDialog;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -151,5 +156,11 @@ public class GuiCreator {
         frame.dispose();
         leftPanel.removeAll();
         rightPanel.removeAll();
+    }
+
+    public static boolean getConfirmationResponse(final String confirmationMessage) {
+        final JPanel myPanel = new JPanel();
+        myPanel.add(new JLabel(confirmationMessage));
+        return showConfirmDialog(null, myPanel, "Please confirm", OK_CANCEL_OPTION, PLAIN_MESSAGE, null) == OK_OPTION;
     }
 }
