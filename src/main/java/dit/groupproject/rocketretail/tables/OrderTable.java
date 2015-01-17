@@ -233,7 +233,7 @@ public class OrderTable extends AbstractTable {
                     // Do nothing
                 } else {
                     if (sortType.equals((String) sortOptions.getSelectedItem())) {
-                        descendingOrderSort ^= descendingOrderSort;
+                        descendingOrderSort = !descendingOrderSort;
                     } else {
                         sortType = (String) sortOptions.getSelectedItem();
                     }
