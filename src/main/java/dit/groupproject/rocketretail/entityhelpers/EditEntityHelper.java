@@ -36,24 +36,16 @@ import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
-public class EditEntityHelper {
+public class EditEntityHelper extends AbstractEntityHelper {
 
-    private final static String[] CUSTOMER_LABELS = { "Customer ID:", "Customer Name:", "Phone Number:", "Address:", "VAT Number:", "Last Purchase:",
-            "Date Added:" };
-    private final static String[] PRODUCT_LABELS = { "Product ID:", "Product Name:", "Stock Level:", "Maximum Level:", "Supplier ID:", "Cost Price:",
-            "Sale Price:" };
-    private final static String[] STAFF_LABELS = { "Staff ID:", "Staff PIN:", "Name:", "Gender:", "Phone Number:", "Address:", "Wage:",
-            "Staff Level:", "Date Added:" };
-    private final static String[] SUPPLIER_LABELS = { "Supplier ID:", "Supplier Name:", "Phone Number:", "Address:", "VAT Number:", "Last Purchase:",
-            "Date Added:" };
-
-    private final static ActionListener cancelListener = new ActionListener() {
-        public void actionPerformed(final ActionEvent e) {
-            GuiCreator.frame.remove(GuiCreator.leftPanel);
-            GuiCreator.frame.repaint();
-            GuiCreator.frame.validate();
-        }
-    };
+    private final static String[] CUSTOMER_LABELS = { "Customer ID", "Customer Name", "Phone Number", "Address", "VAT Number", "Last Purchase",
+            "Date Added" };
+    private final static String[] PRODUCT_LABELS = { "Product ID", "Product Name", "Stock Level", "Maximum Level", "Supplier ID", "Cost Price",
+            "Sale Price" };
+    private final static String[] STAFF_LABELS = { "Staff ID", "Staff PIN", "Name", "Gender", "Phone Number", "Address", "Wage", "Staff Level",
+            "Date Added" };
+    private final static String[] SUPPLIER_LABELS = { "Supplier ID", "Supplier Name", "Phone Number", "Address", "VAT Number", "Last Purchase",
+            "Date Added" };
 
     /**
      * Returns an ActionListener which adds an Entity edit panel to the left
@@ -96,7 +88,7 @@ public class EditEntityHelper {
     }
 
     private static void editCustomerPanel(final int customerId) {
-        resetPanel();
+        resetLeftPanel();
 
         final Customer customer = (Customer) Database.getCustomerById(customerId);
         final int index = Database.getIndexOfCustomer(customer);
@@ -231,11 +223,11 @@ public class EditEntityHelper {
         });
 
         cancel.addActionListener(cancelListener);
-        updateScreen(innerPanel);
+        updateLeftPanel(innerPanel);
     }
 
     private static void editSupplierPanel(final int supplierId) {
-        resetPanel();
+        resetLeftPanel();
 
         final Supplier supplier = (Supplier) Database.getSupplierById(supplierId);
         final int index = Database.getIndexOfSupplier(supplier);
@@ -374,11 +366,11 @@ public class EditEntityHelper {
         });
 
         cancel.addActionListener(cancelListener);
-        updateScreen(innerPanel);
+        updateLeftPanel(innerPanel);
     }
 
     private static void editStaffPanel(int staffId) {
-        resetPanel();
+        resetLeftPanel();
 
         final Staff staff = (Staff) Database.getStaffMemberById(staffId);
         final int index = Database.getIndexOfStaff(staff);
@@ -515,11 +507,11 @@ public class EditEntityHelper {
         });
 
         cancel.addActionListener(cancelListener);
-        updateScreen(innerPanel);
+        updateLeftPanel(innerPanel);
     }
 
     private static void editProductPanel(int productId) {
-        resetPanel();
+        resetLeftPanel();
 
         final Product product = (Product) Database.getProductById(productId);
         final int index = Database.getIndexOfProduct(product);
@@ -621,34 +613,6 @@ public class EditEntityHelper {
         });
 
         cancel.addActionListener(cancelListener);
-        updateScreen(innerPanel);
-    }
-
-    private static JPanel addLabelsToPanel(final String[] labels) {
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
-        int labelIndex = 0;
-
-        final GridBagConstraints gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.insets = new Insets(1, 10, 0, 5);
-        gridBagConstraints.gridx = 0;
-
-        for (final String label : labels) {
-            gridBagConstraints.gridy = labelIndex++;
-            innerPanel.add(new JLabel(label), gridBagConstraints);
-        }
-
-        return innerPanel;
-    }
-
-    private static void resetPanel() {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
-    }
-
-    private static void updateScreen(final JPanel innerPanel) {
-        GuiCreator.leftPanel.add(innerPanel);
-        GuiCreator.setFrame(true, false, false);
+        updateLeftPanel(innerPanel);
     }
 }

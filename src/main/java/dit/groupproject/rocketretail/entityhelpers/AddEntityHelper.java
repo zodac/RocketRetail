@@ -38,7 +38,12 @@ import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
-public class AddEntityHelper {
+public class AddEntityHelper extends AbstractEntityHelper {
+
+    private final static String[] CUSTOMER_LABELS = { "Customer Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
+    private final static String[] SUPPLIER_LABELS = { "Supplier Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
+    private final static String[] STAFF_LABELS = { "Staff PIN", "Name", "Gender", "Phone Number", "Address", "Wage", "Staff Level", "Date Added" };
+    private final static String[] PRODUCT_LABELS = { "Product Description", "Stock Level", "Maximum Lavel", "Supplier ID", "Cost Price", "Sale Price" };
 
     /**
      * Returns an ActionListener which adds an Entity addition panel to the left
@@ -81,28 +86,11 @@ public class AddEntityHelper {
     }
 
     private static void addCustomerPanel() {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
+        resetLeftPanel();
 
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        final JPanel innerPanel = addLabelsToPanel(CUSTOMER_LABELS);
 
         GridBagConstraints g = new GridBagConstraints();
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Customer Name:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Phone Number:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Address:"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("VAT Number:"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("Last Purchase:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Date Added:"), g);
-
         g.insets = new Insets(1, 10, 0, 5);
 
         g.gridx = 1;
@@ -198,101 +186,63 @@ public class AddEntityHelper {
             }
         });
 
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.repaint();
-                GuiCreator.frame.validate();
-            }
-        });
-
-        GuiCreator.leftPanel.add(innerPanel);
-        GuiCreator.setFrame(true, false, false);
+        cancel.addActionListener(cancelListener);
+        updateLeftPanel(innerPanel);
     }
 
     private static void addSupplierPanel() {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
-
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        resetLeftPanel();
+        final JPanel innerPanel = addLabelsToPanel(SUPPLIER_LABELS);
 
         GridBagConstraints g = new GridBagConstraints();
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Supplier ID:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Supplier Name:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Phone Number:"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("Address:"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("VAT Number:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Last Purchase:"), g);
-        g.gridy = 6;
-        innerPanel.add(new JLabel("Date Added:"), g);
-
         g.insets = new Insets(1, 10, 0, 5);
 
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
-        final JTextField suppIdField = new JTextField(null, 20);
-        suppIdField.setText("");
-        suppIdField.setEditable(false);
-        innerPanel.add(suppIdField, g);
-        g.gridy = 1;
-        g.gridwidth = 3;
         final JTextField suppNameField = new JTextField(null, 20);
         innerPanel.add(suppNameField, g);
-        g.gridy = 2;
-        g.gridwidth = 3;
+        g.gridy = 1;
         final JTextField phoneNoField = new JTextField(null, 20);
         innerPanel.add(phoneNoField, g);
-        g.gridy = 3;
-        g.gridwidth = 3;
+        g.gridy = 2;
         final JTextField addressField = new JTextField(null, 20);
         innerPanel.add(addressField, g);
-        g.gridy = 4;
-        g.gridwidth = 3;
+        g.gridy = 3;
         final JTextField vatNoField = new JTextField(null, 20);
         innerPanel.add(vatNoField, g);
-        g.gridy = 5;
-        g.gridy = 5;
+        g.gridy = 4;
         g.gridx = 1;
         g.gridwidth = 1;
         final JComboBox<String> lastPurchaseDay = new JComboBox<>(DAYS_AS_NUMBERS);
         innerPanel.add(lastPurchaseDay, g);
 
-        g.gridy = 5;
+        g.gridy = 4;
         g.gridx = 2;
         g.gridwidth = 1 - 2;
         final JComboBox<String> lastPurchaseMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(lastPurchaseMonth, g);
 
-        g.gridy = 5;
+        g.gridy = 4;
         g.gridx = 3;
         g.gridwidth = 2 - 3;
 
         final JComboBox<String> lastPurchaseYear = new JComboBox<>(YEARS_AS_NUMBERS);
         innerPanel.add(lastPurchaseYear, g);
 
-        g.gridy = 6;
+        g.gridy = 5;
         g.gridx = 1;
         g.gridwidth = 1;
         final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
         innerPanel.add(dateAddedDay, g);
 
-        g.gridy = 6;
+        g.gridy = 5;
         g.gridx = 2;
         g.gridwidth = 1 - 2;
         final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
         innerPanel.add(dateAddedMonth, g);
 
-        g.gridy = 6;
+        g.gridy = 5;
         g.gridx = 3;
         g.gridwidth = 2 - 3;
 
@@ -305,10 +255,9 @@ public class AddEntityHelper {
 
         // Spacer
         g.gridx = 0;
-        g.gridy = 8;
+        g.gridy = 6;
         innerPanel.add(new JLabel(" "), g);
         g.gridx = 1;
-        g.gridy = 8;
         innerPanel.add(new JLabel(" "), g);
 
         final JButton save = new JButton("Save");
@@ -316,11 +265,10 @@ public class AddEntityHelper {
         g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
-        g.gridy = 9;
+        g.gridy = 7;
         innerPanel.add(save, g);
         final JButton cancel = new JButton("Cancel");
         g.gridx = 3;
-        g.gridy = 9;
         innerPanel.add(cancel, g);
 
         save.addActionListener(new ActionListener() {
@@ -356,45 +304,15 @@ public class AddEntityHelper {
             }
         });
 
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.repaint();
-                GuiCreator.frame.validate();
-            }
-        });
-
-        GuiCreator.leftPanel.add(innerPanel);
-        GuiCreator.setFrame(true, false, false);
+        cancel.addActionListener(cancelListener);
+        updateLeftPanel(innerPanel);
     }
 
     private static void addStaffPanel() {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
-
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        resetLeftPanel();
+        final JPanel innerPanel = addLabelsToPanel(STAFF_LABELS);
 
         GridBagConstraints g = new GridBagConstraints();
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Staff PIN:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Name:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Gender:"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("Phone Number:"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("Address:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Wage:"), g);
-        g.gridy = 6;
-        innerPanel.add(new JLabel("Staff Level:"), g);
-        g.gridy = 7;
-        innerPanel.add(new JLabel("Date Added:"), g);
-
         g.insets = new Insets(1, 10, 0, 5);
 
         final String[] genderOptions = { "", "Male", "Female" };
@@ -500,41 +418,15 @@ public class AddEntityHelper {
             }
         });
 
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.repaint();
-                GuiCreator.frame.validate();
-            }
-        });
-
-        GuiCreator.leftPanel.add(innerPanel);
-        GuiCreator.setFrame(true, false, false);
+        cancel.addActionListener(cancelListener);
+        updateLeftPanel(innerPanel);
     }
 
     private static void addProductPanel() {
-        GuiCreator.frame.remove(GuiCreator.leftPanel);
-        GuiCreator.frame.repaint();
-        GuiCreator.leftPanel = new JPanel();
-
-        final JPanel innerPanel = new JPanel(new GridBagLayout());
-        innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
+        resetLeftPanel();
+        final JPanel innerPanel = addLabelsToPanel(PRODUCT_LABELS);
 
         GridBagConstraints g = new GridBagConstraints();
-        g.gridx = 0;
-        g.gridy = 0;
-        innerPanel.add(new JLabel("Product Description:"), g);
-        g.gridy = 1;
-        innerPanel.add(new JLabel("Stock Level:"), g);
-        g.gridy = 2;
-        innerPanel.add(new JLabel("Maximum Level"), g);
-        g.gridy = 3;
-        innerPanel.add(new JLabel("Supplier ID:"), g);
-        g.gridy = 4;
-        innerPanel.add(new JLabel("Cost Price:"), g);
-        g.gridy = 5;
-        innerPanel.add(new JLabel("Sale Price:"), g);
-
         g.insets = new Insets(1, 10, 0, 5);
 
         g.gridx = 1;
@@ -617,15 +509,7 @@ public class AddEntityHelper {
             }
         });
 
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                GuiCreator.frame.remove(GuiCreator.leftPanel);
-                GuiCreator.frame.repaint();
-                GuiCreator.frame.validate();
-            }
-        });
-
-        GuiCreator.leftPanel.add(innerPanel);
-        GuiCreator.setFrame(true, false, false);
+        cancel.addActionListener(cancelListener);
+        updateLeftPanel(innerPanel);
     }
 }

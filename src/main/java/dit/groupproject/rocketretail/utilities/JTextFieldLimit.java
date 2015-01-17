@@ -9,20 +9,20 @@ import javax.swing.text.PlainDocument;
  * application to limit the number of characters in a JTextField or
  * JPasswordField.
  */
+@SuppressWarnings("serial")
 public class JTextFieldLimit extends PlainDocument {
 
-    private static final long serialVersionUID = 1L;
-    private int limit;
+    private int maximumCharactersAllowed;
 
     /**
      * Sets the character limit of the input field.
      * 
-     * @param limit
+     * @param maximumCharactersAllowed
      *            an Integer which defines the maximum characters allowed
      */
-    public JTextFieldLimit(int limit) {
+    public JTextFieldLimit(final int maximumCharactersAllowed) {
         super();
-        this.limit = limit;
+        this.maximumCharactersAllowed = maximumCharactersAllowed;
     }
 
     /**
@@ -30,20 +30,19 @@ public class JTextFieldLimit extends PlainDocument {
      * them in a new String. Restricts string size to the previously set
      * variable limit.
      * 
-     * @param offset
+     * @param indexToPlaceCharacter
      *            an Integer defining the location to place the input character
-     * @param str
+     * @param stringToUpdate
      *            the String the input characters are placed into
-     * @param attr
+     * @param attributeSet
      *            the AttributeSet (font, size, etc) of the string
      * 
      * @throws BadLocationException
      *             if accessing incorrect part of input string
-     * 
-     * @see #JTextFieldLimit(int)
      */
-    public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
-        if ((getLength() + str.length()) <= limit)
-            super.insertString(offset, str, attr);
+    public void insertString(final int indexToPlaceCharacter, String stringToUpdate, AttributeSet attributeSet) throws BadLocationException {
+        if ((getLength() + stringToUpdate.length()) <= maximumCharactersAllowed) {
+            super.insertString(indexToPlaceCharacter, stringToUpdate, attributeSet);
+        }
     }
 }

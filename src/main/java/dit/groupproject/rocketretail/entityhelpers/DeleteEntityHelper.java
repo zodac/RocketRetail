@@ -18,7 +18,7 @@ import dit.groupproject.rocketretail.tables.ProductTable;
 import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 
-public class DeleteEntityHelper {
+public class DeleteEntityHelper extends AbstractEntityHelper {
 
     /**
      * Returns an ActionListener which adds an Entity delete panel to the left
