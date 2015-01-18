@@ -7,7 +7,6 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import dit.groupproject.rocketretail.database.Database;
-import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
@@ -79,65 +78,33 @@ public class DeleteEntityHelper extends AbstractEntityHelper {
     }
 
     private static void deleteCustomer(final int customerId, final String customerName) {
-        int indexToRemove = -1;
-
         if (GuiCreator.getConfirmationResponse("Do you want to delete " + customerName + "?")) {
             resetLeftPanel();
-            final Entity customer = Database.getCustomerById(customerId);
-            indexToRemove = Database.getIndexOfCustomer(customer);
-        }
-
-        if (indexToRemove != -1) {
-            Database.removeCustomerByIndex(indexToRemove);
-            GuiCreator.setConfirmationMessage(customerName + " deleted");
+            Database.removeCustomerById(customerId);
         }
         CustomerTable.createTableGui();
     }
 
     private static void deleteSupplier(final int supplierId, final String supplierName) {
-        int indexToRemove = -1;
-
         if (GuiCreator.getConfirmationResponse("Do you want to delete " + supplierName + "?")) {
             resetLeftPanel();
-            final Entity supplier = Database.getSupplierById(supplierId);
-            indexToRemove = Database.getIndexOfSupplier(supplier);
-        }
-
-        if (indexToRemove != -1) {
-            Database.removeSupplierByIndex(indexToRemove);
-            GuiCreator.setConfirmationMessage(supplierName + " deleted");
+            Database.removeSupplierById(supplierId);
         }
         SupplierTable.createTableGui();
     }
 
     private static void deleteStaff(final int staffId, final String staffName) {
-        int indexToRemove = -1;
-
         if (GuiCreator.getConfirmationResponse("Do you want to delete " + staffName + "?")) {
             resetLeftPanel();
-            final Entity staff = Database.getStaffMemberById(staffId);
-            indexToRemove = Database.getIndexOfStaff(staff);
+            Database.removeStaffById(staffId);
         }
-        if (indexToRemove != -1) {
-            Database.removeStaffByIndex(indexToRemove);
-            GuiCreator.setConfirmationMessage(staffName + " deleted");
-        }
-
         StaffTable.createTableGui();
     }
 
     private static void deleteProduct(final int productId, final String productName) {
-        int indexToRemove = -1;
-
         if (GuiCreator.getConfirmationResponse("Do you want to delete " + productName + "?")) {
             resetLeftPanel();
-            final Entity product = Database.getProductById(productId);
-            indexToRemove = Database.getIndexOfProduct(product);
-        }
-
-        if (indexToRemove != -1) {
-            Database.removeProductByIndex(indexToRemove);
-            GuiCreator.setConfirmationMessage(productName + " deleted");
+            Database.removeProductById(productId);
         }
         ProductTable.createTableGui();
     }

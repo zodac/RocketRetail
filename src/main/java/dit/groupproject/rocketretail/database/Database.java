@@ -1,6 +1,7 @@
 package dit.groupproject.rocketretail.database;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import dit.groupproject.rocketretail.entities.Customer;
@@ -270,6 +271,50 @@ public class Database {
 
     public static int getIndexOfOrder(final Entity order) {
         return orders.indexOf(order);
+    }
+
+    public static void removeCustomerById(final int customerId) {
+        final Iterator<Entity> customersAsIterator = customers.iterator();
+
+        while (customersAsIterator.hasNext()) {
+            if (customersAsIterator.next().getId() == customerId) {
+                customersAsIterator.remove();
+                break;
+            }
+        }
+    }
+
+    public static void removeProductById(final int productId) {
+        final Iterator<Entity> productsAsIterator = products.iterator();
+
+        while (productsAsIterator.hasNext()) {
+            if (productsAsIterator.next().getId() == productId) {
+                productsAsIterator.remove();
+                break;
+            }
+        }
+    }
+
+    public static void removeStaffById(final int staffId) {
+        final Iterator<Entity> staffMembersAsIterator = staffMembers.iterator();
+
+        while (staffMembersAsIterator.hasNext()) {
+            if (staffMembersAsIterator.next().getId() == staffId) {
+                staffMembersAsIterator.remove();
+                break;
+            }
+        }
+    }
+
+    public static void removeSupplierById(final int supplierId) {
+        final Iterator<Entity> suppliersAsIterator = suppliers.iterator();
+
+        while (suppliersAsIterator.hasNext()) {
+            if (suppliersAsIterator.next().getId() == supplierId) {
+                suppliersAsIterator.remove();
+                break;
+            }
+        }
     }
 
     public static ArrayList<Entity> getCurrentTableItems() {
