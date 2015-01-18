@@ -1,9 +1,9 @@
 package dit.groupproject.rocketretail.entityhelpers;
 
-import static dit.groupproject.rocketretail.utilities.DateHandler.DAYS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.MONTHS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEARS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Dates.DAYS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.Dates.MONTHS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.Dates.YEARS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 import static dit.groupproject.rocketretail.utilities.Formatters.DAY_FORMATTER;
 import static dit.groupproject.rocketretail.utilities.Formatters.MONTH_FORMATTER;
 import static dit.groupproject.rocketretail.utilities.Formatters.YEAR_FORMATTER;

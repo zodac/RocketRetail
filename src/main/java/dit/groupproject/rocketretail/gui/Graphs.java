@@ -1,7 +1,7 @@
 package dit.groupproject.rocketretail.gui;
 
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_CURRENT;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
 
 import java.awt.BorderLayout;
@@ -38,7 +38,7 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.VerticalAlignment;
 
-import dit.groupproject.rocketretail.utilities.DateHandler;
+import dit.groupproject.rocketretail.utilities.Dates;
 import dit.groupproject.rocketretail.utilities.DateSort;
 import dit.groupproject.rocketretail.utilities.Predictions;
 
@@ -403,7 +403,7 @@ public class Graphs {
 
         for (int i = 0; i < dataArray.length; i++) {
             if (isYear)
-                xaxis = DateHandler.YEARS_AS_NUMBERS[i + startYearIndex];
+                xaxis = Dates.YEARS_AS_NUMBERS[i + startYearIndex];
             else
                 xaxis = months[i];
 
@@ -490,7 +490,7 @@ public class Graphs {
             if (isYear)
                 xaxis = months[i];
             else
-                xaxis = DateHandler.YEARS_AS_NUMBERS[i];
+                xaxis = Dates.YEARS_AS_NUMBERS[i];
 
             for (int j = 0; j < dataArray[1].length; j++) {
                 dcdM.addValue(dataArray[i][j], TITLE_ARRAY[j], xaxis);
@@ -545,7 +545,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
+            final JComboBox<String> firstYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -573,7 +573,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
+            final JComboBox<String> singleYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -643,7 +643,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
+            final JComboBox<String> firstYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -672,7 +672,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
+            final JComboBox<String> singleYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -737,7 +737,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
+            final JComboBox<String> firstYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -766,7 +766,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(DateHandler.YEARS_AS_NUMBERS);
+            final JComboBox<String> singleYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 

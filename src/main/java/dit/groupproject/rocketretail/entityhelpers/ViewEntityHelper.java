@@ -1,7 +1,7 @@
 package dit.groupproject.rocketretail.entityhelpers;
 
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_CURRENT;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
 import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
 

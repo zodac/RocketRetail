@@ -4,7 +4,7 @@ import static dit.groupproject.rocketretail.utilities.Formatters.YEAR_FORMATTER;
 
 import java.util.Date;
 
-public class DateHandler {
+public class Dates {
 
     public static final int YEAR_START = 2000;
     public static final int YEAR_CURRENT = Integer.parseInt(YEAR_FORMATTER.format(new Date()));
@@ -17,5 +17,4 @@ public class DateHandler {
             "2028", "2029", "2030" };
 
     public static final String[] MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-
 }

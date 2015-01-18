@@ -1,7 +1,7 @@
 package dit.groupproject.rocketretail.utilities;
 
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_CURRENT;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -34,16 +34,16 @@ public class InitialiseArray {
         Database.addStaffMember(new Staff(1003, "Kayley Murphy", 2, "0192134456", "Fodderville", 60000, 1, "16/12/2002"));
         Database.addStaffMember(new Staff(1001, "James Ricardo", 1, "0181245863", "Newtown", 30000, 2, "16/10/2001"));
         Database.addStaffMember(new Staff(1002, "Jennifer Duffin", 2, "0184124456", "Downtown", 20000, 2, "16/11/2001"));
-        Database.addStaffMember(new Staff(1001, "James Ricardo", 1, "0181245867", "Smallsville", 30000, 2, "16/10/2001"));
+        Database.addStaffMember(new Staff(1001, "Alex Ricardo", 1, "0181245867", "Smallsville", 30000, 2, "16/10/2001"));
         Database.addStaffMember(new Staff(1002, "Jennifer Duffin", 2, "0184124456", "New Dobsville", 20000, 2, "16/11/2001"));
-        Database.addStaffMember(new Staff(1003, "Kayley Murtaugh", 2, "0132134456", "Shining Water", 40000, 2, "16/12/2002"));
+        Database.addStaffMember(new Staff(1003, "Kayley Harris", 2, "0132134456", "Shining Water", 40000, 2, "16/12/2002"));
         Database.addStaffMember(new Staff(1004, "Ricky Dunse", 1, "0134667898", "Kasey's Point", 30000, 2, "16/01/2003"));
         Database.addStaffMember(new Staff(1003, "Kayley Murtaugh", 2, "0132134456", "Dumbcreek", 40000, 2, "16/12/2002"));
-        Database.addStaffMember(new Staff(1004, "Ricky Dunse", 1, "0134667894", "Hobtown", 30000, 2, "16/01/2003"));
+        Database.addStaffMember(new Staff(1004, "Richard Phillips", 1, "0134667894", "Hobtown", 30000, 2, "16/01/2003"));
         Database.addStaffMember(new Staff(1005, "Marcus Porter", 1, "0124566891", "Seedyville", 41000, 2, "16/10/2004"));
         Database.addStaffMember(new Staff(1005, "Marc Johns", 1, "0124565891", "Dirtbagtown", 42000, 2, "16/09/2004"));
-        Database.addStaffMember(new Staff(1005, "Marcus Porter", 1, "0124566891", "Nowheretown", 41000, 2, "16/09/2004"));
-        Database.addStaffMember(new Staff(1005, "Marc Johns", 1, "0124565891", "Nowhereville", 42000, 2, "16/09/2004"));
+        Database.addStaffMember(new Staff(1005, "Nicholas Ennis", 1, "0124566891", "Nowheretown", 41000, 2, "16/09/2004"));
+        Database.addStaffMember(new Staff(1005, "Marc Johnson", 1, "0124565891", "Nowhereville", 42000, 2, "16/09/2004"));
     }
 
     /**
@@ -124,12 +124,12 @@ public class InitialiseArray {
      */
     public static void addOrders(boolean extra) {
         final ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
+        ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
 
         if (extra) {
             items.add(new OrderedItem((Product) Database.getProductByIndex(3), 10));
             items.add(new OrderedItem((Product) Database.getProductByIndex(4), 5));
 
-            ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
             Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "20/05/2011", items, false));
             ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
             Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "11/02/2013", items, false));
@@ -140,7 +140,6 @@ public class InitialiseArray {
             items.add(new OrderedItem((Product) Database.getProductByIndex(1), 10));
             items.add(new OrderedItem((Product) Database.getProductByIndex(2), 15));
 
-            ShopDriver.setCurrentStaff((Staff) Database.getStaffMemberByIndex(0));
             Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "10/03/2004", items, false));
             ShopDriver.setCurrentStaff((Staff) Database.getRandomStaffMember());
             Database.addOrder(new Order(Database.getRandomCustomerOrSupplierId(), "04/10/2008", items, false));

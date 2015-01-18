@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
-import dit.groupproject.rocketretail.utilities.DateHandler;
+import dit.groupproject.rocketretail.utilities.Dates;
 
 public class FieldValidator {
 
@@ -100,7 +100,7 @@ public class FieldValidator {
 
             int day = addedBoxes.get(0).getSelectedIndex();
             int month = addedBoxes.get(1).getSelectedIndex();
-            int year = addedBoxes.get(2).getSelectedIndex() + (DateHandler.YEAR_START - 1);
+            int year = addedBoxes.get(2).getSelectedIndex() + (Dates.YEAR_START - 1);
 
             // If month is April, June, September or November, day cannot be 31
             // OR if month is February and is leap year, day cannot be 30 or 31
@@ -125,7 +125,7 @@ public class FieldValidator {
 
             int day = lastPurchaseBoxes.get(0).getSelectedIndex();
             int month = lastPurchaseBoxes.get(1).getSelectedIndex();
-            int year = lastPurchaseBoxes.get(2).getSelectedIndex() + (DateHandler.YEAR_START - 1);
+            int year = lastPurchaseBoxes.get(2).getSelectedIndex() + (Dates.YEAR_START - 1);
 
             // If month is April, June, September or November, day cannot be 31
             // OR if month is February and is leap year, day cannot be 30 or 31

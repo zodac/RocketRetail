@@ -1,8 +1,8 @@
 package dit.groupproject.rocketretail.utilities;
 
-import static dit.groupproject.rocketretail.utilities.DateHandler.MONTHS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_CURRENT;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Dates.MONTHS;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_CURRENT;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Entity;
@@ -22,8 +22,6 @@ public class ProfitLoss {
      * 
      * @return the String with the total values of sales, purchases and gross
      *         profit of the store
-     * 
-     * @see ShopDriver#orders
      */
     public static String createTotals() {
         double loss = 0;
@@ -64,10 +62,6 @@ public class ProfitLoss {
      * 
      * @return a StringBuilder with the breakdown of sales and purchases by year
      *         and month
-     * 
-     * @see DateSort#customerOrderDates
-     * @see DateSort#supplierOrderDates
-     * @see DateSort#sortDate(int, int)
      */
     public static String createAdvancedReport() {
         final char tab = '\t';

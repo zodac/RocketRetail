@@ -1,7 +1,7 @@
 package dit.groupproject.rocketretail.utilities;
 
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEARS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Dates.YEARS_AS_NUMBERS;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 
 import java.util.ArrayList;
 

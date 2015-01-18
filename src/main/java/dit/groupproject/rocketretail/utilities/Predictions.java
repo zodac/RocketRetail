@@ -1,6 +1,6 @@
 package dit.groupproject.rocketretail.utilities;
 
-import static dit.groupproject.rocketretail.utilities.DateHandler.YEAR_START;
+import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 
 /**
  * A class that is used to generate prediction forecasts
