@@ -404,14 +404,7 @@ public class OrderTable extends AbstractTable {
         return o.isActive() && o.isSupplier();
     }
 
-    /**
-     * Creates a customer order in {@link ShopDriver#leftPanel}. Shows a
-     * JComboBox with customer names/IDs, and upon selection, shows the list of
-     * available products, and their current/max stock levels.
-     * 
-     * @see ShopDriver#leftPanel
-     */
-    public static void createCustomerOrder() {
+    private static void createCustomerOrder() {
         // Reset ShopDriver.frame
         GuiCreator.frame.remove(GuiCreator.leftPanel);
         GuiCreator.frame.repaint();
@@ -625,15 +618,6 @@ public class OrderTable extends AbstractTable {
         GuiCreator.setFrame(true, false, false);
     }
 
-    /**
-     * Creates a supplier order in {@link ShopDriver#leftPanel}. Shows a
-     * JComboBox with supplier names/IDs, and upon selection, shows the list of
-     * their products, and the current/max levels we currently hold.
-     * 
-     * @param supplierIndex
-     *            an Integer specifying the supplier's index in the JComboBox
-     *            from {@link ProductTable#viewProductInfo(Product)}
-     */
     public static void createSupplierOrder(int supplierIndex) {
         // Reset ShopDriver.frame
         GuiCreator.frame.remove(GuiCreator.leftPanel);

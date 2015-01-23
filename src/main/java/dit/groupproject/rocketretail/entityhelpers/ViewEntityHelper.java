@@ -192,10 +192,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         g.gridwidth = 2;
         titlePanel.add(titleLabel, g);
 
-        ArrayList<Entity> customerOrders = new ArrayList<>();
-
-        final Entity order = Database.getOrderBySupplierId(customer.getId());
-        customerOrders.add(order);
+        ArrayList<Entity> customerOrders = Database.getAllOrdersByCustomerId(customer.getId());
         final int numberOfCustomerOrders = customerOrders.size();
 
         final Object[][] data = new Object[numberOfCustomerOrders + 1][4];

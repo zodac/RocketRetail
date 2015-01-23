@@ -94,13 +94,15 @@ public class Database {
         throw new DatabaseException("No supplier found with ID: " + supplierId);
     }
 
-    public static Entity getOrderBySupplierId(final int supplierId) {
+    public static ArrayList<Entity> getAllOrdersByCustomerId(final int customerId) {
+        final ArrayList<Entity> customerOrders = new ArrayList<>();
+
         for (final Entity order : orders) {
-            if (((Order) order).getTraderId() == supplierId) {
-                return order;
+            if (((Order) order).getTraderId() == customerId) {
+                customerOrders.add(order);
             }
         }
-        throw new DatabaseException("No order found with supplier ID: " + supplierId);
+        return customerOrders;
     }
 
     public static Entity getOrderById(final int orderId) {

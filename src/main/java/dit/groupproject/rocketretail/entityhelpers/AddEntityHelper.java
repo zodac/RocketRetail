@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
+import dit.groupproject.rocketretail.entities.Entity;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
@@ -90,7 +91,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
         final JPanel innerPanel = addLabelsToPanel(CUSTOMER_LABELS);
 
-        GridBagConstraints g = new GridBagConstraints();
+        final GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
 
         g.gridx = 1;
@@ -138,13 +139,12 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
         g.gridx = 0;
         g.gridy = 6;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
         g.gridx = 1;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
 
         final JButton save = new JButton("Save");
         save.setLayout(new GridBagLayout());
-        g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
         g.gridy = 7;
@@ -175,9 +175,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
                             dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
                     GuiCreator.setConfirmationMessage("Customer " + custNameField.getText() + " added");
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.repaint();
-                    GuiCreator.frame.validate();
+                    removeLeftPanel();
 
                     CustomerTable.descendingOrderSort = false;
                     CustomerTable.sortItems();
@@ -194,7 +192,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         resetLeftPanel();
         final JPanel innerPanel = addLabelsToPanel(SUPPLIER_LABELS);
 
-        GridBagConstraints g = new GridBagConstraints();
+        final GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
 
         g.gridx = 1;
@@ -248,13 +246,12 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
         g.gridx = 0;
         g.gridy = 6;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
         g.gridx = 1;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
 
         final JButton save = new JButton("Save");
         save.setLayout(new GridBagLayout());
-        g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
         g.gridy = 7;
@@ -285,9 +282,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
                             dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
 
                     GuiCreator.setConfirmationMessage("New Supplier \"" + suppNameField.getText() + "\" added");
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.repaint();
-                    GuiCreator.frame.validate();
+                    removeLeftPanel();
 
                     SupplierTable.descendingOrderSort = false;
                     SupplierTable.sortItems();
@@ -304,7 +299,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         resetLeftPanel();
         final JPanel innerPanel = addLabelsToPanel(STAFF_LABELS);
 
-        GridBagConstraints g = new GridBagConstraints();
+        final GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
 
         final String[] genderOptions = { "", "Male", "Female" };
@@ -355,13 +350,12 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
         g.gridx = 0;
         g.gridy = 8;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
         g.gridx = 1;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
 
         final JButton save = new JButton("Save");
         save.setLayout(new GridBagLayout());
-        g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
         g.gridy = 9;
@@ -396,9 +390,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
                                     + dateAddedYear.getSelectedItem()));
 
                     GuiCreator.setConfirmationMessage("Staff member " + nameField.getText() + " added");
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.repaint();
-                    GuiCreator.frame.validate();
+                    removeLeftPanel();
 
                     StaffTable.descendingOrderSort = false;
                     StaffTable.sortItems();
@@ -415,7 +407,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         resetLeftPanel();
         final JPanel innerPanel = addLabelsToPanel(PRODUCT_LABELS);
 
-        GridBagConstraints g = new GridBagConstraints();
+        final GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
 
         g.gridx = 1;
@@ -431,15 +423,9 @@ public class AddEntityHelper extends AbstractEntityHelper {
         innerPanel.add(maxLevelField, g);
         g.gridy = 3;
 
-        final String[] supplierOptions = new String[Database.getSuppliers().size() + 1];
-
-        supplierOptions[0] = "";
-        for (int i = 1; i < supplierOptions.length; i++) {
-            supplierOptions[i] = Database.getSupplierByIndex(i - 1).getName() + " (" + Database.getSupplierByIndex(i - 1).getId() + ")";
-        }
-
-        final JComboBox<String> suppIdBox = new JComboBox<String>(supplierOptions);
-        innerPanel.add(suppIdBox, g);
+        final String[] supplierNamesAndIds = getSupplierNamesAndIds();
+        final JComboBox<String> supplierBox = new JComboBox<String>(supplierNamesAndIds);
+        innerPanel.add(supplierBox, g);
         g.gridy = 4;
         final JTextField costPriceField = new JTextField(null, 20);
         innerPanel.add(costPriceField, g);
@@ -447,16 +433,14 @@ public class AddEntityHelper extends AbstractEntityHelper {
         final JTextField salePriceField = new JTextField(null, 20);
         innerPanel.add(salePriceField, g);
 
-        // Spacer
         g.gridx = 0;
         g.gridy = 6;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
         g.gridx = 1;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
 
         final JButton save = new JButton("Save");
         save.setLayout(new GridBagLayout());
-        g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
         g.gridy = 7;
@@ -476,20 +460,18 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 doubleFields.add(costPriceField);
                 doubleFields.add(salePriceField);
                 final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
-                comboBoxes.add(suppIdBox);
+                comboBoxes.add(supplierBox);
 
                 if (FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null)) {
                     final Product product = new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
-                            .parseInt(maxLevelField.getText()), Integer.parseInt(((String) suppIdBox.getSelectedItem()).substring(
-                            ((String) suppIdBox.getSelectedItem()).length() - 5, ((String) suppIdBox.getSelectedItem()).length() - 1)), Double
+                            .parseInt(maxLevelField.getText()), Integer.parseInt(((String) supplierBox.getSelectedItem()).substring(
+                            ((String) supplierBox.getSelectedItem()).length() - 5, ((String) supplierBox.getSelectedItem()).length() - 1)), Double
                             .parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField.getText()));
 
                     Database.addProduct(product);
 
                     GuiCreator.setConfirmationMessage("Product " + prodDescField.getText() + " added");
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.repaint();
-                    GuiCreator.frame.validate();
+                    removeLeftPanel();
 
                     ProductTable.descendingOrderSort = false;
                     ProductTable.sortItems();
@@ -500,5 +482,18 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
         cancel.addActionListener(cancelListener);
         updateLeftPanel(innerPanel);
+    }
+
+    private static String[] getSupplierNamesAndIds() {
+        final ArrayList<Entity> suppliers = Database.getSuppliers();
+        final String[] supplierNamesAndIds = new String[suppliers.size() + 1];
+
+        supplierNamesAndIds[0] = "";
+        int supplierIndex = 1;
+
+        for (final Entity supplier : suppliers) {
+            supplierNamesAndIds[supplierIndex++] = supplier.getName() + " (" + supplier.getId() + ")";
+        }
+        return supplierNamesAndIds;
     }
 }

@@ -15,11 +15,15 @@ public class AbstractEntityHelper {
 
     protected final static ActionListener cancelListener = new ActionListener() {
         public void actionPerformed(final ActionEvent e) {
-            GuiCreator.frame.remove(GuiCreator.leftPanel);
-            GuiCreator.frame.repaint();
-            GuiCreator.frame.validate();
+            removeLeftPanel();
         }
     };
+
+    protected static void removeLeftPanel() {
+        GuiCreator.frame.remove(GuiCreator.leftPanel);
+        GuiCreator.frame.repaint();
+        GuiCreator.frame.validate();
+    }
 
     protected static void resetLeftPanel() {
         GuiCreator.frame.remove(GuiCreator.leftPanel);
