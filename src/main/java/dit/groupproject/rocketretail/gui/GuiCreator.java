@@ -32,6 +32,10 @@ public class GuiCreator {
     // //Pink
     // public static final Color BACKGROUND_COLOUR = new Color(238, 238, 238);
     // //Default
+    public static final String BOLD_HTML_FORMATTING_TAGS = "<html><b>%s</b></html>";
+    public static final String BOLD_FONT_HTML_FORMATTING_TAGS_WITH_COLOUR = String.format(BOLD_HTML_FORMATTING_TAGS, "<font color=\"%s\">%s</font>");
+
+    public static final Font DEFAULT_LABEL_FONT = new JLabel().getFont();
 
     public static JFrame frame = new JFrame(); // Main GUI frame
     static JPanel headerPanel;

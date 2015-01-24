@@ -1,5 +1,8 @@
 package dit.groupproject.rocketretail.entityhelpers;
 
+import static dit.groupproject.rocketretail.gui.GuiCreator.DEFAULT_LABEL_FONT;
+
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -12,6 +15,8 @@ import javax.swing.JPanel;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 
 public class AbstractEntityHelper {
+
+    protected final static Font BOLD_LABEL_FONT = new Font(DEFAULT_LABEL_FONT.getFontName(), Font.BOLD, DEFAULT_LABEL_FONT.getSize());
 
     protected final static ActionListener cancelListener = new ActionListener() {
         public void actionPerformed(final ActionEvent e) {

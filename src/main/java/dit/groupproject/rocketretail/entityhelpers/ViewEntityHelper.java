@@ -1,5 +1,7 @@
 package dit.groupproject.rocketretail.entityhelpers;
 
+import static dit.groupproject.rocketretail.gui.GuiCreator.BOLD_FONT_HTML_FORMATTING_TAGS_WITH_COLOUR;
+import static dit.groupproject.rocketretail.gui.GuiCreator.BOLD_HTML_FORMATTING_TAGS;
 import static dit.groupproject.rocketretail.utilities.Dates.YEAR_CURRENT;
 import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
@@ -24,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jfree.chart.ChartPanel;
 
 import dit.groupproject.rocketretail.database.Database;
@@ -139,15 +142,12 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         final JLabel dateAddedLabel = new JLabel("Date Added");
         final JLabel titleLabel = new JLabel("Sales to " + customerName);
 
-        final Font currentFont = new JLabel().getFont();
-        final Font labelFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
-
-        customerLabel.setFont(labelFont);
-        vatNumberLabel.setFont(labelFont);
-        phoneNoLabel.setFont(labelFont);
-        addressLabel.setFont(labelFont);
-        dateAddedLabel.setFont(labelFont);
-        titleLabel.setFont(labelFont);
+        customerLabel.setFont(BOLD_LABEL_FONT);
+        vatNumberLabel.setFont(BOLD_LABEL_FONT);
+        phoneNoLabel.setFont(BOLD_LABEL_FONT);
+        addressLabel.setFont(BOLD_LABEL_FONT);
+        dateAddedLabel.setFont(BOLD_LABEL_FONT);
+        titleLabel.setFont(BOLD_LABEL_FONT);
 
         final int textFieldSize = 20;
 
@@ -210,8 +210,8 @@ public class ViewEntityHelper extends AbstractEntityHelper {
             total += totalSale;
         }
 
-        data[numberOfCustomerOrders][2] = "<html><b>Total Sales</b></html>";
-        data[numberOfCustomerOrders][3] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
+        data[numberOfCustomerOrders][2] = String.format(BOLD_HTML_FORMATTING_TAGS, "Total Sales");
+        data[numberOfCustomerOrders][3] = String.format(BOLD_HTML_FORMATTING_TAGS, "€" + CURRENCY_FORMATTER.format(total));
 
         final JTable table = new JTable(data, ORDER_COLUMN_NAMES_FROM_CUSTOMER_TABLE);
         table.setFillsViewportHeight(true);
@@ -255,14 +255,14 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         JLabel dateAddedLabel = new JLabel("Date Added");
         JLabel titleLabel = new JLabel("Products supplied by " + supplier.getName());
 
-        supplierLabel.setFont(new Font(supplierLabel.getFont().getFontName(), Font.BOLD, supplierLabel.getFont().getSize()));
-        vatNumberLabel.setFont(new Font(vatNumberLabel.getFont().getFontName(), Font.BOLD, vatNumberLabel.getFont().getSize()));
-        phoneNoLabel.setFont(new Font(phoneNoLabel.getFont().getFontName(), Font.BOLD, phoneNoLabel.getFont().getSize()));
-        addressLabel.setFont(new Font(addressLabel.getFont().getFontName(), Font.BOLD, addressLabel.getFont().getSize()));
-        dateAddedLabel.setFont(new Font(dateAddedLabel.getFont().getFontName(), Font.BOLD, dateAddedLabel.getFont().getSize()));
-        titleLabel.setFont(new Font(titleLabel.getFont().getFontName(), Font.BOLD, titleLabel.getFont().getSize()));
+        supplierLabel.setFont(BOLD_LABEL_FONT);
+        vatNumberLabel.setFont(BOLD_LABEL_FONT);
+        phoneNoLabel.setFont(BOLD_LABEL_FONT);
+        addressLabel.setFont(BOLD_LABEL_FONT);
+        dateAddedLabel.setFont(BOLD_LABEL_FONT);
+        titleLabel.setFont(BOLD_LABEL_FONT);
 
-        int textFieldSize = 20;
+        final int textFieldSize = 20;
 
         JTextField supplierField = new JTextField(supplier.getName() + " (" + ID_FORMATTER.format(supplier.getId()) + ")", textFieldSize);
         supplierField.setEditable(false);
@@ -472,8 +472,8 @@ public class ViewEntityHelper extends AbstractEntityHelper {
             }
         }
 
-        customerOrderdata[numberOfCustomerOrders][1] = "<html><b>Customer Total</b></html>";
-        customerOrderdata[numberOfCustomerOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(totalSaleValue) + "</b></html>";
+        customerOrderdata[numberOfCustomerOrders][1] = String.format(BOLD_HTML_FORMATTING_TAGS, "Customer Total");
+        customerOrderdata[numberOfCustomerOrders][2] = String.format(BOLD_HTML_FORMATTING_TAGS, "€" + CURRENCY_FORMATTER.format(totalSaleValue));
 
         JTable customerTable = new JTable(customerOrderdata, columnNames);
         customerTable.setFillsViewportHeight(true);
@@ -505,8 +505,8 @@ public class ViewEntityHelper extends AbstractEntityHelper {
             }
         }
 
-        supplierOrderData[numberOfSupplierOrders][1] = "<html><b>Supplier Total</b></html>";
-        supplierOrderData[numberOfSupplierOrders][2] = "<html><b>€" + CURRENCY_FORMATTER.format(totalCostValue) + "</b></html>";
+        supplierOrderData[numberOfSupplierOrders][1] = String.format(BOLD_HTML_FORMATTING_TAGS, "Supplier Total");
+        supplierOrderData[numberOfSupplierOrders][2] = String.format(BOLD_HTML_FORMATTING_TAGS, "€" + CURRENCY_FORMATTER.format(totalCostValue));
 
         JTable supplierTable = new JTable(supplierOrderData, columnNames2);
         supplierTable.setFillsViewportHeight(true);
@@ -556,15 +556,12 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         final JLabel saleLabel = new JLabel("Sale Price");
         final JLabel profitLabel = new JLabel("Profit Per Unit");
 
-        final Font currentFont = new JLabel().getFont();
-        final Font labelFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
-
-        productLabel.setFont(labelFont);
-        stockLabel.setFont(labelFont);
-        supplierLabel.setFont(labelFont);
-        costLabel.setFont(labelFont);
-        saleLabel.setFont(labelFont);
-        profitLabel.setFont(labelFont);
+        productLabel.setFont(BOLD_LABEL_FONT);
+        stockLabel.setFont(BOLD_LABEL_FONT);
+        supplierLabel.setFont(BOLD_LABEL_FONT);
+        costLabel.setFont(BOLD_LABEL_FONT);
+        saleLabel.setFont(BOLD_LABEL_FONT);
+        profitLabel.setFont(BOLD_LABEL_FONT);
 
         final int textFieldSize = 20;
 
@@ -614,28 +611,30 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         titlePanel.add(profitField, g);
 
         final JPanel myPanel = new JPanel(new BorderLayout());
+        final int numberOfYears = YEAR_CURRENT - YEAR_START;
 
-        double[] yearData = new double[YEAR_CURRENT - YEAR_START + 1];
-        double[] productData = new double[YEAR_CURRENT - YEAR_START + 1];
+        double[] yearData = new double[numberOfYears + 1];
+        double[] productData = new double[numberOfYears + 1];
 
         String[] columnNames = { "Year", "Total Qty Bought", "Total Qty Sold", "Year Change" };
-        Object[][] data = new Object[YEAR_CURRENT - YEAR_START + 1 + 1][4];
+        Object[][] data = new Object[numberOfYears + 2][4];
 
-        for (int i = 0; i < YEAR_CURRENT - YEAR_START + 2; i++) {
+        for (int i = 0; i < numberOfYears + 2; i++) {
             for (int j = 0; j < 4; j++) {
                 data[i][j] = 0;
             }
         }
 
-        data[0][2] = "<html><b>Start Level</b></html>";
-        data[0][3] = "<html><b>" + product.getStartLevel() + "</html></b>";
+        int productLevel = product.getStartLevel();
+        data[0][2] = String.format(BOLD_HTML_FORMATTING_TAGS, "Start Level");
+        data[0][3] = String.format(BOLD_HTML_FORMATTING_TAGS, productLevel);
 
-        for (int i = 0; i < YEAR_CURRENT - YEAR_START + 1; i++) {
+        for (int i = 0; i < numberOfYears + 1; i++) {
             for (Entity o : Database.getOrders()) {
                 final Order order = (Order) o;
-                if (Integer.parseInt(order.getOrderDate().substring(6, 10)) == i + YEAR_START) {
 
-                    for (OrderedItem oi : order.getOrderedItems()) {
+                if (Integer.parseInt(order.getOrderDate().substring(6, 10)) == i + YEAR_START) {
+                    for (final OrderedItem oi : order.getOrderedItems()) {
                         if (oi.getProduct().getId() == product.getId() && order.isSupplier() && !order.isActive()) {
                             data[i + 1][1] = (int) data[i + 1][1] + oi.getQuantity();
                         } else if (oi.getProduct().getId() == product.getId() && !order.isSupplier()) {
@@ -645,12 +644,15 @@ public class ViewEntityHelper extends AbstractEntityHelper {
 
                 }
                 data[i + 1][0] = (i + YEAR_START);
-                if ((int) data[i + 1][1] - (int) data[i + 1][2] > 0) {
-                    data[i + 1][3] = "<html><b><font color=\"blue\">" + ((int) data[i + 1][1] - (int) data[i + 1][2]) + "</font></b></html>";
-                } else if ((int) data[i + 1][1] - (int) data[i + 1][2] < 0) {
-                    data[i + 1][3] = "<html><b><font color=\"red\">" + ((int) data[i + 1][1] - (int) data[i + 1][2]) + "</font></b></html>";
-                }
+                final int productQuantityDelta = (int) data[i + 1][1] - (int) data[i + 1][2];
+                final String productQuantityDeltaColour = productQuantityDelta >= 0 ? "blue" : "red";
+
+                data[i + 1][3] = String.format(BOLD_FONT_HTML_FORMATTING_TAGS_WITH_COLOUR, productQuantityDeltaColour, productQuantityDelta);
             }
+
+            yearData[i] = i + YEAR_START;
+            productLevel += (int) data[i + 1][1] - (int) data[i + 1][2];
+            productData[i] = productLevel;
         }
 
         final JTable table = new JTable(data, columnNames);
@@ -659,16 +661,9 @@ public class ViewEntityHelper extends AbstractEntityHelper {
 
         final JScrollPane scrollPane = new JScrollPane(table);
         myPanel.add(scrollPane, BorderLayout.WEST);
-        int runningTotal = product.getStartLevel();
-
-        for (int j = 0; j < YEAR_CURRENT - YEAR_START + 1; j++) {
-            yearData[j] = j + YEAR_START;
-            runningTotal += (int) data[j + 1][1] - (int) data[j + 1][2];
-            productData[j] = runningTotal;
-        }
 
         double[][] inputdata = { yearData, productData };
-        ChartPanel chartPanel = Graphs.createLineChart("Past Stock levels", productName, inputdata);
+        final ChartPanel chartPanel = Graphs.createLineChart("Past Stock levels", productName, inputdata);
         chartPanel.setPreferredSize(new Dimension(500, 750));
 
         myPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
@@ -733,15 +728,12 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         final JLabel deliveryDateLabel = new JLabel("Delivery Date");
         final JLabel titleLabel = new JLabel("Ordered Items");
 
-        final Font currentFont = new JLabel().getFont();
-        final Font labelFont = new Font(currentFont.getFontName(), Font.BOLD, currentFont.getSize());
-
-        orderLabel.setFont(labelFont);
-        staffLabel.setFont(labelFont);
-        traderLabel.setFont(labelFont);
-        orderDateLabel.setFont(labelFont);
-        deliveryDateLabel.setFont(labelFont);
-        titleLabel.setFont(labelFont);
+        orderLabel.setFont(BOLD_LABEL_FONT);
+        staffLabel.setFont(BOLD_LABEL_FONT);
+        traderLabel.setFont(BOLD_LABEL_FONT);
+        orderDateLabel.setFont(BOLD_LABEL_FONT);
+        deliveryDateLabel.setFont(BOLD_LABEL_FONT);
+        titleLabel.setFont(BOLD_LABEL_FONT);
 
         final int textFieldSize = 20;
 
@@ -756,7 +748,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         JTextField deliveryDateField = new JTextField(order.getDeliveryDate(), textFieldSize);
         deliveryDateField.setEditable(false);
 
-        GridBagConstraints g = new GridBagConstraints();
+        final GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
         titlePanel.add(orderLabel, g);
         g.gridx = 1;
@@ -776,41 +768,39 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         g.gridx = 1;
         titlePanel.add(orderDateField, g);
 
-        if (!order.getDeliveryDate().equals("")) {
+        if (StringUtils.isNotBlank(order.getDeliveryDate())) {
             g.gridx = 4;
             titlePanel.add(deliveryDateLabel, g);
             g.gridx = 5;
             titlePanel.add(deliveryDateField, g);
         }
 
-        g = new GridBagConstraints();
-        g.insets = new Insets(1, 10, 0, 5);
         g.gridy = 2;
         g.gridx = 2;
         g.gridwidth = 2;
         titlePanel.add(titleLabel, g);
 
         final String[] columnNames = { "Ordered Product", "Unit Price", "Order Quantity", "Product Total" };
-        final Object[][] data = new Object[order.getOrderedItems().size() + 1][4];
-        double total = 0;
+        final ArrayList<OrderedItem> orderedItems = order.getOrderedItems();
+        final int numberOfOrderedItems = orderedItems.size();
 
-        for (int i = 0; i < order.getOrderedItems().size(); i++) {
-            double unitPrice = 0;
+        final Object[][] data = new Object[numberOfOrderedItems + 1][4];
+        double totalOfAllOrders = 0;
+        int orderedItemIndex = 0;
 
-            if (isSupplier) {
-                unitPrice = order.getOrderedItems().get(i).getProduct().getCostPrice();
-            } else {
-                unitPrice = order.getOrderedItems().get(i).getProduct().getSalePrice();
-            }
+        for (final OrderedItem orderedItem : orderedItems) {
+            final Product orderedProduct = orderedItem.getProduct();
+            final double unitPrice = isSupplier ? orderedProduct.getCostPrice() : orderedProduct.getSalePrice();
+            final double totalPrice = unitPrice * orderedItem.getQuantity();
 
-            data[i][0] = order.getOrderedItems().get(i).getProduct().getName() + " (" + order.getOrderedItems().get(i).getProduct().getId() + ")";
-            data[i][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
-            data[i][2] = order.getOrderedItems().get(i).getQuantity();
-            data[i][3] = "€" + CURRENCY_FORMATTER.format(unitPrice * (int) data[i][2]);
-            total += (unitPrice * (int) data[i][2]);
+            data[orderedItemIndex][0] = orderedProduct.getName() + " (" + orderedProduct.getId() + ")";
+            data[orderedItemIndex][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
+            data[orderedItemIndex][2] = orderedItem.getQuantity();
+            data[orderedItemIndex++][3] = "€" + CURRENCY_FORMATTER.format(totalPrice);
+            totalOfAllOrders += totalPrice;
         }
-        data[order.orderedItems.size()][2] = "<html><b>Order Total</b></html>";
-        data[order.orderedItems.size()][3] = "<html><b>€" + CURRENCY_FORMATTER.format(total) + "</b></html>";
+        data[numberOfOrderedItems][2] = String.format(BOLD_HTML_FORMATTING_TAGS, "Order Total");
+        data[numberOfOrderedItems][3] = String.format(BOLD_HTML_FORMATTING_TAGS, "€" + CURRENCY_FORMATTER.format(totalOfAllOrders));
 
         final JTable table = new JTable(data, columnNames);
         table.setFillsViewportHeight(true);
