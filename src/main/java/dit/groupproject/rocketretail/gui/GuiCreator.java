@@ -36,6 +36,7 @@ public class GuiCreator {
     public static final String BOLD_FONT_HTML_FORMATTING_TAGS_WITH_COLOUR = String.format(BOLD_HTML_FORMATTING_TAGS, "<font color=\"%s\">%s</font>");
 
     public static final Font DEFAULT_LABEL_FONT = new JLabel().getFont();
+    public static final Font BOLD_LABEL_FONT = new Font(DEFAULT_LABEL_FONT.getFontName(), Font.BOLD, DEFAULT_LABEL_FONT.getSize());
 
     public static JFrame frame = new JFrame(); // Main GUI frame
     static JPanel headerPanel;

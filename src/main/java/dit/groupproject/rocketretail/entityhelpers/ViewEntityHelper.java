@@ -2,6 +2,7 @@ package dit.groupproject.rocketretail.entityhelpers;
 
 import static dit.groupproject.rocketretail.gui.GuiCreator.BOLD_FONT_HTML_FORMATTING_TAGS_WITH_COLOUR;
 import static dit.groupproject.rocketretail.gui.GuiCreator.BOLD_HTML_FORMATTING_TAGS;
+import static dit.groupproject.rocketretail.gui.GuiCreator.BOLD_LABEL_FONT;
 import static dit.groupproject.rocketretail.utilities.Dates.YEAR_CURRENT;
 import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;

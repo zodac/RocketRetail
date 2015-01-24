@@ -1,5 +1,6 @@
 package dit.groupproject.rocketretail.tables;
 
+import static dit.groupproject.rocketretail.gui.GuiCreator.BOLD_LABEL_FONT;
 import static dit.groupproject.rocketretail.utilities.Formatters.DATE_FORMATTER;
 import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
 
@@ -118,7 +119,7 @@ public class OrderTable extends AbstractTable {
         buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         final JComboBox<String> completeOptions = tempBox;
-        completeOptions.setEnabled(validOrders == 0);
+        completeOptions.setEnabled(validOrders != 0);
 
         String[] options = { "Sort by...", "Order ID", "Staff ID", "Trader ID", "Total Price", "Order Date", "Active" };
         final JComboBox<String> sortOptions = new JComboBox<String>(options);
@@ -155,10 +156,11 @@ public class OrderTable extends AbstractTable {
 
         createBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (createBox.getSelectedItem().equals("Customer Order"))
+                if (createBox.getSelectedItem().equals("Customer Order")) {
                     createCustomerOrder();
-                else if (createBox.getSelectedItem().equals("Supplier Order"))
+                } else if (createBox.getSelectedItem().equals("Supplier Order")) {
                     createSupplierOrder(0);
+                }
             }
         });
         completeOptions.addActionListener(new ActionListener() {
@@ -188,7 +190,7 @@ public class OrderTable extends AbstractTable {
                     }
                 } else if (completeOptions.getSelectedItem().equals("Complete All Customer Orders")) {
 
-                    JPanel myPanel = new JPanel();
+                    final JPanel myPanel = new JPanel();
                     myPanel.add(new JLabel("Do you want to complete ALL customer orders?"));
 
                     if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
@@ -206,7 +208,7 @@ public class OrderTable extends AbstractTable {
 
                 } else if (completeOptions.getSelectedItem().equals("Complete All Orders")) {
 
-                    JPanel myPanel = new JPanel();
+                    final JPanel myPanel = new JPanel();
                     myPanel.add(new JLabel("Do you want to complete ALL orders?"));
 
                     if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
@@ -219,10 +221,10 @@ public class OrderTable extends AbstractTable {
                             }
                         }
                         GuiCreator.setConfirmationMessage(numberOfActiveOrders + " orders completed");
-                        createTableGui();
+                        OrderTable.createTableGui();
                     }
                 } else {
-                    completeOrder(Integer.parseInt(((String) completeOptions.getSelectedItem()).substring(4, 8)));
+                    completeOrder(Integer.parseInt(((String) completeOptions.getSelectedItem()).substring(4, 10)));
                 }
             }
         });
@@ -239,14 +241,14 @@ public class OrderTable extends AbstractTable {
                     }
                     sortItems();
                 }
-                createTableGui();
+                OrderTable.createTableGui();
             }
         });
 
         showOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 orderFilter = (String) showOptions.getSelectedItem();
-                createTableGui();
+                OrderTable.createTableGui();
             }
         });
 
@@ -259,11 +261,11 @@ public class OrderTable extends AbstractTable {
     }
 
     private static Object[][] generateTableData(final ArrayList<Entity> orders) {
+        final int numberOfOrderFields = orders.get(0).getNumberOfFields();
         Object[][] data = null;
 
         if (orderFilter.equals("Show All Orders")) {
-            data = new Object[orders.size()][orders.get(0).getNumberOfFields()];
-
+            data = new Object[orders.size()][numberOfOrderFields];
             int dataIndex = 0;
 
             for (final Entity order : orders) {
@@ -300,7 +302,7 @@ public class OrderTable extends AbstractTable {
                 }
             }
 
-            data = new Object[numberOfSuppliersWithOrders][orders.get(0).getNumberOfFields()];
+            data = new Object[numberOfSuppliersWithOrders][numberOfOrderFields];
             int supplierIndex = 0;
 
             for (final Entity order : orders) {
@@ -336,7 +338,7 @@ public class OrderTable extends AbstractTable {
                 }
             }
 
-            data = new Object[customerSize][orders.get(0).getNumberOfFields()];
+            data = new Object[customerSize][numberOfOrderFields];
             int customerIndex = 0;
 
             for (final Entity order : orders) {
@@ -374,7 +376,7 @@ public class OrderTable extends AbstractTable {
                 }
             }
 
-            data = new Object[numberOfActiveOrders][orders.get(0).getNumberOfFields()];
+            data = new Object[numberOfActiveOrders][numberOfOrderFields];
             int customerIndex = 0;
             int arrayIndex = 2;
             final String[] orderArrayComplete = new String[numberOfActiveOrders + 2];
@@ -475,8 +477,7 @@ public class OrderTable extends AbstractTable {
                         tF.setEnabled(false);
                         currentStockFields.add(tF);
                         JTextField orderField = new JTextField("0", 5);
-                        if (product.getStockLevel() == 0)
-                            orderField.setEnabled(false);
+                        orderField.setEnabled(product.getStockLevel() != 0);
                         orderAmountFields.add(orderField);
 
                         productQuantPanel.add(productLabels.get(i));
@@ -618,7 +619,7 @@ public class OrderTable extends AbstractTable {
         GuiCreator.setFrame(true, false, false);
     }
 
-    public static void createSupplierOrder(int supplierIndex) {
+    public static void createSupplierOrder(int supplierId) {
         // Reset ShopDriver.frame
         GuiCreator.frame.remove(GuiCreator.leftPanel);
         GuiCreator.frame.repaint();
@@ -626,11 +627,14 @@ public class OrderTable extends AbstractTable {
         innerPanel = new JPanel(new BorderLayout(0, 2));
         innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        // Create array of supplier names for JComboBox
-        String[] supplierArray = new String[Database.getSuppliers().size() + 2];
+        final ArrayList<Entity> suppliers = Database.getSuppliers();
+        final int numberOfSuppliers = suppliers.size();
+        final String[] supplierArray = new String[numberOfSuppliers + 2];
         supplierArray[0] = "";
-        for (int i = 1; i < Database.getSuppliers().size() + 1; i++) {
-            supplierArray[i] = Database.getSuppliers().get(i - 1).getName();
+        int supplierIndex = 1;
+
+        for (final Entity supplier : suppliers) {
+            supplierArray[supplierIndex++] = supplier.getName();
         }
 
         // Add a string to the end of the array
@@ -638,8 +642,8 @@ public class OrderTable extends AbstractTable {
 
         // Create the JComboBox
         final JComboBox<String> supplierOptions = new JComboBox<String>(supplierArray);
-        if (supplierIndex != 0) {
-            supplierOptions.setSelectedIndex(supplierIndex - IdManager.SUPPLIER_ID_START + 1);
+        if (supplierId != 0) {
+            supplierOptions.setSelectedIndex(supplierId - IdManager.SUPPLIER_ID_START + 1);
         }
 
         supplierOptions.addActionListener(new ActionListener() {
@@ -660,9 +664,9 @@ public class OrderTable extends AbstractTable {
                     JLabel orderAmount = new JLabel("Order Amount");
 
                     // Make font bold
-                    productName.setFont(new Font(productName.getFont().getFontName(), Font.BOLD, productName.getFont().getSize()));
-                    currentStockLevel.setFont(new Font(productName.getFont().getFontName(), Font.BOLD, productName.getFont().getSize()));
-                    orderAmount.setFont(new Font(productName.getFont().getFontName(), Font.BOLD, productName.getFont().getSize()));
+                    productName.setFont(BOLD_LABEL_FONT);
+                    currentStockLevel.setFont(BOLD_LABEL_FONT);
+                    orderAmount.setFont(BOLD_LABEL_FONT);
 
                     final JPanel titlePanel = new JPanel(new GridLayout(0, 3));
                     titlePanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
@@ -678,8 +682,9 @@ public class OrderTable extends AbstractTable {
 
                     final Entity supplier = Database.getSupplierByName((String) supplierOptions.getSelectedItem());
                     final int traderId = supplier.getId();
+                    final ArrayList<Entity> products = Database.getProducts();
 
-                    for (final Entity p : Database.getProducts()) {
+                    for (final Entity p : products) {
                         final Product product = (Product) p;
                         if (product.getSupplierId() == traderId)
                             supplierProducts.add(product);
@@ -698,8 +703,7 @@ public class OrderTable extends AbstractTable {
                         tF.setEnabled(false);
                         currentStockFields.add(tF);
                         JTextField orderField = new JTextField("0", 5);
-                        if (supplierProduct.getStockLevel() == supplierProduct.getMaxLevel())
-                            orderField.setEnabled(false);
+                        orderField.setEnabled(supplierProduct.getStockLevel() != supplierProduct.getMaxLevel());
                         orderAmountFields.add(orderField);
 
                         productQuantityPanel.add(productLabels.get(i));
@@ -719,16 +723,18 @@ public class OrderTable extends AbstractTable {
                             int count = 0;
 
                             for (JLabel label : productLabels) {
-                                if (orderAmountFields.get(productLabels.indexOf(label)).getText().length() == 0
-                                        || (Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) + ((Product) Database
-                                                .getProducts().get(productLabels.indexOf(label))).getStockLevel()) > ((Product) Database
-                                                .getProducts().get(productLabels.indexOf(label))).getMaxLevel()) {
+                                final int labelIndex = productLabels.indexOf(label);
+
+                                if (orderAmountFields.get(labelIndex).getText().length() == 0
+                                        || (Integer.parseInt(orderAmountFields.get(labelIndex).getText()) + ((Product) Database
+                                                .getProductByIndex(labelIndex)).getStockLevel()) > ((Product) Database.getProductByIndex(labelIndex))
+                                                .getMaxLevel()) {
                                     valid = false;
                                     orderAmountFields.get(productLabels.indexOf(label)).setBorder(
                                             BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
                                 } else {
-                                    orderAmountFields.get(productLabels.indexOf(label)).setBorder(UIManager.getBorder("TextField.border"));
-                                    count += Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText());
+                                    orderAmountFields.get(labelIndex).setBorder(UIManager.getBorder("TextField.border"));
+                                    count += Integer.parseInt(orderAmountFields.get(labelIndex).getText());
                                 }
                             }
 
@@ -741,16 +747,17 @@ public class OrderTable extends AbstractTable {
                             }
 
                             if (valid) {
-                                ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
+                                final ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
 
-                                for (final Entity p : Database.getProducts()) {
+                                for (final Entity p : products) {
                                     final Product product = (Product) p;
 
                                     for (final JLabel label : productLabels) {
                                         if (label.getText().equals(product.getName())) {
-                                            if (Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > 0)
+                                            if (Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > 0) {
                                                 items.add(new OrderedItem(product, Integer.parseInt(orderAmountFields.get(
                                                         productLabels.indexOf(label)).getText())));
+                                            }
                                         }
                                     }
                                 }
@@ -760,7 +767,7 @@ public class OrderTable extends AbstractTable {
                                 if (items.size() > 0) {
                                     Database.addOrder(new Order(traderId, DATE_FORMATTER.format(new Date()), items, true));
 
-                                    for (Entity s : Database.getSuppliers()) {
+                                    for (Entity s : suppliers) {
                                         if (s.getId() == traderId) {
                                             ((Supplier) s).setLastPurchase(DATE_FORMATTER.format(new Date()));
                                             activeSupplier = s;
@@ -801,7 +808,7 @@ public class OrderTable extends AbstractTable {
                     buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                     buttonPanel2.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-                    buttonPanel.add(new JLabel("Supplier:  "), BorderLayout.WEST);
+                    buttonPanel.add(new JLabel("Supplier: "), BorderLayout.WEST);
                     buttonPanel.add(supplierOptions);
 
                     outerTitlePanel.add(buttonPanel, BorderLayout.NORTH);
