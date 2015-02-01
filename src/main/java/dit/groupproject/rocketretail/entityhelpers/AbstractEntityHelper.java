@@ -10,8 +10,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.tables.CustomerTable;
+import dit.groupproject.rocketretail.tables.OrderTable;
+import dit.groupproject.rocketretail.tables.ProductTable;
+import dit.groupproject.rocketretail.tables.StaffTable;
+import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class AbstractEntityHelper {
+
+    protected final CustomerTable customerTable = CustomerTable.getInstance();
+    protected final ProductTable productTable = ProductTable.getInstance();
+    protected final OrderTable orderTable = OrderTable.getInstance();
+    protected final StaffTable staffTable = StaffTable.getInstance();
+    protected final SupplierTable supplierTable = SupplierTable.getInstance();
 
     protected final static ActionListener cancelListener = new ActionListener() {
         public void actionPerformed(final ActionEvent e) {

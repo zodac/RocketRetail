@@ -30,10 +30,6 @@ import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.groupproject.rocketretail.tables.CustomerTable;
-import dit.groupproject.rocketretail.tables.ProductTable;
-import dit.groupproject.rocketretail.tables.StaffTable;
-import dit.groupproject.rocketretail.tables.SupplierTable;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 public class EditEntityHelper extends AbstractEntityHelper {
@@ -54,7 +50,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
      * Checks the current table state of the system to determine which Entity
      * table to use.
      */
-    public static ActionListener editEntityPanel(final JComboBox<String> editBox) {
+    public ActionListener editEntityPanel(final JComboBox<String> editBox) {
         final TableState currentState = ShopDriver.getCurrentTableState();
 
         if (currentState == TableState.CUSTOMER) {
@@ -87,7 +83,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
     }
 
-    private static void editCustomerPanel(final int customerId) {
+    private void editCustomerPanel(final int customerId) {
         resetLeftPanel();
 
         final Customer customer = (Customer) Database.getCustomerById(customerId);
@@ -204,7 +200,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
                     Database.removeCustomerByIndex(index + 1);
-                    CustomerTable.createTableGui();
+                    customerTable.createTableGui();
                 }
             }
         });
@@ -213,7 +209,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         updateLeftPanel(innerPanel);
     }
 
-    private static void editSupplierPanel(final int supplierId) {
+    private void editSupplierPanel(final int supplierId) {
         resetLeftPanel();
 
         final Supplier supplier = (Supplier) Database.getSupplierById(supplierId);
@@ -331,7 +327,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
                     Database.removeSupplierByIndex(index + 1);
-                    SupplierTable.createTableGui();
+                    supplierTable.createTableGui();
                 }
             }
         });
@@ -340,7 +336,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         updateLeftPanel(innerPanel);
     }
 
-    private static void editStaffPanel(int staffId) {
+    private void editStaffPanel(int staffId) {
         resetLeftPanel();
 
         final Staff staff = (Staff) Database.getStaffMemberById(staffId);
@@ -459,7 +455,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.validate();
                     Database.removeStaffByIndex(index + 1);
-                    StaffTable.createTableGui();
+                    staffTable.createTableGui();
                 }
             }
         });
@@ -468,7 +464,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         updateLeftPanel(innerPanel);
     }
 
-    private static void editProductPanel(int productId) {
+    private void editProductPanel(int productId) {
         resetLeftPanel();
 
         final Product product = (Product) Database.getProductById(productId);
@@ -563,7 +559,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
                     Database.removeProductByIndex(index + 1);
-                    ProductTable.createTableGui();
+                    productTable.createTableGui();
                 }
             }
         });

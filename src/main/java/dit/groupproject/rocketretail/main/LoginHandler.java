@@ -106,7 +106,8 @@ public class LoginHandler {
         final boolean manager = true;
 
         JMenuBar menuBar = new JMenuBar();
-        MenuGui.createMenuBar(menuBar, manager);
+        final MenuGui menuGui = new MenuGui();
+        menuGui.createMenuBar(menuBar, manager);
         HomeScreen.setHomeScreen();
         GuiCreator.showGui(menuBar);
     }

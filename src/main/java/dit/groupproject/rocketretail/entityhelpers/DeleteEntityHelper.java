@@ -10,10 +10,6 @@ import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.groupproject.rocketretail.tables.CustomerTable;
-import dit.groupproject.rocketretail.tables.ProductTable;
-import dit.groupproject.rocketretail.tables.StaffTable;
-import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class DeleteEntityHelper extends AbstractEntityHelper {
 
@@ -24,7 +20,7 @@ public class DeleteEntityHelper extends AbstractEntityHelper {
      * Checks the current table state of the system to determine which Entity
      * table to use.
      */
-    public static ActionListener deleteEntityPanel(final JComboBox<String> deleteBox) {
+    public ActionListener deleteEntityPanel(final JComboBox<String> deleteBox) {
         final TableState currentState = ShopDriver.getCurrentTableState();
 
         if (currentState == TableState.CUSTOMER) {
@@ -77,35 +73,35 @@ public class DeleteEntityHelper extends AbstractEntityHelper {
         throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
     }
 
-    private static void deleteCustomer(final int customerId, final String customerName) {
+    private void deleteCustomer(final int customerId, final String customerName) {
         if (GuiCreator.getConfirmationResponse("Do you want to delete " + customerName + "?")) {
             resetLeftPanel();
             Database.removeCustomerById(customerId);
         }
-        CustomerTable.createTableGui();
+        customerTable.createTableGui();
     }
 
-    private static void deleteSupplier(final int supplierId, final String supplierName) {
+    private void deleteSupplier(final int supplierId, final String supplierName) {
         if (GuiCreator.getConfirmationResponse("Do you want to delete " + supplierName + "?")) {
             resetLeftPanel();
             Database.removeSupplierById(supplierId);
         }
-        SupplierTable.createTableGui();
+        supplierTable.createTableGui();
     }
 
-    private static void deleteStaff(final int staffId, final String staffName) {
+    private void deleteStaff(final int staffId, final String staffName) {
         if (GuiCreator.getConfirmationResponse("Do you want to delete " + staffName + "?")) {
             resetLeftPanel();
             Database.removeStaffById(staffId);
         }
-        StaffTable.createTableGui();
+        staffTable.createTableGui();
     }
 
-    private static void deleteProduct(final int productId, final String productName) {
+    private void deleteProduct(final int productId, final String productName) {
         if (GuiCreator.getConfirmationResponse("Do you want to delete " + productName + "?")) {
             resetLeftPanel();
             Database.removeProductById(productId);
         }
-        ProductTable.createTableGui();
+        productTable.createTableGui();
     }
 }

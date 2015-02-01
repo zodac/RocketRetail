@@ -39,7 +39,6 @@ import dit.groupproject.rocketretail.entities.Order;
 import dit.groupproject.rocketretail.entities.OrderedItem;
 import dit.groupproject.rocketretail.entities.Product;
 import dit.groupproject.rocketretail.entities.Supplier;
-import dit.groupproject.rocketretail.entityhelpers.AddEntityHelper;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
@@ -60,16 +59,25 @@ import dit.groupproject.rocketretail.menus.MenuGui;
  */
 public class OrderTable extends AbstractTable {
 
-    public static boolean first = true;
-    public static boolean descendingOrderSort = false;
+    public boolean first = true;
+    public boolean descendingOrderSort = false;
 
-    private static String sortType = "Sort by...";
-    private static String orderFilter = "Show All Orders";
+    private String sortType = "Sort by...";
+    private String orderFilter = "Show All Orders";
 
-    private static JPanel innerPanel;
-    private static JComboBox<String> createBox;
-    private static JComboBox<String> tempBox = new JComboBox<String>();
-    private static int validOrders = 0;
+    private JPanel innerPanel;
+    private JComboBox<String> createBox;
+    private JComboBox<String> tempBox = new JComboBox<String>();
+    private int validOrders = 0;
+
+    private static OrderTable instance = null;
+
+    public static OrderTable getInstance() {
+        if (instance == null) {
+            instance = new OrderTable();
+        }
+        return instance;
+    }
 
     /**
      * Creates the JMenuItem for "Order" and defines the ActionListener for the
@@ -82,7 +90,7 @@ public class OrderTable extends AbstractTable {
      * @see #createTableGui()
      * @see MenuGui#createMenuBar(JMenuBar, boolean)
      */
-    public static JMenuItem createMenu(final TableState newState, final boolean manager) {
+    public JMenuItem createMenu(final TableState newState, final boolean manager) {
         final JMenuItem menuItem = new JMenuItem(newState.toString());
 
         menuItem.addActionListener(new ActionListener() {
@@ -102,7 +110,7 @@ public class OrderTable extends AbstractTable {
      * Calls {@link #viewOrderInfo(Order)} when an order is selected from the
      * table.
      */
-    public static void createTableGui() {
+    public void createTableGui() {
         setTableState(TableState.ORDER);
         resetGui();
 
@@ -186,7 +194,7 @@ public class OrderTable extends AbstractTable {
                             }
                         }
                         GuiCreator.setConfirmationMessage(numberOfActiveSupplierOptions + " orders completed");
-                        OrderTable.createTableGui();
+                        createTableGui();
                     }
                 } else if (completeOptions.getSelectedItem().equals("Complete All Customer Orders")) {
 
@@ -203,7 +211,7 @@ public class OrderTable extends AbstractTable {
                             }
                         }
                         GuiCreator.setConfirmationMessage(numberOfActiveCustomerOrders + " orders completed");
-                        OrderTable.createTableGui();
+                        createTableGui();
                     }
 
                 } else if (completeOptions.getSelectedItem().equals("Complete All Orders")) {
@@ -221,7 +229,7 @@ public class OrderTable extends AbstractTable {
                             }
                         }
                         GuiCreator.setConfirmationMessage(numberOfActiveOrders + " orders completed");
-                        OrderTable.createTableGui();
+                        createTableGui();
                     }
                 } else {
                     completeOrder(Integer.parseInt(((String) completeOptions.getSelectedItem()).substring(4, 10)));
@@ -241,14 +249,14 @@ public class OrderTable extends AbstractTable {
                     }
                     sortItems();
                 }
-                OrderTable.createTableGui();
+                createTableGui();
             }
         });
 
         showOptions.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 orderFilter = (String) showOptions.getSelectedItem();
-                OrderTable.createTableGui();
+                createTableGui();
             }
         });
 
@@ -260,7 +268,7 @@ public class OrderTable extends AbstractTable {
         updateGui(scrollPane, buttonPanel);
     }
 
-    private static Object[][] generateTableData(final ArrayList<Entity> orders) {
+    private Object[][] generateTableData(final ArrayList<Entity> orders) {
         final int numberOfOrderFields = orders.get(0).getNumberOfFields();
         Object[][] data = null;
 
@@ -396,17 +404,17 @@ public class OrderTable extends AbstractTable {
         return data;
     }
 
-    private static boolean isActiveCustomerOrder(final Entity order) {
+    private boolean isActiveCustomerOrder(final Entity order) {
         final Order o = (Order) order;
         return o.isActive() && !o.isSupplier();
     }
 
-    private static boolean isActiveSupplierOrder(final Entity order) {
+    private boolean isActiveSupplierOrder(final Entity order) {
         final Order o = (Order) order;
         return o.isActive() && o.isSupplier();
     }
 
-    private static void createCustomerOrder() {
+    private void createCustomerOrder() {
         // Reset ShopDriver.frame
         GuiCreator.frame.remove(GuiCreator.leftPanel);
         GuiCreator.frame.repaint();
@@ -432,7 +440,7 @@ public class OrderTable extends AbstractTable {
             public void actionPerformed(ActionEvent e) {
                 if (customerOptions.getSelectedItem().equals("New Customer")) {
                     ShopDriver.setCurrentTable(TableState.CUSTOMER);
-                    AddEntityHelper.addEntityPanel();
+                    addEntityHelper.addEntityPanel();
                     ShopDriver.setCurrentTable(TableState.ORDER);
                 } else {
                     // Reset ShopDriver.frame
@@ -619,7 +627,7 @@ public class OrderTable extends AbstractTable {
         GuiCreator.setFrame(true, false, false);
     }
 
-    public static void createSupplierOrder(int supplierId) {
+    public void createSupplierOrder(int supplierId) {
         // Reset ShopDriver.frame
         GuiCreator.frame.remove(GuiCreator.leftPanel);
         GuiCreator.frame.repaint();
@@ -650,7 +658,7 @@ public class OrderTable extends AbstractTable {
             public void actionPerformed(ActionEvent e) {
                 if (supplierOptions.getSelectedItem().equals("New Supplier")) {
                     ShopDriver.setCurrentTable(TableState.SUPPLIER);
-                    AddEntityHelper.addEntityPanel();
+                    addEntityHelper.addEntityPanel();
                     ShopDriver.setCurrentTable(TableState.ORDER);
                 } else {
                     // Reset ShopDriver.frame
@@ -850,7 +858,7 @@ public class OrderTable extends AbstractTable {
         GuiCreator.setFrame(true, false, false);
     }
 
-    private static void completeOrder(int orderId) {
+    private void completeOrder(int orderId) {
         final JPanel myPanel = new JPanel();
         myPanel.add(new JLabel("Are you sure you want to complete order #" + ID_FORMATTER.format(orderId) + "?"));
 
@@ -865,7 +873,7 @@ public class OrderTable extends AbstractTable {
         createTableGui();
     }
 
-    public static void sortItems() {
+    public void sortItems() {
         Comparator<Entity> comparator = Order.getComparator(sortType);
 
         if (descendingOrderSort) {

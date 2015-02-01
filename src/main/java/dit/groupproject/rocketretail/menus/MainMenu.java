@@ -21,11 +21,17 @@ import dit.groupproject.rocketretail.utilities.InitialiseArray;
 
 public class MainMenu {
 
+    private final CustomerTable customerTable = CustomerTable.getInstance();
+    private final ProductTable productTable = ProductTable.getInstance();
+    private final OrderTable orderTable = OrderTable.getInstance();
+    private final StaffTable staffTable = StaffTable.getInstance();
+    private final SupplierTable supplierTable = SupplierTable.getInstance();
+
     /**
      * Create submenu and ActionListeners, and passes back to ShopDriver to add
      * to menuBar
      */
-    public static JMenu createMenu() {
+    public JMenu createMenu() {
         final JMenu clearMenu = createClearMenu();
         final JMenu generateOrderMenu = createGenerateOrdersMenu();
         final JMenu mainMenu = createMainMenu(clearMenu, generateOrderMenu);
@@ -33,7 +39,7 @@ public class MainMenu {
         return mainMenu;
     }
 
-    private static JMenu createClearMenu() {
+    private JMenu createClearMenu() {
         final JMenuItem clearAll = new JMenuItem("Clear All");
         clearAll.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -43,10 +49,10 @@ public class MainMenu {
 
                 ShopDriver.setCurrentTable(TableState.NONE);
 
-                StaffTable.first = true;
-                ProductTable.first = true;
-                CustomerTable.first = true;
-                SupplierTable.first = true;
+                staffTable.first = true;
+                productTable.first = true;
+                customerTable.first = true;
+                supplierTable.first = true;
 
                 HomeScreen.setHomeScreen();
                 GuiCreator.frame.setTitle("Rocket Retail Inc");
@@ -71,10 +77,10 @@ public class MainMenu {
         clearCenter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 GuiCreator.frame.remove(GuiCreator.mainPanel);
-                StaffTable.first = true;
-                ProductTable.first = true;
-                SupplierTable.first = true;
-                CustomerTable.first = true;
+                staffTable.first = true;
+                productTable.first = true;
+                supplierTable.first = true;
+                customerTable.first = true;
                 GuiCreator.frame.setTitle("Rocket Retail Inc");
 
                 HomeScreen.setHomeScreen();
@@ -90,7 +96,7 @@ public class MainMenu {
         return clearMenu;
     }
 
-    private static JMenu createGenerateOrdersMenu() {
+    private JMenu createGenerateOrdersMenu() {
         final JMenuItem generateOrdersOne = new JMenuItem("1 Order");
         generateOrdersOne.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -133,7 +139,7 @@ public class MainMenu {
         return generateOrderMenu;
     }
 
-    private static JMenu createMainMenu(final JMenu clearMenu, final JMenu generateOrderMenu) {
+    private JMenu createMainMenu(final JMenu clearMenu, final JMenu generateOrderMenu) {
         final JMenuItem resetArrays = new JMenuItem("Reset Arrays");
         resetArrays.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -173,18 +179,18 @@ public class MainMenu {
         }
     }
 
-    private static void createCurrentTable() {
+    private void createCurrentTable() {
         if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
-            StaffTable.createTableGui();
+            staffTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
-            ProductTable.createTableGui();
+            productTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
-            CustomerTable.createTableGui();
+            customerTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
-            SupplierTable.createTableGui();
+            supplierTable.createTableGui();
         } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
-            OrderTable.first = true;
-            OrderTable.createTableGui();
+            orderTable.first = true;
+            orderTable.createTableGui();
         }
     }
 }

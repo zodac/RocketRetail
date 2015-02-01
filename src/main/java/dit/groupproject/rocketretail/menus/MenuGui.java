@@ -13,6 +13,13 @@ import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class MenuGui {
 
+    private final MainMenu menu = new MainMenu();
+    private final CustomerTable customerTable = CustomerTable.getInstance();
+    private final ProductTable productTable = ProductTable.getInstance();
+    private final OrderTable orderTable = OrderTable.getInstance();
+    private final StaffTable staffTable = StaffTable.getInstance();
+    private final SupplierTable supplierTable = SupplierTable.getInstance();
+
     /**
      * Creates a menubar and adds databaseMenus including staff, product,
      * supplier, customer, order, stock control, profitloss and graphs
@@ -22,21 +29,21 @@ public class MenuGui {
      * @param manager
      *            (boolean)
      */
-    public static void createMenuBar(final JMenuBar menuBar, final boolean manager) {
-        menuBar.add(MainMenu.createMenu());
+    public void createMenuBar(final JMenuBar menuBar, final boolean manager) {
+        menuBar.add(menu.createMenu());
         menuBar.add(createDatabaseMenu(manager));
         menuBar.add(StockControlMenu.createMenu());
         menuBar.add(ProfitLossMenu.createMenu(manager));
         menuBar.add(Graphs.createMenu());
     }
 
-    private static JMenu createDatabaseMenu(final boolean manager) {
+    private JMenu createDatabaseMenu(final boolean manager) {
         final JMenu databaseMenu = new JMenu("Database");
-        databaseMenu.add(StaffTable.createMenu(TableState.STAFF, manager));
-        databaseMenu.add(ProductTable.createMenu(TableState.PRODUCT, manager));
-        databaseMenu.add(SupplierTable.createMenu(TableState.SUPPLIER, manager));
-        databaseMenu.add(CustomerTable.createMenu(TableState.CUSTOMER, manager));
-        databaseMenu.add(OrderTable.createMenu(TableState.ORDER, manager));
+        databaseMenu.add(staffTable.createMenu(TableState.STAFF, manager));
+        databaseMenu.add(productTable.createMenu(TableState.PRODUCT, manager));
+        databaseMenu.add(supplierTable.createMenu(TableState.SUPPLIER, manager));
+        databaseMenu.add(customerTable.createMenu(TableState.CUSTOMER, manager));
+        databaseMenu.add(orderTable.createMenu(TableState.ORDER, manager));
 
         return databaseMenu;
     }

@@ -21,12 +21,21 @@ import dit.groupproject.rocketretail.menus.MenuGui;
 
 public class SupplierTable extends AbstractTable {
 
-    public static boolean first = true;
-    public static boolean descendingOrderSort = false;
+    public boolean first = true;
+    public boolean descendingOrderSort = false;
 
-    private final static String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
+    private final String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
 
-    private static String sortType = "Sort by...";
+    private String sortType = "Sort by...";
+
+    private static SupplierTable instance = null;
+
+    public static SupplierTable getInstance() {
+        if (instance == null) {
+            instance = new SupplierTable();
+        }
+        return instance;
+    }
 
     /**
      * Creates the JMenuItem for "Supplier", and defines the ActionListener for
@@ -39,7 +48,7 @@ public class SupplierTable extends AbstractTable {
      * @see #createTableGui()
      * @see MenuGui#createMenuBar(JMenuBar, boolean)
      */
-    public static JMenuItem createMenu(final TableState newState, final boolean manager) {
+    public JMenuItem createMenu(final TableState newState, final boolean manager) {
         final JMenuItem menuItem = new JMenuItem(newState.toString());
 
         menuItem.addActionListener(new ActionListener() {
@@ -60,7 +69,7 @@ public class SupplierTable extends AbstractTable {
      * Calls {@link #viewSupplierInfo(Supplier)} when a supplier is selected
      * from the table.
      */
-    public static void createTableGui() {
+    public void createTableGui() {
         setTableState(TableState.SUPPLIER);
         resetGui();
 
@@ -78,7 +87,7 @@ public class SupplierTable extends AbstractTable {
         updateGui(scrollPane, buttonPanel);
     }
 
-    private static JComboBox<String> createSortOptions() {
+    private JComboBox<String> createSortOptions() {
         final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
         final int index = Arrays.asList(SORT_OPTIONS).indexOf(sortType);
         sortOptions.setSelectedIndex(index);
@@ -101,7 +110,7 @@ public class SupplierTable extends AbstractTable {
         return sortOptions;
     }
 
-    public static void sortItems() {
+    public void sortItems() {
         Comparator<Entity> comparator = Supplier.getComparator(sortType);
 
         if (descendingOrderSort) {

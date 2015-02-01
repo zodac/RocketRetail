@@ -61,7 +61,8 @@ public class PerformanceTest {
      */
     @Test(timeout = LONG_TIMEOUT_IN_MS)
     public void staffTest() {
-        StaffTable.createTableGui();
+        final StaffTable staffTable = StaffTable.getInstance();
+        staffTable.createTableGui();
     }
 
     /**
@@ -70,7 +71,8 @@ public class PerformanceTest {
      */
     @Test(timeout = LONG_TIMEOUT_IN_MS)
     public void productTest() {
-        ProductTable.createTableGui();
+        final ProductTable productTable = ProductTable.getInstance();
+        productTable.createTableGui();
     }
 
     /**
@@ -79,7 +81,8 @@ public class PerformanceTest {
      */
     @Test(timeout = LONG_TIMEOUT_IN_MS)
     public void supplierTest() {
-        SupplierTable.createTableGui();
+        final SupplierTable supplierTable = SupplierTable.getInstance();
+        supplierTable.createTableGui();
     }
 
     /**
@@ -88,7 +91,8 @@ public class PerformanceTest {
      */
     @Test(timeout = LONG_TIMEOUT_IN_MS)
     public void customerTest() {
-        CustomerTable.createTableGui();
+        final CustomerTable customerTable = CustomerTable.getInstance();
+        customerTable.createTableGui();
     }
 
     @AfterClass

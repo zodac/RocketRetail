@@ -33,10 +33,6 @@ import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.groupproject.rocketretail.tables.CustomerTable;
-import dit.groupproject.rocketretail.tables.ProductTable;
-import dit.groupproject.rocketretail.tables.StaffTable;
-import dit.groupproject.rocketretail.tables.SupplierTable;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 public class AddEntityHelper extends AbstractEntityHelper {
@@ -53,7 +49,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
      * Checks the current table state of the system to determine which Entity
      * table to use.
      */
-    public static ActionListener addEntityPanel() {
+    public ActionListener addEntityPanel() {
         final TableState currentState = ShopDriver.getCurrentTableState();
 
         if (currentState == TableState.CUSTOMER) {
@@ -86,7 +82,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
     }
 
-    private static void addCustomerPanel() {
+    private void addCustomerPanel() {
         resetLeftPanel();
 
         final JPanel innerPanel = addLabelsToPanel(CUSTOMER_LABELS);
@@ -177,9 +173,9 @@ public class AddEntityHelper extends AbstractEntityHelper {
                     GuiCreator.setConfirmationMessage("Customer " + custNameField.getText() + " added");
                     removeLeftPanel();
 
-                    CustomerTable.descendingOrderSort = false;
-                    CustomerTable.sortItems();
-                    CustomerTable.createTableGui();
+                    customerTable.descendingOrderSort = false;
+                    customerTable.sortItems();
+                    customerTable.createTableGui();
                 }
             }
         });
@@ -188,7 +184,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         updateLeftPanel(innerPanel);
     }
 
-    private static void addSupplierPanel() {
+    private void addSupplierPanel() {
         resetLeftPanel();
         final JPanel innerPanel = addLabelsToPanel(SUPPLIER_LABELS);
 
@@ -284,9 +280,9 @@ public class AddEntityHelper extends AbstractEntityHelper {
                     GuiCreator.setConfirmationMessage("New Supplier \"" + suppNameField.getText() + "\" added");
                     removeLeftPanel();
 
-                    SupplierTable.descendingOrderSort = false;
-                    SupplierTable.sortItems();
-                    SupplierTable.createTableGui();
+                    supplierTable.descendingOrderSort = false;
+                    supplierTable.sortItems();
+                    supplierTable.createTableGui();
                 }
             }
         });
@@ -295,7 +291,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         updateLeftPanel(innerPanel);
     }
 
-    private static void addStaffPanel() {
+    private void addStaffPanel() {
         resetLeftPanel();
         final JPanel innerPanel = addLabelsToPanel(STAFF_LABELS);
 
@@ -392,9 +388,9 @@ public class AddEntityHelper extends AbstractEntityHelper {
                     GuiCreator.setConfirmationMessage("Staff member " + nameField.getText() + " added");
                     removeLeftPanel();
 
-                    StaffTable.descendingOrderSort = false;
-                    StaffTable.sortItems();
-                    StaffTable.createTableGui();
+                    staffTable.descendingOrderSort = false;
+                    staffTable.sortItems();
+                    staffTable.createTableGui();
                 }
             }
         });
@@ -403,7 +399,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         updateLeftPanel(innerPanel);
     }
 
-    private static void addProductPanel() {
+    private void addProductPanel() {
         resetLeftPanel();
         final JPanel innerPanel = addLabelsToPanel(PRODUCT_LABELS);
 
@@ -473,9 +469,9 @@ public class AddEntityHelper extends AbstractEntityHelper {
                     GuiCreator.setConfirmationMessage("Product " + prodDescField.getText() + " added");
                     removeLeftPanel();
 
-                    ProductTable.descendingOrderSort = false;
-                    ProductTable.sortItems();
-                    ProductTable.createTableGui();
+                    productTable.descendingOrderSort = false;
+                    productTable.sortItems();
+                    productTable.createTableGui();
                 }
             }
         });

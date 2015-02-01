@@ -24,6 +24,11 @@ import dit.groupproject.rocketretail.main.TableState;
 
 public abstract class AbstractTable {
 
+    protected final static AddEntityHelper addEntityHelper = new AddEntityHelper();
+    protected final static DeleteEntityHelper deleteEntityHelper = new DeleteEntityHelper();
+    protected final static EditEntityHelper editEntityHelper = new EditEntityHelper();
+    protected final static ViewEntityHelper viewEntityHelper = new ViewEntityHelper();
+
     protected static int showDialog(final String title, final JPanel myPanel) {
         return JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
     }
@@ -60,19 +65,19 @@ public abstract class AbstractTable {
 
     protected static JButton createAddButton(final String addButtonTitle) {
         final JButton addButton = new JButton(addButtonTitle);
-        addButton.addActionListener(AddEntityHelper.addEntityPanel());
+        addButton.addActionListener(addEntityHelper.addEntityPanel());
         return addButton;
     }
 
     protected static JComboBox<String> createEditBox(final String[] itemsToEdit) {
         final JComboBox<String> editBox = new JComboBox<String>(itemsToEdit);
-        editBox.addActionListener(EditEntityHelper.editEntityPanel(editBox));
+        editBox.addActionListener(editEntityHelper.editEntityPanel(editBox));
         return editBox;
     }
 
     protected static JComboBox<String> createDeleteBox(final String[] itemsToDelete) {
         final JComboBox<String> deleteBox = new JComboBox<String>(itemsToDelete);
-        deleteBox.addActionListener(DeleteEntityHelper.deleteEntityPanel(deleteBox));
+        deleteBox.addActionListener(deleteEntityHelper.deleteEntityPanel(deleteBox));
         return deleteBox;
     }
 
@@ -80,7 +85,7 @@ public abstract class AbstractTable {
         final JTable table = new JTable(data, columnNames);
         table.setColumnSelectionAllowed(false);
         table.setFillsViewportHeight(true);
-        table.addMouseListener(ViewEntityHelper.viewEntityTable(table));
+        table.addMouseListener(viewEntityHelper.viewEntityTable(table));
 
         final JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBackground(GuiCreator.BACKGROUND_COLOUR);

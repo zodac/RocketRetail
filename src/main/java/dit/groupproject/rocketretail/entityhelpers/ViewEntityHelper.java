@@ -42,11 +42,6 @@ import dit.groupproject.rocketretail.gui.Graphs;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.groupproject.rocketretail.tables.CustomerTable;
-import dit.groupproject.rocketretail.tables.OrderTable;
-import dit.groupproject.rocketretail.tables.ProductTable;
-import dit.groupproject.rocketretail.tables.StaffTable;
-import dit.groupproject.rocketretail.tables.SupplierTable;
 
 public class ViewEntityHelper extends AbstractEntityHelper {
 
@@ -59,7 +54,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
      * Checks the current table state of the system to determine which Entity
      * table to use.
      */
-    public static MouseAdapter viewEntityTable(final JTable entitySubTable) {
+    public MouseAdapter viewEntityTable(final JTable entitySubTable) {
         final TableState currentState = ShopDriver.getCurrentTableState();
 
         if (currentState == TableState.CUSTOMER) {
@@ -121,7 +116,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         throw new IllegalArgumentException("No sub-table available for current table state [" + currentState.toString() + "]!");
     }
 
-    private static void viewCustomerInfo(final Customer customer) {
+    private void viewCustomerInfo(final Customer customer) {
         final String customerName = customer.getName();
 
         GuiCreator.frame.remove(GuiCreator.mainPanel);
@@ -224,7 +219,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         final JButton backButton = new JButton("Back to Customers");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                CustomerTable.createTableGui();
+                customerTable.createTableGui();
             }
         });
 
@@ -236,7 +231,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         GuiCreator.setFrame(false, false, true);
     }
 
-    private static void viewSupplierInfo(final Supplier supplier) {
+    private void viewSupplierInfo(final Supplier supplier) {
         GuiCreator.frame.remove(GuiCreator.mainPanel);
         GuiCreator.frame.setTitle("Rocket Retail Inc - " + supplier.getName());
         GuiCreator.frame.repaint();
@@ -340,7 +335,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         final JButton backButton = new JButton("Back to Suppliers");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SupplierTable.createTableGui();
+                supplierTable.createTableGui();
             }
         });
 
@@ -352,7 +347,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         GuiCreator.setFrame(false, false, true);
     }
 
-    private static void viewStaffInfo(final Staff staff) {
+    private void viewStaffInfo(final Staff staff) {
         GuiCreator.frame.remove(GuiCreator.mainPanel);
         GuiCreator.frame.setTitle("Rocket Retail Inc - " + staff.getName());
         GuiCreator.frame.repaint();
@@ -522,7 +517,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         JButton backButton = new JButton("Back to Staff Members");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                StaffTable.createTableGui();
+                staffTable.createTableGui();
             }
         });
 
@@ -535,7 +530,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         GuiCreator.setFrame(false, false, true);
     }
 
-    public static void viewProductInfo(final Product product) {
+    public void viewProductInfo(final Product product) {
         final String productName = product.getName();
 
         GuiCreator.frame.remove(GuiCreator.mainPanel);
@@ -675,14 +670,14 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         final JButton orderButton = new JButton("Order " + productName);
         orderButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                OrderTable.createSupplierOrder(product.getSupplierId());
+                orderTable.createSupplierOrder(product.getSupplierId());
             }
         });
 
         final JButton backButton = new JButton("Back to Products");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ProductTable.createTableGui();
+                productTable.createTableGui();
             }
         });
 
@@ -695,7 +690,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         GuiCreator.setFrame(false, false, true);
     }
 
-    private static void viewOrderInfo(final Order order) {
+    private void viewOrderInfo(final Order order) {
         GuiCreator.frame.remove(GuiCreator.mainPanel);
         GuiCreator.frame.setTitle("Rocket Retail Inc - Order #" + ID_FORMATTER.format(order.getId()));
         GuiCreator.frame.repaint();
@@ -813,7 +808,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         final JButton backButton = new JButton("Back to Orders");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                OrderTable.createTableGui();
+                orderTable.createTableGui();
             }
         });
 
