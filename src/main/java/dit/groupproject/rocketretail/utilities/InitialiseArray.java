@@ -159,7 +159,6 @@ public class InitialiseArray {
      *            boolean to decide if order is in to the current year
      */
     public static void generateOrders(final int numberOfOrders, final boolean displayConfirmationMessage, final boolean orderInCurrentYear) {
-        final int ordersToCreate = (numberOfOrders == 0) ? RANDOM.nextInt(16) + 5 : numberOfOrders;
         final int maxLoop = 50;
         final int maxWhile = 40;
 
@@ -167,7 +166,7 @@ public class InitialiseArray {
         int loops = 0;
         ArrayList<OrderedItem> items = new ArrayList<OrderedItem>();
 
-        while (index < ordersToCreate && loops < maxLoop) {
+        while (index < numberOfOrders && loops < maxLoop) {
             items = new ArrayList<OrderedItem>();
             int itemsToCreate = RANDOM.nextInt(Database.getProducts().size()) + 1;
             final Staff currentStaff = ShopDriver.getCurrentStaff();

@@ -2,6 +2,7 @@ package dit.groupproject.rocketretail.menus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -124,7 +125,7 @@ public class MainMenu {
         final JMenuItem generateOrdersRandom = new JMenuItem("Random Orders");
         generateOrdersRandom.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                InitialiseArray.generateOrders(0, true, true);
+                InitialiseArray.generateOrders(new Random().nextInt(16) + 5, true, true);
                 createCurrentTable();
                 clearRightPanel();
             }
@@ -180,15 +181,17 @@ public class MainMenu {
     }
 
     private void createCurrentTable() {
-        if (ShopDriver.getCurrentTableState().equals(TableState.STAFF)) {
+        final TableState currentTableState = ShopDriver.getCurrentTableState();
+
+        if (currentTableState.equals(TableState.STAFF)) {
             staffTable.createTableGui();
-        } else if (ShopDriver.getCurrentTableState().equals(TableState.PRODUCT)) {
+        } else if (currentTableState.equals(TableState.PRODUCT)) {
             productTable.createTableGui();
-        } else if (ShopDriver.getCurrentTableState().equals(TableState.CUSTOMER)) {
+        } else if (currentTableState.equals(TableState.CUSTOMER)) {
             customerTable.createTableGui();
-        } else if (ShopDriver.getCurrentTableState().equals(TableState.SUPPLIER)) {
+        } else if (currentTableState.equals(TableState.SUPPLIER)) {
             supplierTable.createTableGui();
-        } else if (ShopDriver.getCurrentTableState().equals(TableState.ORDER)) {
+        } else if (currentTableState.equals(TableState.ORDER)) {
             orderTable.first = true;
             orderTable.createTableGui();
         }

@@ -17,43 +17,45 @@ import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 public class LoginHandler {
 
+    private final static int ID_CHARACTER_LIMIT = 3;
+    private final static int PIN_CHARACTER_LIMIT = 4;
+
     /**
      * Creates a {@link #showDialog(String, JPanel)} pop-up asking for a user's
      * ID and PIN. Matches ID and PIN to values in {@link #staffMembers}.<br />
      * After three unsuccessfully attempts, the program closes.
      */
     public static boolean logon() {
-        JPanel myPanel = new JPanel();
-        int count = 0; // Counter for attempts
-        JTextField idField = new JTextField(5); // JTextField for ID input
-        JPasswordField pinField = new JPasswordField(5); // JPasswordField for
-                                                         // PIN input
-        boolean found = false;
+        final JPanel myPanel = new JPanel();
+        final JTextField idField = new JTextField(5);
+        final JPasswordField pinField = new JPasswordField(5);
 
-        // Restricts input fields to certain character length
-        idField.setDocument(new JTextFieldLimit(3));
-        pinField.setDocument(new JTextFieldLimit(4));
+        int numberOfAttempts = 0;
+        boolean validLogin = false;
 
-        // Add JLabels and JTextFields to panel
+        idField.setDocument(new JTextFieldLimit(ID_CHARACTER_LIMIT));
+        pinField.setDocument(new JTextFieldLimit(PIN_CHARACTER_LIMIT));
+
         myPanel.add(new JLabel("Staff ID:"));
         myPanel.add(idField);
         myPanel.add(new JLabel("Staff PIN:"));
         myPanel.add(pinField);
         JLabel errorLabel = new JLabel();
 
-        while (count < 3 && !found) {
-            if (count == 1) {
+        while (numberOfAttempts < 3 && !validLogin) {
+            if (numberOfAttempts == 1) {
                 myPanel.add(errorLabel);
                 errorLabel.setText("2 attempts remaining");
-            } else if (count == 2)
+            } else if (numberOfAttempts == 2) {
                 errorLabel.setText("1 attempt remaining");
+            }
 
             if (showDialog("Please enter your staff ID and PIN", myPanel) == JOptionPane.OK_OPTION) {
                 try {
                     final Staff staff = (Staff) Database.getStaffMemberById(Integer.parseInt(idField.getText()));
                     if (hasValidLogonCredentials(staff, Integer.parseInt(String.valueOf(pinField.getPassword())))) {
                         ShopDriver.setCurrentStaff(staff);
-                        found = true;
+                        validLogin = true;
                     }
                 } catch (final DatabaseException e) {
                     System.out.println("Invalid staff ID!");
@@ -61,10 +63,10 @@ public class LoginHandler {
             } else {
                 System.exit(0);
             }
-            count++;
+            numberOfAttempts++;
         }
 
-        if (!found) {
+        if (!validLogin) {
             JOptionPane.showMessageDialog(null, "Too many incorrect logon attempts!", "Logon Fail", JOptionPane.PLAIN_MESSAGE);
             System.exit(0);
         }
@@ -105,7 +107,7 @@ public class LoginHandler {
         // final boolean manager = logon();
         final boolean manager = true;
 
-        JMenuBar menuBar = new JMenuBar();
+        final JMenuBar menuBar = new JMenuBar();
         final MenuGui menuGui = new MenuGui();
         menuGui.createMenuBar(menuBar, manager);
         HomeScreen.setHomeScreen();

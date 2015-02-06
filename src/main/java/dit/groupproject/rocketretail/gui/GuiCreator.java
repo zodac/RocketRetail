@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -38,11 +39,12 @@ public class GuiCreator {
     public static final Font DEFAULT_LABEL_FONT = new JLabel().getFont();
     public static final Font BOLD_LABEL_FONT = new Font(DEFAULT_LABEL_FONT.getFontName(), Font.BOLD, DEFAULT_LABEL_FONT.getSize());
 
-    public static JFrame frame = new JFrame(); // Main GUI frame
-    static JPanel headerPanel;
+    public static JFrame frame = new JFrame();
     public static JPanel mainPanel;
     public static JPanel leftPanel;
     public static JPanel rightPanel;
+
+    static JPanel headerPanel;
     static JPanel bottomPanel;
     static JLabel confirmationLabel;
 
@@ -58,25 +60,33 @@ public class GuiCreator {
      * </ul>
      */
     public static void createGui() {
+        setThemeToWindows();
+
+        frame.setSize(1150, 700);
+        frame.setTitle("Rocket Retail Inc");
+
+        createHeaderPanel();
+        createConfirmationPanel();
+
+        mainPanel = new JPanel(new BorderLayout(0, 2));
+        leftPanel = new JPanel();
+        rightPanel = new JPanel();
+
+        frame.setBackground(BACKGROUND_COLOUR);
+        headerPanel.setBackground(BACKGROUND_COLOUR);
+
+        centreGuiOnScreen();
+    }
+
+    private static void setThemeToWindows() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             System.out.println("Error loading Windows theme!");
         }
+    }
 
-        frame.setSize(1150, 700);
-        frame.setTitle("Rocket Retail Inc");
-
-        headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setPreferredSize(new Dimension(750, 60));
-
-        try {
-            final JLabel headerLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/rocketRetail.png"))));
-            headerPanel.add(headerLabel, BorderLayout.CENTER);
-        } catch (IOException e) {
-            System.out.println("Error loading heading banner!");
-        }
-
+    private static void createConfirmationPanel() {
         bottomPanel = new JPanel();
         bottomPanel.setPreferredSize(new Dimension(750, 30));
         bottomPanel.setBackground(BACKGROUND_COLOUR);
@@ -84,21 +94,26 @@ public class GuiCreator {
         confirmationLabel.setFont(new Font(confirmationLabel.getFont().getFontName(), Font.BOLD, confirmationLabel.getFont().getSize()));
         bottomPanel.add(confirmationLabel);
         frame.add(bottomPanel, BorderLayout.SOUTH);
+    }
 
+    private static void createHeaderPanel() {
+        headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setPreferredSize(new Dimension(750, 60));
+        try {
+            final JLabel headerLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("images/rocketRetail.png"))));
+            headerPanel.add(headerLabel, BorderLayout.CENTER);
+        } catch (IOException e) {
+            System.out.println("Error loading heading banner!");
+        }
         frame.add(headerPanel, BorderLayout.NORTH);
-        mainPanel = new JPanel(new BorderLayout(0, 2));
-        leftPanel = new JPanel();
-        rightPanel = new JPanel();
+    }
 
-        // Set the background colour
-        frame.setBackground(BACKGROUND_COLOUR);
-        headerPanel.setBackground(BACKGROUND_COLOUR);
-
-        // Centers GUI on screen
-        Insets i = frame.getToolkit().getScreenInsets(
-                GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDefaultConfiguration());
+    private static void centreGuiOnScreen() {
+        final GraphicsConfiguration localGraphics = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDefaultConfiguration();
+        final Insets i = frame.getToolkit().getScreenInsets(localGraphics);
         int maxWidth = (frame.getToolkit().getScreenSize().width - i.left - i.right);
         int maxHeight = (frame.getToolkit().getScreenSize().height - i.top - i.bottom);
+
         frame.setLocation(((maxWidth - frame.getWidth()) / 2), ((maxHeight - frame.getHeight()) / 2));
     }
 
@@ -118,7 +133,7 @@ public class GuiCreator {
      */
     public static void setConfirmationMessage(final String title) {
         confirmationLabel.setText(title);
-        Timer confirmationTimer = new Timer(4000, new ActionListener() {
+        final Timer confirmationTimer = new Timer(4000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 confirmationLabel.setText("");
