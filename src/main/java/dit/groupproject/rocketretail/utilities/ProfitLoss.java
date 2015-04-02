@@ -68,15 +68,15 @@ public class ProfitLoss {
         final char newLine = '\n';
         final char euroSign = '€';
 
-        final StringBuilder overallReport = new StringBuilder();
-        overallReport.append("Year").append(tab).append("Month").append(tab).append("Purchases").append(tab).append("Sales").append(newLine)
+        final StringBuilder totalReport = new StringBuilder();
+        totalReport.append("Year").append(tab).append("Month").append(tab).append("Purchases").append(tab).append("Sales").append(newLine)
                 .append("_____________________________________").append(newLine).append(newLine);
         DateSort.sortDate(YEAR_START, YEAR_CURRENT + 1);
 
         int yearIndex = YEAR_START;
         for (int year = 0; year <= YEAR_CURRENT - YEAR_START; year++) {
             final StringBuilder yearlyReport = new StringBuilder();
-            yearIndex++;
+
             for (int month = 0; month < 12; month++) {
                 final double purchase = -1 * DateSort.supplierOrderDates[year][month];
                 final double sale = DateSort.customerOrderDates[year][month];
@@ -102,9 +102,11 @@ public class ProfitLoss {
             }
 
             if (yearlyReport.length() > 0) {
-                overallReport.append(yearlyReport).append("-------------------------------------").append(newLine);
+                totalReport.append(yearlyReport).append("-------------------------------------").append(newLine);
             }
+
+            yearIndex++;
         }
-        return overallReport.toString();
+        return totalReport.toString();
     }
 }
