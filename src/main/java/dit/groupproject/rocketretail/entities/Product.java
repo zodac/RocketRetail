@@ -121,7 +121,7 @@ public class Product implements Entity {
         data[3] = maxLevel;
         data[4] = supplierId;
         data[5] = "€" + CURRENCY_FORMATTER.format(costPrice);
-        data[6] = "€" + CURRENCY_FORMATTER.format(costPrice);
+        data[6] = "€" + CURRENCY_FORMATTER.format(salePrice);
 
         return data;
     }
