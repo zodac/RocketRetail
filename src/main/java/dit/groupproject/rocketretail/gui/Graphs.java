@@ -38,8 +38,8 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.VerticalAlignment;
 
-import dit.groupproject.rocketretail.utilities.Dates;
 import dit.groupproject.rocketretail.utilities.DateSort;
+import dit.groupproject.rocketretail.utilities.Dates;
 import dit.groupproject.rocketretail.utilities.Predictions;
 
 public class Graphs {
@@ -50,6 +50,13 @@ public class Graphs {
     private final static Color colourProfit = new Color(209, 142, 109);
 
     private static int startYearIndex;
+
+    private static void resetGraphPanel(final String title) {
+        GuiCreator.frame.remove(GuiCreator.mainPanel);
+        GuiCreator.frame.setTitle("Rocket Retail Inc - " + title);
+        GuiCreator.frame.repaint();
+        GuiCreator.mainPanel = new JPanel();
+    }
 
     public static JMenu createMenu() {
         final JMenu graphMenu = new JMenu("Graphs");
@@ -92,7 +99,7 @@ public class Graphs {
             public void actionPerformed(ActionEvent e) {
                 // also show 12 month for this year
                 double[][] inputArray = createArraySingleYear(YEAR_CURRENT);
-                BarGraphLeft("Title", inputArray, "" + "Months", false);
+                barGraphLeft("Title", inputArray, "" + "Months", false);
 
                 double[][] sixMonthPredictionArray = Predictions.sixMthPrediction(Predictions.createArrayFiveYear(YEAR_CURRENT));
                 sixMonthPredictionBarGraph("Six Month Prediction", sixMonthPredictionArray, "Months", true);
@@ -103,7 +110,6 @@ public class Graphs {
         graphMenu.add(barGraphTwelveMonthItem);
         graphMenu.add(predBarGraphTwoYearItem);
         graphMenu.add(predBarGraphSixMonthItem);
-        // Return menu
         return graphMenu;
     }
 
@@ -173,12 +179,8 @@ public class Graphs {
      * @param isYear
      *            (boolean)
      * */
-    public static void BarGraphLeft(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
-        // Reset frame
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Graphs");
-        GuiCreator.frame.repaint();
-        GuiCreator.mainPanel = new JPanel();
+    public static void barGraphLeft(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
+        resetGraphPanel("12 Month Prediction");
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", createDataset(dataArray, isYear), PlotOrientation.VERTICAL,
                 true, true, false);
@@ -213,11 +215,7 @@ public class Graphs {
      *            (boolean)
      * */
     public static void BarGraphLeft5Year(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
-        // Reset frame
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Graphs");
-        GuiCreator.frame.repaint();
-        GuiCreator.mainPanel = new JPanel();
+        resetGraphPanel("5 Year Prediction");
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", fiveYearCreateDataset(dataArray, isYear),
                 PlotOrientation.VERTICAL, true, true, false);
@@ -234,8 +232,6 @@ public class Graphs {
         chartPanel.setPreferredSize(new Dimension(500, 270));
 
         GuiCreator.mainPanel.add(chartPanel, BorderLayout.WEST);
-
-        // Update GuiCreator.frame
         GuiCreator.setFrame(false, false, true);
     }
 
@@ -253,11 +249,7 @@ public class Graphs {
      *            (boolean)
      * */
     public static void sixMonthPredictionBarGraph(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
-        // Reset frame
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Prediction");
-        GuiCreator.frame.repaint();
-        // GuiCreator.mainPanel = new JPanel();
+        resetGraphPanel("6 Month Prediction");
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", createDatasetMth(dataArray, isYear), PlotOrientation.VERTICAL,
                 true, true, false);
@@ -302,11 +294,7 @@ public class Graphs {
      *            (boolean)
      * */
     public static void twoYearPredictionBarGraph(String title, double[][] dataArray, String xAxisTitle, Boolean isYear) {
-        // Reset frame
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Prediction");
-        GuiCreator.frame.repaint();
-        // GuiCreator.mainPanel = new JPanel();
+        resetGraphPanel("2 Year Prediction");
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", twoYearCreateDataset(dataArray, isYear),
                 PlotOrientation.VERTICAL, true, true, false);
@@ -332,8 +320,6 @@ public class Graphs {
         r.setSeriesPaint(2, gradientpaint2);
 
         GuiCreator.mainPanel.add(chartPanel, BorderLayout.EAST);
-
-        // Update GuiCreator.frame
         GuiCreator.setFrame(false, false, true);
     }
 
@@ -513,11 +499,7 @@ public class Graphs {
      *            (boolean)
      * */
     public static void BarGraph12Month(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
-        // Reset frame
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
-        GuiCreator.frame.repaint();
-        GuiCreator.mainPanel = new JPanel();
+        resetGraphPanel("12 Month Prediction");
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", createDataset(dataArray, isYear), PlotOrientation.VERTICAL,
                 true, true, false);
@@ -611,11 +593,7 @@ public class Graphs {
      *            (boolean)
      * */
     public static void BarGraph5Year(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
-        // Reset frame
-        GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
-        GuiCreator.frame.repaint();
-        GuiCreator.mainPanel = new JPanel();
+        resetGraphPanel("5 Year Prediction");
 
         JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", createDataset(dataArray, isYear), PlotOrientation.VERTICAL,
                 true, true, false);
@@ -711,7 +689,7 @@ public class Graphs {
     public static void BarGraph(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
         // Reset frame
         GuiCreator.frame.remove(GuiCreator.mainPanel);
-        GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
+        // GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
         GuiCreator.frame.repaint();
         GuiCreator.mainPanel = new JPanel();
 

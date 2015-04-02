@@ -29,9 +29,13 @@ public class StockControlMenu {
     static ArrayList<Product> productsToReplenish = new ArrayList<Product>();
     static JComboBox<String> replenishBox;
 
+    private final static int NUMBER_OF_REPLENISH_OPTIONS = 5;
+    private final static double BASE_STOCK_INCREASE_PERCENTAGE = 100 / (NUMBER_OF_REPLENISH_OPTIONS - 1);
+    private final static String REPLENISH_PRODUCTS_OPTION_FORMAT = "Replenish low products to %s";
+
     /**
      * Create submenu and ActionListeners, and passes back to ShopDriver to add
-     * to menuBar
+     * to menuBar.
      */
     public static JMenu createMenu() {
         JMenuItem checkAllProductLevels = new JMenuItem("Check All Product Levels");
@@ -41,11 +45,9 @@ public class StockControlMenu {
             }
         });
 
-        // Add menu items to "Stock Control" menu
         JMenu stockControlMenu = new JMenu("Stock Control");
         stockControlMenu.add(checkAllProductLevels);
 
-        // Return submenu
         return stockControlMenu;
     }
 
@@ -56,12 +58,12 @@ public class StockControlMenu {
      * */
     public static void checkAll() {
 
-        // Reset ShopDriver.frame
         GuiCreator.frame.remove(GuiCreator.rightPanel);
         GuiCreator.frame.remove(GuiCreator.mainPanel);
         GuiCreator.frame.remove(GuiCreator.leftPanel);
 
         GuiCreator.frame.repaint();
+        GuiCreator.frame.setTitle("Rocket Retail Inc - Current Stock Levels");
         GuiCreator.mainPanel = new JPanel(new BorderLayout());
 
         productDescription.clear();
@@ -76,21 +78,20 @@ public class StockControlMenu {
 
             productPercentLevel.add(percentage);
 
-            if (Double.compare(percentage, new Double(25.00)) == -1) {
+            if (Double.compare(percentage, new Double(BASE_STOCK_INCREASE_PERCENTAGE)) == -1) {
                 productsToReplenish.add(product);
             }
         }
-        /**
-         * creates a bar chart of products VS % of max stock using JFreePanel
-         * */
+
+        // creates a bar chart of products VS % of max stock using JFreePanel
         ChartPanel p = Graphs.createProductGraph("Product Chart", "Products", "% of Max Stock", productDescription, productPercentLevel);
 
-        String[] replenishOptions = new String[5];
-        replenishOptions[0] = "Replenish products to...";
-        replenishOptions[1] = "Replenish low products to 25%";
-        replenishOptions[2] = "Replenish low products to 50%";
-        replenishOptions[3] = "Replenish low products to 75%";
-        replenishOptions[4] = "Replenish low products to 100%";
+        final String[] replenishOptions = new String[NUMBER_OF_REPLENISH_OPTIONS];
+        replenishOptions[0] = String.format(REPLENISH_PRODUCTS_OPTION_FORMAT, "...");
+
+        for (int i = 1; i < replenishOptions.length; i++) {
+            replenishOptions[i] = String.format(REPLENISH_PRODUCTS_OPTION_FORMAT, (int) (BASE_STOCK_INCREASE_PERCENTAGE * i) + "%");
+        }
 
         replenishBox = new JComboBox<String>(replenishOptions);
 
@@ -102,20 +103,17 @@ public class StockControlMenu {
         replenishBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                if (replenishBox.getSelectedIndex() == 0) {
-                } else {
-                    if (replenishBox.getSelectedIndex() == 1)
-                        StockControlUtilities.replenishStocks(new Double(25.00), productsToReplenish);
-                    if (replenishBox.getSelectedIndex() == 2)
-                        StockControlUtilities.replenishStocks(new Double(50.00), productsToReplenish);
-                    if (replenishBox.getSelectedIndex() == 3)
-                        StockControlUtilities.replenishStocks(new Double(75.00), productsToReplenish);
-                    if (replenishBox.getSelectedIndex() == 4)
-                        StockControlUtilities.replenishStocks(new Double(100.00), productsToReplenish);
+                final int selectedIndex = replenishBox.getSelectedIndex();
 
-                    GuiCreator.setConfirmationMessage("Products replensihed to " + (replenishBox.getSelectedIndex() * 25) + "%");
+                if (selectedIndex != 0) {
+                    final double percentageToIncrease = BASE_STOCK_INCREASE_PERCENTAGE * selectedIndex;
+
+                    StockControlUtilities.replenishStocks(new Double(percentageToIncrease), productsToReplenish);
+
+                    GuiCreator.setConfirmationMessage("Products replenished to " + (int) percentageToIncrease + "%");
                     replenishBox.setSelectedIndex(0);
                     replenishBox.setEnabled(false);
+                    checkAll();
                 }
 
             }
@@ -130,80 +128,4 @@ public class StockControlMenu {
 
         GuiCreator.setFrame(false, false, true);
     }
-
-    /**
-     * returns the productDescription arrayList
-     * 
-     * @return productDescription (ArrayList)
-     */
-    public static ArrayList<String> getProductDescription() {
-        return productDescription;
-    }
-
-    /**
-     * changes the ArrayList productDescription
-     * 
-     * @param productDescription
-     */
-    public static void setProductDescription(ArrayList<String> productDescription) {
-        StockControlMenu.productDescription = productDescription;
-    }
-
-    /**
-     * returns ArrayList productPercentLevel
-     * 
-     * @return productPercentLevel (ArrayList)
-     */
-    public static ArrayList<Double> getProductPercentLevel() {
-        return productPercentLevel;
-    }
-
-    /**
-     * changes the value of ArrayList productPercentLevel
-     * 
-     * @param productPercentLevel
-     *            (ArrayList)
-     */
-    public static void setProductPercentLevel(ArrayList<Double> productPercentLevel) {
-        StockControlMenu.productPercentLevel = productPercentLevel;
-    }
-
-    /**
-     * returns the ArrayList productsToReplenish
-     * 
-     * @return productsToReplenish (ArrayList)
-     */
-    public static ArrayList<Product> getProductsToReplenish() {
-        return productsToReplenish;
-    }
-
-    /**
-     * changes the value of ArrayList productsToReplenish
-     * 
-     * @param productsToReplenish
-     *            (ArrayList)
-     */
-    public static void setProductsToReplenish(ArrayList<Product> productsToReplenish) {
-        StockControlMenu.productsToReplenish = productsToReplenish;
-    }
-
-    /**
-     * returns the value of ArrayList replenishBox
-     * 
-     * @return replenishBox (ArrayList)
-     */
-    public static JComboBox<String> getReplenishBox() {
-        return replenishBox;
-    }
-
-    /**
-     * chages the value of ArrayList replenishBox
-     * 
-     * @param replenishBox
-     *            (ArrayList)
-     */
-    public static void setReplenishBox(JComboBox<String> replenishBox) {
-        StockControlMenu.replenishBox = replenishBox;
-    }
-
 }
