@@ -320,7 +320,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
                 data[indexArray][0] = product.getName();
                 data[indexArray][1] = product.getId();
                 data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(product.getCostPrice());
-                data[indexArray][3] = product.getStockLevel() + "/" + product.getMaxLevel();
+                data[indexArray][3] = product.getCurrentStockLevel() + "/" + product.getMaxStockLevel();
                 indexArray++;
             }
         }
@@ -566,7 +566,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
 
         final JTextField productField = new JTextField(productName + " (" + ID_FORMATTER.format(product.getId()) + ")", textFieldSize);
         productField.setEditable(false);
-        final JTextField stockField = new JTextField(product.getStockLevel() + "/" + product.getMaxLevel(), textFieldSize);
+        final JTextField stockField = new JTextField(product.getCurrentStockLevel() + "/" + product.getMaxStockLevel(), textFieldSize);
         stockField.setEditable(false);
         final JTextField supplierField = new JTextField(supplier, textFieldSize);
         supplierField.setEditable(false);

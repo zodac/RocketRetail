@@ -70,12 +70,12 @@ public class StockControlUtilities {
 
     private static int getOrderAmount(Double percentageThreshold, Product p) {
 
-        double percentageOfMaxStock = calculatePercentage(p.getStockLevel(), p.getMaxLevel());
+        double percentageOfMaxStock = calculatePercentage(p.getCurrentStockLevel(), p.getMaxStockLevel());
         double percentIncreaseToOrder = (percentageThreshold - percentageOfMaxStock) / 100;
 
-        int orderNumber = (int) (p.getMaxLevel() * percentIncreaseToOrder);
+        int orderNumber = (int) (p.getMaxStockLevel() * percentIncreaseToOrder);
 
-        if (((orderNumber + p.getStockLevel()) * 100) / p.getMaxLevel() < percentageThreshold) {
+        if (((orderNumber + p.getCurrentStockLevel()) * 100) / p.getMaxStockLevel() < percentageThreshold) {
             orderNumber++;
         }
 

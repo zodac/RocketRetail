@@ -72,7 +72,7 @@ public class StockControlMenu {
             final Product product = (Product) p;
             productDescription.add(product.getName());
 
-            final Double percentage = StockControlUtilities.calculatePercentage(product.getStockLevel(), product.getMaxLevel());
+            final Double percentage = StockControlUtilities.calculatePercentage(product.getCurrentStockLevel(), product.getMaxStockLevel());
 
             productPercentLevel.add(percentage);
 

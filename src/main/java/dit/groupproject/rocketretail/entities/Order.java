@@ -36,11 +36,11 @@ public class Order implements Entity {
         for (final OrderedItem orderedItem : orderedItems) {
             if (!isSupplier) {
                 final Product orderedProduct = orderedItem.getProduct();
-                final int stockLevel = orderedProduct.getStockLevel();
+                final int stockLevel = orderedProduct.getCurrentStockLevel();
                 final int quantity = orderedItem.getQuantity();
 
                 if (stockLevel >= quantity) {
-                    orderedProduct.setStockLevel(stockLevel - quantity);
+                    orderedProduct.setCurrentStockLevel(stockLevel - quantity);
                 }
             }
         }
@@ -51,7 +51,7 @@ public class Order implements Entity {
             if (isSupplier) {
                 for (final OrderedItem orderedItem : orderedItems) {
                     final Product product = (Product) Database.getProductById(orderedItem.getProduct().getId());
-                    product.setStockLevel(product.getStockLevel() + orderedItem.getQuantity());
+                    product.setCurrentStockLevel(product.getCurrentStockLevel() + orderedItem.getQuantity());
                 }
             }
         }
@@ -107,7 +107,7 @@ public class Order implements Entity {
 
         for (final OrderedItem orderedItem : orderedItems) {
             if (isSupplier()) {
-                orderedItem.getProduct().setStockLevel(orderedItem.getProduct().getStockLevel() + orderedItem.getQuantity());
+                orderedItem.getProduct().setCurrentStockLevel(orderedItem.getProduct().getCurrentStockLevel() + orderedItem.getQuantity());
             }
         }
 

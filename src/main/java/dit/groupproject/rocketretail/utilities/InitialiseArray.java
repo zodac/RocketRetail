@@ -217,8 +217,8 @@ public class InitialiseArray {
                 unique = false;
 
                 final Product product = (Product) Database.getProductById(productId);
-                if (product.getStockLevel() > 1) {
-                    items.add(new OrderedItem(product, RANDOM.nextInt(product.getStockLevel() / 2) + 1));
+                if (product.getCurrentStockLevel() > 1) {
+                    items.add(new OrderedItem(product, RANDOM.nextInt(product.getCurrentStockLevel() / 2) + 1));
                 }
 
                 if (whileLoop < 40) {
@@ -232,7 +232,7 @@ public class InitialiseArray {
                 if (isSupplier) {
                     for (final OrderedItem oi : items) {
                         final Product orderedProduct = oi.getProduct();
-                        if (orderedProduct.getStockLevel() + oi.getQuantity() > orderedProduct.getMaxLevel()) {
+                        if (orderedProduct.getCurrentStockLevel() + oi.getQuantity() > orderedProduct.getMaxStockLevel()) {
                             valid = false;
                         }
                     }

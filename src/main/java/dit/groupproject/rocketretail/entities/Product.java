@@ -3,6 +3,7 @@ package dit.groupproject.rocketretail.entities;
 import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
 import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
 
+import java.text.NumberFormat;
 import java.util.Comparator;
 
 /**
@@ -11,19 +12,19 @@ import java.util.Comparator;
 public class Product implements Entity {
 
     private int productId;
-    private int stockLevel;
-    private int maxLevel;
+    private int currentStockLevel;
+    private int maxStockLevel;
     private int supplierId;
     private int startLevel;
     private double costPrice, salePrice;
     private String productName;
 
-    public Product(final String productName, final int stockLevel, final int maxLevel, final int supplierId, final double costPrice,
+    public Product(final String productName, final int currentStockLevel, final int maxStockLevel, final int supplierId, final double costPrice,
             final double salePrice) {
         this.productId = IdManager.getProductIdAndIncrement();
         this.productName = productName;
-        this.startLevel = stockLevel;
-        this.maxLevel = maxLevel;
+        this.startLevel = currentStockLevel;
+        this.maxStockLevel = maxStockLevel;
         this.supplierId = supplierId;
         this.costPrice = costPrice;
         this.salePrice = salePrice;
@@ -48,12 +49,12 @@ public class Product implements Entity {
         return productName;
     }
 
-    public int getStockLevel() {
-        return stockLevel;
+    public int getCurrentStockLevel() {
+        return currentStockLevel;
     }
 
-    public void setStockLevel(final int stockLevel) {
-        this.stockLevel = stockLevel;
+    public void setCurrentStockLevel(final int currentStockLevel) {
+        this.currentStockLevel = currentStockLevel;
     }
 
     public int getSupplierId() {
@@ -64,8 +65,8 @@ public class Product implements Entity {
         return costPrice;
     }
 
-    public int getMaxLevel() {
-        return maxLevel;
+    public int getMaxStockLevel() {
+        return maxStockLevel;
     }
 
     public double getSalePrice() {
@@ -90,7 +91,7 @@ public class Product implements Entity {
 
     private static Comparator<Entity> compareByStockLevel = new Comparator<Entity>() {
         public int compare(final Entity s1, final Entity s2) {
-            return ((Product) s1).getStockLevel() - ((Product) s2).getStockLevel();
+            return ((Product) s1).getCurrentStockLevel() - ((Product) s2).getCurrentStockLevel();
         }
     };
 
@@ -117,8 +118,8 @@ public class Product implements Entity {
         final Object[] data = new Object[getNumberOfFields()];
         data[0] = ID_FORMATTER.format(productId);
         data[1] = productName;
-        data[2] = stockLevel;
-        data[3] = maxLevel;
+        data[2] = NumberFormat.getIntegerInstance().format(currentStockLevel);
+        data[3] = NumberFormat.getIntegerInstance().format(maxStockLevel);
         data[4] = supplierId;
         data[5] = "€" + CURRENCY_FORMATTER.format(costPrice);
         data[6] = "€" + CURRENCY_FORMATTER.format(salePrice);

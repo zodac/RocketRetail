@@ -481,11 +481,11 @@ public class OrderTable extends AbstractTable {
                         pl.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
                         productLabels.add(pl);
 
-                        JTextField tF = new JTextField("" + product.getStockLevel() + "/" + product.getMaxLevel(), 5);
+                        JTextField tF = new JTextField("" + product.getCurrentStockLevel() + "/" + product.getMaxStockLevel(), 5);
                         tF.setEnabled(false);
                         currentStockFields.add(tF);
                         JTextField orderField = new JTextField("0", 5);
-                        orderField.setEnabled(product.getStockLevel() != 0);
+                        orderField.setEnabled(product.getCurrentStockLevel() != 0);
                         orderAmountFields.add(orderField);
 
                         productQuantPanel.add(productLabels.get(i));
@@ -507,7 +507,7 @@ public class OrderTable extends AbstractTable {
                             for (JLabel label : productLabels) {
                                 if (orderAmountFields.get(productLabels.indexOf(label)).getText().length() == 0
                                         || Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > ((Product) Database
-                                                .getProducts().get(productLabels.indexOf(label))).getStockLevel()) {
+                                                .getProducts().get(productLabels.indexOf(label))).getCurrentStockLevel()) {
                                     valid = false;
                                     orderAmountFields.get(productLabels.indexOf(label)).setBorder(
                                             BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
@@ -534,7 +534,7 @@ public class OrderTable extends AbstractTable {
                                     for (JLabel label : productLabels) {
                                         if (label.getText().equals(product.getName())
                                                 && Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > 0) {
-                                            if (product.getStockLevel() >= Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
+                                            if (product.getCurrentStockLevel() >= Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
                                                     .getText()))
                                                 items.add(new OrderedItem(product, Integer.parseInt(orderAmountFields.get(
                                                         productLabels.indexOf(label)).getText())));
@@ -707,11 +707,11 @@ public class OrderTable extends AbstractTable {
                         productLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
                         productLabels.add(productLabel);
 
-                        final JTextField tF = new JTextField("" + supplierProduct.getStockLevel() + "/" + supplierProduct.getMaxLevel(), 5);
+                        final JTextField tF = new JTextField("" + supplierProduct.getCurrentStockLevel() + "/" + supplierProduct.getMaxStockLevel(), 5);
                         tF.setEnabled(false);
                         currentStockFields.add(tF);
                         JTextField orderField = new JTextField("0", 5);
-                        orderField.setEnabled(supplierProduct.getStockLevel() != supplierProduct.getMaxLevel());
+                        orderField.setEnabled(supplierProduct.getCurrentStockLevel() != supplierProduct.getMaxStockLevel());
                         orderAmountFields.add(orderField);
 
                         productQuantityPanel.add(productLabels.get(i));
@@ -735,8 +735,8 @@ public class OrderTable extends AbstractTable {
 
                                 if (orderAmountFields.get(labelIndex).getText().length() == 0
                                         || (Integer.parseInt(orderAmountFields.get(labelIndex).getText()) + ((Product) Database
-                                                .getProductByIndex(labelIndex)).getStockLevel()) > ((Product) Database.getProductByIndex(labelIndex))
-                                                .getMaxLevel()) {
+                                                .getProductByIndex(labelIndex)).getCurrentStockLevel()) > ((Product) Database.getProductByIndex(labelIndex))
+                                                .getMaxStockLevel()) {
                                     valid = false;
                                     orderAmountFields.get(productLabels.indexOf(label)).setBorder(
                                             BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));

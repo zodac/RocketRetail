@@ -509,8 +509,8 @@ public class EditEntityHelper extends AbstractEntityHelper {
         // Set JTextFields with current data
         prodIdField.setText("" + product.getId());
         prodDescField.setText(product.getName());
-        stockLevelField.setText("" + product.getStockLevel());
-        maxLevelField.setText("" + product.getMaxLevel());
+        stockLevelField.setText("" + product.getCurrentStockLevel());
+        maxLevelField.setText("" + product.getMaxStockLevel());
         suppIdBox.setSelectedIndex(product.getSupplierId() - IdManager.SUPPLIER_ID_START + 1);
         costPriceField.setText("" + product.getCostPrice());
         salePriceField.setText("" + product.getSalePrice());
