@@ -426,7 +426,8 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         g.gridwidth = 2;
         titlePanel.add(titleLabel, g);
 
-        int numberOfCustomerOrders = 0, numberOfSupplierOrders = 0;
+        int numberOfCustomerOrders = 0;
+        int numberOfSupplierOrders = 0;
         int arrayIndex = 0;
 
         for (final Entity o : Database.getOrders()) {
