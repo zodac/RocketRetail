@@ -78,6 +78,14 @@ public class Staff implements Entity {
         return gender;
     }
 
+    public String getStaffLevelAsString() {
+        return staffLevel == 1 ? "Manager" : "Employee";
+    }
+
+    public String getGenderAsString() {
+        return gender == 1 ? "Male" : "Female";
+    }
+
     public static Comparator<Entity> getComparator(final String sortType) {
         if (sortType.equals("Name")) {
             return compareByName;
@@ -127,11 +135,11 @@ public class Staff implements Entity {
         final Object[] data = new Object[getNumberOfFields()];
         data[0] = ID_FORMATTER.format(staffId);
         data[1] = staffName;
-        data[2] = gender == 1 ? "Male" : "Female";
+        data[2] = getGenderAsString();
         data[3] = phoneNumber;
         data[4] = address;
         data[5] = CURRENCY_FORMATTER.format(wage);
-        data[6] = staffLevel == 1 ? "Manager" : "Employee";
+        data[6] = getStaffLevelAsString();
         data[7] = dateAdded;
 
         return data;

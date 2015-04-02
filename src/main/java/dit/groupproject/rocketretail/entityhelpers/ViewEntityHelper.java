@@ -362,8 +362,6 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         myPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
         buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-        final String level = staff.getStaffLevel() == 1 ? "Manager" : "Employee";
-
         JLabel staffLabel = new JLabel("Staff");
         JLabel levelLabel = new JLabel("Staff Level");
         JLabel wageLabel = new JLabel("Wage");
@@ -383,7 +381,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
 
         JTextField staffField = new JTextField(staff.getName() + " (" + ID_FORMATTER.format(staff.getId()) + ")", textFieldSize);
         staffField.setEditable(false);
-        JTextField levelField = new JTextField(level, textFieldSize);
+        JTextField levelField = new JTextField(staff.getStaffLevelAsString(), textFieldSize);
         levelField.setEditable(false);
         JTextField wageField = new JTextField(CURRENCY_FORMATTER.format(staff.getWage()), textFieldSize);
         wageField.setEditable(false);

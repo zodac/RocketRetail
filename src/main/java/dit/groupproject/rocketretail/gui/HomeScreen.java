@@ -28,6 +28,8 @@ import dit.groupproject.rocketretail.main.TableState;
  */
 public class HomeScreen {
 
+    private final static String STAFF_INFO_FORMAT = "\t%s\n\t%s at \"Rocket Retail Inc\" since %s\n\tPhone Number is %s\n\tAnnual wage is %s";
+
     /**
      * This method displays the details of the staff member who is currently
      * logged in.
@@ -59,12 +61,10 @@ public class HomeScreen {
     }
 
     private static JTextArea loadStaffDetails(final Staff currentStaff) {
-        final String level = currentStaff.getStaffLevel() == 1 ? "Manager" : "Employee";
-        final String output = "\t" + currentStaff.getName() + "\n" + "\t" + level + " at \"Rocket Retail Inc\" since " + currentStaff.getDateAdded()
-                + "\n" + "\t" + "Phone Number is " + currentStaff.getPhoneNumber() + "\n" + "\t" + "Annual wage is "
-                + CURRENCY_FORMATTER.format(currentStaff.getWage());
+        final String staffInfoText = String.format(STAFF_INFO_FORMAT, currentStaff.getName(), currentStaff.getStaffLevelAsString(),
+                currentStaff.getDateAdded(), currentStaff.getPhoneNumber(), CURRENCY_FORMATTER.format(currentStaff.getWage()));
 
-        final JTextArea staffInfo = new JTextArea(output, 10, 20);
+        final JTextArea staffInfo = new JTextArea(staffInfoText, 10, 20);
         staffInfo.setBackground(GuiCreator.BACKGROUND_COLOUR);
         staffInfo.setEditable(false);
         return staffInfo;
@@ -75,13 +75,7 @@ public class HomeScreen {
         innerPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
         try {
-            final int currentStaffGender = currentStaff.getGender();
-            String profileImagePath = "images/profile";
-            if (currentStaffGender == 1) {
-                profileImagePath += "Male.png";
-            } else {
-                profileImagePath += "Female.png";
-            }
+            final String profileImagePath = "images/profile" + currentStaff.getGenderAsString() + ".png";
             final JLabel homeLabel = new JLabel(new ImageIcon(ImageIO.read(ClassLoader.getSystemResource(profileImagePath))));
             innerPanel.add(homeLabel, BorderLayout.NORTH);
         } catch (IOException e) {
@@ -95,8 +89,8 @@ public class HomeScreen {
         double currentStaffTotal = 0;
         double otherStaffTotal = 0;
 
-        for (final Entity o : Database.getOrders()) {
-            final Order order = (Order) o;
+        for (final Entity entity : Database.getOrders()) {
+            final Order order = (Order) entity;
 
             final boolean currentStaffOrder = order.getStaffId() == currentStaff.getId();
 
