@@ -61,7 +61,7 @@ public class HomeScreen {
     private static JTextArea loadStaffDetails(final Staff currentStaff) {
         final String level = currentStaff.getStaffLevel() == 1 ? "Manager" : "Employee";
         final String output = "\t" + currentStaff.getName() + "\n" + "\t" + level + " at \"Rocket Retail Inc\" since " + currentStaff.getDateAdded()
-                + "\n" + "\t" + "Phone Number is " + currentStaff.getPhoneNumber() + "\n" + "\t" + "Annual wage is €"
+                + "\n" + "\t" + "Phone Number is " + currentStaff.getPhoneNumber() + "\n" + "\t" + "Annual wage is "
                 + CURRENCY_FORMATTER.format(currentStaff.getWage());
 
         final JTextArea staffInfo = new JTextArea(output, 10, 20);

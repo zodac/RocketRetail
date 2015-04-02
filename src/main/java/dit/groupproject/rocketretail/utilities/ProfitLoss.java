@@ -27,8 +27,8 @@ public class ProfitLoss {
         double loss = 0;
         double profit = 0;
 
-        for (final Entity o : Database.getOrders()) {
-            final Order order = (Order) o;
+        for (final Entity entity : Database.getOrders()) {
+            final Order order = (Order) entity;
 
             if (order.isSupplier()) {
                 for (final OrderedItem oi : order.getOrderedItems()) {
@@ -76,7 +76,7 @@ public class ProfitLoss {
         int yearIndex = YEAR_START;
         for (int year = 0; year <= YEAR_CURRENT - YEAR_START; year++) {
             final StringBuilder yearlyReport = new StringBuilder();
-
+            
             for (int month = 0; month < 12; month++) {
                 final double purchase = -1 * DateSort.supplierOrderDates[year][month];
                 final double sale = DateSort.customerOrderDates[year][month];
@@ -104,7 +104,7 @@ public class ProfitLoss {
             if (yearlyReport.length() > 0) {
                 totalReport.append(yearlyReport).append("-------------------------------------").append(newLine);
             }
-
+            
             yearIndex++;
         }
         return totalReport.toString();

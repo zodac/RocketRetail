@@ -130,7 +130,7 @@ public class Staff implements Entity {
         data[2] = gender == 1 ? "Male" : "Female";
         data[3] = phoneNumber;
         data[4] = address;
-        data[5] = "€" + CURRENCY_FORMATTER.format(wage);
+        data[5] = CURRENCY_FORMATTER.format(wage);
         data[6] = staffLevel == 1 ? "Manager" : "Employee";
         data[7] = dateAdded;
 

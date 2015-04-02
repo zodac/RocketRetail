@@ -4,6 +4,8 @@ import static dit.groupproject.rocketretail.utilities.Formatters.YEAR_FORMATTER;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 public class Dates {
 
     public static final int YEAR_START = 2000;
@@ -17,4 +19,10 @@ public class Dates {
             "2028", "2029", "2030" };
 
     public static final String[] MONTHS = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+    // Prediction date string arrays
+    public static final String[] MONTHS_TWO_YEARS = ArrayUtils.addAll(MONTHS, MONTHS);
+    public static final String[] NEXT_TWO_YEARS = { String.valueOf(YEAR_CURRENT + 1), String.valueOf(YEAR_CURRENT + 2) };
+    public static final String[] LAST_FIVE_YEARS = { String.valueOf(YEAR_CURRENT - 4), String.valueOf(YEAR_CURRENT - 3),
+            String.valueOf(YEAR_CURRENT - 2), String.valueOf(YEAR_CURRENT - 1), String.valueOf(YEAR_CURRENT) };
 }

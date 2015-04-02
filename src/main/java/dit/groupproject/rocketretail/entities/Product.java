@@ -121,8 +121,8 @@ public class Product implements Entity {
         data[2] = NumberFormat.getIntegerInstance().format(currentStockLevel);
         data[3] = NumberFormat.getIntegerInstance().format(maxStockLevel);
         data[4] = supplierId;
-        data[5] = "€" + CURRENCY_FORMATTER.format(costPrice);
-        data[6] = "€" + CURRENCY_FORMATTER.format(salePrice);
+        data[5] = CURRENCY_FORMATTER.format(costPrice);
+        data[6] = CURRENCY_FORMATTER.format(salePrice);
 
         return data;
     }

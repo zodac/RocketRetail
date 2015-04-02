@@ -202,12 +202,12 @@ public class ViewEntityHelper extends AbstractEntityHelper {
             data[indexArray][0] = ID_FORMATTER.format(customerOrder.getId());
             data[indexArray][1] = customerOrder.getOrderDate();
             data[indexArray][2] = customerOrder.getDeliveryDate();
-            data[indexArray++][3] = "€" + CURRENCY_FORMATTER.format(totalSale);
+            data[indexArray++][3] = CURRENCY_FORMATTER.format(totalSale);
             total += totalSale;
         }
 
         data[numberOfCustomerOrders][2] = String.format(BOLD_HTML_FORMATTING_TAGS, "Total Sales");
-        data[numberOfCustomerOrders][3] = String.format(BOLD_HTML_FORMATTING_TAGS, "€" + CURRENCY_FORMATTER.format(total));
+        data[numberOfCustomerOrders][3] = String.format(BOLD_HTML_FORMATTING_TAGS, CURRENCY_FORMATTER.format(total));
 
         final JTable table = new JTable(data, ORDER_COLUMN_NAMES_FROM_CUSTOMER_TABLE);
         table.setFillsViewportHeight(true);
@@ -319,7 +319,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
             if (supplier.getId() == product.getSupplierId()) {
                 data[indexArray][0] = product.getName();
                 data[indexArray][1] = product.getId();
-                data[indexArray][2] = "€" + CURRENCY_FORMATTER.format(product.getCostPrice());
+                data[indexArray][2] = CURRENCY_FORMATTER.format(product.getCostPrice());
                 data[indexArray][3] = product.getCurrentStockLevel() + "/" + product.getMaxStockLevel();
                 indexArray++;
             }
@@ -385,7 +385,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         staffField.setEditable(false);
         JTextField levelField = new JTextField(level, textFieldSize);
         levelField.setEditable(false);
-        JTextField wageField = new JTextField("€" + CURRENCY_FORMATTER.format(staff.getWage()), textFieldSize);
+        JTextField wageField = new JTextField(CURRENCY_FORMATTER.format(staff.getWage()), textFieldSize);
         wageField.setEditable(false);
 
         JTextField phoneNoField = new JTextField(staff.getPhoneNumber(), textFieldSize);
@@ -463,13 +463,13 @@ public class ViewEntityHelper extends AbstractEntityHelper {
 
                 customerOrderdata[arrayIndex][0] = ID_FORMATTER.format(order.getId());
                 customerOrderdata[arrayIndex][1] = customerName + " (" + ID_FORMATTER.format(customerId) + ")";
-                customerOrderdata[arrayIndex++][2] = "€" + CURRENCY_FORMATTER.format(totalSalePrice);
+                customerOrderdata[arrayIndex++][2] = CURRENCY_FORMATTER.format(totalSalePrice);
                 totalSalePrice += totalSalePrice;
             }
         }
 
         customerOrderdata[numberOfCustomerOrders][1] = String.format(BOLD_HTML_FORMATTING_TAGS, "Customer Total");
-        customerOrderdata[numberOfCustomerOrders][2] = String.format(BOLD_HTML_FORMATTING_TAGS, "€" + CURRENCY_FORMATTER.format(totalSaleValue));
+        customerOrderdata[numberOfCustomerOrders][2] = String.format(BOLD_HTML_FORMATTING_TAGS, CURRENCY_FORMATTER.format(totalSaleValue));
 
         JTable customerTable = new JTable(customerOrderdata, columnNames);
         customerTable.setFillsViewportHeight(true);
@@ -496,13 +496,13 @@ public class ViewEntityHelper extends AbstractEntityHelper {
 
                 supplierOrderData[arrayIndex][0] = ID_FORMATTER.format(order.getId());
                 supplierOrderData[arrayIndex][1] = supplierName + " (" + ID_FORMATTER.format(supplierId) + ")";
-                supplierOrderData[arrayIndex++][2] = "€" + CURRENCY_FORMATTER.format(totalCostPrice);
+                supplierOrderData[arrayIndex++][2] = CURRENCY_FORMATTER.format(totalCostPrice);
                 totalCostValue += totalCostPrice;
             }
         }
 
         supplierOrderData[numberOfSupplierOrders][1] = String.format(BOLD_HTML_FORMATTING_TAGS, "Supplier Total");
-        supplierOrderData[numberOfSupplierOrders][2] = String.format(BOLD_HTML_FORMATTING_TAGS, "€" + CURRENCY_FORMATTER.format(totalCostValue));
+        supplierOrderData[numberOfSupplierOrders][2] = String.format(BOLD_HTML_FORMATTING_TAGS, CURRENCY_FORMATTER.format(totalCostValue));
 
         JTable supplierTable = new JTable(supplierOrderData, columnNames2);
         supplierTable.setFillsViewportHeight(true);
@@ -571,11 +571,11 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         final JTextField supplierField = new JTextField(supplier, textFieldSize);
         supplierField.setEditable(false);
 
-        final JTextField costField = new JTextField("€" + CURRENCY_FORMATTER.format(product.getCostPrice()), textFieldSize);
+        final JTextField costField = new JTextField(CURRENCY_FORMATTER.format(product.getCostPrice()), textFieldSize);
         costField.setEditable(false);
-        final JTextField saleField = new JTextField("€" + CURRENCY_FORMATTER.format(product.getSalePrice()), textFieldSize);
+        final JTextField saleField = new JTextField(CURRENCY_FORMATTER.format(product.getSalePrice()), textFieldSize);
         saleField.setEditable(false);
-        final JTextField profitField = new JTextField("€" + CURRENCY_FORMATTER.format(product.getSalePrice() - product.getCostPrice()), textFieldSize);
+        final JTextField profitField = new JTextField(CURRENCY_FORMATTER.format(product.getSalePrice() - product.getCostPrice()), textFieldSize);
         profitField.setEditable(false);
 
         GridBagConstraints g = new GridBagConstraints();
@@ -659,7 +659,7 @@ public class ViewEntityHelper extends AbstractEntityHelper {
         myPanel.add(scrollPane, BorderLayout.WEST);
 
         double[][] inputdata = { yearData, productData };
-        final ChartPanel chartPanel = Graphs.createLineChart("Past Stock levels", productName, inputdata);
+        final ChartPanel chartPanel = Graphs.createProductStockLevelChart("Past Stock levels", productName, inputdata);
         chartPanel.setPreferredSize(new Dimension(500, 750));
 
         myPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
@@ -790,13 +790,13 @@ public class ViewEntityHelper extends AbstractEntityHelper {
             final double totalPrice = unitPrice * orderedItem.getQuantity();
 
             data[orderedItemIndex][0] = orderedProduct.getName() + " (" + orderedProduct.getId() + ")";
-            data[orderedItemIndex][1] = "€" + CURRENCY_FORMATTER.format(unitPrice);
+            data[orderedItemIndex][1] = CURRENCY_FORMATTER.format(unitPrice);
             data[orderedItemIndex][2] = orderedItem.getQuantity();
-            data[orderedItemIndex++][3] = "€" + CURRENCY_FORMATTER.format(totalPrice);
+            data[orderedItemIndex++][3] = CURRENCY_FORMATTER.format(totalPrice);
             totalOfAllOrders += totalPrice;
         }
         data[numberOfOrderedItems][2] = String.format(BOLD_HTML_FORMATTING_TAGS, "Order Total");
-        data[numberOfOrderedItems][3] = String.format(BOLD_HTML_FORMATTING_TAGS, "€" + CURRENCY_FORMATTER.format(totalOfAllOrders));
+        data[numberOfOrderedItems][3] = String.format(BOLD_HTML_FORMATTING_TAGS, CURRENCY_FORMATTER.format(totalOfAllOrders));
 
         final JTable table = new JTable(data, columnNames);
         table.setFillsViewportHeight(true);

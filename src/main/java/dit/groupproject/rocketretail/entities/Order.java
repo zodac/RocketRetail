@@ -213,7 +213,7 @@ public class Order implements Entity {
         data[0] = ID_FORMATTER.format(orderId);
         data[1] = ID_FORMATTER.format(staffId);
         data[2] = traderId;
-        data[3] = "€" + CURRENCY_FORMATTER.format(getTotalPrice());
+        data[3] = CURRENCY_FORMATTER.format(getTotalPrice());
         data[4] = orderDate;
         data[5] = deliveryDate.isEmpty() ? " " : deliveryDate;
 

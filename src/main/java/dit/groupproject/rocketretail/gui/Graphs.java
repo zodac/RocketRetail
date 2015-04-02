@@ -1,5 +1,10 @@
 package dit.groupproject.rocketretail.gui;
 
+import static dit.groupproject.rocketretail.utilities.Dates.LAST_FIVE_YEARS;
+import static dit.groupproject.rocketretail.utilities.Dates.MONTHS;
+import static dit.groupproject.rocketretail.utilities.Dates.MONTHS_TWO_YEARS;
+import static dit.groupproject.rocketretail.utilities.Dates.NEXT_TWO_YEARS;
+import static dit.groupproject.rocketretail.utilities.Dates.YEARS_AS_NUMBERS;
 import static dit.groupproject.rocketretail.utilities.Dates.YEAR_CURRENT;
 import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
@@ -39,15 +44,15 @@ import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.VerticalAlignment;
 
 import dit.groupproject.rocketretail.utilities.DateSort;
-import dit.groupproject.rocketretail.utilities.Dates;
 import dit.groupproject.rocketretail.utilities.Predictions;
 
 public class Graphs {
 
     private final static String[] TITLE_ARRAY = { "Sales", "Purchases", "Gross Profit" };
-    private final static Color colourSales = new Color(109, 209, 186);
-    private final static Color colourPurchases = new Color(142, 209, 109);
-    private final static Color colourProfit = new Color(209, 142, 109);
+
+    private final static Color PROFIT_GRAPH_COLOUR = new Color(209, 142, 109);
+    private final static Color SALES_GRAPH_COLOUR = new Color(109, 209, 186);
+    private final static Color PURCHASES_GRAPH_COLOUR = new Color(142, 209, 109);
 
     private static int startYearIndex;
 
@@ -64,11 +69,8 @@ public class Graphs {
         JMenuItem barGraphFiveYearItem = new JMenuItem("Create 5-Year Bar Graph");
         barGraphFiveYearItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int firstYear = 2009;
-                int secondYear = 2013;
                 startYearIndex = 10;
-                double[][] inputArray = createArrayMultipleYears(firstYear, secondYear);
-                // startYearIndex = firstYear.getSelectedIndex();
+                double[][] inputArray = createArrayMultipleYears(YEAR_CURRENT - 4, YEAR_CURRENT);
                 BarGraph5Year("Title", inputArray, "Years", true);
             }
         });
@@ -76,9 +78,8 @@ public class Graphs {
         JMenuItem barGraphTwelveMonthItem = new JMenuItem("Create 12-Month Bar Graph");
         barGraphTwelveMonthItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int singleYear = 2013;
                 startYearIndex = 14;
-                double[][] inputArray = createArraySingleYear(singleYear);
+                double[][] inputArray = createArraySingleYear(YEAR_CURRENT);
                 BarGraph12Month("Title", inputArray, "" + "Months", false);
             }
         });
@@ -189,7 +190,7 @@ public class Graphs {
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
 
-        String yearTitle = "Plot for " + (YEAR_CURRENT);
+        final String yearTitle = "Plot for " + YEAR_CURRENT;
         chart.addSubtitle(new TextTitle(yearTitle, new Font("SansSerif", Font.PLAIN, 18), new Color(82, 89, 110), RectangleEdge.TOP,
                 HorizontalAlignment.CENTER, VerticalAlignment.TOP, RectangleInsets.ZERO_INSETS));
 
@@ -224,7 +225,7 @@ public class Graphs {
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
 
-        String yearTitle = "Plot for " + (YEAR_CURRENT - 5) + "-" + "" + (YEAR_CURRENT);
+        String yearTitle = "Plot for " + (YEAR_CURRENT - 5) + "-" + YEAR_CURRENT;
         chart.addSubtitle(new TextTitle(yearTitle, new Font("SansSerif", Font.PLAIN, 18), new Color(82, 89, 110), RectangleEdge.TOP,
                 HorizontalAlignment.CENTER, VerticalAlignment.TOP, RectangleInsets.ZERO_INSETS));
 
@@ -261,13 +262,13 @@ public class Graphs {
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(470, 270));
 
-        String yearTitle = "" + (YEAR_CURRENT + 1);
+        final String yearTitle = String.valueOf(YEAR_CURRENT + 1);
         chart.addSubtitle(new TextTitle("Prediction for " + yearTitle, new Font("SansSerif", Font.PLAIN, 18), new Color(82, 89, 110),
                 RectangleEdge.TOP, HorizontalAlignment.CENTER, VerticalAlignment.TOP, RectangleInsets.ZERO_INSETS));
 
-        GradientPaint gradientpaint0 = new GradientPaint(0.0F, 0.0F, colourSales, 0.0F, 0.0F, colourSales);
-        GradientPaint gradientpaint1 = new GradientPaint(0.0F, 0.0F, colourPurchases, 0.0F, 0.0F, colourPurchases);
-        GradientPaint gradientpaint2 = new GradientPaint(0.0F, 0.0F, colourProfit, 0.0F, 0.0F, colourProfit);
+        GradientPaint gradientpaint0 = new GradientPaint(0.0F, 0.0F, SALES_GRAPH_COLOUR, 0.0F, 0.0F, SALES_GRAPH_COLOUR);
+        GradientPaint gradientpaint1 = new GradientPaint(0.0F, 0.0F, PURCHASES_GRAPH_COLOUR, 0.0F, 0.0F, PURCHASES_GRAPH_COLOUR);
+        GradientPaint gradientpaint2 = new GradientPaint(0.0F, 0.0F, PROFIT_GRAPH_COLOUR, 0.0F, 0.0F, PROFIT_GRAPH_COLOUR);
 
         BarRenderer r = (BarRenderer) chart.getCategoryPlot().getRenderer();
         r.setSeriesPaint(0, gradientpaint0);
@@ -310,9 +311,9 @@ public class Graphs {
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(400, 270));
 
-        GradientPaint gradientpaint0 = new GradientPaint(0.0F, 0.0F, colourSales, 0.0F, 0.0F, colourSales);
-        GradientPaint gradientpaint1 = new GradientPaint(0.0F, 0.0F, colourPurchases, 0.0F, 0.0F, colourPurchases);
-        GradientPaint gradientpaint2 = new GradientPaint(0.0F, 0.0F, colourProfit, 0.0F, 0.0F, colourProfit);
+        GradientPaint gradientpaint0 = new GradientPaint(0.0F, 0.0F, SALES_GRAPH_COLOUR, 0.0F, 0.0F, SALES_GRAPH_COLOUR);
+        GradientPaint gradientpaint1 = new GradientPaint(0.0F, 0.0F, PURCHASES_GRAPH_COLOUR, 0.0F, 0.0F, PURCHASES_GRAPH_COLOUR);
+        GradientPaint gradientpaint2 = new GradientPaint(0.0F, 0.0F, PROFIT_GRAPH_COLOUR, 0.0F, 0.0F, PROFIT_GRAPH_COLOUR);
 
         BarRenderer r = (BarRenderer) chart.getCategoryPlot().getRenderer();
         r.setSeriesPaint(0, gradientpaint0);
@@ -357,14 +358,6 @@ public class Graphs {
 
     }
 
-    /**
-     * creates a data set including products and stock
-     * 
-     * @param productDescription
-     *            (ArrayList<String>)
-     * @param productPercentLevel
-     *            (ArrayList<Double>)
-     * */
     private static DefaultCategoryDataset createProductDataset(ArrayList<String> productDescription, ArrayList<Double> productPercentLevel) {
         DefaultCategoryDataset dcd = new DefaultCategoryDataset();
 
@@ -374,82 +367,42 @@ public class Graphs {
         return dcd;
     }
 
-    /**
-     * creates a data set including months and years
-     * 
-     * @param dataArray
-     *            (double [][])
-     * @param isYear
-     *            (boolean)
-     * */
     private static DefaultCategoryDataset createDataset(double[][] dataArray, boolean isYear) {
-        DefaultCategoryDataset dcd = new DefaultCategoryDataset();
-        String xaxis = "";
-        String[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+        final DefaultCategoryDataset dcd = new DefaultCategoryDataset();
 
         for (int i = 0; i < dataArray.length; i++) {
-            if (isYear)
-                xaxis = Dates.YEARS_AS_NUMBERS[i + startYearIndex];
-            else
-                xaxis = months[i];
+            final String xAxis = isYear ? YEARS_AS_NUMBERS[i + startYearIndex] : MONTHS[i];
 
             for (int j = 0; j < dataArray[1].length; j++) {
-                dcd.addValue(dataArray[i][j], TITLE_ARRAY[j], xaxis);
+                dcd.addValue(dataArray[i][j], TITLE_ARRAY[j], xAxis);
             }
         }
         return dcd;
     }
 
-    /**
-     * creates a data set including months and years
-     * 
-     * @param dataArray
-     *            (double [][])
-     * @param isYear
-     *            (boolean)
-     * */
     private static DefaultCategoryDataset twoYearCreateDataset(double[][] dataArray, boolean isYear) {
-        DefaultCategoryDataset dcdY = new DefaultCategoryDataset();
-        String xaxis = "";
-        String[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May",
-                "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-        String[] years = { "" + (YEAR_CURRENT + 1), "" + (YEAR_CURRENT + 2) };
+        final DefaultCategoryDataset dcdY = new DefaultCategoryDataset();
 
         for (int i = 0; i < dataArray.length; i++) {
-            if (isYear) {
-                xaxis = years[i];
-            } else {
-                xaxis = months[i];
-            }
+
+            final String xAxis = isYear ? NEXT_TWO_YEARS[i] : MONTHS_TWO_YEARS[i];
 
             for (int j = 0; j < dataArray[1].length; j++) {
-                dcdY.addValue(dataArray[i][j], TITLE_ARRAY[j], xaxis);
+                dcdY.addValue(dataArray[i][j], TITLE_ARRAY[j], xAxis);
             }
         }
         return dcdY;
     }
 
-    /**
-     * creates a data set including years and months
-     * 
-     * @param dataArray
-     *            (double [][])
-     * @param isYear
-     *            (boolean)
-     * */
     private static DefaultCategoryDataset fiveYearCreateDataset(double[][] dataArray, boolean isYear) {
-        DefaultCategoryDataset dcdY = new DefaultCategoryDataset();
+        final DefaultCategoryDataset dcdY = new DefaultCategoryDataset();
         String xaxis = "";
-        String[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May",
-                "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-        String[] years = { "" + (YEAR_CURRENT - 4), "" + (YEAR_CURRENT - 3), "" + (YEAR_CURRENT - 2), "" + (YEAR_CURRENT - 1),
-                "" + (YEAR_CURRENT - 0), "" + YEAR_CURRENT };
 
         for (int i = 0; i < dataArray.length; i++) {
             if (isYear) {
-                xaxis = years[i];
+                xaxis = LAST_FIVE_YEARS[i];
             } else {
-                xaxis = months[i];
+                xaxis = MONTHS_TWO_YEARS[i];
             }
 
             for (int j = 0; j < dataArray[1].length; j++) {
@@ -459,27 +412,14 @@ public class Graphs {
         return dcdY;
     }
 
-    /**
-     * creates a data set including years and months
-     * 
-     * @param dataArray
-     *            (double [][])
-     * @param isYear
-     *            (boolean)
-     * */
     private static DefaultCategoryDataset createDatasetMth(double[][] dataArray, boolean isYear) {
-        DefaultCategoryDataset dcdM = new DefaultCategoryDataset();
-        String xaxis = "";
-        String[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+        final DefaultCategoryDataset dcdM = new DefaultCategoryDataset();
 
         for (int i = 0; i < dataArray.length; i++) {
-            if (isYear)
-                xaxis = months[i];
-            else
-                xaxis = Dates.YEARS_AS_NUMBERS[i];
+            final String xAxis = isYear ? MONTHS[i] : YEARS_AS_NUMBERS[i];
 
             for (int j = 0; j < dataArray[1].length; j++) {
-                dcdM.addValue(dataArray[i][j], TITLE_ARRAY[j], xaxis);
+                dcdM.addValue(dataArray[i][j], TITLE_ARRAY[j], xAxis);
             }
         }
         return dcdM;
@@ -508,7 +448,7 @@ public class Graphs {
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setUpperMargin(0.0);
 
-        String yearTitle = "Plot for " + (startYearIndex + 1999);
+        String yearTitle = "Plot for " + (startYearIndex + YEAR_START);
         chart.addSubtitle(new TextTitle(yearTitle, new Font("SansSerif", Font.PLAIN, 18), new Color(82, 89, 110), RectangleEdge.TOP,
                 HorizontalAlignment.CENTER, VerticalAlignment.TOP, RectangleInsets.ZERO_INSETS));
 
@@ -527,7 +467,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
+            final JComboBox<String> firstYear = new JComboBox<String>(YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -555,7 +495,7 @@ public class Graphs {
 
             g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
+            final JComboBox<String> singleYear = new JComboBox<String>(YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -614,14 +554,12 @@ public class Graphs {
         if (isYear) {
             chartPanel.setPreferredSize(new Dimension(500, 270));
 
-            g.gridx = 0;
             g.gridy = 0;
             g.gridwidth = 4;
             myPanel.add(new JLabel("Please select the start year:"), g);
 
-            g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
+            final JComboBox<String> firstYear = new JComboBox<String>(YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -643,14 +581,12 @@ public class Graphs {
         else {
             chartPanel.setPreferredSize(new Dimension(650, 270));
 
-            g.gridx = 0;
             g.gridy = 0;
             g.gridwidth = 4;
             myPanel.add(new JLabel("Please select a year:"), g);
 
-            g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
+            final JComboBox<String> singleYear = new JComboBox<String>(YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -687,9 +623,7 @@ public class Graphs {
      *            (boolean)
      * */
     public static void BarGraph(String title, double[][] dataArray, String xAxisTitle, boolean isYear) {
-        // Reset frame
         GuiCreator.frame.remove(GuiCreator.mainPanel);
-        // GuiCreator.frame.setTitle("Rocket Retail Inc - Orders");
         GuiCreator.frame.repaint();
         GuiCreator.mainPanel = new JPanel();
 
@@ -708,14 +642,12 @@ public class Graphs {
         if (isYear) {
             chartPanel.setPreferredSize(new Dimension(500, 270));
 
-            g.gridx = 0;
             g.gridy = 0;
             g.gridwidth = 4;
             myPanel.add(new JLabel("Please select the start year:"), g);
 
-            g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> firstYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
+            final JComboBox<String> firstYear = new JComboBox<String>(YEARS_AS_NUMBERS);
             firstYear.setSelectedIndex(startYearIndex);
             myPanel.add(firstYear, g);
 
@@ -737,14 +669,12 @@ public class Graphs {
         else {
             chartPanel.setPreferredSize(new Dimension(650, 270));
 
-            g.gridx = 0;
             g.gridy = 0;
             g.gridwidth = 4;
             myPanel.add(new JLabel("Please select a year:"), g);
 
-            g.gridx = 0;
             g.gridy = 1;
-            final JComboBox<String> singleYear = new JComboBox<String>(Dates.YEARS_AS_NUMBERS);
+            final JComboBox<String> singleYear = new JComboBox<String>(YEARS_AS_NUMBERS);
             singleYear.setSelectedIndex(startYearIndex);
             myPanel.add(singleYear, g);
 
@@ -764,7 +694,6 @@ public class Graphs {
 
         GuiCreator.mainPanel.add(chartPanel, BorderLayout.CENTER);
 
-        // Update GuiCreator.frame
         GuiCreator.setFrame(false, false, true);
     }
 
@@ -778,67 +707,39 @@ public class Graphs {
      * @return the ChartPanel containing the graph
      */
     public static ChartPanel createPieChart(String chartTitle, String staffID, double[] salesBreakdown) {
-
-        DefaultPieDataset dpd = createDataset(staffID, salesBreakdown);
-        JFreeChart chart = ChartFactory.createPieChart(chartTitle, dpd, true, true, false);
-
-        ChartPanel chartPanel = new ChartPanel(chart);
-
-        return chartPanel;
+        final DefaultPieDataset dpd = createPieDataset(staffID, salesBreakdown);
+        final JFreeChart chart = ChartFactory.createPieChart(chartTitle, dpd, true, true, false);
+        return new ChartPanel(chart);
     }
 
-    /**
-     * creates a data set including staff and sales
-     * 
-     * @param salesBreakdown
-     *            (double [])
-     * @param staffID
-     *            (String)
-     * */
-    private static DefaultPieDataset createDataset(String staffID, double[] salesBreakdown) {
-        DefaultPieDataset dpd = new DefaultPieDataset();
+    private static DefaultPieDataset createPieDataset(String staffID, double[] salesBreakdown) {
+        final DefaultPieDataset dpd = new DefaultPieDataset();
 
-        dpd.setValue(staffID + "\n €" + CURRENCY_FORMATTER.format(salesBreakdown[0]), salesBreakdown[0]);
-        dpd.setValue("Others" + "\n€" + CURRENCY_FORMATTER.format(salesBreakdown[1]), salesBreakdown[1]);
+        dpd.setValue(staffID + "\n" + CURRENCY_FORMATTER.format(salesBreakdown[0]), salesBreakdown[0]);
+        dpd.setValue("Others" + "\n" + CURRENCY_FORMATTER.format(salesBreakdown[1]), salesBreakdown[1]);
 
         return dpd;
     }
 
     /**
-     * creates a line chart plotting stock level
+     * Creates a chart mapping product level to year.
      * 
      * @param title
-     *            (String)
-     * @param seriesName
-     *            (String)
+     *            title of the line chart
+     * @param productName
+     *            name of the product
      * @param data
-     *            (double [][])
+     *            2D array with year/product stock level data
      * */
-    public static ChartPanel createLineChart(String title, String seriesName, double[][] data) {
-
-        XYDataset ds = createDataset(data, seriesName);
-        JFreeChart chart = ChartFactory.createXYLineChart(title, "Year", "Stock Level", ds, PlotOrientation.VERTICAL, true, true, false);
-
-        ChartPanel c = new ChartPanel(chart);
-
-        return c;
-
+    public static ChartPanel createProductStockLevelChart(final String title, final String productName, final double[][] data) {
+        final XYDataset ds = createLineDataset(productName, data);
+        final JFreeChart chart = ChartFactory.createXYLineChart(title, "Year", "Stock Level", ds, PlotOrientation.VERTICAL, true, true, false);
+        return new ChartPanel(chart);
     }
 
-    /**
-     * creates a data set
-     * 
-     * @param data
-     *            (double [][])
-     * @param seriesName
-     *            (String)
-     * */
-    private static XYDataset createDataset(double[][] data, String seriesName) {
-
-        DefaultXYDataset ds = new DefaultXYDataset();
-
+    private static XYDataset createLineDataset(final String seriesName, final double[][] data) {
+        final DefaultXYDataset ds = new DefaultXYDataset();
         ds.addSeries(seriesName, data);
-
         return ds;
     }
 }
