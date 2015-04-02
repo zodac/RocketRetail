@@ -1,5 +1,6 @@
 package dit.groupproject.rocketretail.entities;
 
+import static dit.groupproject.rocketretail.utilities.Formatters.CURRENCY_FORMATTER;
 import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
 
 import java.util.Comparator;
@@ -119,8 +120,8 @@ public class Product implements Entity {
         data[2] = stockLevel;
         data[3] = maxLevel;
         data[4] = supplierId;
-        data[5] = costPrice;
-        data[6] = salePrice;
+        data[5] = "€" + CURRENCY_FORMATTER.format(costPrice);
+        data[6] = "€" + CURRENCY_FORMATTER.format(costPrice);
 
         return data;
     }
