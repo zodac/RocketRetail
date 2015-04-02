@@ -68,31 +68,43 @@ public class ProfitLoss {
         final char newLine = '\n';
         final char euroSign = '€';
 
-        final StringBuilder budget = new StringBuilder();
-        budget.append("Year").append(tab).append("Month").append(tab).append("Purchases").append(tab).append("Sales").append(newLine)
-                .append("_____________________________________").append(newLine);
+        final StringBuilder overallReport = new StringBuilder();
+        overallReport.append("Year").append(tab).append("Month").append(tab).append("Purchases").append(tab).append("Sales").append(newLine)
+                .append("_____________________________________").append(newLine).append(newLine);
         DateSort.sortDate(YEAR_START, YEAR_CURRENT + 1);
 
         int yearIndex = YEAR_START;
         for (int year = 0; year <= YEAR_CURRENT - YEAR_START; year++) {
-
+            final StringBuilder yearlyReport = new StringBuilder();
+            yearIndex++;
             for (int month = 0; month < 12; month++) {
                 final double purchase = -1 * DateSort.supplierOrderDates[year][month];
                 final double sale = DateSort.customerOrderDates[year][month];
 
-                if (month == 0) {
-                    budget.append(yearIndex++);
+                final StringBuilder monthlyReport = new StringBuilder();
+
+                if (purchase > 0 || sale > 0) {
+
+                    if (yearlyReport.length() == 0) {
+                        monthlyReport.append(yearIndex);
+                    }
+
+                    monthlyReport.append(tab).append(MONTHS[month]).append(tab).append(euroSign).append(CURRENCY_FORMATTER.format(purchase));
+
+                    if (purchase >= 1000) {
+                        monthlyReport.append(tab);
+                    }
+
+                    monthlyReport.append(tab).append(tab).append(euroSign).append(CURRENCY_FORMATTER.format(sale)).append(newLine);
+
+                    yearlyReport.append(monthlyReport);
                 }
+            }
 
-                budget.append(tab).append(MONTHS[month]).append(tab).append(euroSign).append(CURRENCY_FORMATTER.format(purchase));
-
-                if (purchase >= 1000) {
-                    budget.append(tab);
-                }
-
-                budget.append(tab).append(euroSign).append(CURRENCY_FORMATTER.format(sale)).append(newLine);
+            if (yearlyReport.length() > 0) {
+                overallReport.append(yearlyReport).append("-------------------------------------").append(newLine);
             }
         }
-        return budget.toString();
+        return overallReport.toString();
     }
 }
