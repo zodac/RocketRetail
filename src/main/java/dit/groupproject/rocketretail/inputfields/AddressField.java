@@ -1,7 +1,9 @@
 package dit.groupproject.rocketretail.inputfields;
 
+import javax.swing.JTextField;
+
 @SuppressWarnings("serial")
-public class AddressField extends BaseField {
+public class AddressField extends JTextField {
 
     private final static int INPUT_FIELD_LENGTH = 20;
 
