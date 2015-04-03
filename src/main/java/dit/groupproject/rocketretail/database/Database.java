@@ -335,4 +335,8 @@ public class Database {
         }
         throw new DatabaseException("Looking for database items from invalid table state: " + currentState.toString());
     }
+
+    public static int getLastOrderId() {
+        return orders.get(orders.size() - 1).getId();
+    }
 }

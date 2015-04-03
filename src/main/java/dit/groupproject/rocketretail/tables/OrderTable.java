@@ -59,6 +59,10 @@ import dit.groupproject.rocketretail.menus.MenuGui;
  */
 public class OrderTable extends AbstractTable {
 
+    private static final String ORDER_COMPLETED_MESSAGE_FORMAT = "Order #%s completed";
+    private static final String ORDER_CONFIRMATION_MESSAGE_FORMAT = "Are you sure you want to complete order #%s?";
+    private static final String CUSTOMER_ORDER_CREATED_MESSAGE_FORMAT = "Order #%s created for customer \"%s\"";
+    private static final String SUPPLIER_ORDER_CREATED_MESSAGE_FORMAT = "Order #%s created for supplier \"%s\"";
     public boolean first = true;
     public boolean descendingOrderSort = false;
 
@@ -477,11 +481,11 @@ public class OrderTable extends AbstractTable {
                     for (final Entity p : Database.getProducts()) {
                         final Product product = (Product) p;
 
-                        JLabel pl = new JLabel("" + product.getName());
+                        JLabel pl = new JLabel(product.getName());
                         pl.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
                         productLabels.add(pl);
 
-                        JTextField tF = new JTextField("" + product.getCurrentStockLevel() + "/" + product.getMaxStockLevel(), 5);
+                        JTextField tF = new JTextField(product.getCurrentStockLevel() + "/" + product.getMaxStockLevel(), 5);
                         tF.setEnabled(false);
                         currentStockFields.add(tF);
                         JTextField orderField = new JTextField("0", 5);
@@ -534,8 +538,8 @@ public class OrderTable extends AbstractTable {
                                     for (JLabel label : productLabels) {
                                         if (label.getText().equals(product.getName())
                                                 && Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label)).getText()) > 0) {
-                                            if (product.getCurrentStockLevel() >= Integer.parseInt(orderAmountFields.get(productLabels.indexOf(label))
-                                                    .getText()))
+                                            if (product.getCurrentStockLevel() >= Integer.parseInt(orderAmountFields
+                                                    .get(productLabels.indexOf(label)).getText()))
                                                 items.add(new OrderedItem(product, Integer.parseInt(orderAmountFields.get(
                                                         productLabels.indexOf(label)).getText())));
                                         }
@@ -555,9 +559,8 @@ public class OrderTable extends AbstractTable {
                                         }
                                     }
                                 }
-                                GuiCreator.setConfirmationMessage("Order #"
-                                        + ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
-                                        + " created for customer \"" + activeCustomer.getName() + "\"");
+                                GuiCreator.setConfirmationMessage(String.format(CUSTOMER_ORDER_CREATED_MESSAGE_FORMAT,
+                                        ID_FORMATTER.format(Database.getLastOrderId()), activeCustomer.getName()));
 
                                 GuiCreator.frame.remove(GuiCreator.leftPanel);
                                 GuiCreator.mainPanel.validate();
@@ -587,7 +590,7 @@ public class OrderTable extends AbstractTable {
                     buttonPanel.setBackground(GuiCreator.BACKGROUND_COLOUR);
                     buttonPanel2.setBackground(GuiCreator.BACKGROUND_COLOUR);
 
-                    buttonPanel.add(new JLabel("Customer:  "), BorderLayout.WEST);
+                    buttonPanel.add(new JLabel("Customer: "), BorderLayout.WEST);
                     buttonPanel.add(customerOptions);
 
                     outerTitlePanel.add(buttonPanel, BorderLayout.NORTH);
@@ -619,7 +622,7 @@ public class OrderTable extends AbstractTable {
                 }
             }
         });
-        innerPanel.add(new JLabel("Customer:  "), BorderLayout.WEST);
+        innerPanel.add(new JLabel("Customer: "), BorderLayout.WEST);
         innerPanel.add(customerOptions);
         GuiCreator.leftPanel.add(innerPanel);
 
@@ -661,7 +664,6 @@ public class OrderTable extends AbstractTable {
                     addEntityHelper.addEntityPanel();
                     ShopDriver.setCurrentTable(TableState.ORDER);
                 } else {
-                    // Reset ShopDriver.frame
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.leftPanel = new JPanel();
@@ -703,11 +705,11 @@ public class OrderTable extends AbstractTable {
                     // sp and pl
                     int i = 0;
                     for (final Product supplierProduct : supplierProducts) {
-                        final JLabel productLabel = new JLabel("" + supplierProduct.getName());
+                        final JLabel productLabel = new JLabel(supplierProduct.getName());
                         productLabel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
                         productLabels.add(productLabel);
 
-                        final JTextField tF = new JTextField("" + supplierProduct.getCurrentStockLevel() + "/" + supplierProduct.getMaxStockLevel(), 5);
+                        final JTextField tF = new JTextField(supplierProduct.getCurrentStockLevel() + "/" + supplierProduct.getMaxStockLevel(), 5);
                         tF.setEnabled(false);
                         currentStockFields.add(tF);
                         JTextField orderField = new JTextField("0", 5);
@@ -735,8 +737,8 @@ public class OrderTable extends AbstractTable {
 
                                 if (orderAmountFields.get(labelIndex).getText().length() == 0
                                         || (Integer.parseInt(orderAmountFields.get(labelIndex).getText()) + ((Product) Database
-                                                .getProductByIndex(labelIndex)).getCurrentStockLevel()) > ((Product) Database.getProductByIndex(labelIndex))
-                                                .getMaxStockLevel()) {
+                                                .getProductByIndex(labelIndex)).getCurrentStockLevel()) > ((Product) Database
+                                                .getProductByIndex(labelIndex)).getMaxStockLevel()) {
                                     valid = false;
                                     orderAmountFields.get(productLabels.indexOf(label)).setBorder(
                                             BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red));
@@ -784,18 +786,16 @@ public class OrderTable extends AbstractTable {
 
                                 }
 
-                                GuiCreator.setConfirmationMessage("Order #"
-                                        + ID_FORMATTER.format(Database.getOrders().get(Database.getOrders().size() - 1).getId())
-                                        + " created for supplier \"" + activeSupplier.getName() + "\"");
+                                GuiCreator.setConfirmationMessage(String.format(SUPPLIER_ORDER_CREATED_MESSAGE_FORMAT,
+                                        ID_FORMATTER.format(Database.getLastOrderId()), activeSupplier.getName()));
 
-                                // Reset ShopDriver.frame
                                 GuiCreator.frame.remove(GuiCreator.leftPanel);
                                 GuiCreator.frame.repaint();
                                 GuiCreator.frame.validate();
                                 createTableGui();
                             }
                         }
-                    });// submitOrder
+                    });
 
                     JButton cancelButton = new JButton("Cancel");
                     cancelButton.addActionListener(new ActionListener() {
@@ -840,32 +840,27 @@ public class OrderTable extends AbstractTable {
 
                     innerPanel.add(buttonPanel2, BorderLayout.SOUTH);
 
-                    // Add innerPanel
                     GuiCreator.leftPanel.add(innerPanel);
 
-                    // Update ShopDriver.frame
                     GuiCreator.setFrame(true, false, false);
                 }
             }
         });
-        innerPanel.add(new JLabel("Supplier:  "), BorderLayout.WEST);
+        innerPanel.add(new JLabel("Supplier: "), BorderLayout.WEST);
         innerPanel.add(supplierOptions);
 
-        // Add innerPanel to leftPanel
         GuiCreator.leftPanel.add(innerPanel);
-
-        // Update ShopDriver.frame
         GuiCreator.setFrame(true, false, false);
     }
 
     private void completeOrder(int orderId) {
         final JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("Are you sure you want to complete order #" + ID_FORMATTER.format(orderId) + "?"));
+        myPanel.add(new JLabel(String.format(ORDER_CONFIRMATION_MESSAGE_FORMAT, ID_FORMATTER.format(orderId))));
 
         if (showDialog("Please confirm", myPanel) == JOptionPane.OK_OPTION) {
             final Order order = (Order) Database.getOrderById(orderId);
             order.completeOrder(DATE_FORMATTER.format(new Date()));
-            GuiCreator.setConfirmationMessage("Order #" + orderId + " completed");
+            GuiCreator.setConfirmationMessage(String.format(ORDER_COMPLETED_MESSAGE_FORMAT, orderId));
         }
 
         GuiCreator.frame.remove(GuiCreator.leftPanel);

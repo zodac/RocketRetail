@@ -43,13 +43,13 @@ public class ProfitLoss {
 
         final StringBuilder profitOutput = new StringBuilder();
         if (profit - loss < 0) {
-            profitOutput.append("\nGross Profit:\t-€" + CURRENCY_FORMATTER.format((-1) * (profit - loss)));
+            profitOutput.append("\nGross Profit:\t-" + CURRENCY_FORMATTER.format((-1) * (profit - loss)));
         } else {
-            profitOutput.append("\nGross Profit:\t€" + CURRENCY_FORMATTER.format(profit - loss));
+            profitOutput.append("\nGross Profit:\t" + CURRENCY_FORMATTER.format(profit - loss));
         }
 
         final StringBuilder result = new StringBuilder();
-        result.append("Totals\n=====\nSales:\t\t€" + CURRENCY_FORMATTER.format(profit) + "\nPurchases:\t€" + CURRENCY_FORMATTER.format(loss)
+        result.append("Totals\n=====\nSales:\t\t" + CURRENCY_FORMATTER.format(profit) + "\nPurchases:\t" + CURRENCY_FORMATTER.format(loss)
                 + "\n============================" + profitOutput.toString());
 
         return result.toString();
@@ -66,7 +66,6 @@ public class ProfitLoss {
     public static String createAdvancedReport() {
         final char tab = '\t';
         final char newLine = '\n';
-        final char euroSign = '€';
 
         final StringBuilder totalReport = new StringBuilder();
         totalReport.append("Year").append(tab).append("Month").append(tab).append("Purchases").append(tab).append("Sales").append(newLine)
@@ -76,7 +75,7 @@ public class ProfitLoss {
         int yearIndex = YEAR_START;
         for (int year = 0; year <= YEAR_CURRENT - YEAR_START; year++) {
             final StringBuilder yearlyReport = new StringBuilder();
-            
+
             for (int month = 0; month < 12; month++) {
                 final double purchase = -1 * DateSort.supplierOrderDates[year][month];
                 final double sale = DateSort.customerOrderDates[year][month];
@@ -89,13 +88,13 @@ public class ProfitLoss {
                         monthlyReport.append(yearIndex);
                     }
 
-                    monthlyReport.append(tab).append(MONTHS[month]).append(tab).append(euroSign).append(CURRENCY_FORMATTER.format(purchase));
+                    monthlyReport.append(tab).append(MONTHS[month]).append(tab).append(CURRENCY_FORMATTER.format(purchase));
 
                     if (purchase >= 1000) {
                         monthlyReport.append(tab);
                     }
 
-                    monthlyReport.append(tab).append(tab).append(euroSign).append(CURRENCY_FORMATTER.format(sale)).append(newLine);
+                    monthlyReport.append(tab).append(tab).append(CURRENCY_FORMATTER.format(sale)).append(newLine);
 
                     yearlyReport.append(monthlyReport);
                 }
@@ -104,7 +103,7 @@ public class ProfitLoss {
             if (yearlyReport.length() > 0) {
                 totalReport.append(yearlyReport).append("-------------------------------------").append(newLine);
             }
-            
+
             yearIndex++;
         }
         return totalReport.toString();

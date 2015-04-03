@@ -48,6 +48,7 @@ import dit.groupproject.rocketretail.utilities.Predictions;
 
 public class Graphs {
 
+    private final static String EURO_CHART_TITLE = "Euro (€)";
     private final static String[] TITLE_ARRAY = { "Sales", "Purchases", "Gross Profit" };
 
     private final static Color PROFIT_GRAPH_COLOUR = new Color(209, 142, 109);
@@ -100,7 +101,7 @@ public class Graphs {
             public void actionPerformed(ActionEvent e) {
                 // also show 12 month for this year
                 double[][] inputArray = createArraySingleYear(YEAR_CURRENT);
-                barGraphLeft("Title", inputArray, "" + "Months");
+                barGraphLeft("Title", inputArray, "Months");
 
                 double[][] sixMonthPredictionArray = Predictions.sixMthPrediction(Predictions.createArrayFiveYear(YEAR_CURRENT));
                 sixMonthPredictionBarGraph("Six Month Prediction", sixMonthPredictionArray, "Months");
@@ -184,8 +185,8 @@ public class Graphs {
     public static void barGraphLeft(String title, double[][] dataArray, String xAxisTitle) {
         resetGraphPanel("12 Month Prediction");
 
-        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", createDataset(dataArray, false), PlotOrientation.VERTICAL,
-                true, true, false);
+        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, EURO_CHART_TITLE, createDataset(dataArray, false),
+                PlotOrientation.VERTICAL, true, true, false);
         chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
@@ -219,8 +220,8 @@ public class Graphs {
     public static void barGraphLeft5Year(String title, double[][] dataArray, String xAxisTitle) {
         resetGraphPanel("5 Year Prediction");
 
-        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", fiveYearCreateDataset(dataArray), PlotOrientation.VERTICAL,
-                true, true, false);
+        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, EURO_CHART_TITLE, fiveYearCreateDataset(dataArray),
+                PlotOrientation.VERTICAL, true, true, false);
         chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
@@ -253,8 +254,8 @@ public class Graphs {
     public static void sixMonthPredictionBarGraph(String title, double[][] dataArray, String xAxisTitle) {
         resetGraphPanel("6 Month Prediction");
 
-        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", createDatasetMth(dataArray), PlotOrientation.VERTICAL, true,
-                true, false);
+        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, EURO_CHART_TITLE, createDatasetMth(dataArray), PlotOrientation.VERTICAL,
+                true, true, false);
         chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
@@ -298,7 +299,7 @@ public class Graphs {
     public static void twoYearPredictionBarGraph(String title, double[][] dataArray, String xAxisTitle, Boolean isYear) {
         resetGraphPanel("2 Year Prediction");
 
-        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", twoYearCreateDataset(dataArray, isYear),
+        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, EURO_CHART_TITLE, twoYearCreateDataset(dataArray, isYear),
                 PlotOrientation.VERTICAL, true, true, false);
         chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
@@ -432,8 +433,8 @@ public class Graphs {
     public static void barGraph12Month(String title, double[][] dataArray, String xAxisTitle) {
         resetGraphPanel("12 Month Prediction");
 
-        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", createDataset(dataArray, false), PlotOrientation.VERTICAL,
-                true, true, false);
+        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, EURO_CHART_TITLE, createDataset(dataArray, false),
+                PlotOrientation.VERTICAL, true, true, false);
         chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
@@ -493,8 +494,8 @@ public class Graphs {
     public static void barGraph5Year(String title, double[][] dataArray, String xAxisTitle) {
         resetGraphPanel("5 Year Prediction");
 
-        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", createDataset(dataArray, true), PlotOrientation.VERTICAL,
-                true, true, false);
+        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, EURO_CHART_TITLE, createDataset(dataArray, true),
+                PlotOrientation.VERTICAL, true, true, false);
         chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);
@@ -557,8 +558,8 @@ public class Graphs {
         GuiCreator.frame.repaint();
         GuiCreator.mainPanel = new JPanel();
 
-        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, "Euro (€)", createDataset(dataArray, isYear), PlotOrientation.VERTICAL,
-                true, true, false);
+        JFreeChart chart = ChartFactory.createBarChart3D(null, xAxisTitle, EURO_CHART_TITLE, createDataset(dataArray, isYear),
+                PlotOrientation.VERTICAL, true, true, false);
         chart.setBackgroundPaint(GuiCreator.BACKGROUND_COLOUR);
 
         ((CategoryPlot) chart.getPlot()).getDomainAxis().setLowerMargin(0.0);

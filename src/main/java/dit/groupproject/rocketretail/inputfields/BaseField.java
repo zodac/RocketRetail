@@ -9,6 +9,6 @@ public abstract class BaseField extends JTextField {
         super(null, inputFieldLength);
     }
 
-    // abstract boolean validateInput();
+    // abstract boolean isValidInput();
 
 }

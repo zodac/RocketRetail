@@ -96,7 +96,6 @@ public class AddEntityHelper extends AbstractEntityHelper {
         g.gridwidth = 3;
 
         final NameField customerNameField = new NameField();
-        // final JTextField custNameField = new JTextField(null, 20);
         innerPanel.add(customerNameField, g);
         g.gridy = 1;
         final JTextField phoneNoField = new JTextField(null, 20);
@@ -198,8 +197,8 @@ public class AddEntityHelper extends AbstractEntityHelper {
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
-        final JTextField suppNameField = new JTextField(null, 20);
-        innerPanel.add(suppNameField, g);
+        final NameField supplierNameField = new NameField();
+        innerPanel.add(supplierNameField, g);
         g.gridy = 1;
         final JTextField phoneNoField = new JTextField(null, 20);
         innerPanel.add(phoneNoField, g);
@@ -263,7 +262,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(suppNameField);
+                textFields.add(supplierNameField);
                 textFields.add(phoneNoField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
@@ -277,11 +276,12 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
                 if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    Database.addSupplier(new Supplier(suppNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField.getText(),
-                            lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/" + lastPurchaseYear.getSelectedItem(),
-                            dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
+                    Database.addSupplier(new Supplier(supplierNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField
+                            .getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
+                            + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
+                            + dateAddedYear.getSelectedItem()));
 
-                    GuiCreator.setConfirmationMessage("New Supplier \"" + suppNameField.getText() + "\" added");
+                    GuiCreator.setConfirmationMessage(String.format("New Supplier \"%s\" added", supplierNameField.getText()));
                     removeLeftPanel();
 
                     supplierTable.descendingOrderSort = false;
@@ -305,7 +305,6 @@ public class AddEntityHelper extends AbstractEntityHelper {
         final String[] genderOptions = { "", "Male", "Female" };
         final String[] staffLevelOptions = { "", "Manager", "Employee" };
         g.fill = GridBagConstraints.HORIZONTAL;
-        // JTextFields with GridBagLayout
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
@@ -313,8 +312,8 @@ public class AddEntityHelper extends AbstractEntityHelper {
         pinField.setDocument(new JTextFieldLimit(4));
         innerPanel.add(pinField, g);
         g.gridy = 1;
-        final JTextField nameField = new JTextField(null, 20);
-        innerPanel.add(nameField, g);
+        final NameField staffNameField = new NameField();
+        innerPanel.add(staffNameField, g);
         g.gridy = 2;
 
         final JComboBox<String> genderField = new JComboBox<String>(genderOptions);
@@ -368,7 +367,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
             public void actionPerformed(ActionEvent e) {
 
                 final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(nameField);
+                textFields.add(staffNameField);
                 textFields.add(phoneNoField);
                 textFields.add(addressField);
                 final ArrayList<JTextField> doubleFields = new ArrayList<>();
@@ -384,12 +383,12 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 addedBoxes.add(dateAddedYear);
 
                 if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null)) {
-                    Database.addStaffMember(new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), nameField.getText(), genderField
+                    Database.addStaffMember(new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), staffNameField.getText(), genderField
                             .getSelectedIndex(), phoneNoField.getText(), addressField.getText(), Double.parseDouble(wageField.getText()),
                             staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
                                     + dateAddedYear.getSelectedItem()));
 
-                    GuiCreator.setConfirmationMessage("Staff member " + nameField.getText() + " added");
+                    GuiCreator.setConfirmationMessage("Staff member " + staffNameField.getText() + " added");
                     removeLeftPanel();
 
                     staffTable.descendingOrderSort = false;
@@ -413,8 +412,8 @@ public class AddEntityHelper extends AbstractEntityHelper {
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
-        final JTextField prodDescField = new JTextField(null, 20);
-        innerPanel.add(prodDescField, g);
+        final NameField productNameField = new NameField();
+        innerPanel.add(productNameField, g);
         g.gridy = 1;
         final JTextField stockLevelField = new JTextField(null, 20);
         innerPanel.add(stockLevelField, g);
@@ -452,7 +451,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(prodDescField);
+                textFields.add(productNameField);
                 final ArrayList<JTextField> intFields = new ArrayList<>();
                 intFields.add(stockLevelField);
                 intFields.add(maxLevelField);
@@ -463,14 +462,14 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 comboBoxes.add(supplierBox);
 
                 if (FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null)) {
-                    final Product product = new Product(prodDescField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
+                    final Product product = new Product(productNameField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
                             .parseInt(maxLevelField.getText()), Integer.parseInt(((String) supplierBox.getSelectedItem()).substring(
                             ((String) supplierBox.getSelectedItem()).length() - 5, ((String) supplierBox.getSelectedItem()).length() - 1)), Double
                             .parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField.getText()));
 
                     Database.addProduct(product);
 
-                    GuiCreator.setConfirmationMessage("Product " + prodDescField.getText() + " added");
+                    GuiCreator.setConfirmationMessage("Product " + productNameField.getText() + " added");
                     removeLeftPanel();
 
                     productTable.descendingOrderSort = false;
