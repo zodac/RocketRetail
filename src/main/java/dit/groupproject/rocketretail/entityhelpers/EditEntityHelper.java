@@ -28,8 +28,11 @@ import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.inputfields.AddressField;
 import dit.groupproject.rocketretail.inputfields.IdField;
 import dit.groupproject.rocketretail.inputfields.NameField;
+import dit.groupproject.rocketretail.inputfields.PhoneNumberField;
+import dit.groupproject.rocketretail.inputfields.VatField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
@@ -103,14 +106,14 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final NameField customerNameField = new NameField();
         innerPanel.add(customerNameField, g);
         g.gridy = 2;
-        final JTextField phoneNoField = new JTextField(null, 20);
-        innerPanel.add(phoneNoField, g);
+        final PhoneNumberField customerPhoneField = new PhoneNumberField();
+        innerPanel.add(customerPhoneField, g);
         g.gridy = 3;
-        final JTextField addressField = new JTextField(null, 20);
-        innerPanel.add(addressField, g);
+        final AddressField customerAddressField = new AddressField();
+        innerPanel.add(customerAddressField, g);
         g.gridy = 4;
-        final JTextField vatNoField = new JTextField(null, 20);
-        innerPanel.add(vatNoField, g);
+        final VatField customerVatField = new VatField();
+        innerPanel.add(customerVatField, g);
 
         g.gridy = 5;
         g.gridx = 1;
@@ -145,9 +148,9 @@ public class EditEntityHelper extends AbstractEntityHelper {
 
         customerIdField.setText(ID_FORMATTER.format(customer.getId()));
         customerNameField.setText(customer.getName());
-        phoneNoField.setText(customer.getPhoneNumber());
-        addressField.setText(customer.getAddress());
-        vatNoField.setText(customer.getVatNumber());
+        customerPhoneField.setText(customer.getPhoneNumber());
+        customerAddressField.setText(customer.getAddress());
+        customerVatField.setText(customer.getVatNumber());
         lastPurchaseDay.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(0, 2)));
         lastPurchaseMonth.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(3, 5)));
         lastPurchaseYear.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(6, 10)) - (YEAR_START - 1));
@@ -176,9 +179,9 @@ public class EditEntityHelper extends AbstractEntityHelper {
             public void actionPerformed(final ActionEvent e) {
                 final ArrayList<JTextField> textFields = new ArrayList<>();
                 textFields.add(customerNameField);
-                textFields.add(phoneNoField);
-                textFields.add(addressField);
-                textFields.add(vatNoField);
+                textFields.add(customerPhoneField);
+                textFields.add(customerAddressField);
+                textFields.add(customerVatField);
                 final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
                 addedBoxes.add(dateAddedDay);
                 addedBoxes.add(dateAddedMonth);
@@ -189,10 +192,10 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
                 if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    final Customer editedCustomer = new Customer(customerNameField.getText(), phoneNoField.getText(), addressField.getText(),
-                            vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
-                                    + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem()
-                                    + "/" + dateAddedYear.getSelectedItem());
+                    final Customer editedCustomer = new Customer(customerNameField.getText(), customerPhoneField.getText(), customerAddressField
+                            .getText(), customerVatField.getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem()
+                            + "/" + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
+                            + dateAddedYear.getSelectedItem());
                     editedCustomer.setId(index + IdManager.CUSTOMER_ID_START);
                     Database.addCustomerByIndex(index, editedCustomer);
 
@@ -228,13 +231,13 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final NameField supplierNameField = new NameField();
         innerPanel.add(supplierNameField, g);
         g.gridy = 2;
-        final JTextField phoneNoField = new JTextField(null, 20);
-        innerPanel.add(phoneNoField, g);
+        final PhoneNumberField supplierPhoneField = new PhoneNumberField();
+        innerPanel.add(supplierPhoneField, g);
         g.gridy = 3;
-        final JTextField addressField = new JTextField(null, 20);
+        final AddressField addressField = new AddressField();
         innerPanel.add(addressField, g);
         g.gridy = 4;
-        final JTextField vatNoField = new JTextField(null, 20);
+        final VatField vatNoField = new VatField();
         innerPanel.add(vatNoField, g);
 
         g.gridy = 5;
@@ -270,7 +273,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
 
         supplierIdField.setText(ID_FORMATTER.format(supplier.getId()));
         supplierNameField.setText(supplier.getName());
-        phoneNoField.setText(supplier.getPhoneNumber());
+        supplierPhoneField.setText(supplier.getPhoneNumber());
         addressField.setText(supplier.getAddress());
         vatNoField.setText(supplier.getVatNumber());
         lastPurchaseDay.setSelectedIndex(Integer.parseInt(supplier.getLastPurchase().substring(0, 2)));
@@ -302,7 +305,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
             public void actionPerformed(ActionEvent e) {
                 final ArrayList<JTextField> textFields = new ArrayList<>();
                 textFields.add(supplierNameField);
-                textFields.add(phoneNoField);
+                textFields.add(supplierPhoneField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
                 final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
@@ -315,7 +318,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
                 if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    final Supplier editedSupplier = new Supplier(supplierNameField.getText(), phoneNoField.getText(), addressField.getText(),
+                    final Supplier editedSupplier = new Supplier(supplierNameField.getText(), supplierPhoneField.getText(), addressField.getText(),
                             vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
                                     + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem()
                                     + "/" + dateAddedYear.getSelectedItem());
@@ -366,10 +369,10 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final JComboBox<String> genderField = new JComboBox<>(genderOptions);
         innerPanel.add(genderField, g);
         g.gridy = 4;
-        final JTextField phoneNoField = new JTextField(null, 20);
-        innerPanel.add(phoneNoField, g);
+        final PhoneNumberField staffPhoneField = new PhoneNumberField();
+        innerPanel.add(staffPhoneField, g);
         g.gridy = 5;
-        final JTextField addressField = new JTextField(null, 20);
+        final AddressField addressField = new AddressField();
         innerPanel.add(addressField, g);
         g.gridy = 6;
         final JTextField wageField = new JTextField(null, 20);
@@ -398,7 +401,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         pinField.setText(String.valueOf(staff.getStaffPin()));
         staffNameField.setText(staff.getName());
         genderField.setSelectedIndex(staff.getGender());
-        phoneNoField.setText(staff.getPhoneNumber());
+        staffPhoneField.setText(staff.getPhoneNumber());
         addressField.setText(staff.getAddress());
         wageField.setText(String.valueOf(staff.getWage()));
         staffLevelField.setSelectedIndex(staff.getStaffLevel());
@@ -428,7 +431,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
 
                 final ArrayList<JTextField> textFields = new ArrayList<>();
                 textFields.add(staffNameField);
-                textFields.add(phoneNoField);
+                textFields.add(staffPhoneField);
                 textFields.add(addressField);
                 final ArrayList<JTextField> doubleFields = new ArrayList<>();
                 doubleFields.add(wageField);
@@ -444,9 +447,9 @@ public class EditEntityHelper extends AbstractEntityHelper {
 
                 if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null)) {
                     final Staff editedStaff = new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), staffNameField.getText(),
-                            genderField.getSelectedIndex(), phoneNoField.getText(), addressField.getText(), Double.parseDouble(wageField.getText()),
-                            staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
-                                    + dateAddedYear.getSelectedItem());
+                            genderField.getSelectedIndex(), staffPhoneField.getText(), addressField.getText(),
+                            Double.parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/"
+                                    + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem());
                     editedStaff.setId(index + IdManager.STAFF_ID_START);
                     Database.addStaffMemberByIndex(index, editedStaff);
 

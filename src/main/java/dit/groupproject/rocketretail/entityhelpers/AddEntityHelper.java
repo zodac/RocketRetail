@@ -31,7 +31,10 @@ import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.inputfields.AddressField;
 import dit.groupproject.rocketretail.inputfields.NameField;
+import dit.groupproject.rocketretail.inputfields.PhoneNumberField;
+import dit.groupproject.rocketretail.inputfields.VatField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
@@ -98,13 +101,13 @@ public class AddEntityHelper extends AbstractEntityHelper {
         final NameField customerNameField = new NameField();
         innerPanel.add(customerNameField, g);
         g.gridy = 1;
-        final JTextField phoneNoField = new JTextField(null, 20);
-        innerPanel.add(phoneNoField, g);
+        final PhoneNumberField customerPhoneField = new PhoneNumberField();
+        innerPanel.add(customerPhoneField, g);
         g.gridy = 2;
-        final JTextField addressField = new JTextField(null, 20);
+        final AddressField addressField = new AddressField();
         innerPanel.add(addressField, g);
         g.gridy = 3;
-        final JTextField vatNoField = new JTextField(null, 20);
+        final VatField vatNoField = new VatField();
         innerPanel.add(vatNoField, g);
 
         g.gridy = 4;
@@ -155,7 +158,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
             public void actionPerformed(ActionEvent e) {
                 final ArrayList<JTextField> textFields = new ArrayList<>();
                 textFields.add(customerNameField);
-                textFields.add(phoneNoField);
+                textFields.add(customerPhoneField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
                 final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
@@ -168,7 +171,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
                 if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    Database.addCustomer(new Customer(customerNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField
+                    Database.addCustomer(new Customer(customerNameField.getText(), customerPhoneField.getText(), addressField.getText(), vatNoField
                             .getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
                             + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
                             + dateAddedYear.getSelectedItem()));
@@ -200,13 +203,13 @@ public class AddEntityHelper extends AbstractEntityHelper {
         final NameField supplierNameField = new NameField();
         innerPanel.add(supplierNameField, g);
         g.gridy = 1;
-        final JTextField phoneNoField = new JTextField(null, 20);
-        innerPanel.add(phoneNoField, g);
+        final PhoneNumberField supplierPhoneField = new PhoneNumberField();
+        innerPanel.add(supplierPhoneField, g);
         g.gridy = 2;
-        final JTextField addressField = new JTextField(null, 20);
+        final AddressField addressField = new AddressField();
         innerPanel.add(addressField, g);
         g.gridy = 3;
-        final JTextField vatNoField = new JTextField(null, 20);
+        final VatField vatNoField = new VatField();
         innerPanel.add(vatNoField, g);
         g.gridy = 4;
         g.gridx = 1;
@@ -263,7 +266,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
             public void actionPerformed(ActionEvent e) {
                 final ArrayList<JTextField> textFields = new ArrayList<>();
                 textFields.add(supplierNameField);
-                textFields.add(phoneNoField);
+                textFields.add(supplierPhoneField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
                 final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
@@ -276,7 +279,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
                 if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    Database.addSupplier(new Supplier(supplierNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField
+                    Database.addSupplier(new Supplier(supplierNameField.getText(), supplierPhoneField.getText(), addressField.getText(), vatNoField
                             .getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
                             + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
                             + dateAddedYear.getSelectedItem()));
@@ -319,10 +322,10 @@ public class AddEntityHelper extends AbstractEntityHelper {
         final JComboBox<String> genderField = new JComboBox<String>(genderOptions);
         innerPanel.add(genderField, g);
         g.gridy = 3;
-        final JTextField phoneNoField = new JTextField(null, 20);
-        innerPanel.add(phoneNoField, g);
+        final PhoneNumberField staffPhoneField = new PhoneNumberField();
+        innerPanel.add(staffPhoneField, g);
         g.gridy = 4;
-        final JTextField addressField = new JTextField(null, 20);
+        final AddressField addressField = new AddressField();
         innerPanel.add(addressField, g);
         g.gridy = 5;
         final JTextField wageField = new JTextField(null, 20);
@@ -368,7 +371,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
                 final ArrayList<JTextField> textFields = new ArrayList<>();
                 textFields.add(staffNameField);
-                textFields.add(phoneNoField);
+                textFields.add(staffPhoneField);
                 textFields.add(addressField);
                 final ArrayList<JTextField> doubleFields = new ArrayList<>();
                 doubleFields.add(wageField);
@@ -384,7 +387,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
                 if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null)) {
                     Database.addStaffMember(new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), staffNameField.getText(), genderField
-                            .getSelectedIndex(), phoneNoField.getText(), addressField.getText(), Double.parseDouble(wageField.getText()),
+                            .getSelectedIndex(), staffPhoneField.getText(), addressField.getText(), Double.parseDouble(wageField.getText()),
                             staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
                                     + dateAddedYear.getSelectedItem()));
 
