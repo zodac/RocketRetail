@@ -56,34 +56,23 @@ public class AddEntityHelper extends AbstractEntityHelper {
     public ActionListener addEntityPanel() {
         final TableState currentState = ShopDriver.getCurrentTableState();
 
-        if (currentState == TableState.CUSTOMER) {
-            return new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+        return new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                if (currentState == TableState.CUSTOMER) {
                     addCustomerPanel();
-                }
-            };
-        } else if (currentState == TableState.ORDER) {
-
-        } else if (currentState == TableState.PRODUCT) {
-            return new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+                } else if (currentState == TableState.ORDER) {
+                    System.out.println("Not yet implemented!");
+                } else if (currentState == TableState.PRODUCT) {
                     addProductPanel();
-                }
-            };
-        } else if (currentState == TableState.STAFF) {
-            return new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+                } else if (currentState == TableState.STAFF) {
                     addStaffPanel();
-                }
-            };
-        } else if (currentState == TableState.SUPPLIER) {
-            return new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
+                } else if (currentState == TableState.SUPPLIER) {
                     addSupplierPanel();
+                } else {
+                    throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
                 }
-            };
-        }
-        throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
+            }
+        };
     }
 
     private void addCustomerPanel() {

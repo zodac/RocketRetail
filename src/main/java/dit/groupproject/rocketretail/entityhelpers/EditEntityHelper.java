@@ -58,34 +58,25 @@ public class EditEntityHelper extends AbstractEntityHelper {
     public ActionListener editEntityPanel(final JComboBox<String> editBox) {
         final TableState currentState = ShopDriver.getCurrentTableState();
 
-        if (currentState == TableState.CUSTOMER) {
-            return new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    editCustomerPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10)));
-                }
-            };
-        } else if (currentState == TableState.ORDER) {
+        return new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                final int selectedIdIndex = Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10));
 
-        } else if (currentState == TableState.PRODUCT) {
-            return new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    editProductPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10)));
+                if (currentState == TableState.CUSTOMER) {
+                    editCustomerPanel(selectedIdIndex);
+                } else if (currentState == TableState.ORDER) {
+                    System.out.println("Not yet implemented!");
+                } else if (currentState == TableState.PRODUCT) {
+                    editProductPanel(selectedIdIndex);
+                } else if (currentState == TableState.STAFF) {
+                    editStaffPanel(selectedIdIndex);
+                } else if (currentState == TableState.SUPPLIER) {
+                    editSupplierPanel(selectedIdIndex);
+                } else {
+                    throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
                 }
-            };
-        } else if (currentState == TableState.STAFF) {
-            return new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    editStaffPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10)));
-                }
-            };
-        } else if (currentState == TableState.SUPPLIER) {
-            return new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    editSupplierPanel(Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10)));
-                }
-            };
-        }
-        throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
+            }
+        };
     }
 
     private void editCustomerPanel(final int customerId) {
