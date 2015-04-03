@@ -27,7 +27,6 @@ import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import dit.groupproject.rocketretail.main.LoginHandler;
 import dit.groupproject.rocketretail.menus.MenuGui;
 
 public class GuiCreator {
@@ -184,12 +183,12 @@ public class GuiCreator {
     }
 
     public static void launchGui() {
-        final boolean manager = LoginHandler.loginAsManager();
-        // final boolean manager = true;
+        // final boolean isManager = LoginHandler.loginAsManager();
+        final boolean isManager = true;
 
         final JMenuBar menuBar = new JMenuBar();
         final MenuGui menuGui = new MenuGui();
-        menuGui.createMenuBar(menuBar, manager);
+        menuGui.createMenuBar(menuBar, isManager);
         HomeScreen.setHomeScreen();
         GuiCreator.showGui(menuBar);
     }

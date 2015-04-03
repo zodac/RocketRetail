@@ -31,6 +31,7 @@ import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.inputfields.NameField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
@@ -93,8 +94,10 @@ public class AddEntityHelper extends AbstractEntityHelper {
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
-        final JTextField custNameField = new JTextField(null, 20);
-        innerPanel.add(custNameField, g);
+
+        final NameField customerNameField = new NameField();
+        // final JTextField custNameField = new JTextField(null, 20);
+        innerPanel.add(customerNameField, g);
         g.gridy = 1;
         final JTextField phoneNoField = new JTextField(null, 20);
         innerPanel.add(phoneNoField, g);
@@ -152,7 +155,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(custNameField);
+                textFields.add(customerNameField);
                 textFields.add(phoneNoField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
@@ -166,11 +169,12 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
                 if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    Database.addCustomer(new Customer(custNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField.getText(),
-                            lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/" + lastPurchaseYear.getSelectedItem(),
-                            dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem()));
+                    Database.addCustomer(new Customer(customerNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField
+                            .getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
+                            + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
+                            + dateAddedYear.getSelectedItem()));
 
-                    GuiCreator.setConfirmationMessage("Customer " + custNameField.getText() + " added");
+                    GuiCreator.setConfirmationMessage("Customer " + customerNameField.getText() + " added");
                     removeLeftPanel();
 
                     customerTable.descendingOrderSort = false;

@@ -80,7 +80,7 @@ public class Graphs {
             public void actionPerformed(ActionEvent e) {
                 startYearIndex = 14;
                 double[][] inputArray = createArraySingleYear(YEAR_CURRENT);
-                barGraph12Month("Title", inputArray, "" + "Months");
+                barGraph12Month("Title", inputArray, "Months");
             }
         });
 

@@ -74,7 +74,7 @@ public class FieldValidator {
             for (JPasswordField password : pinFields) {
                 final String input = String.valueOf(password.getPassword());
 
-                if (input.matches("^\\d*$") && input.length() == 4) {
+                if (isValidPinInput(input)) {
                     password.setBorder(validBorder);
                 } else {
                     password.setBorder(errorBorder);
@@ -83,6 +83,10 @@ public class FieldValidator {
             }
         }
         return valid;
+    }
+
+    private static boolean isValidPinInput(final String input) {
+        return input.matches("^\\d*$") && input.length() == 4;
     }
 
     private static boolean validateDateBoxes(ArrayList<JComboBox<String>> addedBoxes, ArrayList<JComboBox<String>> lastPurchaseBoxes, boolean valid,
@@ -101,10 +105,6 @@ public class FieldValidator {
             int day = addedBoxes.get(0).getSelectedIndex();
             int month = addedBoxes.get(1).getSelectedIndex();
             int year = addedBoxes.get(2).getSelectedIndex() + (Dates.YEAR_START - 1);
-
-            // If month is April, June, September or November, day cannot be 31
-            // OR if month is February and is leap year, day cannot be 30 or 31
-            // OR if February but not a leap year, day cannot be 29, 30 or 31
 
             if (isInvalidDate(day, month, year)) {
                 addedBoxes.get(0).setBorder(errorBorder);
@@ -126,10 +126,6 @@ public class FieldValidator {
             int day = lastPurchaseBoxes.get(0).getSelectedIndex();
             int month = lastPurchaseBoxes.get(1).getSelectedIndex();
             int year = lastPurchaseBoxes.get(2).getSelectedIndex() + (Dates.YEAR_START - 1);
-
-            // If month is April, June, September or November, day cannot be 31
-            // OR if month is February and is leap year, day cannot be 30 or 31
-            // OR if February but not a leap year, day cannot be 29, 30 or 31
 
             if (isInvalidDate(day, month, year)) {
                 lastPurchaseBoxes.get(0).setBorder(errorBorder);
@@ -159,11 +155,11 @@ public class FieldValidator {
         if (textFields.size() > 0) {
             for (JTextField text : textFields) {
                 if (text.getText().isEmpty()) {
-                    // matching label = red
                     text.setBorder(errorBorder);
                     valid = false;
-                } else
+                } else {
                     text.setBorder(validBorder);
+                }
             }
         }
 

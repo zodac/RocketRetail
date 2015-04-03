@@ -28,6 +28,7 @@ import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
+import dit.groupproject.rocketretail.inputfields.NameField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
@@ -99,8 +100,8 @@ public class EditEntityHelper extends AbstractEntityHelper {
         custIdField.setEditable(false);
         innerPanel.add(custIdField, g);
         g.gridy = 1;
-        final JTextField custNameField = new JTextField(null, 20);
-        innerPanel.add(custNameField, g);
+        final NameField customerNameField = new NameField();
+        innerPanel.add(customerNameField, g);
         g.gridy = 2;
         final JTextField phoneNoField = new JTextField(null, 20);
         innerPanel.add(phoneNoField, g);
@@ -143,7 +144,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         innerPanel.add(dateAddedYear, g);
 
         custIdField.setText("" + customer.getId());
-        custNameField.setText(customer.getName());
+        customerNameField.setText(customer.getName());
         phoneNoField.setText(customer.getPhoneNumber());
         addressField.setText(customer.getAddress());
         vatNoField.setText(customer.getVatNumber());
@@ -174,7 +175,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         save.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
                 final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(custNameField);
+                textFields.add(customerNameField);
                 textFields.add(phoneNoField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
@@ -188,14 +189,14 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
                 if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
-                    final Customer editedCustomer = new Customer(custNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField
+                    final Customer editedCustomer = new Customer(customerNameField.getText(), phoneNoField.getText(), addressField.getText(), vatNoField
                             .getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
                             + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
                             + dateAddedYear.getSelectedItem());
                     editedCustomer.setId(index + IdManager.CUSTOMER_ID_START);
                     Database.addCustomerByIndex(index, editedCustomer);
 
-                    GuiCreator.setConfirmationMessage("Customer " + custNameField.getText() + "'s details editted");
+                    GuiCreator.setConfirmationMessage("Customer " + customerNameField.getText() + "'s details editted");
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
