@@ -32,12 +32,14 @@ import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.inputfields.AddressField;
+import dit.groupproject.rocketretail.inputfields.GenderField;
 import dit.groupproject.rocketretail.inputfields.NameField;
 import dit.groupproject.rocketretail.inputfields.PhoneNumberField;
+import dit.groupproject.rocketretail.inputfields.PinField;
+import dit.groupproject.rocketretail.inputfields.StaffLevelField;
 import dit.groupproject.rocketretail.inputfields.VatField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 public class AddEntityHelper extends AbstractEntityHelper {
 
@@ -293,22 +295,19 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
         final GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
-
-        final String[] genderOptions = { "", "Male", "Female" };
-        final String[] staffLevelOptions = { "", "Manager", "Employee" };
         g.fill = GridBagConstraints.HORIZONTAL;
+
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
-        final JPasswordField pinField = new JPasswordField(null, 20);
-        pinField.setDocument(new JTextFieldLimit(4));
+        final PinField pinField = new PinField();
         innerPanel.add(pinField, g);
         g.gridy = 1;
         final NameField staffNameField = new NameField();
         innerPanel.add(staffNameField, g);
         g.gridy = 2;
 
-        final JComboBox<String> genderField = new JComboBox<String>(genderOptions);
+        final GenderField genderField = new GenderField();
         innerPanel.add(genderField, g);
         g.gridy = 3;
         final PhoneNumberField staffPhoneField = new PhoneNumberField();
@@ -320,7 +319,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         final JTextField wageField = new JTextField(null, 20);
         innerPanel.add(wageField, g);
         g.gridy = 6;
-        final JComboBox<String> staffLevelField = new JComboBox<String>(staffLevelOptions);
+        final StaffLevelField staffLevelField = new StaffLevelField();
         innerPanel.add(staffLevelField, g);
 
         g.gridy = 7;

@@ -29,13 +29,15 @@ import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.inputfields.AddressField;
+import dit.groupproject.rocketretail.inputfields.GenderField;
 import dit.groupproject.rocketretail.inputfields.IdField;
 import dit.groupproject.rocketretail.inputfields.NameField;
 import dit.groupproject.rocketretail.inputfields.PhoneNumberField;
+import dit.groupproject.rocketretail.inputfields.PinField;
+import dit.groupproject.rocketretail.inputfields.StaffLevelField;
 import dit.groupproject.rocketretail.inputfields.VatField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
-import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 
 public class EditEntityHelper extends AbstractEntityHelper {
 
@@ -339,9 +341,6 @@ public class EditEntityHelper extends AbstractEntityHelper {
 
         GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
-
-        final String[] genderOptions = { "", "Male", "Female" };
-        final String[] staffLevelOptions = { "", "Manager", "Employee" };
         g.fill = GridBagConstraints.HORIZONTAL;
 
         g.gridx = 1;
@@ -350,14 +349,13 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final IdField staffIdField = new IdField();
         innerPanel.add(staffIdField, g);
         g.gridy = 1;
-        final JPasswordField pinField = new JPasswordField(null, 20);
-        pinField.setDocument(new JTextFieldLimit(4));
+        final PinField pinField = new PinField();
         innerPanel.add(pinField, g);
         g.gridy = 2;
         final NameField staffNameField = new NameField();
         innerPanel.add(staffNameField, g);
         g.gridy = 3;
-        final JComboBox<String> genderField = new JComboBox<>(genderOptions);
+        final GenderField genderField = new GenderField();
         innerPanel.add(genderField, g);
         g.gridy = 4;
         final PhoneNumberField staffPhoneField = new PhoneNumberField();
@@ -369,7 +367,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final JTextField wageField = new JTextField(null, 20);
         innerPanel.add(wageField, g);
         g.gridy = 7;
-        final JComboBox<String> staffLevelField = new JComboBox<>(staffLevelOptions);
+        final StaffLevelField staffLevelField = new StaffLevelField();
         innerPanel.add(staffLevelField, g);
 
         g.gridy = 8;
