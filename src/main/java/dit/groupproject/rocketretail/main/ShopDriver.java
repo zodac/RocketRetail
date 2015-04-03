@@ -17,7 +17,7 @@ public class ShopDriver {
         Database.initialiseDatabase();
         InitialiseArray.generateOrders(10, false, false);
         GuiCreator.createGui();
-        LoginHandler.launchGui();
+        GuiCreator.launchGui();
     }
 
     public static TableState getCurrentTableState() {

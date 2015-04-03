@@ -21,10 +21,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import dit.groupproject.rocketretail.main.LoginHandler;
+import dit.groupproject.rocketretail.menus.MenuGui;
 
 public class GuiCreator {
 
@@ -111,8 +115,8 @@ public class GuiCreator {
     private static void centreGuiOnScreen() {
         final GraphicsConfiguration localGraphics = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDefaultConfiguration();
         final Insets i = frame.getToolkit().getScreenInsets(localGraphics);
-        int maxWidth = (frame.getToolkit().getScreenSize().width - i.left - i.right);
-        int maxHeight = (frame.getToolkit().getScreenSize().height - i.top - i.bottom);
+        int maxWidth = frame.getToolkit().getScreenSize().width - i.left - i.right;
+        int maxHeight = frame.getToolkit().getScreenSize().height - i.top - i.bottom;
 
         frame.setLocation(((maxWidth - frame.getWidth()) / 2), ((maxHeight - frame.getHeight()) / 2));
     }
@@ -124,12 +128,12 @@ public class GuiCreator {
     }
 
     /**
-     * Sets the JLabel {@link #confirmationLabel} (in {@link #bottomPanel}) to
-     * the input message.<br />
-     * Includes a timer which hides the message after 4000 milliseconds.
+     * Displays a message at the bottom of the GUI.
+     * <p>
+     * Message remains on screen for 4 seconds.
      * 
      * @param title
-     *            a String holding the message to display on-screen
+     *            the message to display on GUI
      */
     public static void setConfirmationMessage(final String title) {
         confirmationLabel.setText(title);
@@ -172,15 +176,39 @@ public class GuiCreator {
         frame.validate();
     }
 
-    public static void clearScreen() {
+    public static void relaunchGui() {
         frame.dispose();
         leftPanel.removeAll();
         rightPanel.removeAll();
+        launchGui();
+    }
+
+    public static void launchGui() {
+        final boolean manager = LoginHandler.loginAsManager();
+        // final boolean manager = true;
+
+        final JMenuBar menuBar = new JMenuBar();
+        final MenuGui menuGui = new MenuGui();
+        menuGui.createMenuBar(menuBar, manager);
+        HomeScreen.setHomeScreen();
+        GuiCreator.showGui(menuBar);
     }
 
     public static boolean getConfirmationResponse(final String confirmationMessage) {
         final JPanel myPanel = new JPanel();
         myPanel.add(new JLabel(confirmationMessage));
         return showConfirmDialog(null, myPanel, "Please confirm", OK_CANCEL_OPTION, PLAIN_MESSAGE, null) == OK_OPTION;
+    }
+
+    public static void showMandatoryDialog(final String title, final JPanel myPanel) {
+        if (JOptionPane.showConfirmDialog(null, myPanel, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null) != JOptionPane.OK_OPTION) {
+            System.exit(0);
+        }
+
+    }
+
+    public static void showFailureMessage(final String title, final String errorMessage) {
+        JOptionPane.showMessageDialog(null, errorMessage, title, JOptionPane.PLAIN_MESSAGE);
+        System.exit(0);
     }
 }

@@ -10,7 +10,6 @@ import javax.swing.JMenuItem;
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.gui.HomeScreen;
-import dit.groupproject.rocketretail.main.LoginHandler;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 import dit.groupproject.rocketretail.tables.CustomerTable;
@@ -153,7 +152,7 @@ public class MainMenu {
         logout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 GuiCreator.frame.setTitle("Rocket Retail Inc");
-                LoginHandler.logout();
+                GuiCreator.relaunchGui();
             }
         });
         final JMenuItem closeProgram = new JMenuItem("Close Program");
