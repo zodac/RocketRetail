@@ -399,7 +399,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
         resetLeftPanel();
         final JPanel innerPanel = addLabelsToPanel(PRODUCT_LABELS);
 
-        final GridBagConstraints g = new GridBagConstraints();
+        GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
 
         g.gridx = 1;
@@ -432,6 +432,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
         final JButton save = new JButton("Save");
         save.setLayout(new GridBagLayout());
+        g = new GridBagConstraints();
         g.insets = new Insets(1, 0, 0, 0);
         g.gridx = 1;
         g.gridy = 7;
