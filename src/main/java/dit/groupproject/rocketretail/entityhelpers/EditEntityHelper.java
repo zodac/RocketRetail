@@ -41,6 +41,11 @@ import dit.groupproject.rocketretail.main.TableState;
 
 public class EditEntityHelper extends AbstractEntityHelper {
 
+    private final static String CUSTOMER_UPDATED_MESSAGE_FORMAT = "Customer %s's details updated";
+    private final static String PRODUCT_UPDATED_MESSAGE_FORMAT = "Product %s's details updated";
+    private final static String STAFF_UPDATED_MESSAGE_FORMAT = "Staff member %s's details updated";
+    private final static String SUPPLIER_UPDATED_MESSAGE_FORMAT = "Supplier %s's details updated";
+
     private final static String[] CUSTOMER_LABELS = { "Customer ID", "Customer Name", "Phone Number", "Address", "VAT Number", "Last Purchase",
             "Date Added" };
     private final static String[] PRODUCT_LABELS = { "Product ID", "Product Name", "Stock Level", "Maximum Level", "Supplier", "Cost Price",
@@ -157,7 +162,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                     editedCustomer.setId(index + IdManager.CUSTOMER_ID_START);
                     Database.addCustomerByIndex(index, editedCustomer);
 
-                    GuiCreator.setConfirmationMessage("Customer " + customerNameField.getText() + "'s details editted");
+                    GuiCreator.setConfirmationMessage(String.format(CUSTOMER_UPDATED_MESSAGE_FORMAT, editedCustomer.getName()));
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
@@ -246,7 +251,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                     editedSupplier.setId(index + IdManager.SUPPLIER_ID_START);
                     Database.addSupplierByIndex(index, editedSupplier);
 
-                    GuiCreator.setConfirmationMessage("Supplier \"" + supplierNameField.getText() + "'s details editted");
+                    GuiCreator.setConfirmationMessage(String.format(SUPPLIER_UPDATED_MESSAGE_FORMAT, editedSupplier.getName()));
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();
@@ -352,7 +357,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                     editedStaff.setId(index + IdManager.STAFF_ID_START);
                     Database.addStaffMemberByIndex(index, editedStaff);
 
-                    GuiCreator.setConfirmationMessage("Staff member " + staffNameField.getText() + "'s details editted");
+                    GuiCreator.setConfirmationMessage(String.format(STAFF_UPDATED_MESSAGE_FORMAT, editedStaff.getName()));
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.validate();
                     Database.removeStaffByIndex(index + 1);
@@ -448,7 +453,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                     editedProduct.setId(index + IdManager.PRODUCT_ID_START);
                     Database.addProductByIndex(index, editedProduct);
 
-                    GuiCreator.setConfirmationMessage("Product " + productNameField.getText() + "'s details editted");
+                    GuiCreator.setConfirmationMessage(String.format(PRODUCT_UPDATED_MESSAGE_FORMAT, editedProduct.getName()));
                     GuiCreator.frame.remove(GuiCreator.leftPanel);
                     GuiCreator.frame.repaint();
                     GuiCreator.frame.validate();

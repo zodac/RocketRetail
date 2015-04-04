@@ -27,15 +27,10 @@ public class DateField extends JComponent {
     }
 
     public void setDate(final String date) {
-        // final String[] dateValues = date.split("/");
-        // dayBox.setSelectedIndex(Integer.parseInt(dateValues[0]));
-        // monthBox.setSelectedIndex(Integer.parseInt(dateValues[1]));
-        // yearBox.setSelectedIndex(Integer.parseInt(dateValues[2]) -
-        // (YEAR_START - 1));
-
-        dayBox.setSelectedIndex(Integer.parseInt(date.substring(0, 2)));
-        monthBox.setSelectedIndex(Integer.parseInt(date.substring(3, 5)));
-        yearBox.setSelectedIndex(Integer.parseInt(date.substring(6, 10)) - (YEAR_START - 1));
+        final String[] dateValues = date.split("/");
+        dayBox.setSelectedIndex(Integer.parseInt(dateValues[0]));
+        monthBox.setSelectedIndex(Integer.parseInt(dateValues[1]));
+        yearBox.setSelectedIndex(Integer.parseInt(dateValues[2]) - (YEAR_START - 1));
     }
 
     public void setCurrentDate() {
