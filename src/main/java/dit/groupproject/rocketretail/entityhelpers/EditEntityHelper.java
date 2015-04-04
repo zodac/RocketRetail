@@ -29,12 +29,15 @@ import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.inputfields.AddressField;
+import dit.groupproject.rocketretail.inputfields.CurrencyField;
 import dit.groupproject.rocketretail.inputfields.GenderField;
 import dit.groupproject.rocketretail.inputfields.IdField;
 import dit.groupproject.rocketretail.inputfields.NameField;
+import dit.groupproject.rocketretail.inputfields.NumberField;
 import dit.groupproject.rocketretail.inputfields.PhoneNumberField;
 import dit.groupproject.rocketretail.inputfields.PinField;
 import dit.groupproject.rocketretail.inputfields.StaffLevelField;
+import dit.groupproject.rocketretail.inputfields.SuppliersField;
 import dit.groupproject.rocketretail.inputfields.VatField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
@@ -364,7 +367,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final AddressField addressField = new AddressField();
         innerPanel.add(addressField, g);
         g.gridy = 6;
-        final JTextField wageField = new JTextField(null, 20);
+        final CurrencyField wageField = new CurrencyField();
         innerPanel.add(wageField, g);
         g.gridy = 7;
         final StaffLevelField staffLevelField = new StaffLevelField();
@@ -475,26 +478,20 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final NameField productNameField = new NameField();
         innerPanel.add(productNameField, g);
         g.gridy = 2;
-        final JTextField stockLevelField = new JTextField(null, 20);
+        final NumberField stockLevelField = new NumberField();
         innerPanel.add(stockLevelField, g);
         g.gridy = 3;
-        final JTextField maxLevelField = new JTextField(null, 20);
+        final NumberField maxLevelField = new NumberField();
         innerPanel.add(maxLevelField, g);
         g.gridy = 4;
 
-        final String[] supplierOptions = new String[Database.getSuppliers().size() + 1];
-        supplierOptions[0] = "";
-
-        for (int i = 1; i < supplierOptions.length; i++) {
-            supplierOptions[i] = Database.getSupplierByIndex(i - 1).getName() + " (" + Database.getSupplierByIndex(i - 1).getId() + ")";
-        }
-        final JComboBox<String> suppIdBox = new JComboBox<String>(supplierOptions);
+        final SuppliersField suppIdBox = new SuppliersField();
         innerPanel.add(suppIdBox, g);
         g.gridy = 5;
-        final JTextField costPriceField = new JTextField(null, 20);
+        final CurrencyField costPriceField = new CurrencyField();
         innerPanel.add(costPriceField, g);
         g.gridy = 6;
-        final JTextField salePriceField = new JTextField(null, 20);
+        final CurrencyField salePriceField = new CurrencyField();
         innerPanel.add(salePriceField, g);
 
         productIdField.setText(ID_FORMATTER.format(product.getId()));
