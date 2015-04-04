@@ -46,7 +46,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
 
     private final static String[] CUSTOMER_LABELS = { "Customer ID", "Customer Name", "Phone Number", "Address", "VAT Number", "Last Purchase",
             "Date Added" };
-    private final static String[] PRODUCT_LABELS = { "Product ID", "Product Name", "Stock Level", "Maximum Level", "Supplier ID", "Cost Price",
+    private final static String[] PRODUCT_LABELS = { "Product ID", "Product Name", "Stock Level", "Maximum Level", "Supplier", "Cost Price",
             "Sale Price" };
     private final static String[] STAFF_LABELS = { "Staff ID", "Staff PIN", "Name", "Gender", "Phone Number", "Address", "Wage", "Staff Level",
             "Date Added" };
@@ -61,10 +61,9 @@ public class EditEntityHelper extends AbstractEntityHelper {
      * table to use.
      */
     public ActionListener editEntityPanel(final JComboBox<String> editBox) {
-        final TableState currentState = ShopDriver.getCurrentTableState();
-
         return new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
+                final TableState currentState = ShopDriver.getCurrentTableState();
                 final int selectedIdIndex = Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10));
 
                 if (currentState == TableState.CUSTOMER) {
@@ -78,7 +77,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 } else if (currentState == TableState.SUPPLIER) {
                     editSupplierPanel(selectedIdIndex);
                 } else {
-                    throw new IllegalArgumentException("No panel available for current table state [" + currentState.toString() + "]!");
+                    throw new IllegalArgumentException(String.format("No panel available for current table state [%s]!", currentState.toString()));
                 }
             }
         };
@@ -187,7 +186,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 lastPurchaseBoxes.add(lastPurchaseMonth);
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
+                if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes, null)) {
                     final Customer editedCustomer = new Customer(customerNameField.getText(), customerPhoneField.getText(), customerAddressField
                             .getText(), customerVatField.getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem()
                             + "/" + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
@@ -313,7 +312,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 lastPurchaseBoxes.add(lastPurchaseMonth);
                 lastPurchaseBoxes.add(lastPurchaseYear);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes)) {
+                if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes, null)) {
                     final Supplier editedSupplier = new Supplier(supplierNameField.getText(), supplierPhoneField.getText(), addressField.getText(),
                             vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
                                     + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem()
@@ -437,7 +436,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 addedBoxes.add(dateAddedMonth);
                 addedBoxes.add(dateAddedYear);
 
-                if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null)) {
+                if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null, null)) {
                     final Staff editedStaff = new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), staffNameField.getText(),
                             genderField.getSelectedIndex(), staffPhoneField.getText(), addressField.getText(),
                             Double.parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/"
@@ -533,7 +532,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
                 comboBoxes.add(suppIdBox);
 
-                if (FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null)) {
+                if (FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null, null)) {
                     final Product editedProduct = new Product(productNameField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
                             .parseInt(maxLevelField.getText()),
                             Integer.parseInt(((String) suppIdBox.getSelectedItem()).split("\\(")[1].split("\\)")[0]), Double

@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
+import dit.groupproject.rocketretail.inputfields.DateField;
 import dit.groupproject.rocketretail.utilities.Dates;
 
 public class FieldValidator {
@@ -51,7 +52,7 @@ public class FieldValidator {
      */
     public static boolean checkFields(final ArrayList<JTextField> textFields, ArrayList<JTextField> intFields, ArrayList<JTextField> doubleFields,
             ArrayList<JPasswordField> pinFields, ArrayList<JComboBox<String>> comboBoxes, ArrayList<JComboBox<String>> addedBoxes,
-            ArrayList<JComboBox<String>> lastPurchaseBoxes) {
+            ArrayList<JComboBox<String>> lastPurchaseBoxes, ArrayList<DateField> dateFields) {
 
         boolean valid = true;
         final Border errorBorder = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red);
@@ -61,6 +62,7 @@ public class FieldValidator {
         valid = validatePinField(pinFields, valid, errorBorder, validBorder);
         valid = validateComboBoxes(comboBoxes, valid, errorBorder, validBorder);
         valid = validateDateBoxes(addedBoxes, lastPurchaseBoxes, valid, errorBorder, validBorder);
+        // valid = validateDateFields()
 
         if (!valid) {
             GuiCreator.setConfirmationMessage("Invalid entry!");
