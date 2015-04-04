@@ -1,20 +1,11 @@
 package dit.groupproject.rocketretail.entityhelpers;
 
-import static dit.groupproject.rocketretail.utilities.Dates.DAYS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.Dates.MONTHS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.Dates.YEARS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
-import static dit.groupproject.rocketretail.utilities.Formatters.DAY_FORMATTER;
-import static dit.groupproject.rocketretail.utilities.Formatters.MONTH_FORMATTER;
-import static dit.groupproject.rocketretail.utilities.Formatters.YEAR_FORMATTER;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -104,24 +95,11 @@ public class AddEntityHelper extends AbstractEntityHelper {
         final VatField vatNoField = new VatField();
         innerPanel.add(vatNoField, g);
 
-        final DateField lastPurchaseDate = new DateField();
-        lastPurchaseDate.addToPanel(innerPanel, g);
-
-        g.gridy = 5;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
-        innerPanel.add(dateAddedDay, g);
-        g.gridx = 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
-        innerPanel.add(dateAddedMonth, g);
-        g.gridx = 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
-        innerPanel.add(dateAddedYear, g);
-
-        dateAddedDay.setSelectedIndex(Integer.parseInt(DAY_FORMATTER.format(new Date())));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(MONTH_FORMATTER.format(new Date())));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
+        final DateField lastPurchaseDateField = new DateField();
+        lastPurchaseDateField.addToPanel(innerPanel, g);
+        final DateField dateAddedField = new DateField();
+        dateAddedField.setCurrentDate();
+        dateAddedField.addToPanel(innerPanel, g);
 
         g.gridx = 0;
         g.gridy = 6;
@@ -146,19 +124,13 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 textFields.add(customerPhoneField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
-                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
-                addedBoxes.add(dateAddedDay);
-                addedBoxes.add(dateAddedMonth);
-                addedBoxes.add(dateAddedYear);
-                final ArrayList<DateField> lastPurchaseBoxes = new ArrayList<>();
-                lastPurchaseBoxes.add(lastPurchaseDate);
-                // lastPurchaseBoxes.add(lastPurchaseMonth);
-                // lastPurchaseBoxes.add(lastPurchaseYear);
+                final ArrayList<DateField> dateBoxes = new ArrayList<>();
+                dateBoxes.add(lastPurchaseDateField);
+                dateBoxes.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, null, lastPurchaseBoxes)) {
+                if (FieldValidator.checkFields(textFields, null, null, null, null, null, null, dateBoxes)) {
                     Database.addCustomer(new Customer(customerNameField.getText(), customerPhoneField.getText(), addressField.getText(), vatNoField
-                            .getText(), lastPurchaseDate.getValue(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
-                            + dateAddedYear.getSelectedItem()));
+                            .getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate()));
 
                     GuiCreator.setConfirmationMessage("Customer " + customerNameField.getText() + " added");
                     removeLeftPanel();
@@ -195,40 +167,12 @@ public class AddEntityHelper extends AbstractEntityHelper {
         g.gridy = 3;
         final VatField vatNoField = new VatField();
         innerPanel.add(vatNoField, g);
-        g.gridy = 4;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> lastPurchaseDay = new JComboBox<>(DAYS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseDay, g);
 
-        g.gridy = 4;
-        g.gridx = 2;
-        final JComboBox<String> lastPurchaseMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseMonth, g);
-
-        g.gridy = 4;
-        g.gridx = 3;
-        final JComboBox<String> lastPurchaseYear = new JComboBox<>(YEARS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseYear, g);
-
-        g.gridy = 5;
-        g.gridx = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
-        innerPanel.add(dateAddedDay, g);
-
-        g.gridy = 5;
-        g.gridx = 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
-        innerPanel.add(dateAddedMonth, g);
-
-        g.gridy = 5;
-        g.gridx = 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
-        innerPanel.add(dateAddedYear, g);
-
-        dateAddedDay.setSelectedIndex(Integer.parseInt(DAY_FORMATTER.format(new Date())));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(MONTH_FORMATTER.format(new Date())));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
+        final DateField lastPurchaseDateField = new DateField();
+        lastPurchaseDateField.addToPanel(innerPanel, g);
+        final DateField dateAddedField = new DateField();
+        dateAddedField.setCurrentDate();
+        dateAddedField.addToPanel(innerPanel, g);
 
         g.gridx = 0;
         g.gridy = 6;
@@ -253,20 +197,13 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 textFields.add(supplierPhoneField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
-                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
-                addedBoxes.add(dateAddedDay);
-                addedBoxes.add(dateAddedMonth);
-                addedBoxes.add(dateAddedYear);
-                final ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<>();
-                lastPurchaseBoxes.add(lastPurchaseDay);
-                lastPurchaseBoxes.add(lastPurchaseMonth);
-                lastPurchaseBoxes.add(lastPurchaseYear);
+                final ArrayList<DateField> dateFields = new ArrayList<>();
+                dateFields.add(lastPurchaseDateField);
+                dateFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes, null)) {
+                if (FieldValidator.checkFields(textFields, null, null, null, null, null, null, dateFields)) {
                     Database.addSupplier(new Supplier(supplierNameField.getText(), supplierPhoneField.getText(), addressField.getText(), vatNoField
-                            .getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
-                            + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
-                            + dateAddedYear.getSelectedItem()));
+                            .getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate()));
 
                     GuiCreator.setConfirmationMessage(String.format("New Supplier \"%s\" added", supplierNameField.getText()));
                     removeLeftPanel();
@@ -315,21 +252,9 @@ public class AddEntityHelper extends AbstractEntityHelper {
         final StaffLevelField staffLevelField = new StaffLevelField();
         innerPanel.add(staffLevelField, g);
 
-        g.gridy = 7;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<String>(DAYS_AS_NUMBERS);
-        innerPanel.add(dateAddedDay, g);
-        g.gridx = 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<String>(MONTHS_AS_NUMBERS);
-        innerPanel.add(dateAddedMonth, g);
-        g.gridx = 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<String>(YEARS_AS_NUMBERS);
-        innerPanel.add(dateAddedYear, g);
-
-        dateAddedDay.setSelectedIndex(Integer.parseInt(DAY_FORMATTER.format(new Date())));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(MONTH_FORMATTER.format(new Date())));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
+        final DateField dateAddedField = new DateField();
+        dateAddedField.setCurrentDate();
+        dateAddedField.addToPanel(innerPanel, g);
 
         g.gridx = 0;
         g.gridy = 8;
@@ -361,16 +286,13 @@ public class AddEntityHelper extends AbstractEntityHelper {
                 final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
                 comboBoxes.add(genderField);
                 comboBoxes.add(staffLevelField);
-                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
-                addedBoxes.add(dateAddedDay);
-                addedBoxes.add(dateAddedMonth);
-                addedBoxes.add(dateAddedYear);
+                final ArrayList<DateField> dateFields = new ArrayList<>();
+                dateFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null, null)) {
+                if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, null, null, dateFields)) {
                     Database.addStaffMember(new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), staffNameField.getText(), genderField
                             .getSelectedIndex(), staffPhoneField.getText(), addressField.getText(), Double.parseDouble(wageField.getText()),
-                            staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
-                                    + dateAddedYear.getSelectedItem()));
+                            staffLevelField.getSelectedIndex(), dateAddedField.getDate()));
 
                     GuiCreator.setConfirmationMessage("Staff member " + staffNameField.getText() + " added");
                     removeLeftPanel();
@@ -453,7 +375,7 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
                     Database.addProduct(product);
 
-                    GuiCreator.setConfirmationMessage("Product " + productNameField.getText() + " added");
+                    GuiCreator.setConfirmationMessage(String.format("Product %s added", productNameField.getText()));
                     removeLeftPanel();
 
                     productTable.descendingOrderSort = false;

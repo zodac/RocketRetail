@@ -1,9 +1,5 @@
 package dit.groupproject.rocketretail.entityhelpers;
 
-import static dit.groupproject.rocketretail.utilities.Dates.DAYS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.Dates.MONTHS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.Dates.YEARS_AS_NUMBERS;
-import static dit.groupproject.rocketretail.utilities.Dates.YEAR_START;
 import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
 
 import java.awt.GridBagConstraints;
@@ -30,6 +26,7 @@ import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.inputfields.AddressField;
 import dit.groupproject.rocketretail.inputfields.CurrencyField;
+import dit.groupproject.rocketretail.inputfields.DateField;
 import dit.groupproject.rocketretail.inputfields.GenderField;
 import dit.groupproject.rocketretail.inputfields.IdField;
 import dit.groupproject.rocketretail.inputfields.NameField;
@@ -64,20 +61,23 @@ public class EditEntityHelper extends AbstractEntityHelper {
         return new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
                 final TableState currentState = ShopDriver.getCurrentTableState();
-                final int selectedIdIndex = Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10));
 
-                if (currentState == TableState.CUSTOMER) {
-                    editCustomerPanel(selectedIdIndex);
-                } else if (currentState == TableState.ORDER) {
-                    System.out.println("Not yet implemented!");
-                } else if (currentState == TableState.PRODUCT) {
-                    editProductPanel(selectedIdIndex);
-                } else if (currentState == TableState.STAFF) {
-                    editStaffPanel(selectedIdIndex);
-                } else if (currentState == TableState.SUPPLIER) {
-                    editSupplierPanel(selectedIdIndex);
-                } else {
-                    throw new IllegalArgumentException(String.format("No panel available for current table state [%s]!", currentState.toString()));
+                if (editBox.getSelectedIndex() > 0) {
+                    final int selectedIdIndex = Integer.parseInt(((String) editBox.getSelectedItem()).substring(4, 10));
+
+                    if (currentState == TableState.CUSTOMER) {
+                        editCustomerPanel(selectedIdIndex);
+                    } else if (currentState == TableState.ORDER) {
+                        System.out.println("Not yet implemented!");
+                    } else if (currentState == TableState.PRODUCT) {
+                        editProductPanel(selectedIdIndex);
+                    } else if (currentState == TableState.STAFF) {
+                        editStaffPanel(selectedIdIndex);
+                    } else if (currentState == TableState.SUPPLIER) {
+                        editSupplierPanel(selectedIdIndex);
+                    } else {
+                        throw new IllegalArgumentException(String.format("No panel available for current table state [%s]!", currentState.toString()));
+                    }
                 }
             }
         };
@@ -110,48 +110,18 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final VatField customerVatField = new VatField();
         innerPanel.add(customerVatField, g);
 
-        g.gridy = 5;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> lastPurchaseDay = new JComboBox<>(DAYS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseDay, g);
-
-        g.gridy = 5;
-        g.gridx = 2;
-        final JComboBox<String> lastPurchaseMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseMonth, g);
-
-        g.gridy = 5;
-        g.gridx = 3;
-        final JComboBox<String> lastPurchaseYear = new JComboBox<>(YEARS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseYear, g);
-
-        g.gridy = 6;
-        g.gridx = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
-        innerPanel.add(dateAddedDay, g);
-
-        g.gridy = 6;
-        g.gridx = 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
-        innerPanel.add(dateAddedMonth, g);
-
-        g.gridy = 6;
-        g.gridx = 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
-        innerPanel.add(dateAddedYear, g);
+        final DateField lastPurchaseDateField = new DateField();
+        lastPurchaseDateField.addToPanel(innerPanel, g);
+        final DateField dateAddedField = new DateField();
+        dateAddedField.addToPanel(innerPanel, g);
 
         customerIdField.setText(ID_FORMATTER.format(customer.getId()));
         customerNameField.setText(customer.getName());
         customerPhoneField.setText(customer.getPhoneNumber());
         customerAddressField.setText(customer.getAddress());
         customerVatField.setText(customer.getVatNumber());
-        lastPurchaseDay.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(0, 2)));
-        lastPurchaseMonth.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(3, 5)));
-        lastPurchaseYear.setSelectedIndex(Integer.parseInt(customer.getLastPurchase().substring(6, 10)) - (YEAR_START - 1));
-        dateAddedDay.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(0, 2)));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(3, 5)));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(customer.getDateAdded().substring(6, 10)) - (YEAR_START - 1));
+        lastPurchaseDateField.setDate(customer.getLastPurchase());
+        dateAddedField.setDate(customer.getDateAdded());
 
         g.gridx = 0;
         g.gridy = 8;
@@ -177,20 +147,13 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 textFields.add(customerPhoneField);
                 textFields.add(customerAddressField);
                 textFields.add(customerVatField);
-                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
-                addedBoxes.add(dateAddedDay);
-                addedBoxes.add(dateAddedMonth);
-                addedBoxes.add(dateAddedYear);
-                final ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<>();
-                lastPurchaseBoxes.add(lastPurchaseDay);
-                lastPurchaseBoxes.add(lastPurchaseMonth);
-                lastPurchaseBoxes.add(lastPurchaseYear);
+                final ArrayList<DateField> dateFields = new ArrayList<>();
+                dateFields.add(lastPurchaseDateField);
+                dateFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes, null)) {
+                if (FieldValidator.checkFields(textFields, null, null, null, null, null, null, dateFields)) {
                     final Customer editedCustomer = new Customer(customerNameField.getText(), customerPhoneField.getText(), customerAddressField
-                            .getText(), customerVatField.getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem()
-                            + "/" + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem() + "/"
-                            + dateAddedYear.getSelectedItem());
+                            .getText(), customerVatField.getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate());
                     editedCustomer.setId(index + IdManager.CUSTOMER_ID_START);
                     Database.addCustomerByIndex(index, editedCustomer);
 
@@ -235,54 +198,24 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final VatField vatNoField = new VatField();
         innerPanel.add(vatNoField, g);
 
-        g.gridy = 5;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> lastPurchaseDay = new JComboBox<>(DAYS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseDay, g);
-
-        g.gridy = 5;
-        g.gridx = 2;
-        final JComboBox<String> lastPurchaseMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseMonth, g);
-
-        g.gridy = 5;
-        g.gridx = 3;
-        final JComboBox<String> lastPurchaseYear = new JComboBox<>(YEARS_AS_NUMBERS);
-        innerPanel.add(lastPurchaseYear, g);
-
-        g.gridy = 6;
-        g.gridx = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
-        innerPanel.add(dateAddedDay, g);
-
-        g.gridy = 6;
-        g.gridx = 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
-        innerPanel.add(dateAddedMonth, g);
-
-        g.gridy = 6;
-        g.gridx = 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
-        innerPanel.add(dateAddedYear, g);
+        final DateField lastPurchaseDateField = new DateField();
+        lastPurchaseDateField.addToPanel(innerPanel, g);
+        final DateField dateAddedField = new DateField();
+        dateAddedField.addToPanel(innerPanel, g);
 
         supplierIdField.setText(ID_FORMATTER.format(supplier.getId()));
         supplierNameField.setText(supplier.getName());
         supplierPhoneField.setText(supplier.getPhoneNumber());
         addressField.setText(supplier.getAddress());
         vatNoField.setText(supplier.getVatNumber());
-        lastPurchaseDay.setSelectedIndex(Integer.parseInt(supplier.getLastPurchase().substring(0, 2)));
-        lastPurchaseMonth.setSelectedIndex(Integer.parseInt(supplier.getLastPurchase().substring(3, 5)));
-        lastPurchaseYear.setSelectedIndex(Integer.parseInt(supplier.getLastPurchase().substring(6, 10)) - (YEAR_START - 1));
-        dateAddedDay.setSelectedIndex(Integer.parseInt(supplier.getDateAdded().substring(0, 2)));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(supplier.getDateAdded().substring(3, 5)));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(supplier.getDateAdded().substring(6, 10)) - (YEAR_START - 1));
+        lastPurchaseDateField.setDate(supplier.getLastPurchase());
+        dateAddedField.setDate(supplier.getDateAdded());
 
         g.gridx = 0;
         g.gridy = 8;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
         g.gridx = 1;
-        innerPanel.add(new JLabel(" "), g);
+        innerPanel.add(new JLabel(""), g);
 
         final JButton save = new JButton("Save");
         save.setLayout(new GridBagLayout());
@@ -303,20 +236,13 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 textFields.add(supplierPhoneField);
                 textFields.add(addressField);
                 textFields.add(vatNoField);
-                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
-                addedBoxes.add(dateAddedDay);
-                addedBoxes.add(dateAddedMonth);
-                addedBoxes.add(dateAddedYear);
-                final ArrayList<JComboBox<String>> lastPurchaseBoxes = new ArrayList<>();
-                lastPurchaseBoxes.add(lastPurchaseDay);
-                lastPurchaseBoxes.add(lastPurchaseMonth);
-                lastPurchaseBoxes.add(lastPurchaseYear);
+                final ArrayList<DateField> dateFields = new ArrayList<>();
+                dateFields.add(lastPurchaseDateField);
+                dateFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, addedBoxes, lastPurchaseBoxes, null)) {
+                if (FieldValidator.checkFields(textFields, null, null, null, null, null, null, dateFields)) {
                     final Supplier editedSupplier = new Supplier(supplierNameField.getText(), supplierPhoneField.getText(), addressField.getText(),
-                            vatNoField.getText(), lastPurchaseDay.getSelectedItem() + "/" + lastPurchaseMonth.getSelectedItem() + "/"
-                                    + lastPurchaseYear.getSelectedItem(), dateAddedDay.getSelectedItem() + "/" + dateAddedMonth.getSelectedItem()
-                                    + "/" + dateAddedYear.getSelectedItem());
+                            vatNoField.getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate());
                     editedSupplier.setId(index + IdManager.SUPPLIER_ID_START);
                     Database.addSupplierByIndex(index, editedSupplier);
 
@@ -372,21 +298,8 @@ public class EditEntityHelper extends AbstractEntityHelper {
         final StaffLevelField staffLevelField = new StaffLevelField();
         innerPanel.add(staffLevelField, g);
 
-        g.gridy = 8;
-        g.gridx = 1;
-        g.gridwidth = 1;
-        final JComboBox<String> dateAddedDay = new JComboBox<>(DAYS_AS_NUMBERS);
-        innerPanel.add(dateAddedDay, g);
-
-        g.gridy = 8;
-        g.gridx = 2;
-        final JComboBox<String> dateAddedMonth = new JComboBox<>(MONTHS_AS_NUMBERS);
-        innerPanel.add(dateAddedMonth, g);
-
-        g.gridy = 8;
-        g.gridx = 3;
-        final JComboBox<String> dateAddedYear = new JComboBox<>(YEARS_AS_NUMBERS);
-        innerPanel.add(dateAddedYear, g);
+        final DateField dateAddedField = new DateField();
+        dateAddedField.addToPanel(innerPanel, g);
 
         staffIdField.setText(ID_FORMATTER.format(staffId));
         pinField.setText(String.valueOf(staff.getStaffPin()));
@@ -396,9 +309,7 @@ public class EditEntityHelper extends AbstractEntityHelper {
         addressField.setText(staff.getAddress());
         wageField.setText(String.valueOf(staff.getWage()));
         staffLevelField.setSelectedIndex(staff.getStaffLevel());
-        dateAddedDay.setSelectedIndex(Integer.parseInt(staff.getDateAdded().substring(0, 2)));
-        dateAddedMonth.setSelectedIndex(Integer.parseInt(staff.getDateAdded().substring(3, 5)));
-        dateAddedYear.setSelectedIndex(Integer.parseInt(staff.getDateAdded().substring(6, 10)) - (YEAR_START - 1));
+        dateAddedField.setDate(staff.getDateAdded());
 
         g.gridx = 0;
         g.gridy = 9;
@@ -431,16 +342,13 @@ public class EditEntityHelper extends AbstractEntityHelper {
                 final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
                 comboBoxes.add(genderField);
                 comboBoxes.add(staffLevelField);
-                final ArrayList<JComboBox<String>> addedBoxes = new ArrayList<>();
-                addedBoxes.add(dateAddedDay);
-                addedBoxes.add(dateAddedMonth);
-                addedBoxes.add(dateAddedYear);
+                final ArrayList<DateField> dateFields = new ArrayList<>();
+                dateFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, addedBoxes, null, null)) {
+                if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, null, null, dateFields)) {
                     final Staff editedStaff = new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), staffNameField.getText(),
                             genderField.getSelectedIndex(), staffPhoneField.getText(), addressField.getText(),
-                            Double.parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(), dateAddedDay.getSelectedItem() + "/"
-                                    + dateAddedMonth.getSelectedItem() + "/" + dateAddedYear.getSelectedItem());
+                            Double.parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(), dateAddedField.getDate());
                     editedStaff.setId(index + IdManager.STAFF_ID_START);
                     Database.addStaffMemberByIndex(index, editedStaff);
 

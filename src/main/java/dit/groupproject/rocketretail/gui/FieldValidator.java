@@ -62,7 +62,6 @@ public class FieldValidator {
         valid = validatePinField(pinFields, valid, errorBorder, validBorder);
         valid = validateComboBoxes(comboBoxes, valid, errorBorder, validBorder);
         valid = validateDateBoxes(addedBoxes, lastPurchaseBoxes, valid, errorBorder, validBorder);
-        // valid = validateDateFields()
 
         if (!valid) {
             GuiCreator.setConfirmationMessage("Invalid entry!");
