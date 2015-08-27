@@ -16,7 +16,7 @@ import dit.groupproject.rocketretail.tables.ProductTable;
 import dit.groupproject.rocketretail.tables.StaffTable;
 import dit.groupproject.rocketretail.tables.SupplierTable;
 
-public class AbstractEntityHelper {
+public class BaseEntityHelper {
 
     protected final CustomerTable customerTable = CustomerTable.getInstance();
     protected final ProductTable productTable = ProductTable.getInstance();

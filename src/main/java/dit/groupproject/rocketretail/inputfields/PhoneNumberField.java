@@ -8,7 +8,6 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class PhoneNumberField extends JTextField implements InputField {
 
-    private final static int INPUT_FIELD_LENGTH = 20;
     private final static String NUMBERS_ONLY_SEVEN_TO_TEN_DIGITS_PATTERN = "[0-9]{7,10}";
 
     public PhoneNumberField() {
@@ -23,11 +22,29 @@ public class PhoneNumberField extends JTextField implements InputField {
     @Override
     public boolean isValidInput() {
         final String inputText = this.getText();
-        return inputText.matches(NUMBERS_ONLY_SEVEN_TO_TEN_DIGITS_PATTERN);
+        final boolean isValid = inputText.matches(NUMBERS_ONLY_SEVEN_TO_TEN_DIGITS_PATTERN);
+
+        if (isValid) {
+            setValidBorder();
+        } else {
+            setInvalidBorder();
+        }
+
+        return isValid;
     }
 
     @Override
     public String getText() {
         return super.getText().replaceAll("\\s", "").replace("-", "");
+    }
+
+    @Override
+    public void setValidBorder() {
+        this.setBorder(VALID_BORDER);
+    }
+
+    @Override
+    public void setInvalidBorder() {
+        this.setBorder(INVALID_BORDER);
     }
 }

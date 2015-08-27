@@ -43,7 +43,7 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 
-public class ViewEntityHelper extends AbstractEntityHelper {
+public class ViewEntityHelper extends BaseEntityHelper {
 
     private final static String[] ORDER_COLUMN_NAMES_FROM_CUSTOMER_TABLE = { "Order ID", "Order Date", "Delivery Date", "Total Cost" };
 

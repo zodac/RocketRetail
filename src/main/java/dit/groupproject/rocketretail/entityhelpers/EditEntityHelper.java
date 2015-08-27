@@ -39,7 +39,7 @@ import dit.groupproject.rocketretail.inputfields.VatField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 
-public class EditEntityHelper extends AbstractEntityHelper {
+public class EditEntityHelper extends BaseEntityHelper {
 
     private final static String CUSTOMER_UPDATED_MESSAGE_FORMAT = "Customer %s's details updated";
     private final static String PRODUCT_UPDATED_MESSAGE_FORMAT = "Product %s's details updated";

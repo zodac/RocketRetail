@@ -8,8 +8,6 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class IdField extends JTextField implements InputField {
 
-    private final static int INPUT_FIELD_LENGTH = 20;
-
     public IdField() {
         super(INPUT_FIELD_LENGTH);
         this.setEditable(false);
@@ -23,6 +21,24 @@ public class IdField extends JTextField implements InputField {
     @Override
     public boolean isValidInput() {
         // IDs are system-generated - no validation needed (for now)
-        return true;
+        final boolean isValid = true;
+
+        if (isValid) {
+            setValidBorder();
+        } else {
+            setInvalidBorder();
+        }
+
+        return isValid;
+    }
+
+    @Override
+    public void setValidBorder() {
+        this.setBorder(VALID_BORDER);
+    }
+
+    @Override
+    public void setInvalidBorder() {
+        this.setBorder(INVALID_BORDER);
     }
 }

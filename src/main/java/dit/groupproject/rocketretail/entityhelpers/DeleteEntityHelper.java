@@ -11,7 +11,7 @@ import dit.groupproject.rocketretail.gui.GuiCreator;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
 
-public class DeleteEntityHelper extends AbstractEntityHelper {
+public class DeleteEntityHelper extends BaseEntityHelper {
 
     /**
      * Returns an ActionListener which adds an Entity delete panel to the left

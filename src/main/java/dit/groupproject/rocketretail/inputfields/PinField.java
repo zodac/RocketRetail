@@ -10,7 +10,6 @@ import dit.groupproject.rocketretail.utilities.JTextFieldLimit;
 @SuppressWarnings("serial")
 public class PinField extends JPasswordField implements InputField {
 
-    private final static int INPUT_FIELD_LENGTH = 20;
     private final static String NUMBERS_ONLY_FOUR_DIGITS_PATTERN = "[0-9]{4}";
 
     public PinField() {
@@ -26,6 +25,24 @@ public class PinField extends JPasswordField implements InputField {
     @Override
     public boolean isValidInput() {
         final String pinInput = String.valueOf(this.getPassword());
-        return pinInput.matches(NUMBERS_ONLY_FOUR_DIGITS_PATTERN);
+        final boolean isValid = pinInput.matches(NUMBERS_ONLY_FOUR_DIGITS_PATTERN);
+
+        if (isValid) {
+            setValidBorder();
+        } else {
+            setInvalidBorder();
+        }
+
+        return isValid;
+    }
+
+    @Override
+    public void setValidBorder() {
+        this.setBorder(VALID_BORDER);
+    }
+
+    @Override
+    public void setInvalidBorder() {
+        this.setBorder(INVALID_BORDER);
     }
 }

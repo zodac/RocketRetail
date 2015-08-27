@@ -22,6 +22,24 @@ public class StaffLevelField extends JComboBox<String> implements InputField {
     @Override
     public boolean isValidInput() {
         final String inputText = ((String) this.getSelectedItem());
-        return !inputText.isEmpty();
+        final boolean isValid = !inputText.isEmpty();
+
+        if (isValid) {
+            setValidBorder();
+        } else {
+            setInvalidBorder();
+        }
+
+        return isValid;
+    }
+
+    @Override
+    public void setValidBorder() {
+        this.setBorder(VALID_BORDER);
+    }
+
+    @Override
+    public void setInvalidBorder() {
+        this.setBorder(INVALID_BORDER);
     }
 }

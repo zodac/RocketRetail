@@ -8,7 +8,6 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class NameField extends JTextField implements InputField {
 
-    private final static int INPUT_FIELD_LENGTH = 20;
     private final static String NAME_PATTERN = "^([A-Z]+[a-zA-Z]*[ ])+[A-Z]+[a-zA-Z]*";
 
     public NameField() {
@@ -23,6 +22,24 @@ public class NameField extends JTextField implements InputField {
     @Override
     public boolean isValidInput() {
         final String inputText = this.getText();
-        return inputText.matches(NAME_PATTERN);
+        final boolean isValid = inputText.matches(NAME_PATTERN);
+
+        if (isValid) {
+            setValidBorder();
+        } else {
+            setInvalidBorder();
+        }
+
+        return isValid;
+    }
+
+    @Override
+    public void setValidBorder() {
+        this.setBorder(VALID_BORDER);
+    }
+
+    @Override
+    public void setInvalidBorder() {
+        this.setBorder(INVALID_BORDER);
     }
 }

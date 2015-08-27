@@ -8,7 +8,6 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class VatField extends JTextField implements InputField {
 
-    private final static int INPUT_FIELD_LENGTH = 20;
     // Valid Irish pattern would be "(IE)?[0-9]S[0-9]{5}L"
     private final static String VAT_NUMBER_PATTERN = "^[A-Z]?[0-9]{7}$";
 
@@ -24,6 +23,24 @@ public class VatField extends JTextField implements InputField {
     @Override
     public boolean isValidInput() {
         final String inputText = this.getText();
-        return inputText.matches(VAT_NUMBER_PATTERN);
+        final boolean isValid = inputText.matches(VAT_NUMBER_PATTERN);
+
+        if (isValid) {
+            setValidBorder();
+        } else {
+            setInvalidBorder();
+        }
+
+        return isValid;
+    }
+
+    @Override
+    public void setValidBorder() {
+        this.setBorder(VALID_BORDER);
+    }
+
+    @Override
+    public void setInvalidBorder() {
+        this.setBorder(INVALID_BORDER);
     }
 }

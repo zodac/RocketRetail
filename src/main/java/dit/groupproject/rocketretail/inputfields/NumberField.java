@@ -10,8 +10,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 @SuppressWarnings("serial")
 public class NumberField extends JTextField implements InputField {
 
-    private final static int INPUT_FIELD_LENGTH = 20;
-
     public NumberField() {
         super(INPUT_FIELD_LENGTH);
     }
@@ -24,6 +22,24 @@ public class NumberField extends JTextField implements InputField {
     @Override
     public boolean isValidInput() {
         final String inputNumber = this.getText();
-        return NumberUtils.isNumber(inputNumber);
+        final boolean isValid = NumberUtils.isNumber(inputNumber);
+
+        if (isValid) {
+            setValidBorder();
+        } else {
+            setInvalidBorder();
+        }
+
+        return isValid;
+    }
+
+    @Override
+    public void setValidBorder() {
+        this.setBorder(VALID_BORDER);
+    }
+
+    @Override
+    public void setInvalidBorder() {
+        this.setBorder(INVALID_BORDER);
     }
 }

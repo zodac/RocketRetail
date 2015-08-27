@@ -136,6 +136,7 @@ public class GuiCreator {
      */
     public static void setConfirmationMessage(final String title) {
         confirmationLabel.setText(title);
+        // TODO Set BG too - perhaps as param?
         final Timer confirmationTimer = new Timer(4000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
