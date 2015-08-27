@@ -17,13 +17,18 @@ public class CurrencyField extends JTextField implements InputField {
     }
 
     @Override
-    public void addToPanel(JPanel panelToBeAddedTo, GridBagConstraints g) {
+    public void addToPanel(final JPanel panelToBeAddedTo, final GridBagConstraints g) {
 
     }
 
     @Override
     public boolean isValidInput() {
-        final String inputNumber = this.getText().replace("€", "").replace(",", "");
+        final String inputNumber = this.getText();
         return NumberUtils.isNumber(inputNumber);
+    }
+
+    @Override
+    public String getText() {
+        return super.getText().replace("€", "").replace(",", "");
     }
 }

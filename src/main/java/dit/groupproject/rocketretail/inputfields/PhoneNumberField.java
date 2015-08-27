@@ -25,4 +25,9 @@ public class PhoneNumberField extends JTextField implements InputField {
         final String inputText = this.getText();
         return inputText.matches(NUMBERS_ONLY_SEVEN_TO_TEN_DIGITS_PATTERN);
     }
+
+    @Override
+    public String getText() {
+        return super.getText().replaceAll("\\s", "").replace("-", "");
+    }
 }

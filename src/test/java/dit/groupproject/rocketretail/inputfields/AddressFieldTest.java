@@ -10,23 +10,20 @@ import org.junit.Test;
  */
 public class AddressFieldTest {
 
-    private final static String BLANK_INPUT = "";
-    private final static String VALID_INPUT = "Some text";
-
     private AddressField addressField = new AddressField();
 
     @Test
     public void whenEmptyStringIsEntered_thenValidationFails() {
-        addressField.setText(BLANK_INPUT);
+        addressField.setText("");
         final boolean validationResult = addressField.isValidInput();
-        assertThat(String.format("Input [%s] passed validation", BLANK_INPUT), validationResult, is(false));
+        assertThat(validationResult, is(false));
     }
 
     @Test
     public void whenNonEmptyStringIsEntered_thenValidationPasses() {
-        addressField.setText(VALID_INPUT);
+        addressField.setText("Some text");
         final boolean validationResult = addressField.isValidInput();
-        assertThat(String.format("Input [%s] failed validation", VALID_INPUT), validationResult, is(true));
+        assertThat(validationResult, is(true));
     }
 
 }

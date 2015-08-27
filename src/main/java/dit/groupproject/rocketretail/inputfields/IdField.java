@@ -16,8 +16,8 @@ public class IdField extends JTextField implements InputField {
     }
 
     @Override
-    public void addToPanel(JPanel panelToBeAddedTo, GridBagConstraints g) {
-        
+    public void addToPanel(final JPanel panelToBeAddedTo, final GridBagConstraints g) {
+
     }
 
     @Override
