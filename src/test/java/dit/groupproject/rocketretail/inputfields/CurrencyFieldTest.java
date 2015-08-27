@@ -60,4 +60,11 @@ public class CurrencyFieldTest {
         final boolean validationResult = currencyField.isValidInput();
         assertThat(validationResult, is(true));
     }
+
+    @Test
+    public void whenDigitsWithDecimalPlace_thenValidationPasses() {
+        currencyField.setText("€1,234.50");
+        final boolean validationResult = currencyField.isValidInput();
+        assertThat(validationResult, is(true));
+    }
 }
