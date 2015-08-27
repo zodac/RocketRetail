@@ -16,7 +16,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class DateField extends JComponent {
+public class DateField extends JComponent implements InputField {
 
     final JComboBox<String> dayBox = new JComboBox<>(DAYS_AS_NUMBERS);
     final JComboBox<String> monthBox = new JComboBox<>(MONTHS_AS_NUMBERS);
@@ -39,6 +39,7 @@ public class DateField extends JComponent {
         yearBox.setSelectedIndex(Integer.parseInt(YEAR_FORMATTER.format(new Date())) - (YEAR_START - 1));
     }
 
+    @Override
     public void addToPanel(final JPanel panelToBeAddedTo, final GridBagConstraints g) {
         g.gridx = 1;
         g.gridy++;
@@ -49,5 +50,15 @@ public class DateField extends JComponent {
         panelToBeAddedTo.add(monthBox, g);
         g.gridx++;
         panelToBeAddedTo.add(yearBox, g);
+    }
+
+    @Override
+    public boolean isValidInput() {
+        final int day = dayBox.getSelectedIndex();
+        final int month = monthBox.getSelectedIndex();
+        final int year = yearBox.getSelectedIndex();
+
+        return (day == 31 && (month == 2 || month == 4 || month == 6 || month == 9 || month == 11)) || (day == 30 && month == 2)
+                || (day == 29 && month == 2 && year % 4 != 0);
     }
 }

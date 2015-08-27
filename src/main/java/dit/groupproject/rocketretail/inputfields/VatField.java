@@ -9,6 +9,8 @@ import javax.swing.JTextField;
 public class VatField extends JTextField implements InputField {
 
     private final static int INPUT_FIELD_LENGTH = 20;
+    // Valid Irish pattern would be "(IE)?[0-9]S[0-9]{5}L"
+    private final static String VAT_NUMBER_PATTERN = "^[A-Z]?[0-9]{7}$";
 
     public VatField() {
         super(INPUT_FIELD_LENGTH);
@@ -16,13 +18,12 @@ public class VatField extends JTextField implements InputField {
 
     @Override
     public void addToPanel(final JPanel panelToBeAddedTo, final GridBagConstraints g) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public boolean isValidInput() {
-        // TODO Auto-generated method stub
-        return false;
+        final String inputText = this.getText();
+        return inputText.matches(VAT_NUMBER_PATTERN);
     }
 }

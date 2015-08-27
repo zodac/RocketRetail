@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 public class PhoneNumberField extends JTextField implements InputField {
 
     private final static int INPUT_FIELD_LENGTH = 20;
+    private final static String NUMBERS_ONLY_SEVEN_TO_TEN_DIGITS_PATTERN = "[0-9]{7,10}";
 
     public PhoneNumberField() {
         super(INPUT_FIELD_LENGTH);
@@ -16,11 +17,12 @@ public class PhoneNumberField extends JTextField implements InputField {
 
     @Override
     public void addToPanel(final JPanel panelToBeAddedTo, final GridBagConstraints g) {
-        panelToBeAddedTo.add(this, g);
+
     }
 
     @Override
     public boolean isValidInput() {
-        return true;
+        final String inputText = this.getText();
+        return inputText.matches(NUMBERS_ONLY_SEVEN_TO_TEN_DIGITS_PATTERN);
     }
 }
