@@ -67,16 +67,15 @@ public class DateField extends JComponent implements InputField {
         final int month = monthBox.getSelectedIndex();
         final int year = yearBox.getSelectedIndex() + YEAR_START - 1;
 
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
 
-        boolean is31stForSeptAprilJunNov = day == 31 && (month == 2 || month == 4 || month == 6 || month == 9 || month == 11);
-        boolean is30thForFeb = day == 30 && month == 2;
+        boolean is31stOfFebAprilJunSeptNov = day == 31 && (month == 2 || month == 4 || month == 6 || month == 9 || month == 11);
+        boolean is30thOfFeb = day == 30 && month == 2;
         boolean isLeapDay = day == 29 && month == 2;
         boolean isLeapYear = cal.getActualMaximum(Calendar.DAY_OF_YEAR) > 365;
 
-        boolean isInvalidDate = is31stForSeptAprilJunNov || is30thForFeb || (isLeapDay && !isLeapYear);
-
+        boolean isInvalidDate = is31stOfFebAprilJunSeptNov || is30thOfFeb || (isLeapDay && !isLeapYear);
         return !isInvalidDate;
     }
 }
