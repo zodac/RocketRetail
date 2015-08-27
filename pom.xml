@@ -5,31 +5,38 @@
     <groupId>dit</groupId>
     <artifactId>groupproject</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    
+
     <properties>
-        <freechart.version>1.0.19</freechart.version>
-        <apache.version>3.3.2</apache.version>
-        
-        <junit.version>4.12</junit.version>
+        <apache_version>3.3.2</apache_version>
+        <freechart_version>1.0.19</freechart_version>
+
+        <hamcrest_version>1.3</hamcrest_version>
+        <junit_version>4.12</junit_version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
-            <version>${freechart.version}</version>
+            <version>${freechart_version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${apache.version}</version>
+            <version>${apache_version}</version>
         </dependency>
 
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <version>${junit_version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest_version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
