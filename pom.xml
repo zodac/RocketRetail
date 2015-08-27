@@ -5,24 +5,31 @@
     <groupId>dit</groupId>
     <artifactId>groupproject</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    
+    <properties>
+        <freechart.version>1.0.19</freechart.version>
+        <apache.version>3.3.2</apache.version>
+        
+        <junit.version>4.12</junit.version>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
-            <version>1.0.19</version>
+            <version>${freechart.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
+            <version>${apache.version}</version>
         </dependency>
 
         <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

@@ -877,4 +877,28 @@ public class OrderTable extends AbstractTable {
 
         Collections.sort(Database.getOrders(), comparator);
     }
+
+    @Override
+    protected void reverseSortOrder() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected String getCurrentSortOption() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected void setCurrentSortOption(String sortOption) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected String[] getSortOptionTitles() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

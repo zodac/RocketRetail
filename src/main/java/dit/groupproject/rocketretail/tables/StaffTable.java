@@ -2,7 +2,6 @@ package dit.groupproject.rocketretail.tables;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -22,12 +21,9 @@ import dit.groupproject.rocketretail.main.TableState;
  */
 public class StaffTable extends AbstractTable {
 
-    public boolean first = true;
+    public boolean firstTimeLoadingTable = true;
     public boolean descendingOrderSort = false;
-
-    private final String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "Wage", "Level", "Date Added" };
-
-    private String sortType = "Sort by...";
+    private String currentSortOption = "Sort by...";
 
     private static StaffTable instance = null;
 
@@ -62,13 +58,14 @@ public class StaffTable extends AbstractTable {
      * on first run. Options to sort table by ID, Name, Address, Wage, Level and
      * Date Added. Options to Add, Edit and Delete Staff Members.
      */
+    @Override
     public void createTableGui() {
         setTableState(TableState.STAFF);
         resetGui();
 
-        if (first) {
+        if (firstTimeLoadingTable) {
             sortItems();
-            first = false;
+            firstTimeLoadingTable = false;
         }
 
         final String[] staffColumnNames = { "ID", "Name", "Gender", "Phone Number", "Address", "Wage", "Level", "Date Added" };
@@ -80,36 +77,34 @@ public class StaffTable extends AbstractTable {
         updateGui(scrollPane, buttonPanel);
     }
 
-    private JComboBox<String> createSortOptions() {
-        final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
-        final int index = Arrays.asList(SORT_OPTIONS).indexOf(sortType);
-        sortOptions.setSelectedIndex(index);
-
-        sortOptions.addActionListener(new ActionListener() {
-            public void actionPerformed(final ActionEvent e) {
-                if (sortOptions.getSelectedItem().equals("Sort by...")) {
-                    // Do nothing
-                } else {
-                    if (sortType.equals((String) sortOptions.getSelectedItem())) {
-                        descendingOrderSort = !descendingOrderSort;
-                    } else {
-                        sortType = (String) sortOptions.getSelectedItem();
-                    }
-                    sortItems();
-                }
-                createTableGui();
-            }
-        });
-        return sortOptions;
-    }
-
+    @Override
     public void sortItems() {
-        Comparator<Entity> comparator = Staff.getComparator(sortType);
+        Comparator<Entity> comparator = Staff.getComparator(currentSortOption);
 
         if (descendingOrderSort) {
             comparator = Collections.reverseOrder(comparator);
         }
 
         Collections.sort(Database.getStaffMembers(), comparator);
+    }
+
+    @Override
+    protected void reverseSortOrder() {
+        descendingOrderSort = !descendingOrderSort;
+    }
+
+    @Override
+    protected String getCurrentSortOption() {
+        return currentSortOption;
+    }
+
+    @Override
+    protected void setCurrentSortOption(final String sortOption) {
+        this.currentSortOption = sortOption;
+    }
+
+    @Override
+    protected String[] getSortOptionTitles() {
+        return new String[] { "Sort by...", "ID", "Name", "Address", "Wage", "Level", "Date Added" };
     }
 }

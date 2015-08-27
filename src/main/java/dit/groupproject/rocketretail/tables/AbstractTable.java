@@ -3,7 +3,10 @@ package dit.groupproject.rocketretail.tables;
 import static dit.groupproject.rocketretail.utilities.Formatters.ID_FORMATTER;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -119,4 +122,42 @@ public abstract class AbstractTable {
         buttonPanel.add(sortOptions);
         return buttonPanel;
     }
+
+    protected JComboBox<String> createSortOptions() {
+        final String[] sortOptionTitles = getSortOptionTitles();
+        final String currentSortOption = getCurrentSortOption();
+        final JComboBox<String> sortOptions = new JComboBox<String>(sortOptionTitles);
+        final int index = Arrays.asList(sortOptionTitles).indexOf(currentSortOption);
+        sortOptions.setSelectedIndex(index);
+
+        sortOptions.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final String currentSortOption = (String) sortOptions.getSelectedItem();
+                if (currentSortOption.equals("Sort by...")) {
+                    // Do nothing
+                } else {
+                    if (currentSortOption.equals(currentSortOption)) {
+                        reverseSortOrder();
+                    } else {
+                        setCurrentSortOption(currentSortOption);
+                    }
+                    sortItems();
+                }
+                createTableGui();
+            }
+        });
+        return sortOptions;
+    }
+
+    protected abstract void reverseSortOrder();
+
+    protected abstract String getCurrentSortOption();
+
+    protected abstract void setCurrentSortOption(final String sortOption);
+
+    protected abstract String[] getSortOptionTitles();
+
+    public abstract void sortItems();
+
+    public abstract void createTableGui();
 }

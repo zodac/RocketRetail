@@ -78,16 +78,15 @@ public class AddEntityHelper extends AbstractEntityHelper {
 
         final GridBagConstraints g = new GridBagConstraints();
         g.insets = new Insets(1, 10, 0, 5);
-
         g.gridx = 1;
-        g.gridy = 0;
         g.gridwidth = 3;
 
+        g.gridy = 0;
         final NameField customerNameField = new NameField();
-        innerPanel.add(customerNameField, g);
+        customerNameField.addToPanel(innerPanel, g);
         g.gridy = 1;
         final PhoneNumberField customerPhoneField = new PhoneNumberField();
-        innerPanel.add(customerPhoneField, g);
+        customerPhoneField.addToPanel(innerPanel, g);
         g.gridy = 2;
         final AddressField addressField = new AddressField();
         innerPanel.add(addressField, g);

@@ -49,10 +49,10 @@ public class MainMenu {
 
                 ShopDriver.setCurrentTable(TableState.NONE);
 
-                staffTable.first = true;
-                productTable.first = true;
-                customerTable.first = true;
-                supplierTable.first = true;
+                staffTable.firstTimeLoadingTable = true;
+                productTable.firstTimeLoadingTable = true;
+                customerTable.firstTimeLoadingTable = true;
+                supplierTable.firstTimeLoadingTable = true;
 
                 HomeScreen.setHomeScreen();
                 GuiCreator.frame.setTitle("Rocket Retail Inc");
@@ -77,10 +77,10 @@ public class MainMenu {
         clearCenter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 GuiCreator.frame.remove(GuiCreator.mainPanel);
-                staffTable.first = true;
-                productTable.first = true;
-                supplierTable.first = true;
-                customerTable.first = true;
+                staffTable.firstTimeLoadingTable = true;
+                productTable.firstTimeLoadingTable = true;
+                supplierTable.firstTimeLoadingTable = true;
+                customerTable.firstTimeLoadingTable = true;
                 GuiCreator.frame.setTitle("Rocket Retail Inc");
 
                 HomeScreen.setHomeScreen();

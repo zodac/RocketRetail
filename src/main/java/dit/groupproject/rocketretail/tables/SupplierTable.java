@@ -2,7 +2,6 @@ package dit.groupproject.rocketretail.tables;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -21,12 +20,9 @@ import dit.groupproject.rocketretail.menus.MenuGui;
 
 public class SupplierTable extends AbstractTable {
 
-    public boolean first = true;
+    public boolean firstTimeLoadingTable = true;
     public boolean descendingOrderSort = false;
-
-    private final String[] SORT_OPTIONS = { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
-
-    private String sortType = "Sort by...";
+    private String currentSortOption = "Sort by...";
 
     private static SupplierTable instance = null;
 
@@ -69,13 +65,14 @@ public class SupplierTable extends AbstractTable {
      * Calls {@link #viewSupplierInfo(Supplier)} when a supplier is selected
      * from the table.
      */
+    @Override
     public void createTableGui() {
         setTableState(TableState.SUPPLIER);
         resetGui();
 
-        if (first) {
+        if (firstTimeLoadingTable) {
             sortItems();
-            first = false;
+            firstTimeLoadingTable = false;
         }
 
         final String[] supplierColumnNames = { "ID", "Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
@@ -87,37 +84,35 @@ public class SupplierTable extends AbstractTable {
         updateGui(scrollPane, buttonPanel);
     }
 
-    private JComboBox<String> createSortOptions() {
-        final JComboBox<String> sortOptions = new JComboBox<String>(SORT_OPTIONS);
-        final int index = Arrays.asList(SORT_OPTIONS).indexOf(sortType);
-        sortOptions.setSelectedIndex(index);
-
-        sortOptions.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (sortOptions.getSelectedItem().equals("Sort by...")) {
-
-                } else {
-                    if (sortType.equals((String) sortOptions.getSelectedItem())) {
-                        descendingOrderSort = !descendingOrderSort;
-                    } else {
-                        sortType = (String) sortOptions.getSelectedItem();
-                    }
-                    sortItems();
-                }
-                createTableGui();
-            }
-        });
-        return sortOptions;
-    }
-
+    @Override
     public void sortItems() {
-        Comparator<Entity> comparator = Supplier.getComparator(sortType);
+        Comparator<Entity> comparator = Supplier.getComparator(currentSortOption);
 
         if (descendingOrderSort) {
             comparator = Collections.reverseOrder(comparator);
         }
 
         Collections.sort(Database.getSuppliers(), comparator);
+    }
+
+    @Override
+    protected void reverseSortOrder() {
+        descendingOrderSort = !descendingOrderSort;
+    }
+
+    @Override
+    protected String getCurrentSortOption() {
+        return currentSortOption;
+    }
+
+    @Override
+    protected void setCurrentSortOption(final String sortOption) {
+        this.currentSortOption = sortOption;
+    }
+
+    @Override
+    protected String[] getSortOptionTitles() {
+        return new String[] { "Sort by...", "ID", "Name", "Address", "VAT Number", "Last Purchase", "Date Added" };
     }
 
 }
