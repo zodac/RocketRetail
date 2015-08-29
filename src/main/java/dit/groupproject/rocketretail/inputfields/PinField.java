@@ -22,6 +22,10 @@ public class PinField extends JPasswordField implements InputField {
 
     }
 
+    public int getPinValue() {
+        return Integer.parseInt(String.valueOf(getPassword()));
+    }
+
     @Override
     public boolean isValidInput() {
         final String pinInput = String.valueOf(this.getPassword());

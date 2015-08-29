@@ -74,8 +74,9 @@ public class DateField extends JComponent implements InputField {
         final boolean is30thOfFeb = day == 30 && month == 2;
         final boolean isLeapDay = day == 29 && month == 2;
         final boolean isLeapYear = cal.getActualMaximum(Calendar.DAY_OF_YEAR) > 365;
+        final boolean isValidInput = day == 0 || month == 0 || year == YEAR_START - 1;
 
-        boolean isInvalidDate = is31stOfFebAprilJunSeptNov || is30thOfFeb || (isLeapDay && !isLeapYear);
+        boolean isInvalidDate = isValidInput || is31stOfFebAprilJunSeptNov || is30thOfFeb || (isLeapDay && !isLeapYear);
         final boolean isValid = !isInvalidDate;
 
         if (isValid) {
@@ -89,11 +90,15 @@ public class DateField extends JComponent implements InputField {
 
     @Override
     public void setValidBorder() {
-        this.setBorder(VALID_BORDER);
+        dayBox.setBorder(VALID_BORDER);
+        monthBox.setBorder(VALID_BORDER);
+        yearBox.setBorder(VALID_BORDER);
     }
 
     @Override
     public void setInvalidBorder() {
-        this.setBorder(INVALID_BORDER);
+        dayBox.setBorder(INVALID_BORDER);
+        monthBox.setBorder(INVALID_BORDER);
+        yearBox.setBorder(INVALID_BORDER);
     }
 }

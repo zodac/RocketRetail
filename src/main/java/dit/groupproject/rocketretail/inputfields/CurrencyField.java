@@ -33,6 +33,10 @@ public class CurrencyField extends JTextField implements InputField {
         return isValid;
     }
 
+    public double getValue() {
+        return Double.parseDouble(getText());
+    }
+
     @Override
     public String getText() {
         return super.getText().replace("€", "").replace(",", "");

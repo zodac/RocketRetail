@@ -24,7 +24,7 @@ public class BaseEntityHelper {
     protected final StaffTable staffTable = StaffTable.getInstance();
     protected final SupplierTable supplierTable = SupplierTable.getInstance();
 
-    protected final static ActionListener cancelListener = new ActionListener() {
+    protected final static ActionListener CANCEL_LISTENER = new ActionListener() {
         public void actionPerformed(final ActionEvent e) {
             removeLeftPanel();
         }

@@ -33,6 +33,10 @@ public class NumberField extends JTextField implements InputField {
         return isValid;
     }
 
+    public int getValue() {
+        return Integer.parseInt(getText());
+    }
+
     @Override
     public void setValidBorder() {
         this.setBorder(VALID_BORDER);

@@ -6,13 +6,11 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
@@ -25,6 +23,7 @@ import dit.groupproject.rocketretail.inputfields.AddressField;
 import dit.groupproject.rocketretail.inputfields.CurrencyField;
 import dit.groupproject.rocketretail.inputfields.DateField;
 import dit.groupproject.rocketretail.inputfields.GenderField;
+import dit.groupproject.rocketretail.inputfields.InputField;
 import dit.groupproject.rocketretail.inputfields.NameField;
 import dit.groupproject.rocketretail.inputfields.NumberField;
 import dit.groupproject.rocketretail.inputfields.PhoneNumberField;
@@ -38,9 +37,14 @@ import dit.groupproject.rocketretail.main.TableState;
 public class AddEntityHelper extends BaseEntityHelper {
 
     private final static String[] CUSTOMER_LABELS = { "Customer Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
-    private final static String[] SUPPLIER_LABELS = { "Supplier Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
-    private final static String[] STAFF_LABELS = { "Staff PIN", "Name", "Gender", "Phone Number", "Address", "Wage", "Staff Level", "Date Added" };
     private final static String[] PRODUCT_LABELS = { "Product Description", "Stock Level", "Maximum Lavel", "Supplier ID", "Cost Price", "Sale Price" };
+    private final static String[] STAFF_LABELS = { "Staff PIN", "Name", "Gender", "Phone Number", "Address", "Wage", "Staff Level", "Date Added" };
+    private final static String[] SUPPLIER_LABELS = { "Supplier Name", "Phone Number", "Address", "VAT Number", "Last Purchase", "Date Added" };
+
+    private final static String CUSTOMER_ADDED_FORMAT = "Customer \"%s\" added";
+    private final static String PRODUCT_ADDED_FORMAT = "Product %s added";
+    private final static String STAFF_MEMBER_ADDED_FORMAT = "Staff member \"%s\" added";
+    private final static String SUPPLIER_ADDED_FORMAT = "New Supplier \"%s\" added";
 
     /**
      * Returns an ActionListener which adds an Entity addition panel to the left
@@ -83,16 +87,16 @@ public class AddEntityHelper extends BaseEntityHelper {
 
         g.gridy = 0;
         final NameField customerNameField = new NameField();
-        customerNameField.addToPanel(innerPanel, g);
+        innerPanel.add(customerNameField, g);
         g.gridy = 1;
         final PhoneNumberField customerPhoneField = new PhoneNumberField();
-        customerPhoneField.addToPanel(innerPanel, g);
+        innerPanel.add(customerPhoneField, g);
         g.gridy = 2;
-        final AddressField addressField = new AddressField();
-        innerPanel.add(addressField, g);
+        final AddressField customerAddressField = new AddressField();
+        innerPanel.add(customerAddressField, g);
         g.gridy = 3;
-        final VatField vatNoField = new VatField();
-        innerPanel.add(vatNoField, g);
+        final VatField customerVatField = new VatField();
+        innerPanel.add(customerVatField, g);
 
         final DateField lastPurchaseDateField = new DateField();
         lastPurchaseDateField.addToPanel(innerPanel, g);
@@ -118,20 +122,26 @@ public class AddEntityHelper extends BaseEntityHelper {
 
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(customerNameField);
-                textFields.add(customerPhoneField);
-                textFields.add(addressField);
-                textFields.add(vatNoField);
-                final ArrayList<DateField> dateBoxes = new ArrayList<>();
-                dateBoxes.add(lastPurchaseDateField);
-                dateBoxes.add(dateAddedField);
+                final List<InputField> inputFields = new ArrayList<>();
+                inputFields.add(customerNameField);
+                inputFields.add(customerPhoneField);
+                inputFields.add(customerAddressField);
+                inputFields.add(customerVatField);
+                inputFields.add(lastPurchaseDateField);
+                inputFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, null, null, dateBoxes)) {
-                    Database.addCustomer(new Customer(customerNameField.getText(), customerPhoneField.getText(), addressField.getText(), vatNoField
-                            .getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate()));
-
-                    GuiCreator.setConfirmationMessage("Customer " + customerNameField.getText() + " added");
+                if (FieldValidator.checkFields(inputFields)) {
+                    final Customer customer = new Customer(
+                        customerNameField.getText(),
+                        customerPhoneField.getText(),
+                        customerAddressField.getText(),
+                        customerVatField.getText(),
+                        lastPurchaseDateField.getDate(),
+                        dateAddedField.getDate()
+                    );
+                    
+                    Database.addCustomer(customer);
+                    GuiCreator.setConfirmationMessage(String.format(CUSTOMER_ADDED_FORMAT, customerNameField.getText()));
                     removeLeftPanel();
 
                     customerTable.descendingOrderSort = false;
@@ -141,7 +151,7 @@ public class AddEntityHelper extends BaseEntityHelper {
             }
         });
 
-        cancel.addActionListener(cancelListener);
+        cancel.addActionListener(CANCEL_LISTENER);
         updateLeftPanel(innerPanel);
     }
 
@@ -161,11 +171,11 @@ public class AddEntityHelper extends BaseEntityHelper {
         final PhoneNumberField supplierPhoneField = new PhoneNumberField();
         innerPanel.add(supplierPhoneField, g);
         g.gridy = 2;
-        final AddressField addressField = new AddressField();
-        innerPanel.add(addressField, g);
+        final AddressField supplierAddressField = new AddressField();
+        innerPanel.add(supplierAddressField, g);
         g.gridy = 3;
-        final VatField vatNoField = new VatField();
-        innerPanel.add(vatNoField, g);
+        final VatField supplierVatField = new VatField();
+        innerPanel.add(supplierVatField, g);
 
         final DateField lastPurchaseDateField = new DateField();
         lastPurchaseDateField.addToPanel(innerPanel, g);
@@ -191,20 +201,27 @@ public class AddEntityHelper extends BaseEntityHelper {
 
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(supplierNameField);
-                textFields.add(supplierPhoneField);
-                textFields.add(addressField);
-                textFields.add(vatNoField);
-                final ArrayList<DateField> dateFields = new ArrayList<>();
-                dateFields.add(lastPurchaseDateField);
-                dateFields.add(dateAddedField);
+                final List<InputField> inputFields = new ArrayList<>();
+                inputFields.add(supplierNameField);
+                inputFields.add(supplierPhoneField);
+                inputFields.add(supplierAddressField);
+                inputFields.add(supplierVatField);
+                inputFields.add(lastPurchaseDateField);
+                inputFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, null, null, dateFields)) {
-                    Database.addSupplier(new Supplier(supplierNameField.getText(), supplierPhoneField.getText(), addressField.getText(), vatNoField
-                            .getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate()));
-
-                    GuiCreator.setConfirmationMessage(String.format("New Supplier \"%s\" added", supplierNameField.getText()));
+                if (FieldValidator.checkFields(inputFields)) {
+                    final Supplier supplier = new Supplier(
+                        supplierNameField.getText(),
+                        supplierPhoneField.getText(),
+                        supplierAddressField.getText(),
+                        supplierVatField.getText(),
+                        lastPurchaseDateField.getDate(),
+                        dateAddedField.getDate()
+                    );
+                    
+                    
+                    Database.addSupplier(supplier);
+                    GuiCreator.setConfirmationMessage(String.format(SUPPLIER_ADDED_FORMAT, supplierNameField.getText()));
                     removeLeftPanel();
 
                     supplierTable.descendingOrderSort = false;
@@ -214,7 +231,7 @@ public class AddEntityHelper extends BaseEntityHelper {
             }
         });
 
-        cancel.addActionListener(cancelListener);
+        cancel.addActionListener(CANCEL_LISTENER);
         updateLeftPanel(innerPanel);
     }
 
@@ -242,8 +259,8 @@ public class AddEntityHelper extends BaseEntityHelper {
         final PhoneNumberField staffPhoneField = new PhoneNumberField();
         innerPanel.add(staffPhoneField, g);
         g.gridy = 4;
-        final AddressField addressField = new AddressField();
-        innerPanel.add(addressField, g);
+        final AddressField staffAddressField = new AddressField();
+        innerPanel.add(staffAddressField, g);
         g.gridy = 5;
         final CurrencyField wageField = new CurrencyField();
         innerPanel.add(wageField, g);
@@ -274,26 +291,31 @@ public class AddEntityHelper extends BaseEntityHelper {
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(staffNameField);
-                textFields.add(staffPhoneField);
-                textFields.add(addressField);
-                final ArrayList<JTextField> doubleFields = new ArrayList<>();
-                doubleFields.add(wageField);
-                final ArrayList<JPasswordField> pinFields = new ArrayList<>();
-                pinFields.add(pinField);
-                final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
-                comboBoxes.add(genderField);
-                comboBoxes.add(staffLevelField);
-                final ArrayList<DateField> dateFields = new ArrayList<>();
-                dateFields.add(dateAddedField);
+                final List<InputField> inputFields = new ArrayList<>();
+                inputFields.add(staffNameField);
+                inputFields.add(staffPhoneField);
+                inputFields.add(staffAddressField);
+                inputFields.add(wageField);
+                inputFields.add(pinField);
+                inputFields.add(genderField);
+                inputFields.add(staffLevelField);
+                inputFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, null, null, dateFields)) {
-                    Database.addStaffMember(new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), staffNameField.getText(), genderField
-                            .getSelectedIndex(), staffPhoneField.getText(), addressField.getText(), Double.parseDouble(wageField.getText()),
-                            staffLevelField.getSelectedIndex(), dateAddedField.getDate()));
+                if (FieldValidator.checkFields(inputFields)) {
+                    final Staff staff = new Staff(
+                        pinField.getPinValue(),
+                        staffNameField.getText(),
+                        genderField.getSelectedIndex(),
+                        staffPhoneField.getText(),
+                        staffAddressField.getText(),
+                        wageField.getValue(),
+                        staffLevelField.getSelectedIndex(),
+                        dateAddedField.getDate()
+                    );
+                    
 
-                    GuiCreator.setConfirmationMessage("Staff member " + staffNameField.getText() + " added");
+                    Database.addStaffMember(staff);
+                    GuiCreator.setConfirmationMessage(String.format(STAFF_MEMBER_ADDED_FORMAT, staffNameField.getText()));
                     removeLeftPanel();
 
                     staffTable.descendingOrderSort = false;
@@ -303,7 +325,7 @@ public class AddEntityHelper extends BaseEntityHelper {
             }
         });
 
-        cancel.addActionListener(cancelListener);
+        cancel.addActionListener(CANCEL_LISTENER);
         updateLeftPanel(innerPanel);
     }
 
@@ -355,26 +377,27 @@ public class AddEntityHelper extends BaseEntityHelper {
 
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(productNameField);
-                final ArrayList<JTextField> intFields = new ArrayList<>();
-                intFields.add(stockLevelField);
-                intFields.add(maxLevelField);
-                final ArrayList<JTextField> doubleFields = new ArrayList<>();
-                doubleFields.add(costPriceField);
-                doubleFields.add(salePriceField);
-                final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
-                comboBoxes.add(supplierBox);
 
-                if (FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null, null)) {
-                    final Product product = new Product(productNameField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
-                            .parseInt(maxLevelField.getText()), Integer.parseInt(((String) supplierBox.getSelectedItem()).substring(
-                            ((String) supplierBox.getSelectedItem()).length() - 5, ((String) supplierBox.getSelectedItem()).length() - 1)), Double
-                            .parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField.getText()));
+                final List<InputField> inputFields = new ArrayList<>();
+                inputFields.add(productNameField);
+                inputFields.add(stockLevelField);
+                inputFields.add(maxLevelField);
+                inputFields.add(costPriceField);
+                inputFields.add(salePriceField);
+                inputFields.add(supplierBox);
+
+                if (FieldValidator.checkFields(inputFields)) {
+                    final Product product = new Product(
+                        productNameField.getText(),
+                        stockLevelField.getValue(),
+                        maxLevelField.getValue(),
+                        supplierBox.getSelectedSupplierId(),
+                        costPriceField.getValue(),
+                        salePriceField.getValue()
+                    );
 
                     Database.addProduct(product);
-
-                    GuiCreator.setConfirmationMessage(String.format("Product %s added", productNameField.getText()));
+                    GuiCreator.setConfirmationMessage(String.format(PRODUCT_ADDED_FORMAT, productNameField.getText()));
                     removeLeftPanel();
 
                     productTable.descendingOrderSort = false;
@@ -384,7 +407,7 @@ public class AddEntityHelper extends BaseEntityHelper {
             }
         });
 
-        cancel.addActionListener(cancelListener);
+        cancel.addActionListener(CANCEL_LISTENER);
         updateLeftPanel(innerPanel);
     }
 }

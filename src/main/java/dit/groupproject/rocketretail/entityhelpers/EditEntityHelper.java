@@ -8,13 +8,12 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 import dit.groupproject.rocketretail.database.Database;
 import dit.groupproject.rocketretail.entities.Customer;
@@ -29,6 +28,7 @@ import dit.groupproject.rocketretail.inputfields.CurrencyField;
 import dit.groupproject.rocketretail.inputfields.DateField;
 import dit.groupproject.rocketretail.inputfields.GenderField;
 import dit.groupproject.rocketretail.inputfields.IdField;
+import dit.groupproject.rocketretail.inputfields.InputField;
 import dit.groupproject.rocketretail.inputfields.NameField;
 import dit.groupproject.rocketretail.inputfields.NumberField;
 import dit.groupproject.rocketretail.inputfields.PhoneNumberField;
@@ -147,32 +147,35 @@ public class EditEntityHelper extends BaseEntityHelper {
 
         save.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(customerNameField);
-                textFields.add(customerPhoneField);
-                textFields.add(customerAddressField);
-                textFields.add(customerVatField);
-                final ArrayList<DateField> dateFields = new ArrayList<>();
-                dateFields.add(lastPurchaseDateField);
-                dateFields.add(dateAddedField);
+                final List<InputField> inputFields = new ArrayList<>();
+                inputFields.add(customerNameField);
+                inputFields.add(customerPhoneField);
+                inputFields.add(customerAddressField);
+                inputFields.add(customerVatField);
+                inputFields.add(lastPurchaseDateField);
+                inputFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, null, null, dateFields)) {
-                    final Customer editedCustomer = new Customer(customerNameField.getText(), customerPhoneField.getText(), customerAddressField
-                            .getText(), customerVatField.getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate());
+                if (FieldValidator.checkFields(inputFields)) {
+                    final Customer editedCustomer = new Customer(
+                        customerNameField.getText(),
+                        customerPhoneField.getText(),
+                        customerAddressField.getText(),
+                        customerVatField.getText(),
+                        lastPurchaseDateField.getDate(),
+                        dateAddedField.getDate()
+                    );
+                    
                     editedCustomer.setId(index + IdManager.CUSTOMER_ID_START);
                     Database.addCustomerByIndex(index, editedCustomer);
-
                     GuiCreator.setConfirmationMessage(String.format(CUSTOMER_UPDATED_MESSAGE_FORMAT, editedCustomer.getName()));
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.repaint();
-                    GuiCreator.frame.validate();
+                    removeLeftPanel();
                     Database.removeCustomerByIndex(index + 1);
                     customerTable.createTableGui();
                 }
             }
         });
 
-        cancel.addActionListener(cancelListener);
+        cancel.addActionListener(CANCEL_LISTENER);
         updateLeftPanel(innerPanel);
     }
 
@@ -197,11 +200,11 @@ public class EditEntityHelper extends BaseEntityHelper {
         final PhoneNumberField supplierPhoneField = new PhoneNumberField();
         innerPanel.add(supplierPhoneField, g);
         g.gridy = 3;
-        final AddressField addressField = new AddressField();
-        innerPanel.add(addressField, g);
+        final AddressField supplierAddressField = new AddressField();
+        innerPanel.add(supplierAddressField, g);
         g.gridy = 4;
-        final VatField vatNoField = new VatField();
-        innerPanel.add(vatNoField, g);
+        final VatField supplierVatField = new VatField();
+        innerPanel.add(supplierVatField, g);
 
         final DateField lastPurchaseDateField = new DateField();
         lastPurchaseDateField.addToPanel(innerPanel, g);
@@ -211,8 +214,8 @@ public class EditEntityHelper extends BaseEntityHelper {
         supplierIdField.setText(ID_FORMATTER.format(supplier.getId()));
         supplierNameField.setText(supplier.getName());
         supplierPhoneField.setText(supplier.getPhoneNumber());
-        addressField.setText(supplier.getAddress());
-        vatNoField.setText(supplier.getVatNumber());
+        supplierAddressField.setText(supplier.getAddress());
+        supplierVatField.setText(supplier.getVatNumber());
         lastPurchaseDateField.setDate(supplier.getLastPurchase());
         dateAddedField.setDate(supplier.getDateAdded());
 
@@ -236,32 +239,29 @@ public class EditEntityHelper extends BaseEntityHelper {
 
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(supplierNameField);
-                textFields.add(supplierPhoneField);
-                textFields.add(addressField);
-                textFields.add(vatNoField);
-                final ArrayList<DateField> dateFields = new ArrayList<>();
-                dateFields.add(lastPurchaseDateField);
-                dateFields.add(dateAddedField);
+                final List<InputField> inputFields = new ArrayList<>();
+                inputFields.add(supplierNameField);
+                inputFields.add(supplierPhoneField);
+                inputFields.add(supplierAddressField);
+                inputFields.add(supplierVatField);
+                inputFields.add(lastPurchaseDateField);
+                inputFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, null, null, null, null, null, dateFields)) {
-                    final Supplier editedSupplier = new Supplier(supplierNameField.getText(), supplierPhoneField.getText(), addressField.getText(),
-                            vatNoField.getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate());
+                if (FieldValidator.checkFields(inputFields)) {
+                    final Supplier editedSupplier = new Supplier(supplierNameField.getText(), supplierPhoneField.getText(), supplierAddressField
+                            .getText(), supplierVatField.getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate());
+
                     editedSupplier.setId(index + IdManager.SUPPLIER_ID_START);
                     Database.addSupplierByIndex(index, editedSupplier);
-
                     GuiCreator.setConfirmationMessage(String.format(SUPPLIER_UPDATED_MESSAGE_FORMAT, editedSupplier.getName()));
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.repaint();
-                    GuiCreator.frame.validate();
+                    removeLeftPanel();
                     Database.removeSupplierByIndex(index + 1);
                     supplierTable.createTableGui();
                 }
             }
         });
 
-        cancel.addActionListener(cancelListener);
+        cancel.addActionListener(CANCEL_LISTENER);
         updateLeftPanel(innerPanel);
     }
 
@@ -294,8 +294,8 @@ public class EditEntityHelper extends BaseEntityHelper {
         final PhoneNumberField staffPhoneField = new PhoneNumberField();
         innerPanel.add(staffPhoneField, g);
         g.gridy = 5;
-        final AddressField addressField = new AddressField();
-        innerPanel.add(addressField, g);
+        final AddressField staffAddressField = new AddressField();
+        innerPanel.add(staffAddressField, g);
         g.gridy = 6;
         final CurrencyField wageField = new CurrencyField();
         innerPanel.add(wageField, g);
@@ -311,7 +311,7 @@ public class EditEntityHelper extends BaseEntityHelper {
         staffNameField.setText(staff.getName());
         genderField.setSelectedIndex(staff.getGender());
         staffPhoneField.setText(staff.getPhoneNumber());
-        addressField.setText(staff.getAddress());
+        staffAddressField.setText(staff.getAddress());
         wageField.setText(String.valueOf(staff.getWage()));
         staffLevelField.setSelectedIndex(staff.getStaffLevel());
         dateAddedField.setDate(staff.getDateAdded());
@@ -336,37 +336,33 @@ public class EditEntityHelper extends BaseEntityHelper {
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(staffNameField);
-                textFields.add(staffPhoneField);
-                textFields.add(addressField);
-                final ArrayList<JTextField> doubleFields = new ArrayList<>();
-                doubleFields.add(wageField);
-                final ArrayList<JPasswordField> pinFields = new ArrayList<>();
-                pinFields.add(pinField);
-                final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
-                comboBoxes.add(genderField);
-                comboBoxes.add(staffLevelField);
-                final ArrayList<DateField> dateFields = new ArrayList<>();
-                dateFields.add(dateAddedField);
+                final List<InputField> inputFields = new ArrayList<>();
+                inputFields.add(staffNameField);
+                inputFields.add(staffPhoneField);
+                inputFields.add(staffAddressField);
+                inputFields.add(wageField);
+                inputFields.add(pinField);
+                inputFields.add(genderField);
+                inputFields.add(staffLevelField);
+                inputFields.add(dateAddedField);
 
-                if (FieldValidator.checkFields(textFields, null, doubleFields, pinFields, comboBoxes, null, null, dateFields)) {
-                    final Staff editedStaff = new Staff(Integer.parseInt(String.valueOf(pinField.getPassword())), staffNameField.getText(),
-                            genderField.getSelectedIndex(), staffPhoneField.getText(), addressField.getText(),
-                            Double.parseDouble(wageField.getText()), staffLevelField.getSelectedIndex(), dateAddedField.getDate());
+                if (FieldValidator.checkFields(inputFields)) {
+                    final Staff editedStaff = new Staff(pinField.getPinValue(), staffNameField.getText(), genderField.getSelectedIndex(),
+                            staffPhoneField.getText(), staffAddressField.getText(), wageField.getValue(), staffLevelField.getSelectedIndex(),
+                            dateAddedField.getDate());
+
                     editedStaff.setId(index + IdManager.STAFF_ID_START);
                     Database.addStaffMemberByIndex(index, editedStaff);
 
                     GuiCreator.setConfirmationMessage(String.format(STAFF_UPDATED_MESSAGE_FORMAT, editedStaff.getName()));
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.validate();
+                    removeLeftPanel();
                     Database.removeStaffByIndex(index + 1);
                     staffTable.createTableGui();
                 }
             }
         });
 
-        cancel.addActionListener(cancelListener);
+        cancel.addActionListener(CANCEL_LISTENER);
         updateLeftPanel(innerPanel);
     }
 
@@ -397,8 +393,8 @@ public class EditEntityHelper extends BaseEntityHelper {
         innerPanel.add(maxLevelField, g);
         g.gridy = 4;
 
-        final SuppliersField suppIdBox = new SuppliersField();
-        innerPanel.add(suppIdBox, g);
+        final SuppliersField supplierBox = new SuppliersField();
+        innerPanel.add(supplierBox, g);
         g.gridy = 5;
         final CurrencyField costPriceField = new CurrencyField();
         innerPanel.add(costPriceField, g);
@@ -410,7 +406,7 @@ public class EditEntityHelper extends BaseEntityHelper {
         productNameField.setText(product.getName());
         stockLevelField.setText(String.valueOf(product.getCurrentStockLevel()));
         maxLevelField.setText(String.valueOf(product.getMaxStockLevel()));
-        suppIdBox.setSelectedIndex(product.getSupplierId() - IdManager.SUPPLIER_ID_START + 1);
+        supplierBox.setSelectedIndex(product.getSupplierId() - IdManager.SUPPLIER_ID_START + 1);
         costPriceField.setText(String.valueOf(product.getCostPrice()));
         salePriceField.setText(String.valueOf(product.getSalePrice()));
 
@@ -434,36 +430,29 @@ public class EditEntityHelper extends BaseEntityHelper {
         save.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                final ArrayList<JTextField> textFields = new ArrayList<>();
-                textFields.add(productNameField);
-                final ArrayList<JTextField> intFields = new ArrayList<>();
-                intFields.add(stockLevelField);
-                intFields.add(maxLevelField);
-                final ArrayList<JTextField> doubleFields = new ArrayList<>();
-                doubleFields.add(costPriceField);
-                doubleFields.add(salePriceField);
-                final ArrayList<JComboBox<String>> comboBoxes = new ArrayList<>();
-                comboBoxes.add(suppIdBox);
+                final List<InputField> inputFields = new ArrayList<>();
+                inputFields.add(productNameField);
+                inputFields.add(stockLevelField);
+                inputFields.add(maxLevelField);
+                inputFields.add(costPriceField);
+                inputFields.add(salePriceField);
+                inputFields.add(supplierBox);
 
-                if (FieldValidator.checkFields(textFields, intFields, doubleFields, null, comboBoxes, null, null, null)) {
-                    final Product editedProduct = new Product(productNameField.getText(), Integer.parseInt(stockLevelField.getText()), Integer
-                            .parseInt(maxLevelField.getText()),
-                            Integer.parseInt(((String) suppIdBox.getSelectedItem()).split("\\(")[1].split("\\)")[0]), Double
-                                    .parseDouble(costPriceField.getText()), Double.parseDouble(salePriceField.getText()));
+                if (FieldValidator.checkFields(inputFields)) {
+                    final Product editedProduct = new Product(productNameField.getText(), stockLevelField.getValue(), maxLevelField.getValue(),
+                            supplierBox.getSelectedSupplierId(), costPriceField.getValue(), salePriceField.getValue());
+
                     editedProduct.setId(index + IdManager.PRODUCT_ID_START);
                     Database.addProductByIndex(index, editedProduct);
-
                     GuiCreator.setConfirmationMessage(String.format(PRODUCT_UPDATED_MESSAGE_FORMAT, editedProduct.getName()));
-                    GuiCreator.frame.remove(GuiCreator.leftPanel);
-                    GuiCreator.frame.repaint();
-                    GuiCreator.frame.validate();
+                    removeLeftPanel();
                     Database.removeProductByIndex(index + 1);
                     productTable.createTableGui();
                 }
             }
         });
 
-        cancel.addActionListener(cancelListener);
+        cancel.addActionListener(CANCEL_LISTENER);
         updateLeftPanel(innerPanel);
     }
 }
