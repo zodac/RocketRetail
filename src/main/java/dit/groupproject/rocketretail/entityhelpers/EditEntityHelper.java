@@ -23,7 +23,6 @@ import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
-import dit.groupproject.rocketretail.inputfields.AddressField;
 import dit.groupproject.rocketretail.inputfields.CurrencyField;
 import dit.groupproject.rocketretail.inputfields.DateField;
 import dit.groupproject.rocketretail.inputfields.GenderField;
@@ -35,6 +34,7 @@ import dit.groupproject.rocketretail.inputfields.PhoneNumberField;
 import dit.groupproject.rocketretail.inputfields.PinField;
 import dit.groupproject.rocketretail.inputfields.StaffLevelField;
 import dit.groupproject.rocketretail.inputfields.SuppliersField;
+import dit.groupproject.rocketretail.inputfields.TextField;
 import dit.groupproject.rocketretail.inputfields.VatField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
@@ -109,7 +109,7 @@ public class EditEntityHelper extends BaseEntityHelper {
         final PhoneNumberField customerPhoneField = new PhoneNumberField();
         innerPanel.add(customerPhoneField, g);
         g.gridy = 3;
-        final AddressField customerAddressField = new AddressField();
+        final TextField customerAddressField = new TextField();
         innerPanel.add(customerAddressField, g);
         g.gridy = 4;
         final VatField customerVatField = new VatField();
@@ -156,15 +156,9 @@ public class EditEntityHelper extends BaseEntityHelper {
                 inputFields.add(dateAddedField);
 
                 if (FieldValidator.checkFields(inputFields)) {
-                    final Customer editedCustomer = new Customer(
-                        customerNameField.getText(),
-                        customerPhoneField.getText(),
-                        customerAddressField.getText(),
-                        customerVatField.getText(),
-                        lastPurchaseDateField.getDate(),
-                        dateAddedField.getDate()
-                    );
-                    
+                    final Customer editedCustomer = new Customer(customerNameField.getText(), customerPhoneField.getText(), customerAddressField
+                            .getText(), customerVatField.getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate());
+
                     editedCustomer.setId(index + IdManager.CUSTOMER_ID_START);
                     Database.addCustomerByIndex(index, editedCustomer);
                     GuiCreator.setConfirmationMessage(String.format(CUSTOMER_UPDATED_MESSAGE_FORMAT, editedCustomer.getName()));
@@ -200,7 +194,7 @@ public class EditEntityHelper extends BaseEntityHelper {
         final PhoneNumberField supplierPhoneField = new PhoneNumberField();
         innerPanel.add(supplierPhoneField, g);
         g.gridy = 3;
-        final AddressField supplierAddressField = new AddressField();
+        final TextField supplierAddressField = new TextField();
         innerPanel.add(supplierAddressField, g);
         g.gridy = 4;
         final VatField supplierVatField = new VatField();
@@ -294,7 +288,7 @@ public class EditEntityHelper extends BaseEntityHelper {
         final PhoneNumberField staffPhoneField = new PhoneNumberField();
         innerPanel.add(staffPhoneField, g);
         g.gridy = 5;
-        final AddressField staffAddressField = new AddressField();
+        final TextField staffAddressField = new TextField();
         innerPanel.add(staffAddressField, g);
         g.gridy = 6;
         final CurrencyField wageField = new CurrencyField();
@@ -383,7 +377,7 @@ public class EditEntityHelper extends BaseEntityHelper {
         productIdField.setEditable(false);
         innerPanel.add(productIdField, g);
         g.gridy = 1;
-        final NameField productNameField = new NameField();
+        final TextField productNameField = new TextField();
         innerPanel.add(productNameField, g);
         g.gridy = 2;
         final NumberField stockLevelField = new NumberField();

@@ -13,6 +13,7 @@ import dit.groupproject.rocketretail.entities.Entity;
 public class SuppliersField extends JComboBox<String> implements InputField {
 
     private final static String SUPPLIER_NAME_FORMAT = "%s (%d)";
+    private final static String TEXT_BETWEEN_BRACKETS_PATTERN = "[\\(\\)]";
 
     private static String[] supplierNamesAndIds;
 
@@ -33,7 +34,7 @@ public class SuppliersField extends JComboBox<String> implements InputField {
     }
 
     public int getSelectedSupplierId() {
-        return Integer.parseInt(((String) this.getSelectedItem()).split("\\(")[1].split("\\)")[0]);
+        return Integer.parseInt(((String) this.getSelectedItem()).split(TEXT_BETWEEN_BRACKETS_PATTERN)[1]);
     }
 
     @Override

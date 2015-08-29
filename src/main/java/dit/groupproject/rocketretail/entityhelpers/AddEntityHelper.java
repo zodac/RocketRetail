@@ -19,7 +19,6 @@ import dit.groupproject.rocketretail.entities.Staff;
 import dit.groupproject.rocketretail.entities.Supplier;
 import dit.groupproject.rocketretail.gui.FieldValidator;
 import dit.groupproject.rocketretail.gui.GuiCreator;
-import dit.groupproject.rocketretail.inputfields.AddressField;
 import dit.groupproject.rocketretail.inputfields.CurrencyField;
 import dit.groupproject.rocketretail.inputfields.DateField;
 import dit.groupproject.rocketretail.inputfields.GenderField;
@@ -30,6 +29,7 @@ import dit.groupproject.rocketretail.inputfields.PhoneNumberField;
 import dit.groupproject.rocketretail.inputfields.PinField;
 import dit.groupproject.rocketretail.inputfields.StaffLevelField;
 import dit.groupproject.rocketretail.inputfields.SuppliersField;
+import dit.groupproject.rocketretail.inputfields.TextField;
 import dit.groupproject.rocketretail.inputfields.VatField;
 import dit.groupproject.rocketretail.main.ShopDriver;
 import dit.groupproject.rocketretail.main.TableState;
@@ -92,7 +92,7 @@ public class AddEntityHelper extends BaseEntityHelper {
         final PhoneNumberField customerPhoneField = new PhoneNumberField();
         innerPanel.add(customerPhoneField, g);
         g.gridy = 2;
-        final AddressField customerAddressField = new AddressField();
+        final TextField customerAddressField = new TextField();
         innerPanel.add(customerAddressField, g);
         g.gridy = 3;
         final VatField customerVatField = new VatField();
@@ -131,15 +131,9 @@ public class AddEntityHelper extends BaseEntityHelper {
                 inputFields.add(dateAddedField);
 
                 if (FieldValidator.checkFields(inputFields)) {
-                    final Customer customer = new Customer(
-                        customerNameField.getText(),
-                        customerPhoneField.getText(),
-                        customerAddressField.getText(),
-                        customerVatField.getText(),
-                        lastPurchaseDateField.getDate(),
-                        dateAddedField.getDate()
-                    );
-                    
+                    final Customer customer = new Customer(customerNameField.getText(), customerPhoneField.getText(), customerAddressField.getText(),
+                            customerVatField.getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate());
+
                     Database.addCustomer(customer);
                     GuiCreator.setConfirmationMessage(String.format(CUSTOMER_ADDED_FORMAT, customerNameField.getText()));
                     removeLeftPanel();
@@ -171,7 +165,7 @@ public class AddEntityHelper extends BaseEntityHelper {
         final PhoneNumberField supplierPhoneField = new PhoneNumberField();
         innerPanel.add(supplierPhoneField, g);
         g.gridy = 2;
-        final AddressField supplierAddressField = new AddressField();
+        final TextField supplierAddressField = new TextField();
         innerPanel.add(supplierAddressField, g);
         g.gridy = 3;
         final VatField supplierVatField = new VatField();
@@ -210,16 +204,9 @@ public class AddEntityHelper extends BaseEntityHelper {
                 inputFields.add(dateAddedField);
 
                 if (FieldValidator.checkFields(inputFields)) {
-                    final Supplier supplier = new Supplier(
-                        supplierNameField.getText(),
-                        supplierPhoneField.getText(),
-                        supplierAddressField.getText(),
-                        supplierVatField.getText(),
-                        lastPurchaseDateField.getDate(),
-                        dateAddedField.getDate()
-                    );
-                    
-                    
+                    final Supplier supplier = new Supplier(supplierNameField.getText(), supplierPhoneField.getText(), supplierAddressField.getText(),
+                            supplierVatField.getText(), lastPurchaseDateField.getDate(), dateAddedField.getDate());
+
                     Database.addSupplier(supplier);
                     GuiCreator.setConfirmationMessage(String.format(SUPPLIER_ADDED_FORMAT, supplierNameField.getText()));
                     removeLeftPanel();
@@ -259,7 +246,7 @@ public class AddEntityHelper extends BaseEntityHelper {
         final PhoneNumberField staffPhoneField = new PhoneNumberField();
         innerPanel.add(staffPhoneField, g);
         g.gridy = 4;
-        final AddressField staffAddressField = new AddressField();
+        final TextField staffAddressField = new TextField();
         innerPanel.add(staffAddressField, g);
         g.gridy = 5;
         final CurrencyField wageField = new CurrencyField();
@@ -302,17 +289,9 @@ public class AddEntityHelper extends BaseEntityHelper {
                 inputFields.add(dateAddedField);
 
                 if (FieldValidator.checkFields(inputFields)) {
-                    final Staff staff = new Staff(
-                        pinField.getPinValue(),
-                        staffNameField.getText(),
-                        genderField.getSelectedIndex(),
-                        staffPhoneField.getText(),
-                        staffAddressField.getText(),
-                        wageField.getValue(),
-                        staffLevelField.getSelectedIndex(),
-                        dateAddedField.getDate()
-                    );
-                    
+                    final Staff staff = new Staff(pinField.getPinValue(), staffNameField.getText(), genderField.getSelectedIndex(), staffPhoneField
+                            .getText(), staffAddressField.getText(), wageField.getValue(), staffLevelField.getSelectedIndex(), dateAddedField
+                            .getDate());
 
                     Database.addStaffMember(staff);
                     GuiCreator.setConfirmationMessage(String.format(STAFF_MEMBER_ADDED_FORMAT, staffNameField.getText()));
@@ -339,7 +318,7 @@ public class AddEntityHelper extends BaseEntityHelper {
         g.gridx = 1;
         g.gridy = 0;
         g.gridwidth = 3;
-        final NameField productNameField = new NameField();
+        final TextField productNameField = new TextField();
         innerPanel.add(productNameField, g);
         g.gridy = 1;
         final NumberField stockLevelField = new NumberField();
@@ -387,14 +366,8 @@ public class AddEntityHelper extends BaseEntityHelper {
                 inputFields.add(supplierBox);
 
                 if (FieldValidator.checkFields(inputFields)) {
-                    final Product product = new Product(
-                        productNameField.getText(),
-                        stockLevelField.getValue(),
-                        maxLevelField.getValue(),
-                        supplierBox.getSelectedSupplierId(),
-                        costPriceField.getValue(),
-                        salePriceField.getValue()
-                    );
+                    final Product product = new Product(productNameField.getText(), stockLevelField.getValue(), maxLevelField.getValue(), supplierBox
+                            .getSelectedSupplierId(), costPriceField.getValue(), salePriceField.getValue());
 
                     Database.addProduct(product);
                     GuiCreator.setConfirmationMessage(String.format(PRODUCT_ADDED_FORMAT, productNameField.getText()));

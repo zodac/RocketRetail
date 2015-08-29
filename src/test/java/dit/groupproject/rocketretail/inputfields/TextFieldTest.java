@@ -6,11 +6,11 @@ import static org.hamcrest.core.Is.is;
 import org.junit.Test;
 
 /**
- * A class that is used to test {@link AddressField}.
+ * A class that is used to test {@link TextField}.
  */
-public class AddressFieldTest {
+public class TextFieldTest {
 
-    private AddressField addressField = new AddressField();
+    private TextField addressField = new TextField();
 
     @Test
     public void whenEmptyStringIsEntered_thenValidationFails() {

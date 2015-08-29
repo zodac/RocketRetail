@@ -8,7 +8,7 @@ public class FieldValidator {
 
     /**
      * Validates all input fields. If any are invalid, their border will be
-     * marked red, and a notification will be displayed.
+     * marked, and a notification will be displayed.
      * 
      * @param inputFields
      * @return true if all fields have a valid input

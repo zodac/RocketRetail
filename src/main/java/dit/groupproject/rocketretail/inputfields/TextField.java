@@ -6,9 +6,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class AddressField extends JTextField implements InputField {
+public class TextField extends JTextField implements InputField {
 
-    public AddressField() {
+    public TextField() {
         super(INPUT_FIELD_LENGTH);
     }
 
